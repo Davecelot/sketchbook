@@ -1,0 +1,7 @@
+- tablist "Project sections" [orientation=horizontal]
+  - tab "Overview" [selected]
+  - tab "Activity"
+  - tab "Settings"
+- tabpanel "Overview"
+  - paragraph
+    - text "A summary of the project."

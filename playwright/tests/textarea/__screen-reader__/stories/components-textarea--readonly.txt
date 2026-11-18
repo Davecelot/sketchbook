@@ -1,0 +1,3 @@
+- text "Message"
+- textbox "Message" [readonly] value "Read only text."
+- paragraph [live=polite]

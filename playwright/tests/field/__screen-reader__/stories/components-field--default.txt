@@ -1,0 +1,4 @@
+- text "Email"
+- textbox "Email" desc "We only use it to send receipts."
+- paragraph
+  - text "We only use it to send receipts."

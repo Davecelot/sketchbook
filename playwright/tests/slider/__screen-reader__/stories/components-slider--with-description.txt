@@ -1,0 +1,5 @@
+- text "Volume"
+- slider "Volume" [orientation=horizontal, valuetext=40] value "40" desc "Applies to every channel."
+- paragraph
+  - text "Applies to every channel."
+- paragraph [live=polite]

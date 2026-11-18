@@ -1,0 +1,3 @@
+- text "Nothing matches"
+- text "Change the search terms."
+- link "Clear filters"

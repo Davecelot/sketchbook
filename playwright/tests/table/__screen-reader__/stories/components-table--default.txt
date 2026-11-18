@@ -1,0 +1,36 @@
+- table "Recent orders"
+  - caption
+    - text "Recent orders"
+  - rowgroup
+    - row
+      - columnheader "Order"
+      - columnheader "Status"
+      - columnheader "Method"
+      - columnheader "Amount"
+  - rowgroup
+    - row
+      - cell "ORD-1001"
+      - cell "Paid"
+      - cell "Card"
+      - cell "$250.00"
+    - row
+      - cell "ORD-1002"
+      - cell "Pending"
+      - cell "Transfer"
+      - cell "$150.00"
+    - row
+      - cell "ORD-1003"
+      - cell "Paid"
+      - cell "Cash"
+      - cell "$350.00"
+    - row
+      - cell "ORD-1004"
+      - cell "Failed"
+      - cell "Card"
+      - cell "$450.00"
+  - rowgroup
+    - row
+      - cell "Total"
+      - cell
+      - cell
+      - cell "$1,200.00"

@@ -1,0 +1,4 @@
+- checkbox "Send me product updates" [focused, checked=true] desc "You can unsubscribe at any time."
+- paragraph
+  - text "You can unsubscribe at any time."
+- paragraph [live=polite]

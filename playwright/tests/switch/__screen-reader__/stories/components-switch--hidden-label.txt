@@ -1,0 +1,2 @@
+- switch "Show alerts" [checked=false]
+- paragraph [live=polite]

@@ -1,0 +1,8 @@
+- group "Project members"
+  - image "Ada Example"
+  - image "Grace Sample"
+    - text "GS"
+  - image "Linus Demo"
+    - text "LD"
+  - image "3 more members"
+    - text "+3"

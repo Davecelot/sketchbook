@@ -1,0 +1,22 @@
+- main
+  - heading "Create an account" [level=1]
+  - text "It takes a minute. You can invite your team later."
+  - form "Create an account"
+    - text "Full name"
+    - textbox "Full name" [required]
+    - paragraph [live=polite]
+    - text "Email"
+    - textbox "Email" [required]
+    - paragraph [live=polite]
+    - text "Password"
+    - textbox "Password" [required] desc "Use at least 12 characters."
+    - button "Show password"
+    - paragraph
+      - text "Use at least 12 characters."
+    - checkbox "I agree to the terms of service" [invalid=true, checked=false]
+    - text "I agree to the terms of service"
+    - paragraph [live=polite]
+    - button "Create account"
+  - paragraph
+    - text "Already have an account?"
+  - link "Sign in"

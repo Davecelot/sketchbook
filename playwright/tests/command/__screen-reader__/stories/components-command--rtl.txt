@@ -1,0 +1,11 @@
+- combobox "Search commands" [autocomplete=list, expanded=true, active "Calendar"]
+- listbox "Search commands" [orientation=vertical]
+  - group "Suggestions"
+    - option "Calendar" [selected]
+    - option "Search Emoji"
+    - option "Calculator"
+  - group "Settings"
+    - option "Profile"
+    - option "Billing"
+    - option "Settings"
+- status [live=polite]

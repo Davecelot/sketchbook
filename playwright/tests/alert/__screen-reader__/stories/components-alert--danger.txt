@@ -1,0 +1,3 @@
+- alert [live=assertive]
+  - text "Upload failed"
+  - text "The file is larger than the allowed size. Choose a smaller file."

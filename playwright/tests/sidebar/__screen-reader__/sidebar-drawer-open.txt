@@ -1,0 +1,21 @@
+- dialog "Documentation" [modal]
+  - navigation "Documentation"
+    - strong
+      - text "Sketchbook"
+    - group "Getting started"
+      - list
+        - listitem [level=1]
+          - link "Introduction" [current=page, focused]
+        - listitem [level=1]
+          - link "Installation"
+    - group "Components"
+      - list
+        - listitem [level=1]
+          - link "Button"
+        - listitem [level=1]
+          - link "Card"
+        - listitem [level=1]
+          - link "Dialog"
+        - listitem [level=1]
+          - link "Sidebar"
+    - text "Version 0.1.0"

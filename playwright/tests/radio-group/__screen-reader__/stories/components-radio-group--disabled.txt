@@ -1,0 +1,7 @@
+- radiogroup "Spacing"
+  - radio "Default" [disabled, checked=true]
+  - text "Default"
+  - radio "Comfortable" [disabled, checked=false]
+  - text "Comfortable"
+  - radio "Compact" [disabled, checked=false]
+  - text "Compact"

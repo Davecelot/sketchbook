@@ -1,0 +1,4 @@
+- switch "Offline mode" [focused, checked=true] desc "Pauses syncing until you turn it off."
+- paragraph
+  - text "Pauses syncing until you turn it off."
+- paragraph [live=polite]

@@ -1,0 +1,3 @@
+- text "Home"
+- text "Reports"
+- text "Settings"

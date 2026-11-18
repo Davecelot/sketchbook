@@ -1,0 +1,24 @@
+- group "Text formatting"
+  - button "Bold" [pressed=false]
+  - button "Italic" [pressed=false]
+  - button "Underline" [pressed=false]
+- group "Text formatting"
+  - button "Bold" [pressed=false]
+  - button "Italic" [pressed=false]
+  - button "Underline" [pressed=false]
+- group "Text formatting"
+  - button "Bold" [pressed=false]
+  - button "Italic" [pressed=false]
+  - button "Underline" [pressed=false]
+- group "Text formatting"
+  - button "Bold" [pressed=false]
+  - button "Italic" [pressed=false]
+  - button "Underline" [pressed=false]
+- group "Text formatting"
+  - button "Bold" [pressed=false]
+  - button "Italic" [pressed=false]
+  - button "Underline" [pressed=false]
+- group "Text formatting"
+  - button "Bold" [pressed=false]
+  - button "Italic" [pressed=false]
+  - button "Underline" [pressed=false]

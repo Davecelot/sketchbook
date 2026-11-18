@@ -1,0 +1,5 @@
+- text "Amount"
+- textbox "Amount"
+- paragraph [live=polite]
+- text "$"
+- text "USD"

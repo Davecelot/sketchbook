@@ -1,0 +1,4 @@
+- checkbox "Email me product news" [checked=false] desc "At most one message a month."
+- text "Email me product news"
+- paragraph
+  - text "At most one message a month."

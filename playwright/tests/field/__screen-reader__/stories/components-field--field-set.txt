@@ -1,0 +1,9 @@
+- group "Notifications" desc "Choose what we send you."
+  - Legend
+    - text "Notifications"
+  - paragraph
+    - text "Choose what we send you."
+  - checkbox "Order updates" [checked=true]
+  - text "Order updates"
+  - checkbox "Product news" [checked=false]
+  - text "Product news"

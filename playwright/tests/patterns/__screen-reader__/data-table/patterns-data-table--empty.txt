@@ -1,0 +1,21 @@
+- main
+  - sectionheader
+    - heading "Customers" [level=1]
+    - paragraph
+      - text "Everyone with access to your workspace."
+    - button "Add customer"
+  - search "Customers"
+    - text "Search customers"
+    - searchbox "Search customers"
+    - paragraph [live=polite]
+    - paragraph
+      - text "Press"
+      - text "/"
+      - text "to search"
+  - group "Status"
+    - button "All" [pressed=true]
+    - button "Active" [pressed=false]
+    - button "Invited" [pressed=false]
+  - heading "No customers yet" [level=2]
+  - text "Customers you add or import show up here, with their plan and last visit."
+  - button "Import customers"

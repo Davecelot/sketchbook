@@ -1,0 +1,28 @@
+- article
+  - heading "Quarterly planning guide" [level=1]
+  - paragraph
+    - text "A short paragraph of body copy shows the line height and the measure of running text."
+  - heading "Before you start" [level=2]
+  - paragraph
+    - text "Run"
+    - code
+      - text "npm run build"
+    - text "and check the output."
+  - blockquote
+    - text "A quotation is set apart from the text around it by an indented bar."
+  - heading "Collect your inputs" [level=3]
+  - paragraph
+    - text "The checklist has three steps:"
+  - list
+    - listitem [level=1]
+      - ListMarker "•"
+      - text "Gather the files"
+    - listitem [level=1]
+      - ListMarker "•"
+      - text "Review each one"
+    - listitem [level=1]
+      - ListMarker "•"
+      - text "Send the summary"
+  - heading "Optional extras" [level=4]
+  - paragraph
+    - text "Shown only to you."

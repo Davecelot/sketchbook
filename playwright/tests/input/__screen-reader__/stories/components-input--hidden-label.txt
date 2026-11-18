@@ -1,0 +1,3 @@
+- text "Search"
+- searchbox "Search"
+- paragraph [live=polite]

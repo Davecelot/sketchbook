@@ -1,0 +1,7 @@
+- strong
+  - text "Order details"
+- button "Toggle details" [focused, expanded=true]
+- text "Shipping address"
+- text "Billing address"
+- text "Delivery notes"
+- link "More about this order"

@@ -1,0 +1,2 @@
+- switch "Offline mode" [checked=true]
+- paragraph [live=polite]

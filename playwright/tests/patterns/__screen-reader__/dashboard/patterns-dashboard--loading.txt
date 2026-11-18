@@ -1,0 +1,49 @@
+- banner
+  - paragraph
+    - text "Workspace"
+  - text "North region"
+  - image "Ada Example"
+    - text "AE"
+- main
+  - heading "Overview" [level=1]
+  - status "Loading the overview" [live=polite]
+  - button "Export"
+  - tablist "Dashboard views" [orientation=horizontal]
+    - tab "Overview" [selected]
+    - tab "Customers"
+    - tab "Reports"
+  - tabpanel "Overview" [busy]
+    - heading "Revenue" [level=2]
+    - text "This month"
+    - heading "Active customers" [level=2]
+    - text "Signed in this month"
+    - heading "Open orders" [level=2]
+    - text "Waiting to ship"
+    - heading "Refund rate" [level=2]
+    - text "Last 30 days"
+    - heading "Quarterly goal" [level=2]
+    - text "$136,000 of $200,000"
+    - progressbar "Quarterly goal" value "68"
+    - heading "Visits" [level=2]
+    - text "Last seven days"
+    - heading "Recent activity" [level=2]
+    - heading "Recent orders" [level=2]
+    - table "Recent orders" [busy]
+      - rowgroup
+        - row
+          - columnheader "Order"
+          - columnheader "Status"
+          - columnheader "Amount"
+      - rowgroup
+        - row
+          - cell "ORD-1001"
+          - cell "Paid"
+          - cell
+        - row
+          - cell "ORD-1002"
+          - cell "Pending"
+          - cell
+        - row
+          - cell "ORD-1003"
+          - cell "Paid"
+          - cell

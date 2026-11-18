@@ -1,0 +1,6 @@
+- link "primary"
+- link "secondary"
+- link "destructive"
+- link "tertiary"
+- link "ghost"
+- link "link"

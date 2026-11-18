@@ -1,0 +1,2 @@
+- text "Quarterly plan"
+- text "Edited yesterday by the planning team."

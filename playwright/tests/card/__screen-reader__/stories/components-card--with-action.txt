@@ -1,0 +1,5 @@
+- text "Weekly summary"
+- text "Activity from the last seven days."
+- button "Refresh"
+- text "Totals and trends appear here."
+- button "View report"

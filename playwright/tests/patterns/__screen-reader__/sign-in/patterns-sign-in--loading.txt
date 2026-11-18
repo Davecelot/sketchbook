@@ -1,0 +1,19 @@
+- main
+  - heading "Sign in" [level=1]
+  - text "Use the email address you work with."
+  - form "Sign in" [busy]
+    - text "Email"
+    - textbox "Email" [required] value "ada@example.com"
+    - paragraph [live=polite]
+    - text "Password"
+    - textbox "Password" [required]
+    - button "Show password"
+    - checkbox "Keep me signed in" [checked=false]
+    - paragraph [live=polite]
+    - link "Forgot password?"
+    - button "Sign in" [disabled, busy]
+    - text "or"
+    - button "Continue with single sign-on"
+  - paragraph
+    - text "New here?"
+  - link "Create an account"

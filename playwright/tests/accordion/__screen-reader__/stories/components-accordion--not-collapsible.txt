@@ -1,0 +1,8 @@
+- heading "Shipping" [level=3]
+  - button "Shipping" [disabled, expanded=true]
+- region "Shipping"
+  - text "Orders ship within two days."
+- heading "Returns" [level=3]
+  - button "Returns" [expanded=false]
+- heading "Warranty" [level=3]
+  - button "Warranty" [expanded=false]

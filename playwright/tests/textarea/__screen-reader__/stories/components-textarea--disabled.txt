@@ -1,0 +1,3 @@
+- text "Message"
+- textbox "Message" [disabled] value "Not editable right now."
+- paragraph [live=polite]

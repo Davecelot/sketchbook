@@ -1,0 +1,2 @@
+- checkbox "Send me a copy" [checked=false]
+- text "Send me a copy"

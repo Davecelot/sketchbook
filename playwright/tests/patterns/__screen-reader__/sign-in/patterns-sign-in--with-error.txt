@@ -1,0 +1,22 @@
+- main
+  - heading "Sign in" [level=1]
+  - text "Use the email address you work with."
+  - form "Sign in"
+    - alert [live=assertive]
+      - text "We could not sign you in"
+      - text "The email or password is not right. Check both and try again."
+    - text "Email"
+    - textbox "Email" [required] value "ada@example.com"
+    - paragraph [live=polite]
+    - text "Password"
+    - textbox "Password" [required]
+    - button "Show password"
+    - checkbox "Keep me signed in" [checked=false]
+    - paragraph [live=polite]
+    - link "Forgot password?"
+    - button "Sign in"
+    - text "or"
+    - button "Continue with single sign-on"
+  - paragraph
+    - text "New here?"
+  - link "Create an account"

@@ -1,0 +1,3 @@
+- text "Email"
+- textbox "Email" [readonly] value "name@example.com"
+- paragraph [live=polite]

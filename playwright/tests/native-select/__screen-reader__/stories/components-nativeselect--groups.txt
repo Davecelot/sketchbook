@@ -1,0 +1,10 @@
+- text "Region"
+- combobox "Region" [expanded=false] value "France"
+  - MenuListPopup
+    - group "Europe"
+      - option "France" [selected]
+      - option "Germany"
+    - group "Asia"
+      - option "Spain"
+      - option "Japan" [disabled]
+- paragraph [live=polite]

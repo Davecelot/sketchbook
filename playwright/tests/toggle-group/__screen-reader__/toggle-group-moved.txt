@@ -1,0 +1,4 @@
+- group "Text formatting"
+  - button "Bold" [pressed=true]
+  - button "Italic" [pressed=true]
+  - button "Underline" [focused, pressed=false]

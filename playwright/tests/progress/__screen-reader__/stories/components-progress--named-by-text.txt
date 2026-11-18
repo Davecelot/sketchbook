@@ -1,0 +1,2 @@
+- text "Syncing library"
+- progressbar "Syncing library" value "35"

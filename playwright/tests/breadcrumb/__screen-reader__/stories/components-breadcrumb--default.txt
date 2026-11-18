@@ -1,0 +1,8 @@
+- navigation "Breadcrumb"
+  - list
+    - listitem [level=1]
+      - link "Home"
+    - listitem [level=1]
+      - link "Library"
+    - listitem [level=1]
+      - link "Reports" [disabled]

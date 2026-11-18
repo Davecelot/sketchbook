@@ -1,0 +1,4 @@
+- group "Message actions"
+  - text "Amount"
+  - button "10"
+  - button "20"

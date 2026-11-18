@@ -1,0 +1,4 @@
+- text "Volume"
+- slider "Volume" [invalid=true, orientation=horizontal, valuetext=40] value "40" desc "Choose a value below 80."
+- paragraph [live=polite]
+  - text "Choose a value below 80."

@@ -1,0 +1,6 @@
+- text "Level horizontal"
+- slider "Level horizontal" [orientation=horizontal, valuetext=30] value "30"
+- paragraph [live=polite]
+- text "Level vertical"
+- slider "Level vertical" [orientation=vertical, valuetext=30] value "30"
+- paragraph [live=polite]

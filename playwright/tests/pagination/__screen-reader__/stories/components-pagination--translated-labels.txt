@@ -1,0 +1,14 @@
+- navigation "paginación"
+  - list
+    - listitem [level=1]
+      - link "Ir a la página anterior"
+        - text "Anterior"
+    - listitem [level=1]
+      - link "1" [current=page]
+    - listitem [level=1]
+      - link "Página 2"
+    - listitem [level=1]
+      - link "All"
+    - listitem [level=1]
+      - link "Ir a la página siguiente"
+        - text "Siguiente"

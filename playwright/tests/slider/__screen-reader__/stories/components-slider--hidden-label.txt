@@ -1,0 +1,3 @@
+- text "Brightness"
+- slider "Brightness" [orientation=horizontal, valuetext=40] value "40"
+- paragraph [live=polite]

@@ -1,0 +1,2 @@
+- checkbox "Send me product updates" [checked=false]
+- paragraph [live=polite]

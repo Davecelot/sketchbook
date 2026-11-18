@@ -1,0 +1,4 @@
+- text "Email"
+- textbox "Email" [invalid=true] value "name@" desc "Enter an email like name@example.com."
+- paragraph [live=polite]
+  - text "Enter an email like name@example.com."

@@ -1,0 +1,10 @@
+- text "Region"
+- combobox "Region" [invalid=true, expanded=false] value "Choose a region"
+  - MenuListPopup
+    - option "Choose a region" [selected]
+    - option "North"
+    - option "South"
+    - option "East"
+    - option "West" [disabled]
+    - option "Central"
+- paragraph [live=polite]

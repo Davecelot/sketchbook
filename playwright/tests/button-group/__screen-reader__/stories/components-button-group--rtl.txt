@@ -1,0 +1,4 @@
+- group "Message actions"
+  - button "Archive"
+  - button "Report"
+  - button "Snooze"

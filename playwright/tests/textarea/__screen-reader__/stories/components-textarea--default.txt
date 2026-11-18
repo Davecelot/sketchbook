@@ -1,0 +1,3 @@
+- text "Message"
+- textbox "Message"
+- paragraph [live=polite]

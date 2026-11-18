@@ -1,0 +1,6 @@
+- text "primary"
+- text "secondary"
+- text "destructive"
+- text "tertiary"
+- text "ghost"
+- text "link"

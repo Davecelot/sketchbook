@@ -1,0 +1,6 @@
+- tablist "Sections" [orientation=horizontal]
+  - tab "First" [selected]
+  - tab "Second"
+- tabpanel "First"
+  - text "Name"
+  - textbox "Name"

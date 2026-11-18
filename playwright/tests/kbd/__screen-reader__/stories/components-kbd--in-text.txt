@@ -1,0 +1,7 @@
+- paragraph
+  - text "Press"
+  - text "Esc"
+  - text "to close, or"
+  - text "Ctrl"
+  - text "K"
+  - text "to search."

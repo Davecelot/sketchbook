@@ -1,0 +1,12 @@
+- text "Size medium"
+- combobox "Size medium" [expanded=false] value "One"
+  - MenuListPopup
+    - option "One" [selected]
+    - option "Two"
+- paragraph [live=polite]
+- text "Size small"
+- combobox "Size small" [expanded=false] value "One"
+  - MenuListPopup
+    - option "One" [selected]
+    - option "Two"
+- paragraph [live=polite]

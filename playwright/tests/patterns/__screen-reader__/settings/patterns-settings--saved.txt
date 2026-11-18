@@ -1,0 +1,36 @@
+- main
+  - sectionheader
+    - heading "Settings" [level=1]
+    - paragraph
+      - text "Manage your preferences. Changes apply after you save."
+  - status [live=polite]
+    - text "Changes saved"
+    - text "Your notification settings are up to date."
+  - tablist "Settings sections" [orientation=horizontal]
+    - tab "General"
+    - tab "Notifications" [selected]
+    - tab "Appearance"
+  - tabpanel "Notifications"
+    - form "Notifications"
+      - heading "Notifications" [level=2]
+      - text "Pick what reaches your inbox."
+      - switch "Mentions" [checked=true] desc "When someone mentions you in a comment."
+      - paragraph
+        - text "When someone mentions you in a comment."
+      - paragraph [live=polite]
+      - switch "Weekly summary" [checked=false] desc "A short recap every Monday."
+      - paragraph
+        - text "A short recap every Monday."
+      - paragraph [live=polite]
+      - switch "Product news" [checked=false] desc "New features, at most once a month."
+      - paragraph
+        - text "New features, at most once a month."
+      - paragraph [live=polite]
+      - text "Reminder lead time"
+      - slider "Reminder lead time" [orientation=horizontal, valuetext=15] value "15" desc "Minutes before an event, from 0 to 60."
+      - paragraph
+        - text "Minutes before an event, from 0 to 60."
+      - paragraph [live=polite]
+      - group "Form actions"
+        - button "Cancel"
+        - button "Save changes"

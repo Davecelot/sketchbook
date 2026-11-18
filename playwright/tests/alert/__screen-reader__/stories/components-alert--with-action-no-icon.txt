@@ -1,0 +1,4 @@
+- status [live=polite]
+  - text "Update available"
+  - text "A newer version is ready to install."
+  - button "Retry"

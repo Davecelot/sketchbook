@@ -1,0 +1,2 @@
+- text "Account id"
+- textbox "Account id" [disabled] value "A-1024"

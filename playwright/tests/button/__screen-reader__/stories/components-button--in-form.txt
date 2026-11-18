@@ -1,0 +1,5 @@
+- form
+  - textbox "Note" value "draft"
+  - button "Save"
+  - button "Reset"
+  - button "Plain"

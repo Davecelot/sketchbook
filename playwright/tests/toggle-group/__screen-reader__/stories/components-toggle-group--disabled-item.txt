@@ -1,0 +1,4 @@
+- group "Alignment"
+  - button "Left" [pressed=false]
+  - button "Center" [disabled, pressed=false]
+  - button "Right" [pressed=false]
