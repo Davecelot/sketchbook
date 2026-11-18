@@ -1,0 +1,447 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "InputGroup",
+  "tag": "sb-input-group",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "One bordered shell around a text input or textarea with addons (icons, text, buttons) before, after, above or below it.",
+  "dependsOn": [
+    "Button",
+    "Input",
+    "Textarea"
+  ],
+  "props": {
+    "validation": {
+      "type": "variant",
+      "values": [
+        "none",
+        "error"
+      ],
+      "default": "none",
+      "reflect": true,
+      "note": "error draws the whole shell in the error color and sets aria-invalid=\"true\" on the slotted control (a native input or textarea directly; a sb-input or sb-textarea on its host, which passes it to its inner control). Also give the error message outside the shell (sb-field-error)."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "group",
+      "role": "container",
+      "parent": null,
+      "part": "group",
+      "notes": "Bordered flex container in the shadow root. role=group only when the host has an aria-label."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "notes": "One control (sb-input with hide-label, a native input, a native textarea, or sb-textarea with hide-label) and any number of sb-input-group-addon children, as direct children."
+    }
+  },
+  "events": {},
+  "states": {
+    "focus-within": {
+      "trigger": "focus inside the control (not the addon buttons)",
+      "tokens": [
+        "input-group.focus-ring.color",
+        "input-group.focus-ring.width"
+      ],
+      "borderColor": "input-group.focus-ring.color",
+      "note": "Tracked with focusin and focusout on the control, set as data-focused on the shell; :has() does not reach into other shadow trees."
+    },
+    "error": {
+      "trigger": "validation=\"error\"",
+      "tokens": [
+        "input-group.border-invalid"
+      ]
+    }
+  },
+  "accessibility": {
+    "role": "group",
+    "native": "input, textarea",
+    "accessibleNameSource": "The control keeps its own name: sb-input needs label (use hide-label), a native control needs aria-label or an external label. The shell exposes role=group named by the host aria-label only when one is set. Icon-only sb-input-group-button children need aria-label.",
+    "formAssociation": {
+      "value": false,
+      "note": "The slotted control is the form field; the shell adds none."
+    },
+    "targetSize": "Control and buttons keep the 24px minimum of their own components; the shell is 36px high.",
+    "focusRingVisible": "One 3px solid ring on the whole shell while the control is focused; the inner control's own ring is switched off. Addon buttons keep their own focus ring.",
+    "keyboard": {
+      "Tab": "control, then each addon button in DOM order",
+      "Enter": "in a text input, submits through the control; on an addon button, activates it"
+    },
+    "aria": [
+      "group: role=\"group\" with the forwarded aria-label, only when set",
+      "validation=\"error\": aria-invalid=\"true\" on the slotted control (native, or the host of sb-input / sb-textarea)",
+      "addon icons are decorative; mark them aria-hidden",
+      "clicking an addon outside a button moves focus to the control",
+      "sb-input-group-button passes its slotted text to the inner button as the name and updates it when the text changes, including edits to a text node in place; an aria-label on the host wins"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "input-group.border",
+        "bg": "input-group.bg",
+        "kind": "ui"
+      },
+      {
+        "fg": "input-group.border-invalid",
+        "bg": "input-group.bg",
+        "kind": "ui"
+      },
+      {
+        "fg": "input-group.input.fg",
+        "bg": "input-group.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "input-group.addon.fg",
+        "bg": "input-group.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "input-group.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.11",
+      "2.4.7",
+      "3.3.1",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "input-group.height": "{size.control.default}",
+    "input-group.radius": "{radius.control}",
+    "input-group.border-width": "{border-width.default}",
+    "input-group.bg": "{color.input-background}",
+    "input-group.border": "{color.input}",
+    "input-group.border-invalid": "{color.destructive}",
+    "input-group.shadow": "{elevation.xs}",
+    "input-group.focus-ring.color": "{color.ring}",
+    "input-group.focus-ring.width": "{focus.ring.width}",
+    "input-group.transition-duration": "{motion.duration.fast}",
+    "input-group.transition-easing": "{motion.easing.standard}",
+    "input-group.input.fg": "{color.foreground}",
+    "input-group.input.font-family": "{font.family.body}",
+    "input-group.input.font-size": "{font.size.control}",
+    "input-group.input.line-height": "{font.line-height.control}",
+    "input-group.input.padding-x": "{space.control.padding-x.field}",
+    "input-group.input.padding-y": "{space.control.padding-y.field}",
+    "input-group.addon.fg": "{color.muted-foreground}",
+    "input-group.addon.padding-x": "{space.control.padding-x.field}",
+    "input-group.addon.padding-y": "{space.stack.xs}",
+    "input-group.addon.block-padding": "{space.stack.md}",
+    "input-group.addon.gap": "{space.control.gap.default}",
+    "input-group.addon.font-family": "{font.family.body}",
+    "input-group.addon.font-size": "{font.size.control}",
+    "input-group.addon.font-weight": "{font.weight.control}",
+    "input-group.addon.line-height": "{font.line-height.control}",
+    "input-group.icon-size": "{size.icon.default}",
+    "input-group.disabled-opacity": "{opacity.disabled}"
+  },
+  "elements": [
+    {
+      "tag": "sb-input-group-addon",
+      "summary": "A strip of content (icon, text or buttons) placed before, after, above or below the control inside the shell.",
+      "props": {
+        "align": {
+          "type": "variant",
+          "values": [
+            "inline-start",
+            "inline-end",
+            "block-start",
+            "block-end"
+          ],
+          "default": "inline-start",
+          "reflect": true,
+          "note": "Where the addon sits. A block-* addon turns the shell into a column."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "addon",
+          "role": "container",
+          "parent": null,
+          "part": "addon",
+          "notes": "Flex row of icons, text and buttons; clicking outside a button focuses the control."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "sb-input-group-text, sb-input-group-button, or an icon."
+        }
+      },
+      "notes": "Must be a direct child of sb-input-group."
+    },
+    {
+      "tag": "sb-input-group-text",
+      "summary": "Muted, non-interactive text or icon inside an addon, such as a currency symbol or a unit.",
+      "anatomy": [
+        {
+          "name": "text",
+          "role": "text",
+          "parent": null,
+          "part": "text"
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Text and an optional icon."
+        }
+      }
+    },
+    {
+      "tag": "sb-input-group-button",
+      "summary": "A compact sb-button for use inside an addon. An icon-only one needs aria-label.",
+      "props": {
+        "variant": {
+          "type": "variant",
+          "values": [
+            "ghost",
+            "primary",
+            "tertiary",
+            "secondary"
+          ],
+          "default": "ghost",
+          "reflect": true,
+          "note": "Passed to the inner sb-button."
+        },
+        "size": {
+          "type": "variant",
+          "values": [
+            "tiny",
+            "small",
+            "icon-tiny",
+            "icon-small"
+          ],
+          "default": "tiny",
+          "reflect": true,
+          "note": "Passed to the inner sb-button; icon sizes are square."
+        },
+        "type": {
+          "type": "variant",
+          "values": [
+            "button",
+            "submit",
+            "reset"
+          ],
+          "default": "button",
+          "note": "Submit and reset are done by the group button itself (it is form-associated for that), because the inner sb-button sits in a shadow root outside the page's form. name and value are not supported."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "reflect": true,
+          "note": "Passed to the inner sb-button."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "button",
+          "role": "control",
+          "parent": null,
+          "part": "button",
+          "notes": "sb-button in the shadow root; host aria-label is forwarded to it."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Label text or an icon."
+        }
+      },
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "From the inner button; cancelled while disabled."
+        }
+      }
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "input group",
+      "search field",
+      "addon",
+      "prefix",
+      "suffix",
+      "currency",
+      "copy button"
+    ],
+    "useCases": [
+      {
+        "when": "An input with a leading icon, a currency symbol or a unit",
+        "use": "sb-input-group-addon with sb-input-group-text"
+      },
+      {
+        "when": "An input with an inline action such as copy or clear",
+        "use": "sb-input-group-addon align=inline-end with an icon-only sb-input-group-button and aria-label"
+      },
+      {
+        "when": "A textarea with a toolbar underneath",
+        "use": "a textarea and a block-end sb-input-group-addon"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Icon-only sb-input-group-button without aria-label",
+        "why": "The button has no accessible name",
+        "alternative": "Set aria-label on the button"
+      },
+      {
+        "pattern": "sb-input with its label visible inside a group",
+        "why": "The label would sit inside the bordered shell",
+        "alternative": "Use hide-label and put the visible label outside the group"
+      },
+      {
+        "pattern": "More than one control in a group",
+        "why": "The shell shows one focus ring and one invalid state",
+        "alternative": "Use sb-button-group for several controls"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/input-group/InputGroup.scss",
+        "src/components/input-group/InputGroup.stories.ts",
+        "src/components/input-group/InputGroup.styles.ts",
+        "src/components/input-group/InputGroup.ts",
+        "src/components/input-group/InputGroupAddon.ts",
+        "src/components/input-group/InputGroupButton.ts",
+        "src/components/input-group/InputGroupText.ts",
+        "src/components/input-group/index.ts"
+      ],
+      "spec": "playwright/tests/input-group/input-group.behavior.spec.ts",
+      "coverage": [
+        "shell height and token border; slotted sb-input and native input draw none",
+        "addon order by align; block addons stack",
+        "focus ring on the shell for the control only, no second ring",
+        "validation error: shell color and aria-invalid on the slotted control",
+        "addon click focuses the control, button click does not",
+        "role=group only with aria-label",
+        "icon-only button named by aria-label, click composed",
+        "variant, disabled, submit pass through",
+        "addon text color token",
+        "slotted sb-textarea: shell ring, no second ring, addon click focuses it",
+        "button name follows text edited in place",
+        "axe clean (nine stories)"
+      ],
+      "drift": [
+        {
+          "aspect": "placeholder color",
+          "contract": "input placeholder token for sb-input",
+          "realization": "slotted native inputs keep the browser placeholder color; ::slotted cannot be followed by ::placeholder"
+        },
+        {
+          "aspect": "focus ring",
+          "contract": "solid 3px ring on the shell",
+          "realization": "the visual reference uses ring/50; the invalid focus ring is solid destructive, not the reference 20% tint, so focus differs from invalid at rest (WCAG 2.4.7, 1.4.11)"
+        },
+        {
+          "aspect": "group button submit",
+          "contract": "sb-input-group-button is form-associated and submits or resets itself",
+          "realization": "the visual reference renders a plain button in the page tree; the inner sb-button here sits in a shadow root outside the form. name and value are not supported"
+        },
+        {
+          "aspect": "disabled shell",
+          "contract": "none",
+          "realization": "the visual reference dims the whole group when its control is disabled; here the control and buttons dim themselves (Q3)"
+        }
+      ],
+      "parts": [
+        "group",
+        "addon",
+        "text",
+        "button"
+      ],
+      "slots": [
+        "default"
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "InputGroup": 4
+        }
+      },
+      "coverage": [
+        "InputGroup: 4 variant(s), State (Rest, Focus) x Validation (None, Error); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "input-group.addon.block-padding",
+          "contract": "Padding of a block-start or block-end addon (a header or footer over a textarea).",
+          "realization": "The set draws an inline-start addon with an input; block addons are not drawn yet."
+        },
+        {
+          "aspect": "input-group.disabled-opacity",
+          "contract": "A disabled slotted native input or textarea is dimmed.",
+          "realization": "The InputGroup set has no disabled variant: the shell has no disabled state of its own (Q3), so the dimmed control is not drawn."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "How is the slotted sb-input made to look borderless inside the shell?",
+      "recommendation": "Set its own tokens (--sb-input-border, -bg, -shadow, -radius, -focus-ring-*) from ::slotted(sb-input). Input already reads them.",
+      "status": "answered",
+      "answer": "Slotted rules override the Input tokens.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "How does the shell show focus and invalid when :has() cannot cross shadow trees?",
+      "recommendation": "focusin and focusout on the control set data-focused on the shell; validation=\"error\" sets data-invalid and aria-invalid.",
+      "status": "answered",
+      "answer": "data-focused from focusin/focusout; explicit validation prop.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q3",
+      "question": "A disabled shell?",
+      "recommendation": "Not now: the control and buttons dim themselves; a shell-level disabled adds little.",
+      "status": "answered",
+      "answer": "Deferred.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q4",
+      "question": "Placeholder color of a slotted native input?",
+      "recommendation": "::slotted() cannot be followed by ::placeholder, so the browser default stays; use sb-input where the placeholder token matters. Logged as drift.",
+      "status": "answered",
+      "answer": "Browser default placeholder for native controls.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-003",
+    "D-011",
+    "SB-0007",
+    "SB-0009",
+    "SB-0011"
+  ]
+}

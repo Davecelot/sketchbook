@@ -1,0 +1,234 @@
+{
+  "$description": "Semantic tokens that follow brand.config.json. Applied on every npm run tokens:generate (and sketchbook init). Delete an entry to own that token by hand; a link whose token or target is missing is reported. Rules: harness/generators/links.mjs.",
+  "links": {
+    "color.primary": {
+      "from": "color",
+      "role": "primary",
+      "part": "solid"
+    },
+    "color.primary-foreground": {
+      "from": "color",
+      "role": "primary",
+      "part": "foreground"
+    },
+    "color.destructive": {
+      "from": "color",
+      "role": "destructive",
+      "part": "solid",
+      "alsoOn": [
+        "color.background",
+        "color.card"
+      ]
+    },
+    "color.destructive-foreground": {
+      "from": "color",
+      "role": "destructive",
+      "part": "foreground",
+      "alsoOn": [
+        "color.background",
+        "color.card"
+      ]
+    },
+    "color.success": {
+      "from": "color",
+      "role": "success",
+      "part": "solid"
+    },
+    "color.success-foreground": {
+      "from": "color",
+      "role": "success",
+      "part": "foreground"
+    },
+    "color.warning": {
+      "from": "color",
+      "role": "warning",
+      "part": "solid"
+    },
+    "color.warning-foreground": {
+      "from": "color",
+      "role": "warning",
+      "part": "foreground"
+    },
+    "color.info": {
+      "from": "color",
+      "role": "info",
+      "part": "solid"
+    },
+    "color.info-foreground": {
+      "from": "color",
+      "role": "info",
+      "part": "foreground"
+    },
+    "color.muted-foreground": {
+      "from": "color",
+      "ramp": "neutral",
+      "part": "text",
+      "step": {
+        "light": 500,
+        "dark": 400
+      },
+      "alsoOn": [
+        "color.background",
+        "color.card",
+        "color.popover",
+        "color.muted"
+      ]
+    },
+    "size.control.sm": {
+      "from": "density",
+      "role": "height.sm"
+    },
+    "size.control.default": {
+      "from": "density",
+      "role": "height.default"
+    },
+    "size.control.lg": {
+      "from": "density",
+      "role": "height.lg"
+    },
+    "space.control.padding-x.xs": {
+      "from": "density",
+      "role": "padding-x.xs"
+    },
+    "space.control.padding-x.sm": {
+      "from": "density",
+      "role": "padding-x.sm"
+    },
+    "space.control.padding-x.default": {
+      "from": "density",
+      "role": "padding-x.default"
+    },
+    "space.control.padding-x.lg": {
+      "from": "density",
+      "role": "padding-x.lg"
+    },
+    "space.control.padding-x.field": {
+      "from": "density",
+      "role": "padding-x.field"
+    },
+    "space.control.gap.xs": {
+      "from": "density",
+      "role": "gap.xs"
+    },
+    "space.control.gap.sm": {
+      "from": "density",
+      "role": "gap.sm"
+    },
+    "space.control.gap.default": {
+      "from": "density",
+      "role": "gap.default"
+    },
+    "radius.xsmall": {
+      "from": "radius",
+      "role": "xsmall"
+    },
+    "radius.small": {
+      "from": "radius",
+      "role": "small"
+    },
+    "radius.control": {
+      "from": "radius",
+      "role": "control"
+    },
+    "radius.surface": {
+      "from": "radius",
+      "role": "surface"
+    },
+    "radius.large": {
+      "from": "radius",
+      "role": "large"
+    },
+    "radius.pill": {
+      "from": "radius",
+      "role": "pill"
+    },
+    "motion.duration.fast": {
+      "from": "motion",
+      "role": "duration.fast"
+    },
+    "motion.duration.normal": {
+      "from": "motion",
+      "role": "duration.normal"
+    },
+    "motion.duration.slow": {
+      "from": "motion",
+      "role": "duration.slow"
+    },
+    "motion.duration.loop": {
+      "from": "motion",
+      "role": "duration.loop"
+    },
+    "motion.easing.standard": {
+      "from": "motion",
+      "role": "easing.standard"
+    },
+    "motion.easing.enter": {
+      "from": "motion",
+      "role": "easing.enter"
+    },
+    "motion.easing.exit": {
+      "from": "motion",
+      "role": "easing.exit"
+    },
+    "motion.easing.linear": {
+      "from": "motion",
+      "role": "easing.linear"
+    },
+    "elevation.xs": {
+      "from": "elevation",
+      "role": "xs"
+    },
+    "elevation.sm": {
+      "from": "elevation",
+      "role": "sm"
+    },
+    "elevation.md": {
+      "from": "elevation",
+      "role": "md"
+    },
+    "elevation.lg": {
+      "from": "elevation",
+      "role": "lg"
+    },
+    "size.icon.sm": {
+      "from": "icons",
+      "role": "sm"
+    },
+    "size.icon.default": {
+      "from": "icons",
+      "role": "default"
+    },
+    "size.icon.lg": {
+      "from": "icons",
+      "role": "lg"
+    },
+    "size.icon.xl": {
+      "from": "icons",
+      "role": "xl"
+    },
+    "layer.base": {
+      "from": "z",
+      "role": "base"
+    },
+    "layer.dropdown": {
+      "from": "z",
+      "role": "dropdown"
+    },
+    "layer.sticky": {
+      "from": "z",
+      "role": "sticky"
+    },
+    "layer.overlay": {
+      "from": "z",
+      "role": "overlay"
+    },
+    "layer.modal": {
+      "from": "z",
+      "role": "modal"
+    },
+    "layer.toast": {
+      "from": "z",
+      "role": "toast"
+    }
+  }
+}

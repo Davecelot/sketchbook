@@ -1,0 +1,158 @@
+{
+  "$schema": "./schemas/figma-practices.schema.json",
+  "$description": "How a component is built in a design file: each aspect lists the ways the studied libraries do it and the one Sketchbook adopts. Team-owned; sketchbook api practices shows it, check A1 validates it (decision SB-0079).",
+  "version": 1,
+  "sources": {
+    "carbon": { "name": "Carbon Design System v11 (community file)", "url": "https://www.figma.com/design/KlMIKwk3RPNWxv3TE8USKe/" },
+    "helsinki": { "name": "Helsinki Design System 6.0.0 (community file)", "url": "https://www.figma.com/design/ZTen0R4pixqRp4B9gtYtKG/" },
+    "reference-c": { "name": "A product design system studied for its approach", "url": null },
+    "figma-docs": { "name": "Figma help center and Plugin API reference", "url": "https://developers.figma.com/docs/plugins/api/" }
+  },
+  "aspects": {
+    "state-model": {
+      "question": "How are interaction, validity and availability expressed as variants?",
+      "options": {
+        "flat-state": {
+          "summary": "One State axis lists everything: Enabled, Hover, Focus, Error, Warning, Read-only, Disabled, and even crossings such as Hover + Error.",
+          "seenIn": ["carbon", "helsinki"]
+        },
+        "interaction-state": {
+          "summary": "State holds only the interaction states the contract gives tokens for (Rest, Hover, Focus, Press, Loading); validity, availability and on/off are their own False/True or value axes.",
+          "seenIn": ["reference-c"]
+        }
+      },
+      "adopted": "interaction-state",
+      "reason": "The combinations stay a product of independent axes instead of a growing list of crossings, and each State value maps to a contract state key in spec/api.json (states.draw)."
+    },
+    "optional-parts": {
+      "question": "How does a designer show or hide an optional part (description, value, icon)?",
+      "options": {
+        "show-property": {
+          "summary": "A BOOLEAN property named 'Show <part>' toggles the layer.",
+          "seenIn": ["carbon", "helsinki"]
+        },
+        "part-property": {
+          "summary": "A BOOLEAN property named after the part itself ('Description', 'Left icon') toggles the layer.",
+          "seenIn": ["reference-c"]
+        }
+      },
+      "adopted": "part-property",
+      "reason": "Names come from the registry's content keys, so the same word names the prop in code, the property in the file and the layer."
+    },
+    "text-properties": {
+      "question": "How is the text a component shows exposed?",
+      "options": {
+        "bare-name": { "summary": "TEXT properties named after the part ('Label', 'ErrorText').", "seenIn": ["helsinki"] },
+        "part-text": { "summary": "TEXT properties named '<Part> text' ('Label text', 'Error text', 'Min range text').", "seenIn": ["carbon", "reference-c"] }
+      },
+      "adopted": "part-text",
+      "reason": "A TEXT property and a BOOLEAN property for the same part (Description, Description text) would otherwise collide in the panel."
+    },
+    "helper-parts": {
+      "question": "Where do shared pieces (rails, items, bases) live?",
+      "options": {
+        "inline": { "summary": "Layers inside the component; no helper components.", "seenIn": ["helsinki", "reference-c"] },
+        "underscore-components": {
+          "summary": "A piece used by several variants or components is its own component named with a leading underscore (hidden from publishing) and described as not for independent use.",
+          "seenIn": ["carbon"]
+        }
+      },
+      "adopted": "inline",
+      "reason": "Inline until a piece is shared by two or more components; then it becomes an underscore helper whose description is the fixed 'not for independent use' line."
+    },
+    "nested-instances": {
+      "question": "How is a component built from another one?",
+      "options": {
+        "nest-library-component": {
+          "summary": "The variant holds an instance of the other library component (a value input inside a slider, toggles inside a toggle group) with its properties set.",
+          "seenIn": ["carbon", "reference-c"]
+        },
+        "redraw": { "summary": "The parts are drawn again inside each component.", "seenIn": ["helsinki"] }
+      },
+      "adopted": "nest-library-component",
+      "reason": "It follows the contract's dependsOn and keeps one source for each look."
+    },
+    "content-regions": {
+      "question": "How is a region filled with the person's own content (a card body, a panel, row actions) drawn?",
+      "options": {
+        "sample-text": { "summary": "The region holds sample text; content is placed by detaching or by covering it.", "seenIn": [] },
+        "native-slot": {
+          "summary": "The region is a native slot (a SLOT property spanning the set) with sample content and no limits; a few components are offered first as preferred values.",
+          "seenIn": ["figma-docs"]
+        }
+      },
+      "adopted": "native-slot",
+      "reason": "A slot takes any layer without detaching the instance, so the region stays linked to the library; preferred values point to the usual content without forbidding the rest."
+    },
+    "exposed-instances": {
+      "question": "Are a nested instance's properties editable from the parent, and how is its layer named?",
+      "options": {
+        "hidden-generic-names": { "summary": "Nested instances stay closed; their layers keep part names (item, field-other).", "seenIn": [] },
+        "expose-with-names": {
+          "summary": "Every nested library instance whose component has properties is exposed, so its properties show in the parent's panel, under the component's title and an index (Toggle 1, Button 2).",
+          "seenIn": ["figma-docs"]
+        }
+      },
+      "adopted": "expose-with-names",
+      "reason": "A designer sets each item of a group from the parent's panel instead of drilling into layers; an instance without properties would add an empty entry, so it is left closed."
+    },
+    "drawn-content": {
+      "question": "How much of the control's visible content is drawn, and can it be edited?",
+      "options": {
+        "chrome-only": { "summary": "The frame, border and colors only; text and values are placeholders.", "seenIn": [] },
+        "contract-content": {
+          "summary": "Every piece of visible content the contract defines (value, minimum, maximum, placeholder, label) is drawn with a TEXT property; positions that the value moves (a slider handle) are laid out so a designer can move them.",
+          "seenIn": ["carbon"]
+        }
+      },
+      "adopted": "contract-content",
+      "reason": "A component that shows no value cannot be reviewed against the story that does."
+    },
+    "page-layout": {
+      "question": "Where do the component, its helpers and its documentation sit?",
+      "options": {
+        "page-per-component": {
+          "summary": "One page per component holding the set, its helpers and a specification frame with the states side by side.",
+          "seenIn": ["carbon", "helsinki", "reference-c"]
+        },
+        "library-page": {
+          "summary": "All sets on one Library page so instances resolve across components; documentation lives on separate Components pages, generated from the same source.",
+          "seenIn": []
+        }
+      },
+      "adopted": "library-page",
+      "reason": "The design stamp (check D1) and the nested instances already rely on one Library page. The documentation step adds a generated page per component; revisit if the file outgrows one page."
+    },
+    "description": {
+      "question": "What does a component's description say?",
+      "options": {
+        "one-line": { "summary": "A single sentence.", "seenIn": ["helsinki"] },
+        "summary-and-notes": { "summary": "A summary line and a few usage notes.", "seenIn": ["carbon"] },
+        "sectioned": {
+          "summary": "Sections: what it is, behavior, when to use, what not to do, and notes for generating code.",
+          "seenIn": ["reference-c"]
+        }
+      },
+      "adopted": "sectioned",
+      "reason": "After the API, the description is what the design tool's MCP hands to an agent. It is generated from contract.md, contract.json and the registry, never written in the file."
+    },
+    "zero-values": {
+      "question": "Is a value of zero bound to a variable?",
+      "options": {
+        "literal-zero": { "summary": "Zeros are typed as numbers; the file reports them as unlinked values.", "seenIn": [] },
+        "bound-none-step": { "summary": "Each kind has a semantic zero (space, radius, border width, opacity) and a zero the component draws on purpose (a square inner corner, an unused stroke side, a joined group's gap) is bound to it.", "seenIn": ["figma-docs"] }
+      },
+      "adopted": "bound-none-step",
+      "reason": "Every value the file draws is then a token, scales start at 0, and a designer never sees an unlinked 0 to second-guess."
+    },
+    "text-decoration": {
+      "question": "How is text drawn that one variant underlines (a link on hover)?",
+      "options": {
+        "format-the-layer": { "summary": "The variant's label layer is underlined by hand.", "seenIn": [] },
+        "twin-style-and-layer": { "summary": "Every text role has an underlined twin style; the component draws a second label layer on it, with its own text property, visible only where the variant underlines.", "seenIn": ["figma-docs"] }
+      },
+      "adopted": "twin-style-and-layer",
+      "reason": "Formatting on a layer bound to a TEXT property is shared by every variant of the set, so underlining one variant's label underlines them all."
+    }
+  }
+}

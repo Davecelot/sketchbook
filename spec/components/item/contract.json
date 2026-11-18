@@ -1,0 +1,521 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Item",
+  "tag": "sb-item",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A flexible row for a piece of content with optional media, title, description and actions, usable alone, as a link, or in a list (a family of Web Components).",
+  "dependsOn": [],
+  "props": {
+    "variant": {
+      "type": "variant",
+      "values": [
+        "primary",
+        "tertiary",
+        "muted"
+      ],
+      "default": "primary",
+      "reflect": true,
+      "note": "primary: no surface. tertiary: bordered. muted: tinted surface (muted at half strength)."
+    },
+    "size": {
+      "type": "variant",
+      "values": [
+        "medium",
+        "small"
+      ],
+      "default": "medium",
+      "reflect": true,
+      "note": "medium: 16px padding and gap. small: 12px block padding, 10px gap."
+    },
+    "href": {
+      "type": "text",
+      "default": null,
+      "note": "Renders the whole row as a native link. Without it, or when empty, the row is a plain container. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115)."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "item",
+      "role": "container",
+      "parent": null,
+      "part": "item",
+      "notes": "A div, or an a when href is set; wraps the slotted parts, carries border, padding and the focus ring."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": false,
+      "multiple": true,
+      "notes": "sb-item-media, sb-item-content, sb-item-actions, sb-item-header and sb-item-footer."
+    }
+  },
+  "events": {},
+  "states": {
+    "hover": {
+      "trigger": "pointer over an item that has href",
+      "tokens": [
+        "item.hover-bg"
+      ],
+      "note": "Tinted at half strength."
+    },
+    "focus-visible": {
+      "trigger": "keyboard focus on an item with href",
+      "tokens": [
+        "item.focus-ring.color",
+        "item.focus-ring.width"
+      ],
+      "note": "Border and a solid ring in the ring color."
+    }
+  },
+  "accessibility": {
+    "role": "none for a standalone item; listitem when its parent is sb-item-group; link when href is set (native a)",
+    "native": "a",
+    "accessibleNameSource": "The row's text content, for an item with href (the link's name is everything inside it).",
+    "keyboard": {
+      "Tab": "focuses an item with href",
+      "Enter": "follows the link"
+    },
+    "aria": [
+      "sb-item-group host: role=list; sb-item inside it: role=listitem, both set when the element connects; an item moved in or out of a group gains or loses the listitem role it was given (an author role is never touched)",
+      "sb-item-separator: role=presentation, so a list has only listitem children",
+      "href: the whole row is one native link, so nested interactive controls should not be placed inside it",
+      "data-has-description and data-fixed are presentation-only attributes set by sb-item"
+    ],
+    "announcements": [],
+    "focusRingVisible": ":focus-visible only; border and solid ring in item.focus-ring.color.",
+    "targetSize": "A linked item is at least as tall as its padding plus text (more than 24px).",
+    "contrast": [
+      {
+        "fg": "item.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "item.description.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "item.description.fg",
+        "bg": "item.muted-bg",
+        "kind": "text"
+      },
+      {
+        "fg": "item.fg",
+        "bg": "item.muted-bg",
+        "kind": "text"
+      },
+      {
+        "fg": "item.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "item.media.icon.fg",
+        "bg": "item.media.icon.bg",
+        "kind": "text"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "item.font-family": "{font.family.body}",
+    "item.font-size": "{font.size.body}",
+    "item.line-height": "{font.line-height.control}",
+    "item.fg": "{color.foreground}",
+    "item.radius": "{radius.control}",
+    "item.border-width": "{border-width.default}",
+    "item.border": "{color.border}",
+    "item.muted-bg": "{color.muted}",
+    "item.hover-bg": "{color.accent}",
+    "item.gap": "{space.stack.loose}",
+    "item.padding": "{space.stack.loose}",
+    "item.gap-sm": "{space.stack.cozy}",
+    "item.padding-block-sm": "{space.stack.md}",
+    "item.padding-inline-sm": "{space.stack.loose}",
+    "item.row-gap": "{space.stack.sm}",
+    "item.transition-duration": "{motion.duration.fast}",
+    "item.transition-easing": "{motion.easing.standard}",
+    "item.focus-ring.color": "{color.ring}",
+    "item.focus-ring.width": "{focus.ring.width}",
+    "item.media.gap": "{space.stack.sm}",
+    "item.media.offset": "{space.stack.2xs}",
+    "item.media.icon.size": "{size.media.default}",
+    "item.media.icon.svg-size": "{size.icon.default}",
+    "item.media.icon.radius": "{radius.small}",
+    "item.media.icon.bg": "{color.muted}",
+    "item.media.icon.fg": "{color.foreground}",
+    "item.media.icon.border": "{color.border}",
+    "item.media.image.size": "{size.media.lg}",
+    "item.content.gap": "{space.stack.tight}",
+    "item.title.gap": "{space.stack.sm}",
+    "item.title.font-weight": "{font.weight.label}",
+    "item.description.fg": "{color.muted-foreground}",
+    "item.description.line-height": "{font.line-height.body}",
+    "item.description.link-hover-fg": "{color.primary}",
+    "item.description.link-underline-offset": "{space.text.underline-offset}",
+    "item.actions.gap": "{space.stack.sm}",
+    "item.separator.bg": "{color.border}",
+    "item.separator.height": "{border-width.default}"
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/item/Item.ts",
+        "src/components/item/ItemGroup.ts",
+        "src/components/item/ItemSeparator.ts",
+        "src/components/item/ItemMedia.ts",
+        "src/components/item/ItemContent.ts",
+        "src/components/item/ItemTitle.ts",
+        "src/components/item/ItemDescription.ts",
+        "src/components/item/ItemActions.ts",
+        "src/components/item/ItemHeader.ts",
+        "src/components/item/ItemFooter.ts",
+        "src/components/item/Item.scss",
+        "src/components/item/Item.styles.ts",
+        "src/components/item/Item.stories.ts",
+        "src/components/item/index.ts"
+      ],
+      "parts": [
+        "item"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/item/item.behavior.spec.ts",
+      "coverage": [
+        "all ten elements registered",
+        "default layout, padding, gap, radius, transparent border",
+        "variant and size reflect; small padding and gap",
+        "tertiary border and muted surface in light and dark",
+        "plain row is a div, no link, no role",
+        "href renders a native link named by the row text; Enter follows",
+        "solid focus ring and border for keyboard focus only",
+        "hover tint on links only",
+        "group is a list of listitems in the accessibility tree; separator presentational",
+        "standalone item has no role; roles set before first render",
+        "separator rule",
+        "media frames (icon 32px, image 40px, primary)",
+        "media moves to the top while a description exists",
+        "second content block does not grow",
+        "title weight, description muted and unclamped",
+        "actions, header and footer layout",
+        "description links underlined",
+        "empty href renders no link; moving an item in or out of a group updates its role",
+        "axe clean (all stories)"
+      ],
+      "drift": [
+        {
+          "aspect": "focus ring",
+          "contract": "border and solid 3px ring in the ring color",
+          "realization": "reference uses a ring at half strength, which falls below 3:1"
+        },
+        {
+          "aspect": "description clamp",
+          "contract": "description is shown in full",
+          "realization": "reference clamps it to two lines, hiding content (WCAG 1.4.10)"
+        },
+        {
+          "aspect": "list semantics",
+          "contract": "role=list on the group, role=listitem on a direct child item, role=presentation on the separator",
+          "realization": "reference sets role=list on the group only and uses a separator with role separator"
+        },
+        {
+          "aspect": "separator",
+          "contract": "a div-like host rule drawn from item.separator tokens",
+          "realization": "reference composes its Separator component"
+        },
+        {
+          "aspect": "link rows",
+          "contract": "href renders the wrapper as a native a",
+          "realization": "reference renders any element through asChild"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Item": 18,
+          "ItemGroup": 1
+        }
+      },
+      "coverage": [
+        "Item: 18 variant(s), Variant (Primary, Tertiary, Muted) x Size (Medium, Small) x State (Rest, Hover, Focus); read back ok",
+        "ItemGroup: 1 variant(s); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "item.description.link-hover-fg",
+          "contract": "Hover color of a link in the description.",
+          "realization": "A link inside the text; the sample has none. Text formatting on a property-bound label is shared by every variant in Figma (tool-mapping), so link underlines stay in code."
+        },
+        {
+          "aspect": "item.description.link-underline-offset",
+          "contract": "Underline offset of a link in the description.",
+          "realization": "A link inside the text; the sample has none. Text formatting on a property-bound label is shared by every variant in Figma (tool-mapping), so link underlines stay in code."
+        },
+        {
+          "aspect": "item.media.gap",
+          "contract": "Layout of slotted actions, image media, header and footer rows, and title content.",
+          "realization": "Content the person using it places (a slotted icon, image or control); the library sample shows text only. The set draws icon media, a title and a description."
+        },
+        {
+          "aspect": "item.media.image.size",
+          "contract": "Layout of slotted actions, image media, header and footer rows, and title content.",
+          "realization": "Content the person using it places (a slotted icon, image or control); the library sample shows text only. The set draws icon media, a title and a description."
+        },
+        {
+          "aspect": "item.media.offset",
+          "contract": "Layout of slotted actions, image media, header and footer rows, and title content.",
+          "realization": "Content the person using it places (a slotted icon, image or control); the library sample shows text only. The set draws icon media, a title and a description."
+        },
+        {
+          "aspect": "item.row-gap",
+          "contract": "Layout of slotted actions, image media, header and footer rows, and title content.",
+          "realization": "Content the person using it places (a slotted icon, image or control); the library sample shows text only. The set draws icon media, a title and a description."
+        },
+        {
+          "aspect": "item.title.gap",
+          "contract": "Layout of slotted actions, image media, header and footer rows, and title content.",
+          "realization": "Content the person using it places (a slotted icon, image or control); the library sample shows text only. The set draws icon media, a title and a description."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "How does a row become a link without a render-as-child mechanism?",
+      "recommendation": "An href prop renders the wrapper as a native a.",
+      "status": "answered",
+      "answer": "href renders <a part=\"item\">.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "List semantics: who is the list and who are the items?",
+      "recommendation": "sb-item-group is role=list; a sb-item whose parent is the group becomes role=listitem; the separator is presentational.",
+      "status": "answered",
+      "answer": "As recommended; checked in the accessibility tree.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q3",
+      "question": "Two-line description clamp?",
+      "recommendation": "Drop it: clipped text hides content (WCAG 1.4.10).",
+      "status": "answered",
+      "answer": "Dropped; logged as drift.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q4",
+      "question": "Sibling rule: a second content block does not grow.",
+      "recommendation": "sb-item marks it with data-fixed from slotchange.",
+      "status": "answered",
+      "answer": "data-fixed from slotchange.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "SB-0007",
+    "SB-0011",
+    "SB-0115"
+  ],
+  "variantMatrix": {
+    "dimensions": {
+      "variant": [
+        "primary",
+        "tertiary",
+        "muted"
+      ],
+      "size": [
+        "medium",
+        "small"
+      ]
+    }
+  },
+  "elements": [
+    {
+      "tag": "sb-item-group",
+      "summary": "A vertical stack of items, exposed as a list.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "sb-item and sb-item-separator elements."
+        }
+      },
+      "role": "list",
+      "notes": "The host carries role=list."
+    },
+    {
+      "tag": "sb-item-separator",
+      "summary": "A thin rule between items in a group. Decorative.",
+      "content": {},
+      "role": "presentation",
+      "notes": "Host role=presentation, so the list's only semantic children are its items."
+    },
+    {
+      "tag": "sb-item-media",
+      "summary": "Leading visual: an icon in a bordered tile, an image, or anything else.",
+      "props": {
+        "variant": {
+          "type": "variant",
+          "values": [
+            "primary",
+            "icon",
+            "image"
+          ],
+          "default": "primary",
+          "reflect": true,
+          "note": "primary: no frame. icon: 32px muted tile with a border and a 16px svg. image: 40px rounded crop."
+        }
+      },
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "An svg, an img or an avatar."
+        }
+      }
+    },
+    {
+      "tag": "sb-item-content",
+      "summary": "The text block: title and description.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "sb-item-title and sb-item-description."
+        }
+      },
+      "notes": "Grows to fill the row. A second sb-item-content next to it does not grow (data-fixed set by sb-item)."
+    },
+    {
+      "tag": "sb-item-title",
+      "summary": "The item's main text, in medium weight; can hold a badge next to the text.",
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Title text."
+        }
+      }
+    },
+    {
+      "tag": "sb-item-description",
+      "summary": "Supporting text in muted color. Direct child links are underlined.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "Description text."
+        }
+      }
+    },
+    {
+      "tag": "sb-item-actions",
+      "summary": "Controls at the end of the row.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "sb-button or other controls."
+        }
+      }
+    },
+    {
+      "tag": "sb-item-header",
+      "summary": "A full-width row above the content.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "Content spread across the row."
+        }
+      }
+    },
+    {
+      "tag": "sb-item-footer",
+      "summary": "A full-width row below the content.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "Content spread across the row."
+        }
+      }
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "item",
+      "list item",
+      "row",
+      "media object",
+      "entry",
+      "link row"
+    ],
+    "useCases": [
+      {
+        "when": "A list of entries with an icon, a title, some text and an action",
+        "use": "sb-item-group of sb-item with media, content and actions"
+      },
+      {
+        "when": "The whole row goes somewhere",
+        "use": "sb-item with href"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Buttons or links inside an item that has href",
+        "why": "Nested interactive content inside a link is invalid and confusing",
+        "alternative": "Drop href and put the controls in sb-item-actions"
+      },
+      {
+        "pattern": "A data grid made of items",
+        "why": "Rows and columns need table semantics",
+        "alternative": "Table"
+      }
+    ]
+  },
+  "$extensions": {
+    "design.figma": {
+      "options": [
+        {
+          "name": "Avatar",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "avatar-media"
+          ],
+          "reason": "The code puts any element in the media slot; the activity rows in the stories use an Avatar."
+        },
+        {
+          "name": "Icon",
+          "kind": "boolean",
+          "default": true,
+          "shows": [
+            "media"
+          ],
+          "reason": "The icon media is one choice for the media slot, so the design file can turn it off for the avatar."
+        }
+      ]
+    }
+  }
+}

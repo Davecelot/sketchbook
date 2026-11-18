@@ -1,0 +1,335 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Typography",
+  "tag": "sb-typography",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "Styled text for headings, paragraphs, quotes, lists and inline emphasis, as one element with a kind that picks the native tag.",
+  "dependsOn": [],
+  "props": {
+    "kind": {
+      "type": "variant",
+      "values": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "p",
+        "blockquote",
+        "list",
+        "inline-code",
+        "lead",
+        "large",
+        "small",
+        "muted"
+      ],
+      "default": "p",
+      "reflect": true,
+      "note": "Picks the native element and the text style: h1-h4 headings, p, blockquote, list (ul around slotted li), inline-code (code), lead (p), large (div), small (small), muted (p). Heading level follows the kind; there is no separate level prop."
+    },
+    "content": {
+      "type": "slot",
+      "note": "Default slot: the text. For kind list, slot li elements."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "text",
+      "role": "container",
+      "parent": null,
+      "part": "text",
+      "notes": "The native element chosen by kind (h1-h4, p, blockquote, ul, code, div, small); the default slot is its only child."
+    }
+  ],
+  "variantMatrix": {
+    "dimensions": {
+      "kind": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "p",
+        "blockquote",
+        "list",
+        "inline-code",
+        "lead",
+        "large",
+        "small",
+        "muted"
+      ]
+    }
+  },
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "notes": "Text or inline content. With kind list, li elements (they are projected into the inner ul and keep their list item role)."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "Native role of the chosen element: heading (level 1-4) for h1-h4, paragraph for p, lead and muted, blockquote, list with listitem for list, code for inline-code, generic for large and small",
+    "native": "h1, h2, h3, h4, p, blockquote, ul, code, div, small",
+    "accessibleNameSource": "Content. Text elements are not named by an attribute.",
+    "targetSize": "Not interactive.",
+    "keyboard": {},
+    "aria": [
+      "kind picks real semantics: h1-h4 render native headings, so the document outline is kept",
+      "list: slotted li elements stay list items of the inner ul (flattened tree)",
+      "the host adds no role; nothing is announced beyond the native element"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "typography.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "typography.muted.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "typography.fg",
+        "bg": "typography.code.bg",
+        "kind": "text"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.12",
+      "2.4.6"
+    ]
+  },
+  "tokens": {
+    "typography.font-family": "{font.family.body}",
+    "typography.fg": "{color.foreground}",
+    "typography.muted.fg": "{color.muted-foreground}",
+    "typography.h1.font-size": "{font.size.heading-1}",
+    "typography.h1.line-height": "{font.line-height.heading-1}",
+    "typography.h1.font-weight": "{font.weight.display}",
+    "typography.h2.font-size": "{font.size.heading-2}",
+    "typography.h2.line-height": "{font.line-height.heading-2}",
+    "typography.h2.font-weight": "{font.weight.heading}",
+    "typography.h3.font-size": "{font.size.heading-3}",
+    "typography.h3.line-height": "{font.line-height.heading-3}",
+    "typography.h3.font-weight": "{font.weight.heading}",
+    "typography.h4.font-size": "{font.size.heading-4}",
+    "typography.h4.line-height": "{font.line-height.heading-4}",
+    "typography.h4.font-weight": "{font.weight.heading}",
+    "typography.h2.margin-top": "{space.prose.heading-2}",
+    "typography.h2.padding-bottom": "{space.prose.rule-gap}",
+    "typography.h2.border-width": "{border-width.default}",
+    "typography.h2.border-color": "{color.border}",
+    "typography.h3.margin-top": "{space.prose.heading-3}",
+    "typography.p.font-size": "{font.size.prose}",
+    "typography.p.line-height": "{font.line-height.prose}",
+    "typography.p.margin-top": "{space.prose.flow}",
+    "typography.blockquote.margin-top": "{space.prose.flow}",
+    "typography.blockquote.padding-start": "{space.prose.indent}",
+    "typography.blockquote.border-width": "{border-width.quote}",
+    "typography.blockquote.border-color": "{color.border}",
+    "typography.list.margin-block": "{space.prose.flow}",
+    "typography.list.margin-start": "{space.prose.indent}",
+    "typography.list.item-gap": "{space.prose.list-gap}",
+    "typography.code.font-family": "{font.family.code}",
+    "typography.code.font-size": "{font.size.body}",
+    "typography.code.line-height": "{font.line-height.control}",
+    "typography.code.font-weight": "{font.weight.heading}",
+    "typography.code.bg": "{color.muted}",
+    "typography.code.padding-x": "{space.prose.code-x}",
+    "typography.code.padding-y": "{space.prose.code-y}",
+    "typography.code.radius": "{radius.small}",
+    "typography.lead.font-size": "{font.size.lead}",
+    "typography.lead.line-height": "{font.line-height.lead}",
+    "typography.large.font-size": "{font.size.large}",
+    "typography.large.line-height": "{font.line-height.large}",
+    "typography.large.font-weight": "{font.weight.heading}",
+    "typography.small.font-size": "{font.size.body}",
+    "typography.small.line-height": "{font.line-height.label}",
+    "typography.small.font-weight": "{font.weight.label}",
+    "typography.muted.font-size": "{font.size.body}",
+    "typography.muted.line-height": "{font.line-height.control}",
+    "typography.heading.letter-spacing": "{font.letter-spacing.heading}"
+  },
+  "aiHints": {
+    "category": "atom",
+    "keywords": [
+      "typography",
+      "heading",
+      "h1",
+      "paragraph",
+      "blockquote",
+      "list",
+      "code",
+      "lead",
+      "muted",
+      "prose",
+      "text"
+    ],
+    "useCases": [
+      {
+        "when": "A page or section title",
+        "use": "kind=h1 once per page, then h2, h3, h4 in order"
+      },
+      {
+        "when": "Body copy",
+        "use": "kind=p"
+      },
+      {
+        "when": "A short intro under a title",
+        "use": "kind=lead"
+      },
+      {
+        "when": "Secondary text such as hints or captions",
+        "use": "kind=muted"
+      },
+      {
+        "when": "A command, key or identifier inside a sentence",
+        "use": "kind=inline-code nested in a p"
+      },
+      {
+        "when": "A quotation",
+        "use": "kind=blockquote"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Choosing h3 because it looks smaller than h2",
+        "why": "Skipped heading levels break the outline for screen-reader users",
+        "alternative": "Keep levels in order and restyle with tokens"
+      },
+      {
+        "pattern": "Several h1 in one view",
+        "why": "The page has one main title",
+        "alternative": "One h1, then h2 sections"
+      },
+      {
+        "pattern": "Using lead, large or muted for headings",
+        "why": "They are not headings for assistive technology",
+        "alternative": "Use h2-h4"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/typography/Typography.ts",
+        "src/components/typography/Typography.scss",
+        "src/components/typography/Typography.styles.ts",
+        "src/components/typography/Typography.stories.ts",
+        "src/components/typography/index.ts"
+      ],
+      "parts": [
+        "text"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/typography/typography.behavior.spec.ts",
+      "coverage": [
+        "native element per kind; h1-h4 are headings with levels",
+        "default p, kind reflects and swaps the element",
+        "size, line height and weight from component tokens per kind",
+        "inline-code and small inline, others block; inline-code in a sentence",
+        "inline-code mono on muted background; lead and muted foreground",
+        "top margin only when not the first child",
+        "h2 rule, blockquote bar and italic",
+        "slotted li stay list items with disc markers",
+        "not focusable; axe clean (kinds, article)"
+      ],
+      "drift": [
+        {
+          "aspect": "inline-code",
+          "contract": "radius.small (6px), padding 4px / 6px",
+          "realization": "shadcn rounded (4px), padding 3.2px / 4.8px"
+        },
+        {
+          "aspect": "docs version",
+          "contract": "classic utility-class examples",
+          "realization": "current shadcn docs describe the new Typeset system, not reproduced"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Typography": 12
+        }
+      },
+      "coverage": [
+        "Typography: 12 variant(s), Kind (H1, H2, H3, H4, P, Blockquote, List, Inline code, Lead, Large, Small, Muted); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "typography.blockquote.margin-top",
+          "contract": "Space before a block when it follows another one in prose.",
+          "realization": "Each variant is one block: flow spacing between blocks is not drawn."
+        },
+        {
+          "aspect": "typography.h2.margin-top",
+          "contract": "Space before a block when it follows another one in prose.",
+          "realization": "Each variant is one block: flow spacing between blocks is not drawn."
+        },
+        {
+          "aspect": "typography.h3.margin-top",
+          "contract": "Space before a block when it follows another one in prose.",
+          "realization": "Each variant is one block: flow spacing between blocks is not drawn."
+        },
+        {
+          "aspect": "typography.list.margin-block",
+          "contract": "Space before a block when it follows another one in prose.",
+          "realization": "Each variant is one block: flow spacing between blocks is not drawn."
+        },
+        {
+          "aspect": "typography.p.margin-top",
+          "contract": "Space before a block when it follows another one in prose.",
+          "realization": "Each variant is one block: flow spacing between blocks is not drawn."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "One element with a variant prop, or a family of elements (sb-typography-h1 ...)?",
+      "recommendation": "One element with variant: one stylesheet and token set, real native tags in the shadow root, same API shape as Button and Badge.",
+      "status": "answered",
+      "answer": "One element, sb-typography, with variant (12 values).",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Heading level separate from look (a level prop)?",
+      "recommendation": "No: the variant picks the tag. A level prop is easy to add later if a real need appears (YAGNI).",
+      "status": "answered",
+      "answer": "No level prop; h1-h4 render h1-h4.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q3",
+      "question": "Which reference scale do the variants follow, given the visual reference's docs now describe a newer prose system?",
+      "recommendation": "The classic heading and prose scale, which matches the variants the owner listed.",
+      "status": "answered",
+      "answer": "Follow the classic scale; the newer Typeset system is not reproduced.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-005",
+    "D-011",
+    "SB-0007",
+    "SB-0011"
+  ]
+}

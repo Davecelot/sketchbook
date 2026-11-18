@@ -1,0 +1,299 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Empty",
+  "tag": "sb-empty",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A placeholder for a view with nothing to show yet: optional media, title, description and actions (a family of Web Components).",
+  "dependsOn": [],
+  "props": {},
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "notes": "The host is a centered column; its parts are child elements. A border is added by the consumer (for example a dashed border)."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": false,
+      "multiple": true,
+      "notes": "sb-empty-header and sb-empty-content."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "none (generic container)",
+    "accessibleNameSource": "None. The title is a visual heading; use a real heading element inside sb-empty-title when it belongs in the document outline.",
+    "keyboard": {},
+    "aria": [
+      "no roles or ARIA on any element",
+      "decorative media is marked aria-hidden by the author",
+      "description links are underlined, so they do not rely on color (WCAG 1.4.1)"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "empty.description.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "empty.media.icon.fg",
+        "bg": "empty.media.icon.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "empty.description.link-hover-fg",
+        "bg": "color.background",
+        "kind": "text"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.10"
+    ]
+  },
+  "tokens": {
+    "empty.font-family": "{font.family.body}",
+    "empty.padding": "{space.inset.surface}",
+    "empty.padding-lg": "{space.inset.spacious}",
+    "empty.gap": "{space.inset.surface}",
+    "empty.radius": "{radius.surface}",
+    "empty.header.gap": "{space.stack.sm}",
+    "empty.media.margin-bottom": "{space.stack.sm}",
+    "empty.media.icon.size": "{size.media.lg}",
+    "empty.media.icon.svg-size": "{size.icon.xl}",
+    "empty.media.icon.radius": "{radius.surface}",
+    "empty.media.icon.bg": "{color.muted}",
+    "empty.media.icon.fg": "{color.foreground}",
+    "empty.title.fg": "{color.foreground}",
+    "empty.title.font-size": "{font.size.heading-lg}",
+    "empty.title.font-weight": "{font.weight.label}",
+    "empty.title.line-height": "{font.line-height.heading-lg}",
+    "empty.description.fg": "{color.muted-foreground}",
+    "empty.description.font-size": "{font.size.body}",
+    "empty.description.line-height": "{font.line-height.body}",
+    "empty.description.link-hover-fg": "{color.primary}",
+    "empty.description.link-underline-offset": "{space.text.underline-offset}",
+    "empty.content.gap": "{space.stack.loose}",
+    "empty.content.fg": "{color.foreground}",
+    "empty.content.font-size": "{font.size.body}"
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/empty/Empty.ts",
+        "src/components/empty/EmptyHeader.ts",
+        "src/components/empty/EmptyMedia.ts",
+        "src/components/empty/EmptyTitle.ts",
+        "src/components/empty/EmptyDescription.ts",
+        "src/components/empty/EmptyContent.ts",
+        "src/components/empty/Empty.scss",
+        "src/components/empty/Empty.styles.ts",
+        "src/components/empty/Empty.stories.ts",
+        "src/components/empty/index.ts"
+      ],
+      "parts": [],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/empty/empty.behavior.spec.ts",
+      "coverage": [
+        "all six elements registered",
+        "centered column, gap, padding 24px / 48px from 768px, radius",
+        "balanced text",
+        "header and content max 48ch, centered, gaps",
+        "icon media: 40px muted rounded square, 24px svg",
+        "primary media has no box; variant reflects and updates",
+        "title and description typography and colors in light and dark",
+        "description links underlined, primary on hover",
+        "no roles or ARIA",
+        "axe clean (all stories)"
+      ],
+      "drift": [
+        {
+          "aspect": "description line-height",
+          "contract": "font.line-height.body (1.5)",
+          "realization": "shadcn uses text-sm/relaxed (1.625)"
+        },
+        {
+          "aspect": "title tracking",
+          "contract": "normal letter-spacing",
+          "realization": "shadcn uses tracking-tight; no letter-spacing token exists"
+        },
+        {
+          "aspect": "max width",
+          "contract": "48ch, a measure in characters",
+          "realization": "reference uses max-w-sm (24rem); the size scale has no measure token, so the measure is set in characters"
+        },
+        {
+          "aspect": "border",
+          "contract": "none built in",
+          "realization": "shadcn docs add border-dashed plus a border class on the root"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Empty": 1
+        }
+      },
+      "coverage": [
+        "Empty: 1 variant(s); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "empty.description.link-hover-fg",
+          "contract": "Hover color of a link in the description.",
+          "realization": "A link inside the text; the sample has none. Text formatting on a property-bound label is shared by every variant in Figma (tool-mapping), so link underlines stay in code."
+        },
+        {
+          "aspect": "empty.description.link-underline-offset",
+          "contract": "Underline offset of a link in the description.",
+          "realization": "A link inside the text; the sample has none. Text formatting on a property-bound label is shared by every variant in Figma (tool-mapping), so link underlines stay in code."
+        },
+        {
+          "aspect": "empty.padding-lg",
+          "contract": "Padding at 48em and wider.",
+          "realization": "A wider-viewport value (media query); the design file draws the narrow value, viewports are not an axis."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Border on the root (the docs use border-dashed with a border class)?",
+      "recommendation": "No built-in border: the consumer styles the host (border: 1px dashed ...). Keeps the root a pure layout container.",
+      "status": "answered",
+      "answer": "No built-in border.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Responsive padding (md:p-12) without Tailwind breakpoints?",
+      "recommendation": "A min-width media query at 48em switches padding to empty.padding-lg.",
+      "status": "answered",
+      "answer": "Media query at 48em (768px).",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "SB-0007",
+    "SB-0011"
+  ],
+  "elements": [
+    {
+      "tag": "sb-empty-header",
+      "summary": "Centers the media, title and description in a column no wider than 48 characters.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "sb-empty-media, sb-empty-title and sb-empty-description."
+        }
+      }
+    },
+    {
+      "tag": "sb-empty-media",
+      "summary": "The illustration or icon above the title. The icon variant puts it in a 40px muted rounded square.",
+      "props": {
+        "variant": {
+          "type": "variant",
+          "values": [
+            "primary",
+            "icon"
+          ],
+          "default": "primary",
+          "reflect": true,
+          "note": "primary: no box, the media is shown as is. icon: 40px muted square, 24px svg."
+        }
+      },
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "An svg, image or avatar. Decorative media should be aria-hidden."
+        }
+      }
+    },
+    {
+      "tag": "sb-empty-title",
+      "summary": "What is empty, in 18px medium weight.",
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "notes": "Short title."
+        }
+      }
+    },
+    {
+      "tag": "sb-empty-description",
+      "summary": "One or two sentences saying why and what to do next. Direct child links are underlined.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "Text, optionally with a link."
+        }
+      }
+    },
+    {
+      "tag": "sb-empty-content",
+      "summary": "The actions below the header, as a centered column (buttons, links, a small form).",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "sb-button, links or inputs."
+        }
+      }
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "empty",
+      "empty state",
+      "no results",
+      "placeholder",
+      "zero state",
+      "blank slate"
+    ],
+    "useCases": [
+      {
+        "when": "A list, table or search has no content yet",
+        "use": "sb-empty with an icon media, a title, a description and one primary action"
+      },
+      {
+        "when": "No search results",
+        "use": "sb-empty-title naming the query, a description with a link to clear filters"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Empty state with no way forward",
+        "why": "People are left at a dead end",
+        "alternative": "Add a sb-empty-content action or a link in the description"
+      },
+      {
+        "pattern": "Using Empty for an error",
+        "why": "An error needs an announced, assertive message",
+        "alternative": "Alert with feedback=danger"
+      }
+    ]
+  }
+}

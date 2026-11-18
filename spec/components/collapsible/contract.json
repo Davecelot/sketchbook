@@ -1,0 +1,308 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Collapsible",
+  "tag": "sb-collapsible",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A disclosure that shows or hides one panel of content from a trigger. Three custom elements share state through context.",
+  "dependsOn": [],
+  "props": {
+    "expanded": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Whether the panel is shown. The trigger flips it; code can set it too."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Disables the trigger. The current state is kept."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "notes": "sb-collapsible: light-DOM wrapper that owns the expanded state and shares it with its parts through context. It has no shadow content of its own."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "component": "sb-collapsible-trigger, sb-collapsible-content",
+      "notes": "One trigger and one content, in that order. Other markup (a heading, an always-visible item) may sit around them."
+    }
+  },
+  "events": {
+    "sb-toggle": {
+      "bubbles": true,
+      "composed": true,
+      "cancelable": false,
+      "native": false,
+      "detail": null,
+      "note": "Fires on the sb-collapsible host after expanded changes, from the trigger or from code (like <details> toggle, but it bubbles; shaped like Dialog's sb-toggle). Read host.expanded for the new state."
+    }
+  },
+  "states": {
+    "open": {
+      "trigger": "expanded attribute",
+      "tokens": [
+        "collapsible.transition-duration",
+        "collapsible.transition-easing"
+      ],
+      "note": "Content height animates from 0 to its natural height."
+    },
+    "focus-visible": {
+      "trigger": "keyboard focus on the trigger",
+      "tokens": [
+        "collapsible.focus-ring.color",
+        "collapsible.focus-ring.width"
+      ]
+    },
+    "disabled": {
+      "trigger": "disabled attribute",
+      "tokens": [
+        "collapsible.disabled-opacity"
+      ]
+    }
+  },
+  "accessibility": {
+    "role": "button (the trigger); the content has no role",
+    "native": "button",
+    "accessibleNameSource": "Trigger text. Host aria-label on sb-collapsible-trigger is forwarded to the inner button (ID references do not cross shadow roots, SB-0009).",
+    "targetSize": "The trigger is at least 24x24px (WCAG 2.5.8).",
+    "focusRingVisible": ":focus-visible only; 3px solid ring in collapsible.focus-ring.color.",
+    "keyboard": {
+      "Enter": "toggle the content",
+      "Space": "toggle the content",
+      "Tab": "move focus to the trigger and past it; closed content is out of the tab order"
+    },
+    "aria": [
+      "trigger button: aria-expanded mirrors expanded",
+      "trigger button: aria-controls points to the sb-collapsible-content host through the ariaControlsElements property, which resolves from a shadow root to an element in the light DOM above it (Chromium exposes it in the accessibility tree only when the target has an accessibility node, and the plain content host has none); with no support for the property, aria-controls is omitted and aria-expanded still carries the state",
+      "closed content is visibility:hidden after the animation, so it is neither focusable nor read",
+      "prefers-reduced-motion removes the height animation",
+      "aria-controls is re-resolved when content is added or removed after the trigger"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "collapsible.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.4.11",
+      "2.1.1",
+      "2.3.3",
+      "2.4.7",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "collapsible.transition-duration": "{motion.duration.normal}",
+    "collapsible.transition-easing": "{motion.easing.standard}",
+    "collapsible.focus-ring.color": "{color.ring}",
+    "collapsible.focus-ring.width": "{focus.ring.width}",
+    "collapsible.radius": "{radius.control}",
+    "collapsible.fg": "{color.foreground}",
+    "collapsible.trigger-min-size": "{size.control.xs}",
+    "collapsible.disabled-opacity": "{opacity.disabled}"
+  },
+  "elements": [
+    {
+      "tag": "sb-collapsible-trigger",
+      "summary": "The control that toggles its collapsible. Renders a native button around its slotted content.",
+      "role": "button",
+      "props": {},
+      "anatomy": [
+        {
+          "name": "trigger",
+          "role": "control",
+          "parent": null,
+          "part": "trigger",
+          "notes": "Native <button> in the shadow root."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Text and decorative icons only; the trigger is already a button, so do not nest another control."
+        }
+      },
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "Pointer, Enter or Space; toggles the collapsible."
+        }
+      },
+      "notes": "Must be a descendant of sb-collapsible."
+    },
+    {
+      "tag": "sb-collapsible-content",
+      "summary": "The panel that is shown or hidden. Its height animates.",
+      "props": {},
+      "anatomy": [
+        {
+          "name": "content",
+          "role": "container",
+          "parent": null,
+          "part": "content",
+          "notes": "Grid wrapper whose row animates between 0fr and 1fr."
+        },
+        {
+          "name": "inner",
+          "role": "container",
+          "parent": "content",
+          "part": "inner",
+          "notes": "Clips the content while it animates."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Any content."
+        }
+      },
+      "events": {},
+      "notes": "Must be a descendant of sb-collapsible."
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "collapsible",
+      "disclosure",
+      "expand",
+      "collapse",
+      "show more"
+    ],
+    "useCases": [
+      {
+        "when": "One section of optional detail that a person can reveal",
+        "use": "sb-collapsible with a trigger and content"
+      },
+      {
+        "when": "Several related sections where one open at a time helps",
+        "use": "Accordion"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "A button or link inside sb-collapsible-trigger",
+        "why": "Nested interactive controls break keyboard and screen reader use",
+        "alternative": "Put only text and icons in the trigger"
+      },
+      {
+        "pattern": "Hiding content that people must read to finish a task",
+        "why": "Required information behind a click is easy to miss",
+        "alternative": "Show it, or use Accordion only for optional detail"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/collapsible/Collapsible.ts",
+        "src/components/collapsible/CollapsibleTrigger.ts",
+        "src/components/collapsible/CollapsibleContent.ts",
+        "src/components/collapsible/context.ts",
+        "src/components/collapsible/Collapsible.scss",
+        "src/components/collapsible/Collapsible.styles.ts",
+        "src/components/collapsible/Collapsible.stories.ts",
+        "src/components/collapsible/index.ts"
+      ],
+      "parts": [
+        "trigger",
+        "content",
+        "inner"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/collapsible/collapsible.behavior.spec.ts",
+      "coverage": [
+        "native button trigger named by forwarded aria-label",
+        "aria-expanded follows expanded; expanded reflects",
+        "content hidden until opened",
+        "Enter/Space toggle",
+        "sb-toggle event bubbles, composed, also for programmatic changes",
+        "disabled: native disabled, no toggle, dimmed",
+        "ariaControlsElements resolves to the content host",
+        "closed content out of the tab order",
+        "focus ring keyboard-only in token color",
+        "height transition from motion token; none under reduced motion",
+        "content added after the trigger is wired (aria-controls)",
+        "axe clean (closed, open, text trigger)"
+      ],
+      "drift": [
+        {
+          "aspect": "focus ring",
+          "contract": "solid 3px ring",
+          "realization": "the visual reference leaves the trigger unstyled; the ring is added so the trigger meets WCAG 2.4.7 and 1.4.11"
+        },
+        {
+          "aspect": "aria-controls",
+          "contract": "trigger controls the content",
+          "realization": "set through the ariaControlsElements property; Chromium lists it in the accessibility tree only when the target has an accessibility node"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Collapsible": 6
+        }
+      },
+      "coverage": [
+        "Collapsible: 6 variant(s), State (Rest, Focus) x Open (False, True) x Disabled (False, True); read back ok"
+      ],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "aria-controls across shadow roots: how?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "Set ariaControlsElements on the inner button (inside to outside references resolve); document that without browser support only aria-expanded remains."
+    },
+    {
+      "id": "Q2",
+      "question": "Which events does the root fire?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "toggle (bubbles, composed) after every change of open, like <details>."
+    },
+    {
+      "id": "Q3",
+      "question": "Is the content a region landmark?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "No: the WAI-ARIA disclosure pattern needs no role, and many collapsibles on a page would add landmark noise."
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-011",
+    "SB-0007",
+    "SB-0009"
+  ]
+}

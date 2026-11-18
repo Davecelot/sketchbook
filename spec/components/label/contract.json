@@ -1,0 +1,219 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Label",
+  "tag": "sb-label",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A stand-alone text label for a control: it forwards clicks to the control and, where the platform allows, names it.",
+  "dependsOn": [],
+  "props": {
+    "htmlFor": {
+      "type": "text",
+      "attribute": "for",
+      "default": "",
+      "note": "The id of the control to label, looked up in the same document or shadow tree as the label. Without it, the first control inside the label is used."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Dims the label and stops it forwarding clicks. Set it when the labelled control is disabled; the label does not read the control's state."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "label",
+      "role": "text",
+      "parent": null,
+      "part": "label",
+      "notes": "Wrapper around the default slot; icons or other inline content sit beside the text."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "notes": "The label text, optionally with an icon, or a control to wrap. Interactive content such as a link keeps its own behavior."
+    }
+  },
+  "events": {},
+  "states": {
+    "disabled": {
+      "trigger": "disabled attribute",
+      "tokens": [
+        "label.disabled-opacity"
+      ],
+      "note": "Dims the label and stops it forwarding clicks."
+    }
+  },
+  "accessibility": {
+    "role": "none on the host: the name is delivered to the control, not announced as a role",
+    "accessibleNameSource": "The label's text content names the control through aria-labelledby, set on the control (see association rules).",
+    "targetSize": "Click area is the label box; the control keeps its own target size.",
+    "keyboard": {},
+    "aria": [
+      "association: for=<id> (or a wrapped control) finds the control in the label's own tree scope; the click is forwarded to it (focus, then click for non-text controls)",
+      "naming: the label gets an id if it has none and the control gets aria-labelledby with that id, appended to any value the author set and removed when the label goes away, changes target or the control is replaced",
+      "shadow DOM: ID references do not cross shadow roots (SB-0009), so naming reaches a control only if its host is the element carrying the role or the native control in the same tree (native input, or a host with its own role); a sb-* control that renders its input inside a shadow root is named by its own label prop, and sb-label then only forwards clicks and adds the visual label",
+      "ElementInternals.labels lists native label elements only: sb-label is not one, so a form-associated control's labels collection does not include it",
+      "not focusable itself; clicks on links or buttons inside the label are not forwarded"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "label.fg",
+        "bg": "color.background",
+        "kind": "text"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "2.5.3",
+      "3.3.2",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "label.font-family": "{font.family.body}",
+    "label.font-size": "{font.size.control}",
+    "label.font-weight": "{font.weight.label}",
+    "label.line-height": "{font.line-height.label}",
+    "label.fg": "{color.foreground}",
+    "label.gap": "{space.control.gap.default}",
+    "label.disabled-opacity": "{opacity.disabled}"
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/label/Label.ts",
+        "src/components/label/Label.scss",
+        "src/components/label/Label.styles.ts",
+        "src/components/label/Label.stories.ts",
+        "src/components/label/index.ts"
+      ],
+      "parts": [
+        "label"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/label/label.behavior.spec.ts",
+      "coverage": [
+        "look from tokens; icon beside text",
+        "for + native checkbox toggles and focuses; for + text input focuses; wrapped control activated",
+        "for + sb-input (shadow input) focuses the inner input",
+        "native input named through aria-labelledby; existing value kept; cleanup on retarget and removal; late control",
+        "role-bearing custom host named and activated",
+        "disabled dims and forwards nothing; disabled control and inner links left alone",
+        "not focusable; axe clean"
+      ],
+      "drift": [
+        {
+          "aspect": "naming mechanism",
+          "contract": "aria-labelledby set on a same-tree control",
+          "realization": "the visual reference renders a native label element; sb-label cannot be one, so ElementInternals.labels does not list it"
+        },
+        {
+          "aspect": "shadow-wrapped controls",
+          "contract": "named by their own label prop; sb-label forwards clicks only",
+          "realization": "IDREFs do not cross shadow roots (SB-0009)"
+        },
+        {
+          "aspect": "disabled styling",
+          "contract": "disabled prop",
+          "realization": "the visual reference dims through peer and group disabled selectors"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Label": 2
+        }
+      },
+      "coverage": [
+        "Label: 2 variant(s), Disabled (False, True); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "label.gap",
+          "contract": "Gap between the label text and a slotted control or icon.",
+          "realization": "Content the person using it places (a slotted icon, image or control); the library sample shows text only."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "How does sb-label associate with a control, given IDREFs do not cross shadow roots?",
+      "recommendation": "Behavior-based: resolve the target in the label's own tree scope (for id, or the first control inside), forward clicks, and set aria-labelledby on the target so native controls and role-bearing hosts get a real name. Shadow-wrapped sb-* controls keep their own label prop.",
+      "status": "answered",
+      "answer": "As described in accessibility.aria: for or nesting, click forwarding, aria-labelledby on same-tree targets; sb-* controls with an inner shadow input are named by their own label.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Should the label mirror the control's disabled state?",
+      "recommendation": "No: reading another element's state needs observers and the author knows it; expose a disabled prop instead.",
+      "status": "answered",
+      "answer": "A disabled prop; no mirroring.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-005",
+    "D-011",
+    "SB-0007",
+    "SB-0011"
+  ],
+  "aiHints": {
+    "category": "atom",
+    "keywords": [
+      "label",
+      "form",
+      "field name",
+      "caption",
+      "for"
+    ],
+    "useCases": [
+      {
+        "when": "A native input, select or textarea with its own visible name",
+        "use": "sb-label for=<id> next to it"
+      },
+      {
+        "when": "A custom control whose host carries the role (a switch, a checkbox)",
+        "use": "sb-label for=<id>; the control is named and clickable through the label"
+      },
+      {
+        "when": "Text and control that belong together",
+        "use": "wrap the control in sb-label"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "sb-label next to a sb-input",
+        "why": "sb-input already renders its own label",
+        "alternative": "Use sb-input's label prop; use sb-label only for controls without one"
+      },
+      {
+        "pattern": "A for id that lives inside another shadow root",
+        "why": "IDs only resolve in the label's own tree",
+        "alternative": "Put label and control in the same tree, or wrap the control"
+      },
+      {
+        "pattern": "Placeholder text instead of a label",
+        "why": "It disappears and is not a name",
+        "alternative": "Always give the control a label"
+      }
+    ]
+  }
+}

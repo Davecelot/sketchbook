@@ -1,0 +1,99 @@
+{
+  "$description": "shadcn/ui theme variables, light mode. Generated once as defaults; owned by the team from then on. Deviations from shadcn defaults are marked in $description (accessibility, D-001).",
+  "color": {
+    "$type": "color",
+    "background": {
+      "$value": "{color.white}"
+    },
+    "foreground": {
+      "$value": "{color.neutral.950}"
+    },
+    "card": {
+      "$value": "{color.white}"
+    },
+    "card-foreground": {
+      "$value": "{color.neutral.950}"
+    },
+    "popover": {
+      "$value": "{color.white}"
+    },
+    "popover-foreground": {
+      "$value": "{color.neutral.950}"
+    },
+    "primary": {
+      "$value": "{color.brand.600}"
+    },
+    "primary-foreground": {
+      "$value": "{color.white}"
+    },
+    "secondary": {
+      "$value": "{color.neutral.100}"
+    },
+    "secondary-foreground": {
+      "$value": "{color.neutral.900}"
+    },
+    "muted": {
+      "$value": "{color.neutral.50}",
+      "$description": "Deviation from shadcn (neutral-100): muted-foreground needs 4.5:1 on muted (WCAG 1.4.3)."
+    },
+    "muted-foreground": {
+      "$value": "{color.neutral.500}"
+    },
+    "accent": {
+      "$value": "{color.neutral.100}"
+    },
+    "accent-foreground": {
+      "$value": "{color.neutral.900}"
+    },
+    "destructive": {
+      "$value": "{color.danger.500}"
+    },
+    "destructive-foreground": {
+      "$value": "{color.white}"
+    },
+    "success": {
+      "$value": "{color.green.500}"
+    },
+    "success-foreground": {
+      "$value": "{color.neutral.950}"
+    },
+    "warning": {
+      "$value": "{color.amber.400}"
+    },
+    "warning-foreground": {
+      "$value": "{color.neutral.950}"
+    },
+    "info": {
+      "$value": "{color.blue.500}"
+    },
+    "info-foreground": {
+      "$value": "{color.white}"
+    },
+    "border": {
+      "$value": "{color.neutral.200}"
+    },
+    "input": {
+      "$value": "{color.neutral.500}",
+      "$description": "Deviation from shadcn (neutral-200 / white 15%): form-field borders need 3:1 against the background (WCAG 1.4.11)."
+    },
+    "input-background": {
+      "$value": "{color.white}"
+    },
+    "ring": {
+      "$value": "{color.neutral.500}",
+      "$description": "Deviation from shadcn (neutral-400 at 50%): the focus indicator needs 3:1 (WCAG 1.4.11, 2.4.13)."
+    },
+    "overlay": {
+      "$value": "#00000080"
+    },
+    "sidebar": {
+      "$value": "{color.neutral.50}"
+    },
+    "sidebar-foreground": {
+      "$value": "{color.neutral.950}"
+    },
+    "sidebar-border": {
+      "$value": "{color.neutral.200}"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$description": "Generated from brand.config.json (grid). Edit brand.config.json, or edit here to record an override.",
+  "grid": {
+    "columns": {
+      "$type": "number",
+      "$value": 12
+    },
+    "gutter": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "margin": {
+      "$type": "dimension",
+      "$value": "24px"
+    }
+  },
+  "breakpoint": {
+    "$type": "dimension",
+    "sm": {
+      "$value": "640px"
+    },
+    "md": {
+      "$value": "768px"
+    },
+    "lg": {
+      "$value": "1024px"
+    },
+    "xl": {
+      "$value": "1280px"
+    },
+    "2xl": {
+      "$value": "1536px"
+    }
+  }
+}

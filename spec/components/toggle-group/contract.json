@@ -1,0 +1,565 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "ToggleGroup",
+  "tag": "sb-toggle-group",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "Related on/off controls in one row: pick exactly one, or turn several on, like text alignment or formatting (Web Components).",
+  "dependsOn": [
+    "Toggle"
+  ],
+  "props": {
+    "selection": {
+      "type": "variant",
+      "values": [
+        "single",
+        "multiple"
+      ],
+      "default": "single",
+      "reflect": true,
+      "note": "single: at most one item is pressed (pressing it again clears it). multiple: any number."
+    },
+    "variant": {
+      "type": "variant",
+      "values": [
+        "ghost",
+        "tertiary"
+      ],
+      "default": "ghost",
+      "reflect": true,
+      "note": "Applied to every item."
+    },
+    "size": {
+      "type": "variant",
+      "values": [
+        "medium",
+        "small",
+        "large"
+      ],
+      "default": "medium",
+      "reflect": true,
+      "note": "Applied to every item."
+    },
+    "spacing": {
+      "type": "number",
+      "default": 0,
+      "reflect": true,
+      "note": "Gap between items in 4px units. 0 joins the items into one bar with shared borders."
+    },
+    "orientation": {
+      "type": "variant",
+      "values": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal",
+      "reflect": true,
+      "note": "Layout and arrow-key axis."
+    },
+    "value": {
+      "type": "text",
+      "default": null,
+      "attribute": "value",
+      "note": "Values of the pressed items. Property: string[]. Attribute: space-separated values."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Disables every item."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "group",
+      "role": "container",
+      "parent": null,
+      "part": "group",
+      "notes": "div role=group in the shadow root; named by the host's aria-label."
+    }
+  ],
+  "variantMatrix": {
+    "dimensions": {
+      "variant": [
+        "ghost",
+        "tertiary"
+      ],
+      "size": [
+        "medium",
+        "small",
+        "large"
+      ]
+    }
+  },
+  "content": {
+    "default": {
+      "required": true,
+      "component": "sb-toggle-group-item",
+      "multiple": true,
+      "notes": "The items. Their order is the roving-focus order."
+    }
+  },
+  "events": {
+    "change": {
+      "bubbles": true,
+      "composed": true,
+      "detail": "{ value: string[] }",
+      "note": "Fired after a person changes the pressed items. Not fired when value is set from code."
+    }
+  },
+  "states": {
+    "disabled": {
+      "trigger": "disabled attribute or <fieldset disabled>",
+      "tokens": [
+        "toggle-group.disabled-opacity"
+      ]
+    }
+  },
+  "accessibility": {
+    "role": "group",
+    "native": "button",
+    "accessibleNameSource": "Host aria-label is forwarded to the group; a group of toggles needs a name when its purpose is not clear from the surrounding text. Each item is named by its text or its own aria-label.",
+    "formAssociation": {
+      "value": false,
+      "note": "Not a form field. formAssociated only to follow <fieldset disabled>."
+    },
+    "targetSize": "At least 32x32px in every size (WCAG 2.5.8).",
+    "focusRingVisible": ":focus-visible on the item; 3px solid ring in toggle-group.focus-ring.color; the focused item paints above its neighbours.",
+    "keyboard": {
+      "Tab": "enters the group on one item (the first pressed item, else the first enabled one) and leaves it",
+      "ArrowRight": "next item (ArrowLeft in RTL), wraps",
+      "ArrowLeft": "previous item (ArrowRight in RTL), wraps",
+      "ArrowDown": "next item (vertical orientation)",
+      "ArrowUp": "previous item (vertical orientation)",
+      "Home": "first enabled item",
+      "End": "last enabled item",
+      "Enter": "toggle the focused item",
+      "Space": "toggle the focused item"
+    },
+    "aria": [
+      "group: role=\"group\" with the forwarded aria-label",
+      "items are native buttons with aria-pressed for both selections (APG toolbar and toggle button patterns). Single mode keeps aria-pressed rather than radio semantics because a pressed item can be pressed again to clear it, which a radio cannot do.",
+      "roving tab stop: one item has tabindex 0, the others -1; arrows move focus only, they do not press",
+      "disabled items are skipped by the arrows and are not focusable"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "toggle-group.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "toggle-group.on.fg",
+        "bg": "toggle-group.on.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "toggle-group.hover.fg",
+        "bg": "toggle-group.hover.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "toggle-group.outline.fg-hover",
+        "bg": "toggle-group.outline.bg-hover",
+        "kind": "text"
+      },
+      {
+        "fg": "toggle-group.outline.border",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "toggle-group.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "toggle-group.on.border",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.3",
+      "2.4.7",
+      "2.5.8",
+      "4.1.2"
+    ],
+    "missingNameWarning": "Console warning, once per element (in every build), when the host has no aria-label. A name from an outer legend or label is not detected."
+  },
+  "tokens": {
+    "toggle-group.font-family": "{font.family.body}",
+    "toggle-group.font-size": "{font.size.control}",
+    "toggle-group.font-weight": "{font.weight.control}",
+    "toggle-group.line-height": "{font.line-height.control}",
+    "toggle-group.height.sm": "{size.control.sm}",
+    "toggle-group.height.default": "{size.control.default}",
+    "toggle-group.height.lg": "{size.control.lg}",
+    "toggle-group.padding-x.sm": "{space.control.padding-x-icon.xs}",
+    "toggle-group.padding-x.default": "{space.control.padding-x.xs}",
+    "toggle-group.padding-x.lg": "{space.control.padding-x-icon.sm}",
+    "toggle-group.gap": "{space.control.gap.default}",
+    "toggle-group.spacing-unit": "{space.unit}",
+    "toggle-group.icon-size": "{size.icon.default}",
+    "toggle-group.radius": "{radius.control}",
+    "toggle-group.border-width": "{border-width.default}",
+    "toggle-group.fg": "{color.foreground}",
+    "toggle-group.hover.bg": "{color.muted}",
+    "toggle-group.hover.fg": "{color.muted-foreground}",
+    "toggle-group.on.bg": "{color.accent}",
+    "toggle-group.on.fg": "{color.accent-foreground}",
+    "toggle-group.outline.border": "{color.input}",
+    "toggle-group.outline.shadow": "{elevation.xs}",
+    "toggle-group.outline.bg-hover": "{color.accent}",
+    "toggle-group.outline.fg-hover": "{color.accent-foreground}",
+    "toggle-group.focus-ring.color": "{color.ring}",
+    "toggle-group.focus-ring.width": "{focus.ring.width}",
+    "toggle-group.disabled-opacity": "{opacity.disabled}",
+    "toggle-group.transition-duration": "{motion.duration.fast}",
+    "toggle-group.transition-easing": "{motion.easing.standard}",
+    "toggle-group.on.border": "{color.foreground}"
+  },
+  "elements": [
+    {
+      "tag": "sb-toggle-group-item",
+      "summary": "One toggle button of a sb-toggle-group. Takes variant, size and orientation from the group.",
+      "role": "button",
+      "props": {
+        "value": {
+          "type": "text",
+          "default": null,
+          "required": true,
+          "note": "Identifies the item in the group's value."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "reflect": true,
+          "note": "Disables this item only; it is skipped by the arrows."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "button",
+          "role": "control",
+          "parent": null,
+          "part": "button",
+          "notes": "Native <button aria-pressed> in the shadow root."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Text, an icon, or both. An icon-only item needs aria-label."
+        }
+      },
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "Pointer, Enter or Space. Cancelled while disabled."
+        }
+      },
+      "notes": "Must be a direct child of sb-toggle-group. The group sets data-position (first, middle, last, only) on slotchange; the item sets data-pressed from the group's value."
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "toggle group",
+      "segmented",
+      "bold italic underline",
+      "view switcher",
+      "toggle buttons"
+    ],
+    "useCases": [
+      {
+        "when": "Related on/off options such as text formatting",
+        "use": "selection=multiple"
+      },
+      {
+        "when": "Pick one of a few views or alignments that can also be cleared",
+        "use": "selection=single"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Toggle Group as a required single choice in a form",
+        "why": "A pressed item can be pressed again to clear it, and nothing is submitted",
+        "alternative": "sb-radio-group"
+      },
+      {
+        "pattern": "Icon-only items without aria-label",
+        "why": "The buttons have no accessible name",
+        "alternative": "Set aria-label on every icon-only sb-toggle-group-item"
+      },
+      {
+        "pattern": "Group without a name when its purpose is unclear",
+        "why": "A screen-reader user hears bare buttons",
+        "alternative": "Set aria-label on sb-toggle-group"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/toggle-group/ToggleGroup.ts",
+        "src/components/toggle-group/ToggleGroupItem.ts",
+        "src/components/toggle-group/context.ts",
+        "src/components/toggle-group/ToggleGroup.scss",
+        "src/components/toggle-group/ToggleGroup.styles.ts",
+        "src/components/toggle-group/ToggleGroup.stories.ts",
+        "src/components/toggle-group/index.ts"
+      ],
+      "spec": "playwright/tests/toggle-group/toggle-group.behavior.spec.ts",
+      "coverage": [
+        "role=group named by aria-label, items with aria-pressed",
+        "single: move and clear; multiple: independent; change event shape",
+        "value property and attribute, no change for code updates",
+        "roving focus: one tab stop, wrap, Home/End, never presses",
+        "Enter/Space, Tab enters on pressed item",
+        "vertical axis, RTL",
+        "disabled item skipped; disabled group; fieldset disabled",
+        "joined: data-position, shared borders, outer radii; spacing gap",
+        "token colors, sizes, keyboard-only focus ring",
+        "missing-name warning on the group, once",
+        "axe clean (matrix, multiple, tertiary, vertical, disabled item, text)"
+      ],
+      "drift": [
+        {
+          "aspect": "single mode semantics",
+          "contract": "aria-pressed buttons in role=group",
+          "realization": "the visual reference uses role=radio with aria-checked in single mode; kept pressed so the item can be cleared (Q1)"
+        },
+        {
+          "aspect": "focus ring",
+          "contract": "solid ring, 3px",
+          "realization": "the visual reference uses ring/50 plus border-ring; changed for WCAG 1.4.11"
+        },
+        {
+          "aspect": "per-item variant and size",
+          "contract": "group-level only",
+          "realization": "the visual reference lets items override through props"
+        },
+        {
+          "aspect": "focus layering",
+          "contract": "focused item paints above neighbours",
+          "realization": "position: relative on the focused item (no z-index), so its ring is not covered by later siblings"
+        },
+        {
+          "aspect": "pressed indicator",
+          "contract": "toggle-group.on.border = color.foreground",
+          "realization": "the visual reference shows pressed with an accent fill only (about 1.1:1 against the page); a pressed item also gets a foreground border so the state reaches 3:1 without relying on the fill (WCAG 1.4.11, 1.4.1)"
+        }
+      ],
+      "parts": [
+        "group",
+        "button"
+      ],
+      "slots": [
+        "default"
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "ToggleGroup": 48
+        }
+      },
+      "coverage": [
+        "ToggleGroup: 48 variant(s), Variant (Ghost, Tertiary) x Size (Medium, Small, Large) x Orientation (Horizontal, Vertical) x Disabled (False, True) x Spacing (0, 2); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "toggle-group.border-width",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.fg",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.focus-ring.color",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.focus-ring.width",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.height.default",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.height.lg",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.height.sm",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.hover.bg",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.hover.fg",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.icon-size",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.on.bg",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.on.fg",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.outline.bg-hover",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.outline.border",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.outline.fg-hover",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.outline.shadow",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.padding-x.default",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.padding-x.lg",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.padding-x.sm",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.radius",
+          "contract": "ToggleGroupItem is styled with the group's own tokens.",
+          "realization": "The items are Toggle instances (dependsOn Toggle, practice nested-instances), so they show Toggle's bindings; both sets of tokens name the same semantic tokens today. Re-pointing a toggle-group token is not shown in the file."
+        },
+        {
+          "aspect": "toggle-group.gap",
+          "contract": "Gap between items when the group has spacing.",
+          "realization": "The set draws the joined bar (spacing 0), the default."
+        },
+        {
+          "aspect": "toggle-group.spacing-unit",
+          "contract": "Gap between items when the group has spacing.",
+          "realization": "The set draws the joined bar (spacing 0), the default."
+        },
+        {
+          "aspect": "toggle-group.on.border",
+          "contract": "A pressed item carries a 1px foreground border (WCAG 1.4.11).",
+          "realization": "ToggleGroup items are Toggle instances; a pressed item shows the Toggle on border (toggle.on.border)."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Single mode: radio semantics (role=radio, aria-checked) or aria-pressed?",
+      "recommendation": "aria-pressed on native buttons in both types: single mode lets the pressed item be cleared, which a radio cannot, and the APG toolbar pattern uses toggle buttons. A required one-of-many choice is Radio Group.",
+      "status": "answered",
+      "answer": "aria-pressed buttons in role=group, both types.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Roving focus in multiple mode too?",
+      "recommendation": "Yes, both types: one tab stop and arrows, like the APG toolbar. Selection never follows focus.",
+      "status": "answered",
+      "answer": "Both types use roving focus.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q3",
+      "question": "Shape of value?",
+      "recommendation": "string[] on the property for both types; space-separated on the attribute. One shape keeps type switching simple.",
+      "status": "answered",
+      "answer": "string[] property; space-separated attribute.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q4",
+      "question": "Per-item variant and size?",
+      "recommendation": "No: the group sets them (items inherit from the group). Add later if needed.",
+      "status": "answered",
+      "answer": "Group-level only.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-003",
+    "D-011",
+    "SB-0005",
+    "SB-0007",
+    "SB-0009",
+    "SB-0011",
+    "SB-0121"
+  ],
+  "$extensions": {
+    "design.figma": {
+      "options": [
+        {
+          "name": "Spacing",
+          "kind": "enum",
+          "values": [
+            "0",
+            "2"
+          ],
+          "default": "0",
+          "reason": "spacing takes any number of 4 px units; the stories draw 0 (the joined bar) and 2 (separate items, Onboarding). The gap of 2 binds the spacing scale's step 2, which is 2 x space.unit in every preset (SB-0121)."
+        }
+      ]
+    }
+  }
+}

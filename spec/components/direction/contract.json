@@ -1,0 +1,155 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Direction",
+  "tag": "sb-direction",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "Sets the reading direction, left-to-right or right-to-left, for everything inside it. Components that depend on direction follow it with no extra wiring.",
+  "dependsOn": [],
+  "props": {
+    "dir": {
+      "type": "variant",
+      "values": [
+        "ltr",
+        "rtl"
+      ],
+      "default": "ltr",
+      "reflect": true,
+      "note": "The direction applied to the subtree. It is the native dir attribute, so text, flex rows and logical CSS properties all follow it."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "notes": "sb-direction host: display: contents, so it adds no box. Its dir attribute does the work."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "notes": "Any content."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "none (generic wrapper)",
+    "accessibleNameSource": "Not applicable.",
+    "targetSize": "Not interactive.",
+    "focusRingVisible": "Not focusable.",
+    "keyboard": {},
+    "aria": [
+      "the dir attribute is the platform's mechanism, so assistive technology and bidi text handling use it directly",
+      "components that need direction read it from the platform: :dir() in CSS, getComputedStyle(...).direction in the roving-focus controller (tabs arrows reverse in right-to-left)"
+    ],
+    "announcements": [],
+    "contrast": [],
+    "wcag": [
+      "1.3.2",
+      "3.1.2"
+    ]
+  },
+  "tokens": {},
+  "aiHints": {
+    "category": "atom",
+    "keywords": [
+      "direction",
+      "rtl",
+      "ltr",
+      "bidi",
+      "dir",
+      "locale"
+    ],
+    "useCases": [
+      {
+        "when": "A region whose language reads right to left inside a left-to-right page, or the reverse",
+        "use": "sb-direction dir=\"rtl\" around the region"
+      },
+      {
+        "when": "Setting the direction of a whole page",
+        "use": "dir on the html element is enough"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Mirroring layouts with transforms",
+        "why": "Text, focus order and logical properties stay in the old direction",
+        "alternative": "Use dir and logical CSS properties"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/direction/Direction.ts",
+        "src/components/direction/Direction.scss",
+        "src/components/direction/Direction.styles.ts",
+        "src/components/direction/Direction.stories.ts",
+        "src/components/direction/index.ts"
+      ],
+      "parts": [],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/direction/direction.behavior.spec.ts",
+      "coverage": [
+        "dir reflects and sets subtree direction",
+        "live change",
+        "nested override",
+        "display: contents",
+        "sb-tabs roving focus reverses under rtl and flips back (also story starting in rtl)",
+        "tabs lay out from the right",
+        "pagination chevrons mirror only in rtl",
+        "axe clean (three stories)"
+      ],
+      "drift": [
+        {
+          "aspect": "mechanism",
+          "contract": "native dir attribute on the host, read by components through :dir() and computed direction",
+          "realization": "the visual reference provides a React context; no context is needed in Web Components"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Direction": 1
+        }
+      },
+      "coverage": [
+        "Direction: 1 variant(s); read back ok"
+      ],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Does sb-direction draw a box?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "No: display: contents, so it can wrap anything without changing layout."
+    },
+    {
+      "id": "Q2",
+      "question": "How do other components learn the direction?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "From the platform (:dir(), computed direction), never from a context, so components work without sb-direction too."
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-011",
+    "SB-0007"
+  ]
+}

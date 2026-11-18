@@ -1,0 +1,505 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Pagination",
+  "tag": "sb-pagination",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "Navigation between pages of a long list: a landmark holding page links, previous and next links, and gaps. Seven custom elements.",
+  "dependsOn": [],
+  "props": {
+    "label": {
+      "type": "text",
+      "default": "pagination",
+      "note": "Accessible name of the navigation landmark. Translate it for other languages."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "nav",
+      "role": "container",
+      "parent": null,
+      "part": "nav",
+      "notes": "Native <nav> in the shadow root; named by label."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": false,
+      "component": "sb-pagination-content",
+      "notes": "One sb-pagination-content."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "navigation",
+    "native": "nav",
+    "accessibleNameSource": "label prop (default \"pagination\"). Give each pagination on a page a distinct label.",
+    "targetSize": "Links are 36px square or 36px high (WCAG 2.5.8).",
+    "focusRingVisible": ":focus-visible only; 3px solid ring in pagination.focus-ring.color.",
+    "keyboard": {
+      "Tab": "moves through the links in order",
+      "Enter": "follows the focused link"
+    },
+    "aria": [
+      "root: native nav landmark with aria-label",
+      "content: role=list; item: role=listitem (set on the hosts, which resolve across the shadow roots in the flat tree)",
+      "link: native a; the current page has aria-current=\"page\"",
+      "previous and next: named by the slotted text when no label is set (WCAG 2.5.3 label in name); an explicit label becomes the aria-label; with no slotted text the name is \"Go to previous page\" / \"Go to next page\"",
+      "ellipsis: aria-hidden, decorative; \"More pages\" stays in the DOM as visually hidden text",
+      "sb-pagination-content and sb-pagination-item set role=list and role=listitem only when the author set no role"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "pagination.link.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "pagination.link.hover.fg",
+        "bg": "pagination.link.hover.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "pagination.link.fg",
+        "bg": "pagination.link.active.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "pagination.link.active.border",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "pagination.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.11",
+      "2.4.3",
+      "2.4.7",
+      "2.5.3",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "pagination.font-family": "{font.family.body}",
+    "pagination.font-size": "{font.size.control}",
+    "pagination.font-weight": "{font.weight.control}",
+    "pagination.line-height": "{font.line-height.control}",
+    "pagination.gap": "{space.control.gap.xs}",
+    "pagination.link.size": "{size.control.default}",
+    "pagination.link.radius": "{radius.control}",
+    "pagination.link.padding-x": "{space.control.padding-x-icon.sm}",
+    "pagination.link.gap": "{space.control.gap.xs}",
+    "pagination.link.icon-size": "{size.icon.default}",
+    "pagination.link.fg": "{color.foreground}",
+    "pagination.link.hover.bg": "{color.accent}",
+    "pagination.link.hover.fg": "{color.accent-foreground}",
+    "pagination.link.active.bg": "{color.background}",
+    "pagination.link.active.border": "{color.input}",
+    "pagination.link.active.shadow": "{elevation.xs}",
+    "pagination.link.border-width": "{border-width.default}",
+    "pagination.focus-ring.color": "{color.ring}",
+    "pagination.focus-ring.width": "{focus.ring.width}",
+    "pagination.transition-duration": "{motion.duration.fast}",
+    "pagination.transition-easing": "{motion.easing.standard}"
+  },
+  "elements": [
+    {
+      "tag": "sb-pagination-content",
+      "summary": "The row of items.",
+      "role": "list",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-pagination-item",
+          "notes": "Items only."
+        }
+      },
+      "events": {},
+      "notes": "Child of sb-pagination."
+    },
+    {
+      "tag": "sb-pagination-item",
+      "summary": "One entry of the row: a link, a previous or next link, or a gap.",
+      "role": "listitem",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "notes": "One link or ellipsis element."
+        }
+      },
+      "events": {},
+      "notes": "Child of sb-pagination-content."
+    },
+    {
+      "tag": "sb-pagination-link",
+      "summary": "A link to one page. The current page is filled and marked.",
+      "role": "link",
+      "props": {
+        "href": {
+          "type": "text",
+          "default": null,
+          "note": "Target of the link. Without it the anchor is not a link. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115)."
+        },
+        "active": {
+          "type": "boolean",
+          "default": false,
+          "reflect": true,
+          "note": "The current page: aria-current=\"page\" and the outlined look."
+        },
+        "size": {
+          "type": "variant",
+          "values": [
+            "icon",
+            "medium"
+          ],
+          "default": "icon",
+          "reflect": true,
+          "note": "icon is a 36px square for page numbers; medium is padded for words."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "link",
+          "role": "control",
+          "parent": null,
+          "part": "link",
+          "notes": "Native <a>."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "notes": "The page number or text."
+        }
+      },
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "Follows the link."
+        }
+      },
+      "notes": "Own anchor, not sb-button: Button cannot forward aria-current to its inner link."
+    },
+    {
+      "tag": "sb-pagination-previous",
+      "summary": "Link to the previous page, with a chevron and text.",
+      "role": "link",
+      "props": {
+        "href": {
+          "type": "text",
+          "default": null,
+          "note": "Target of the link. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115)."
+        },
+        "label": {
+          "type": "text",
+          "default": "",
+          "note": "Accessible name override. Without it the slotted text names the link (so the visible text is always in the name); with no slotted text the name is \"Go to previous page\". Translate it, keep the visible text inside it."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "link",
+          "role": "control",
+          "parent": null,
+          "part": "link",
+          "notes": "Native <a>."
+        },
+        {
+          "name": "icon",
+          "role": "icon",
+          "parent": "link",
+          "part": "icon",
+          "notes": "Chevron, decorative; mirrored in right-to-left."
+        },
+        {
+          "name": "text",
+          "role": "text",
+          "parent": "link",
+          "part": "text",
+          "controlledBy": "label"
+        }
+      ],
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "Visible text; defaults to \"Previous\"."
+        }
+      },
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "Follows the link."
+        }
+      }
+    },
+    {
+      "tag": "sb-pagination-next",
+      "summary": "Link to the next page, with text and a chevron.",
+      "role": "link",
+      "props": {
+        "href": {
+          "type": "text",
+          "default": null,
+          "note": "Target of the link. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115)."
+        },
+        "label": {
+          "type": "text",
+          "default": "",
+          "note": "Accessible name override. Without it the slotted text names the link (so the visible text is always in the name); with no slotted text the name is \"Go to next page\". Translate it, keep the visible text inside it."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "link",
+          "role": "control",
+          "parent": null,
+          "part": "link",
+          "notes": "Native <a>."
+        },
+        {
+          "name": "text",
+          "role": "text",
+          "parent": "link",
+          "part": "text",
+          "controlledBy": "label"
+        },
+        {
+          "name": "icon",
+          "role": "icon",
+          "parent": "link",
+          "part": "icon",
+          "notes": "Chevron, decorative; mirrored in right-to-left."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "Visible text; defaults to \"Next\"."
+        }
+      },
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "Follows the link."
+        }
+      }
+    },
+    {
+      "tag": "sb-pagination-ellipsis",
+      "summary": "A gap standing for skipped pages.",
+      "props": {
+        "label": {
+          "type": "text",
+          "default": "More pages",
+          "note": "Visually hidden text. The element is hidden from assistive technology."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "icon",
+          "role": "icon",
+          "parent": null,
+          "part": "icon",
+          "notes": "Three dots."
+        },
+        {
+          "name": "text",
+          "role": "text",
+          "parent": null,
+          "part": "text",
+          "controlledBy": "label",
+          "notes": "Visually hidden."
+        }
+      ],
+      "content": {},
+      "events": {}
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "pagination",
+      "pages",
+      "previous",
+      "next",
+      "navigation"
+    ],
+    "useCases": [
+      {
+        "when": "A list or table split over several pages",
+        "use": "sb-pagination with previous, links, ellipsis and next"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Page links without href",
+        "why": "They are not links: no keyboard focus and no navigation",
+        "alternative": "Give every link an href"
+      },
+      {
+        "pattern": "Two paginations on one page with the same label",
+        "why": "Screen reader users cannot tell the landmarks apart",
+        "alternative": "Set a distinct label on each"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/pagination/Pagination.ts",
+        "src/components/pagination/PaginationContent.ts",
+        "src/components/pagination/PaginationItem.ts",
+        "src/components/pagination/PaginationLink.ts",
+        "src/components/pagination/PaginationPrevious.ts",
+        "src/components/pagination/PaginationNext.ts",
+        "src/components/pagination/PaginationEllipsis.ts",
+        "src/components/pagination/Pagination.scss",
+        "src/components/pagination/Pagination.styles.ts",
+        "src/components/pagination/Pagination.stories.ts",
+        "src/components/pagination/index.ts"
+      ],
+      "parts": [
+        "nav",
+        "link",
+        "icon",
+        "text"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/pagination/pagination.behavior.spec.ts",
+      "coverage": [
+        "navigation landmark, list, listitems; label renames the landmark",
+        "native links with href",
+        "active: aria-current and outlined look from tokens",
+        "previous and next names, visible text, translated labels",
+        "ellipsis aria-hidden, text kept, absent from the accessibility tree",
+        "sizes 36px",
+        "hover tokens",
+        "Tab order, Enter, keyboard-only ring",
+        "forwarded aria-label",
+        "chevrons mirror in rtl",
+        "previous and next named by slotted text without a label; author role kept on content and item",
+        "axe clean"
+      ],
+      "drift": [
+        {
+          "aspect": "link implementation",
+          "contract": "own anchor styled from pagination tokens",
+          "realization": "the visual reference composes its Button; sb-button cannot forward aria-current to its inner link"
+        },
+        {
+          "aspect": "active outline",
+          "contract": "color.input (3:1)",
+          "realization": "the visual reference uses the border color, which is below 3:1 (WCAG 1.4.11)"
+        },
+        {
+          "aspect": "focus ring",
+          "contract": "solid 3px ring",
+          "realization": "the visual reference uses a translucent ring"
+        },
+        {
+          "aspect": "active link hover",
+          "contract": "accent fill",
+          "realization": "same as the reference"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Pagination": 1
+        }
+      },
+      "coverage": [
+        "Pagination: 1 variant(s); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "pagination.focus-ring.color",
+          "contract": "Focus ring of a pagination link.",
+          "realization": "Links take hover and focus only in code; the set has no State axis for them."
+        },
+        {
+          "aspect": "pagination.focus-ring.width",
+          "contract": "Focus ring of a pagination link.",
+          "realization": "Links take hover and focus only in code; the set has no State axis for them."
+        },
+        {
+          "aspect": "pagination.link.hover.bg",
+          "contract": "Hover look of a pagination link.",
+          "realization": "Links take hover and focus only in code; the set has no State axis for them."
+        },
+        {
+          "aspect": "pagination.link.hover.fg",
+          "contract": "Hover look of a pagination link.",
+          "realization": "Links take hover and focus only in code; the set has no State axis for them."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Reuse sb-button with href for the links?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "No: sb-button forwards only aria-label, so aria-current=\"page\" would sit on a generic host. The link renders its own anchor with the same look from pagination tokens."
+    },
+    {
+      "id": "Q2",
+      "question": "Are the ellipsis words read by assistive technology?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "No: the element is aria-hidden; \"More pages\" stays as visually hidden text in the DOM."
+    },
+    {
+      "id": "Q3",
+      "question": "List semantics across shadow roots?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "role=list and role=listitem on the content and item hosts; the flat tree puts the link inside the item."
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-011",
+    "SB-0007",
+    "SB-0009",
+    "SB-0115"
+  ]
+}

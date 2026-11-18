@@ -1,0 +1,419 @@
+{
+  "$description": "The doc shell the design adapters render (docs/design-docs/ is its readable, tool-agnostic view). Every token is a whole JSON string naming a semantic token, so `sketchbook tokens rename` rewrites it and `interface.json` records it as used by design-docs; T7 fails if one is missing. Sizes are grid spans, fractions of a parent, or hug, never pixels. The only absolute, the doc width, is harness.config.json adapters.design.docs.width.",
+  "shell": {
+    "doc": {
+      "fill": "color.background",
+      "gap": "space.inset.spacious",
+      "pad": "space.inset.sm",
+      "radius": "radius.large",
+      "widthFrom": "adapters.design.docs.width"
+    },
+    "header": {
+      "fill": "color.muted",
+      "radius": "radius.small",
+      "pad": "space.inset.spacious",
+      "gap": "space.stack.lg",
+      "titleSpan": [
+        2,
+        3
+      ],
+      "logo": {
+        "size": "size.brand.mark",
+        "fill": "color.primary",
+        "radius": "radius.small",
+        "image": "brand/sketchbook-icon.svg",
+        "component": "Brand mark",
+        "page": "Icon"
+      },
+      "name": {
+        "size": "font.size.heading-1",
+        "color": "color.foreground"
+      },
+      "link": {
+        "size": "font.size.lead",
+        "color": "color.primary",
+        "label": "Auto-generated from the agnostic framework"
+      },
+      "definition": {
+        "size": "font.size.body",
+        "color": "color.muted-foreground"
+      },
+      "pattern": {
+        "shape": "rings",
+        "color": "color.primary",
+        "strokeWidth": "border-width.thick",
+        "opacity": "opacity.pulse",
+        "count": 10,
+        "start": 0.25,
+        "step": 0.22
+      }
+    },
+    "body": {
+      "pad": "space.inset.spacious",
+      "gap": "space.inset.spacious"
+    },
+    "section": {
+      "columns": "layout.grid.columns",
+      "gutter": "layout.grid.gutter",
+      "gap": "space.stack.lg",
+      "title": {
+        "size": "font.size.heading-3",
+        "color": "color.foreground"
+      }
+    },
+    "cards": {
+      "instruction": {
+        "fill": "color.card",
+        "stroke": "color.border",
+        "strokeWidth": "border-width.default",
+        "radius": "radius.surface",
+        "pad": "space.inset.surface",
+        "gap": "space.stack.lg",
+        "span": [
+          1,
+          3
+        ],
+        "title": {
+          "size": "font.size.heading-3",
+          "color": "color.foreground"
+        },
+        "text": {
+          "size": "font.size.body",
+          "color": "color.foreground"
+        },
+        "lines": {
+          "gap": "space.stack.sm"
+        }
+      },
+      "specimen": {
+        "surface": "color.muted",
+        "stroke": "color.border",
+        "strokeWidth": "border-width.default",
+        "radius": "radius.surface",
+        "pad": "space.inset.surface",
+        "gap": "space.stack.lg",
+        "span": [
+          1,
+          3
+        ],
+        "title": {
+          "size": "font.size.heading-4",
+          "color": "color.foreground"
+        }
+      },
+      "preview": {
+        "fill": "color.card",
+        "stroke": "color.border",
+        "strokeWidth": "border-width.default",
+        "radius": "radius.surface",
+        "pad": "space.inset.md",
+        "gap": "space.stack.md",
+        "span": [
+          1,
+          3
+        ]
+      },
+      "callout": {
+        "fill": "color.muted",
+        "pad": "space.inset.md",
+        "bar": {
+          "info": "color.info",
+          "warning": "color.warning"
+        },
+        "text": {
+          "size": "font.size.body",
+          "color": "color.foreground"
+        }
+      }
+    },
+    "sample": {
+      "gap": "space.stack.sm",
+      "size": "size.media.lg",
+      "bar": "size.control.xs",
+      "stroke": "color.border",
+      "strokeWidth": "border-width.default",
+      "fill": "color.card"
+    },
+    "caption": {
+      "size": "font.size.caption",
+      "color": "color.muted-foreground"
+    },
+    "matrix": {
+      "line": "space.stack.2xs",
+      "lineColor": "color.border",
+      "head": {
+        "fill": "color.muted",
+        "pad": "space.inset.md",
+        "text": {
+          "size": "font.size.control",
+          "color": "color.foreground"
+        }
+      },
+      "axis": {
+        "size": "font.size.caption",
+        "color": "color.muted-foreground"
+      },
+      "cell": {
+        "fill": "color.card",
+        "pad": "space.inset.md",
+        "gap": "space.stack.sm"
+      },
+      "excluded": {
+        "fill": "color.muted",
+        "label": "not available",
+        "text": {
+          "size": "font.size.caption",
+          "color": "color.muted-foreground"
+        }
+      }
+    },
+    "tag": {
+      "fill": "color.muted",
+      "stroke": "color.border",
+      "strokeWidth": "border-width.default",
+      "radius": "radius.pill",
+      "pad": "space.stack.xs",
+      "padX": "space.stack.md",
+      "gap": "space.stack.xs",
+      "dot": "size.icon.sm",
+      "name": {
+        "size": "font.size.control",
+        "color": "color.foreground"
+      },
+      "value": {
+        "size": "font.size.caption",
+        "color": "color.muted-foreground"
+      }
+    },
+    "tree": {
+      "node": {
+        "fill": "color.card",
+        "alt": "color.muted",
+        "stroke": "color.border",
+        "strokeWidth": "border-width.default",
+        "radius": [
+          "radius.surface",
+          "radius.control",
+          "radius.small",
+          "radius.xsmall"
+        ],
+        "pad": "space.inset.md",
+        "gap": "space.stack.md",
+        "name": {
+          "size": "font.size.heading-4",
+          "color": "color.foreground"
+        },
+        "note": {
+          "size": "font.size.caption",
+          "color": "color.muted-foreground"
+        }
+      }
+    },
+    "tokenGroups": [
+      {
+        "label": "Color",
+        "prefix": "color."
+      },
+      {
+        "label": "Typography",
+        "prefix": "font."
+      },
+      {
+        "label": "Spacing",
+        "prefix": "space."
+      },
+      {
+        "label": "Size",
+        "prefix": "size."
+      },
+      {
+        "label": "Radius",
+        "prefix": "radius."
+      },
+      {
+        "label": "Border",
+        "prefix": "border-width."
+      },
+      {
+        "label": "Focus",
+        "prefix": "focus."
+      },
+      {
+        "label": "Elevation",
+        "prefix": "elevation."
+      },
+      {
+        "label": "Motion",
+        "prefix": "motion."
+      },
+      {
+        "label": "Opacity",
+        "prefix": "opacity."
+      }
+    ],
+    "code": {
+      "fill": "color.muted",
+      "stroke": "color.border",
+      "strokeWidth": "border-width.default",
+      "radius": "radius.surface",
+      "pad": "space.inset.md",
+      "gap": "space.stack.sm",
+      "family": "font.family.code",
+      "numWidth": "size.control.xs",
+      "num": {
+        "size": "font.size.caption",
+        "color": "color.muted-foreground"
+      },
+      "value": {
+        "size": "font.size.control",
+        "color": "color.foreground"
+      },
+      "highlight": "color.info"
+    }
+  },
+  "pages": [
+    {
+      "name": "Guide",
+      "flow": "row"
+    },
+    {
+      "name": "---"
+    },
+    {
+      "name": "Foundations",
+      "flow": "row"
+    },
+    {
+      "name": "Icons",
+      "flow": "row"
+    },
+    {
+      "name": "---"
+    },
+    {
+      "name": "Components",
+      "flow": "row",
+      "perBatch": true
+    },
+    {
+      "name": "---"
+    },
+    {
+      "name": "Library",
+      "flow": "row"
+    },
+    {
+      "name": "Theme matrix",
+      "flow": "row"
+    },
+    {
+      "name": "---"
+    },
+    {
+      "name": "Patterns",
+      "flow": "row"
+    }
+  ],
+  "themeAxes": [
+    {
+      "name": "Mode",
+      "from": "brand.modes"
+    },
+    {
+      "name": "Shape",
+      "from": "standards.radius"
+    },
+    {
+      "name": "Density",
+      "from": "standards.density"
+    }
+  ],
+  "batches": [
+    {
+      "id": "0",
+      "title": "Actions",
+      "components": [
+        "button",
+        "button-group"
+      ]
+    },
+    {
+      "id": "A",
+      "title": "Toggles and selection",
+      "components": [
+        "checkbox",
+        "radio-group",
+        "switch",
+        "toggle",
+        "toggle-group"
+      ]
+    },
+    {
+      "id": "B",
+      "title": "Text controls",
+      "components": [
+        "input",
+        "textarea",
+        "native-select",
+        "field",
+        "input-group",
+        "label",
+        "slider"
+      ]
+    },
+    {
+      "id": "C",
+      "title": "Surfaces",
+      "components": [
+        "card",
+        "alert",
+        "empty",
+        "item",
+        "aspect-ratio",
+        "avatar"
+      ]
+    },
+    {
+      "id": "D",
+      "title": "Feedback and display",
+      "components": [
+        "badge",
+        "kbd",
+        "spinner",
+        "progress",
+        "skeleton",
+        "separator",
+        "typography"
+      ]
+    },
+    {
+      "id": "E",
+      "title": "Navigation and disclosure",
+      "components": [
+        "tabs",
+        "accordion",
+        "collapsible",
+        "breadcrumb",
+        "pagination"
+      ]
+    },
+    {
+      "id": "F",
+      "title": "Data and layout",
+      "components": [
+        "table",
+        "scroll-area",
+        "direction"
+      ]
+    },
+    {
+      "id": "G",
+      "title": "Overlays",
+      "components": [
+        "command",
+        "dialog",
+        "sidebar"
+      ]
+    }
+  ]
+}

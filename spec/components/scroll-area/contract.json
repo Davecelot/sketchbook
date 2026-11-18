@@ -1,0 +1,265 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "ScrollArea",
+  "tag": "sb-scroll-area",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A region that scrolls its content natively, with themed thin scrollbars and keyboard access when there is something to scroll to.",
+  "dependsOn": [],
+  "props": {
+    "label": {
+      "type": "text",
+      "default": "",
+      "note": "Accessible name of the scrollable region. Required for a good experience: it names the focus stop that keyboard users land on."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "viewport",
+      "role": "container",
+      "parent": null,
+      "part": "viewport",
+      "notes": "The native scroll container (overflow auto on the enabled axes). Focusable and a region only while content overflows."
+    },
+    {
+      "name": "content",
+      "role": "container",
+      "parent": "viewport",
+      "part": "content",
+      "notes": "Wraps the slotted content so growth can be observed."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "notes": "Any content, plus optional sb-scroll-bar children that choose the scrolling axes."
+    }
+  },
+  "events": {},
+  "states": {
+    "scrollable": {
+      "trigger": "content is larger than the viewport on an enabled axis",
+      "tokens": [
+        "scroll-area.focus-ring.color",
+        "scroll-area.focus-ring.width"
+      ],
+      "note": "The viewport becomes a focus stop and a named region."
+    },
+    "focus-visible": {
+      "trigger": "keyboard focus on the viewport",
+      "tokens": [
+        "scroll-area.focus-ring.color",
+        "scroll-area.focus-ring.width"
+      ]
+    }
+  },
+  "accessibility": {
+    "role": "region while scrollable, otherwise none",
+    "accessibleNameSource": "label prop. Without a label the viewport stays focusable but is not exposed as a region, and a console warning fires once per element.",
+    "targetSize": "Scrollbars are the browser's (thin).",
+    "focusRingVisible": ":focus-visible only; 3px solid ring in scroll-area.focus-ring.color.",
+    "keyboard": {
+      "Tab": "focus the viewport while it can scroll",
+      "ArrowUp": "scroll up (native)",
+      "ArrowDown": "scroll down (native)",
+      "ArrowLeft": "scroll left (native)",
+      "ArrowRight": "scroll right (native)",
+      "PageUp": "scroll one page up (native)",
+      "PageDown": "scroll one page down (native)",
+      "Home": "scroll to the start (native)",
+      "End": "scroll to the end (native)"
+    },
+    "aria": [
+      "viewport: tabindex=0, role=region and aria-label only while content overflows, so every scrollable area can be reached and operated without a mouse (WCAG 2.1.1)",
+      "a resize observer re-evaluates overflow when the viewport or the content changes size; it is re-attached when the element is moved in the DOM",
+      "scrollbars are native, styled with scrollbar-width and scrollbar-color"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "scroll-area.thumb",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "scroll-area.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "scroll-area.thumb": "{color.input}",
+    "scroll-area.focus-ring.color": "{color.ring}",
+    "scroll-area.focus-ring.width": "{focus.ring.width}"
+  },
+  "elements": [
+    {
+      "tag": "sb-scroll-bar",
+      "summary": "Declares which axis the scroll area scrolls on. The scrollbar itself is native; this element only switches the axis on.",
+      "props": {
+        "orientation": {
+          "type": "variant",
+          "values": [
+            "vertical",
+            "horizontal"
+          ],
+          "default": "vertical",
+          "reflect": true,
+          "note": "The axis to enable. A scroll area with no sb-scroll-bar scrolls vertically; with some, it scrolls on exactly the axes they name."
+        }
+      },
+      "anatomy": [],
+      "content": {},
+      "events": {},
+      "notes": "Child of sb-scroll-area. Draws nothing."
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "scroll",
+      "scroll area",
+      "overflow",
+      "scrollbar",
+      "viewport"
+    ],
+    "useCases": [
+      {
+        "when": "A bounded panel (list, log, code) that must scroll inside a fixed size",
+        "use": "sb-scroll-area with a height and a label"
+      },
+      {
+        "when": "Content that is also wider than its container",
+        "use": "add <sb-scroll-bar orientation=\"horizontal\">"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "A scroll area with no height or max-height",
+        "why": "It grows with its content and never scrolls",
+        "alternative": "Set height or max-height on the host"
+      },
+      {
+        "pattern": "Nested scroll areas",
+        "why": "Wheel and keyboard scrolling get trapped",
+        "alternative": "Scroll one container"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/scroll-area/ScrollArea.ts",
+        "src/components/scroll-area/ScrollBar.ts",
+        "src/components/scroll-area/ScrollArea.scss",
+        "src/components/scroll-area/ScrollArea.styles.ts",
+        "src/components/scroll-area/ScrollArea.stories.ts",
+        "src/components/scroll-area/index.ts"
+      ],
+      "parts": [
+        "viewport",
+        "content"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/scroll-area/scroll-area.behavior.spec.ts",
+      "coverage": [
+        "native vertical scrolling by default",
+        "sb-scroll-bar chooses axes, updates when removed",
+        "scrollable: focus stop and region named by label",
+        "nothing to scroll: no tabindex, no region",
+        "overflow re-checked on content growth and shrink",
+        "overflow still detected after the element is moved in the DOM",
+        "Tab focus, arrow/Page/End scrolling, keyboard-only ring",
+        "thin scrollbar and thumb color from token",
+        "one-time missing-label warning",
+        "axe clean (four stories)"
+      ],
+      "drift": [
+        {
+          "aspect": "scrollbars",
+          "contract": "native scrollbars styled with scrollbar-width and scrollbar-color",
+          "realization": "the visual reference draws its own scrollbar parts; native bars keep wheel, touch, drag and keyboard behavior"
+        },
+        {
+          "aspect": "thumb color",
+          "contract": "color.input",
+          "realization": "the visual reference uses the border color, below 3:1 (WCAG 1.4.11)"
+        },
+        {
+          "aspect": "keyboard",
+          "contract": "viewport is a focus stop and a region while it overflows",
+          "realization": "the reference has no keyboard stop (WCAG 2.1.1)"
+        },
+        {
+          "aspect": "scrollbar thickness",
+          "contract": "scrollbar-width: thin",
+          "realization": "CSS offers keywords only, so no dimension token applies"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "ScrollArea": 2
+        }
+      },
+      "coverage": [
+        "ScrollArea: 2 variant(s), State (Rest, Focus); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "scroll-area.thumb",
+          "contract": "Color of the scrollbar thumb.",
+          "realization": "Drawn by the browser and the operating system, not by the component."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Custom scrollbar elements or native scrollbars?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "Native, so wheel, touch, drag and keyboard stay the browser's; style with scrollbar-width and scrollbar-color. sb-scroll-bar only declares the axis."
+    },
+    {
+      "id": "Q2",
+      "question": "How do keyboard users reach the content?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "The viewport gets tabindex=0 and role=region with an aria-label while it overflows."
+    },
+    {
+      "id": "Q3",
+      "question": "Scrollbar thumb color?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "color.input (3:1 on the background); the reference's border color is too light for WCAG 1.4.11."
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-011",
+    "SB-0007",
+    "SB-0009"
+  ]
+}

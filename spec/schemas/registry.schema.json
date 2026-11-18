@@ -1,0 +1,29 @@
+{
+  "$id": "registry.schema.json",
+  "title": "Component registry",
+  "type": "object",
+  "required": ["components"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "$description": { "type": "string" },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "tier", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "tier": { "enum": [1, 2, 3] },
+          "status": { "enum": ["planned", "draft", "wip", "beta", "stable", "deprecated", "code-only"] },
+          "tag": { "type": "string" },
+          "path": { "type": "string" },
+          "owner": { "type": "string" },
+          "version": { "type": "string" },
+          "replacedBy": { "type": "string" }
+        }
+      }
+    }
+  }
+}

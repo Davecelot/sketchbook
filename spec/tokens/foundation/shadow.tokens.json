@@ -1,0 +1,42 @@
+{
+  "$description": "Generated from brand.config.json (shadow). Edit brand.config.json, or edit here to record an override.",
+  "shadow": {
+    "$type": "shadow",
+    "xs": {
+      "$value": {
+        "color": "#0000000D",
+        "offsetX": "0px",
+        "offsetY": "1px",
+        "blur": "2px",
+        "spread": "0px"
+      }
+    },
+    "sm": {
+      "$value": {
+        "color": "#0000001A",
+        "offsetX": "0px",
+        "offsetY": "1px",
+        "blur": "3px",
+        "spread": "0px"
+      }
+    },
+    "md": {
+      "$value": {
+        "color": "#0000001A",
+        "offsetX": "0px",
+        "offsetY": "4px",
+        "blur": "6px",
+        "spread": "-1px"
+      }
+    },
+    "lg": {
+      "$value": {
+        "color": "#0000001A",
+        "offsetX": "0px",
+        "offsetY": "10px",
+        "blur": "15px",
+        "spread": "-3px"
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harness-config.schema.json",
+  "title": "harness.config.json",
+  "description": "How the harness builds outputs: tag and CSS prefix, adapters, feature switches, references and white-label guard.",
+  "type": "object",
+  "required": ["prefix", "adapters", "features"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "prefix": { "type": "string", "pattern": "^[a-z][a-z0-9]*$", "description": "Custom-element and CSS custom-property prefix (<prefix>-button, --<prefix>-color-primary)." },
+    "language": {
+      "type": "object",
+      "properties": { "ai": { "type": "string" }, "human": { "type": "string" } }
+    },
+    "adapters": {
+      "type": "object",
+      "required": ["components", "tokens", "preview", "tests", "design"],
+      "properties": {
+        "components": { "enum": ["lit"] },
+        "tokens": { "enum": ["style-dictionary", "plain"] },
+        "preview": { "enum": ["storybook"] },
+        "tests": { "enum": ["playwright"] },
+        "design": {
+          "type": "object",
+          "required": ["tool"],
+          "properties": {
+            "tool": { "enum": ["figma", "none"] },
+            "file": { "type": ["string", "null"] },
+            "fileName": { "type": "string" },
+            "docs": {
+              "type": "object",
+              "description": "Rendering parameters for the documentation pages (spec/design-docs.json, docs/design-docs/). The only absolute in the doc shell.",
+              "required": ["width"],
+              "properties": { "width": { "type": "integer", "minimum": 320, "description": "Doc root width in px; every other size is a token or a grid span." } }
+            },
+            "available": { "type": "boolean", "description": "false disables sync and drift checks for the tool; everything else keeps working." },
+            "note": { "type": "string" }
+          }
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "description": "Process switches read by the rules and slash commands (advisory: checks do not depend on them).",
+      "properties": {
+        "planningGate": { "type": "boolean" },
+        "specTasks": { "type": "boolean" },
+        "testFirst": { "type": "boolean" },
+        "issueTracker": { "type": "boolean" },
+        "reviewGate": { "type": "boolean" },
+        "releaseFlow": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "ui": { "type": "object", "properties": { "reference": { "type": "string" }, "note": { "type": "string" } } },
+    "process": { "type": "object", "properties": { "reference": { "type": "string" }, "note": { "type": "string" } } },
+    "claudeExtras": { "type": "array", "items": { "enum": ["forge"] }, "description": "Optional Claude-layer groups installed in this project (sketchbook init --with); harness/manifest.json \"optional\" lists their files." },
+    "starter": { "type": "string", "description": "The starting point chosen with sketchbook init --start (harness/starters/<id>.json)." },
+    "harnessVersion": { "type": "string", "description": "Version of the harness-owned files (harness/manifest.json), bumped by sketchbook upgrade." },
+    "catalog": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "boolean", "description": "true only in the repo harness/catalog is built from: check G1 then keeps the catalog equal to the components." },
+        "note": { "type": "string" }
+      }
+    },
+    "contextBudget": {
+      "type": "object",
+      "description": "Bytes of the Claude layer that are in context in every session: CLAUDE.md, rules without paths:, model-invocable skill and command descriptions, and what the SessionStart, UserPromptSubmit and SubagentStart hooks print (check H1, SB-0114).",
+      "properties": {
+        "alwaysOnBytes": { "type": "integer", "minimum": 0 },
+        "note": { "type": "string" }
+      }
+    },
+    "whiteLabel": {
+      "type": "object",
+      "properties": {
+        "forbiddenTerms": { "type": "array", "items": { "type": "string" } },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

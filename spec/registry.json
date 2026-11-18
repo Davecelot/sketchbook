@@ -1,0 +1,272 @@
+{
+  "$schema": "./schemas/registry.schema.json",
+  "$description": "Single index of components and their lifecycle status. Statuses are checked against gates by check R1.",
+  "components": [
+    {
+      "name": "Accordion",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-accordion",
+      "path": "spec/components/accordion"
+    },
+    {
+      "name": "Alert",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-alert",
+      "path": "spec/components/alert"
+    },
+    {
+      "name": "Aspect Ratio",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-aspect-ratio",
+      "path": "spec/components/aspect-ratio"
+    },
+    {
+      "name": "Avatar",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-avatar",
+      "path": "spec/components/avatar"
+    },
+    {
+      "name": "Badge",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-badge",
+      "path": "spec/components/badge"
+    },
+    {
+      "name": "Breadcrumb",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-breadcrumb",
+      "path": "spec/components/breadcrumb"
+    },
+    {
+      "name": "Button",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-button",
+      "path": "spec/components/button"
+    },
+    {
+      "name": "Button Group",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-button-group",
+      "path": "spec/components/button-group"
+    },
+    {
+      "name": "Card",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-card",
+      "path": "spec/components/card"
+    },
+    {
+      "name": "Checkbox",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-checkbox",
+      "path": "spec/components/checkbox"
+    },
+    {
+      "name": "Collapsible",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-collapsible",
+      "path": "spec/components/collapsible"
+    },
+    {
+      "name": "Direction",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-direction",
+      "path": "spec/components/direction"
+    },
+    {
+      "name": "Empty",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-empty",
+      "path": "spec/components/empty"
+    },
+    {
+      "name": "Field",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-field",
+      "path": "spec/components/field"
+    },
+    {
+      "name": "Input",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-input",
+      "path": "spec/components/input"
+    },
+    {
+      "name": "Input Group",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-input-group",
+      "path": "spec/components/input-group"
+    },
+    {
+      "name": "Item",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-item",
+      "path": "spec/components/item"
+    },
+    {
+      "name": "Kbd",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-kbd",
+      "path": "spec/components/kbd"
+    },
+    {
+      "name": "Label",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-label",
+      "path": "spec/components/label"
+    },
+    {
+      "name": "Native Select",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-native-select",
+      "path": "spec/components/native-select"
+    },
+    {
+      "name": "Pagination",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-pagination",
+      "path": "spec/components/pagination"
+    },
+    {
+      "name": "Progress",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-progress",
+      "path": "spec/components/progress"
+    },
+    {
+      "name": "Radio Group",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-radio-group",
+      "path": "spec/components/radio-group"
+    },
+    {
+      "name": "Scroll Area",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-scroll-area",
+      "path": "spec/components/scroll-area"
+    },
+    {
+      "name": "Separator",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-separator",
+      "path": "spec/components/separator"
+    },
+    {
+      "name": "Skeleton",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-skeleton",
+      "path": "spec/components/skeleton"
+    },
+    {
+      "name": "Slider",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-slider",
+      "path": "spec/components/slider"
+    },
+    {
+      "name": "Spinner",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-spinner",
+      "path": "spec/components/spinner"
+    },
+    {
+      "name": "Switch",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-switch",
+      "path": "spec/components/switch"
+    },
+    {
+      "name": "Table",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-table",
+      "path": "spec/components/table"
+    },
+    {
+      "name": "Tabs",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-tabs",
+      "path": "spec/components/tabs"
+    },
+    {
+      "name": "Textarea",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-textarea",
+      "path": "spec/components/textarea"
+    },
+    {
+      "name": "Toggle",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-toggle",
+      "path": "spec/components/toggle"
+    },
+    {
+      "name": "Toggle Group",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-toggle-group",
+      "path": "spec/components/toggle-group"
+    },
+    {
+      "name": "Typography",
+      "tier": 1,
+      "status": "stable",
+      "tag": "sb-typography",
+      "path": "spec/components/typography"
+    },
+    {
+      "name": "Sidebar",
+      "tier": 2,
+      "status": "stable",
+      "tag": "sb-sidebar",
+      "path": "spec/components/sidebar"
+    },
+    {
+      "name": "Dialog",
+      "tier": 2,
+      "status": "stable",
+      "tag": "sb-dialog",
+      "path": "spec/components/dialog"
+    },
+    {
+      "name": "Command",
+      "tier": 2,
+      "status": "stable",
+      "tag": "sb-command",
+      "path": "spec/components/command"
+    }
+  ]
+}

@@ -1,0 +1,445 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Textarea",
+  "tag": "sb-textarea",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A multi-line text field with label, description and error built in, taking part in forms.",
+  "dependsOn": [],
+  "props": {
+    "label": {
+      "type": "text",
+      "required": true,
+      "default": null,
+      "note": "Visible label and accessible name. Required: shadow DOM keeps external <label for> from reaching the inner textarea."
+    },
+    "hideLabel": {
+      "type": "boolean",
+      "attribute": "hide-label",
+      "default": false,
+      "note": "Visually hides the label; it stays the accessible name."
+    },
+    "description": {
+      "type": "text",
+      "default": "",
+      "note": "Help text under the field."
+    },
+    "errorMessage": {
+      "type": "text",
+      "attribute": "error-message",
+      "default": "",
+      "note": "Error message. Setting it marks the field invalid."
+    },
+    "name": {
+      "type": "text",
+      "default": "",
+      "note": "Form field name."
+    },
+    "value": {
+      "type": "text",
+      "default": "",
+      "note": "Current text; submitted with the form."
+    },
+    "placeholder": {
+      "type": "text",
+      "default": "",
+      "note": "Example of the expected input. Never a substitute for the label."
+    },
+    "autocomplete": {
+      "type": "text",
+      "default": "",
+      "note": "Native autocomplete token (WCAG 1.3.5 for personal data)."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Native required, plus an aria-hidden asterisk after the label . Explain * once per form."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Native disabled; dimmed; not submitted."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "attribute": "readonly",
+      "default": false,
+      "reflect": true,
+      "note": "Focusable and submitted; not editable."
+    },
+    "minlength": {
+      "type": "number",
+      "default": null,
+      "note": "Native validation."
+    },
+    "maxlength": {
+      "type": "number",
+      "default": null,
+      "note": "Native validation."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "field",
+      "role": "container",
+      "parent": null,
+      "part": "field",
+      "notes": "Vertical stack with the field gap."
+    },
+    {
+      "name": "label",
+      "role": "text",
+      "parent": "field",
+      "part": "label",
+      "controlledBy": "label",
+      "notes": "Native <label for> in the same shadow root."
+    },
+    {
+      "name": "required-indicator",
+      "role": "text",
+      "parent": "label",
+      "part": "required-indicator",
+      "optional": true,
+      "controlledBy": "required",
+      "notes": "Asterisk, aria-hidden."
+    },
+    {
+      "name": "textarea",
+      "role": "control",
+      "parent": "field",
+      "part": "textarea",
+      "notes": "Native <textarea>; receives focus, typing and validation. Min height 64px, resizes vertically."
+    },
+    {
+      "name": "description",
+      "role": "text",
+      "parent": "field",
+      "part": "description",
+      "optional": true,
+      "controlledBy": "description"
+    },
+    {
+      "name": "error",
+      "role": "text",
+      "parent": "field",
+      "part": "error",
+      "optional": true,
+      "controlledBy": "errorMessage",
+      "notes": "Persistent polite live region; text appears when invalid."
+    }
+  ],
+  "content": {},
+  "events": {
+    "input": {
+      "bubbles": true,
+      "composed": true,
+      "native": true,
+      "detail": null,
+      "note": "Each edit. Native and composed, so it crosses the shadow boundary."
+    },
+    "change": {
+      "bubbles": true,
+      "composed": true,
+      "native": false,
+      "detail": null,
+      "note": "Value committed (blur). Re-dispatched from the host because native change is not composed. Enter inserts a newline and never changes the commit state."
+    }
+  },
+  "states": {
+    "hover": {
+      "trigger": "pointer over an enabled field",
+      "tokens": []
+    },
+    "focus-visible": {
+      "trigger": "focus in the textarea",
+      "tokens": [
+        "textarea.focus-ring.color",
+        "textarea.focus-ring.width"
+      ],
+      "borderColor": "textarea.focus-ring.color",
+      "note": "3px solid ring and border in ring color (a translucent ring would fall under 3:1)."
+    },
+    "error": {
+      "trigger": "error-message set, or native validity fails after blur or a submit attempt",
+      "tokens": [
+        "textarea.border-invalid",
+        "textarea.error.fg"
+      ],
+      "note": "Never on the first keystroke."
+    },
+    "disabled": {
+      "trigger": "disabled attribute",
+      "tokens": [
+        "textarea.disabled-opacity"
+      ]
+    },
+    "read-only": {
+      "trigger": "readonly attribute",
+      "tokens": []
+    }
+  },
+  "accessibility": {
+    "role": "textbox (multi-line)",
+    "native": "textarea",
+    "accessibleNameSource": "The label prop, through a native <label for> in the same shadow root.",
+    "formAssociation": {
+      "value": true,
+      "note": "ElementInternals: setFormValue on the textarea value, validity mirrored with setValidity (anchored to the inner textarea), formResetCallback restores the default value, disabled fields are not submitted."
+    },
+    "targetSize": "Minimum 64px high; full width.",
+    "focusRingVisible": "On focus of the textarea; 3px ring in textarea.focus-ring.color.",
+    "missingNameWarning": "Dev-only console warning, once, when label is empty.",
+    "keyboard": {
+      "Tab": "move focus in and out",
+      "typing": "native multi-line text editing",
+      "Enter": "inserts a newline; it never submits the owning form (native textarea behavior)"
+    },
+    "aria": [
+      "aria-describedby -> description and error ids (same root)",
+      "aria-invalid=\"true\" when invalid",
+      "required: native required on the input; the asterisk is aria-hidden",
+      "errorMessage: sets a customError validity, so the form blocks submission",
+      "aria-invalid=\"true\" on the host marks the inner textarea invalid too (as errorMessage does), so a wrapper such as sb-input-group can mark it"
+    ],
+    "announcements": [
+      "error text is announced once when it appears (persistent aria-live=polite region; fix over the reference implementation, where the error is only read on focus)"
+    ],
+    "contrast": [
+      {
+        "fg": "textarea.fg",
+        "bg": "textarea.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "textarea.placeholder",
+        "bg": "textarea.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "textarea.label.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "textarea.description.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "textarea.error.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "textarea.border",
+        "bg": "textarea.bg",
+        "kind": "ui"
+      },
+      {
+        "fg": "textarea.border-invalid",
+        "bg": "textarea.bg",
+        "kind": "ui"
+      },
+      {
+        "fg": "textarea.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "1.4.3",
+      "1.4.11",
+      "2.4.6",
+      "2.4.7",
+      "3.3.1",
+      "3.3.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "tokens": {
+    "textarea.font-family": "{font.family.body}",
+    "textarea.font-size": "{font.size.control}",
+    "textarea.line-height": "{font.line-height.control}",
+    "textarea.padding-x": "{space.control.padding-x.field}",
+    "textarea.padding-y": "{space.control.padding-y.textarea}",
+    "textarea.radius": "{radius.control}",
+    "textarea.border-width": "{border-width.default}",
+    "textarea.bg": "{color.input-background}",
+    "textarea.fg": "{color.foreground}",
+    "textarea.border": "{color.input}",
+    "textarea.border-invalid": "{color.destructive}",
+    "textarea.placeholder": "{color.muted-foreground}",
+    "textarea.shadow": "{elevation.xs}",
+    "textarea.gap": "{space.field.gap}",
+    "textarea.label.fg": "{color.foreground}",
+    "textarea.label.font-size": "{font.size.control}",
+    "textarea.label.font-weight": "{font.weight.label}",
+    "textarea.label.line-height": "{font.line-height.label}",
+    "textarea.description.fg": "{color.muted-foreground}",
+    "textarea.description.font-size": "{font.size.body}",
+    "textarea.description.line-height": "{font.line-height.body}",
+    "textarea.error.fg": "{color.destructive}",
+    "textarea.focus-ring.color": "{color.ring}",
+    "textarea.focus-ring.width": "{focus.ring.width}",
+    "textarea.disabled-opacity": "{opacity.disabled}",
+    "textarea.transition-duration": "{motion.duration.fast}",
+    "textarea.transition-easing": "{motion.easing.standard}",
+    "textarea.min-height": "{size.control.textarea-min}"
+  },
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "textarea",
+      "multi-line",
+      "comment",
+      "message",
+      "notes",
+      "form"
+    ],
+    "useCases": [
+      {
+        "when": "Longer free text: comments, messages, descriptions, notes",
+        "use": "sb-textarea with a label"
+      },
+      {
+        "when": "The label would repeat visible context",
+        "use": "hide-label, keep the label text"
+      },
+      {
+        "when": "Limits or format need explaining before typing",
+        "use": "description"
+      },
+      {
+        "when": "Server or custom validation failed",
+        "use": "errorMessage with what went wrong and how to fix it"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Textarea for a short single-line value",
+        "why": "Wastes space and hides the expected length",
+        "alternative": "Input"
+      },
+      {
+        "pattern": "Placeholder as the only label",
+        "why": "It disappears on typing and is not a reliable accessible name",
+        "alternative": "label (visible or hide-label)"
+      },
+      {
+        "pattern": "Expecting Enter to submit",
+        "why": "Enter inserts a newline in a textarea",
+        "alternative": "A submit Button"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/textarea/Textarea.ts",
+        "src/components/textarea/Textarea.scss",
+        "src/components/textarea/Textarea.styles.ts",
+        "src/components/textarea/Textarea.stories.ts",
+        "src/components/textarea/index.ts"
+      ],
+      "parts": [
+        "field",
+        "label",
+        "required-indicator",
+        "textarea",
+        "description",
+        "error"
+      ],
+      "slots": [],
+      "spec": "playwright/tests/textarea/textarea.behavior.spec.ts",
+      "coverage": [
+        "label is the name; label click focuses; min height 64px; vertical resize",
+        "hide-label keeps the name",
+        "description and error in the accessible description; aria-invalid",
+        "native validity after blur, not on first typing",
+        "required: native required, aria-hidden asterisk",
+        "input on edit, change on commit, both composed",
+        "Enter inserts a newline, never submits",
+        "keyboard focus ring",
+        "form value, validity, minlength, reset, disabled, disabled fieldset, errorMessage customError, label for",
+        "axe clean on all stories"
+      ],
+      "drift": [
+        {
+          "aspect": "API shape",
+          "contract": "label, description and error are props of Textarea",
+          "realization": "shadcn composes Field parts around Textarea; shadow DOM requires them inside"
+        },
+        {
+          "aspect": "border color",
+          "contract": "color.input = neutral-500 (3:1)",
+          "realization": "shadcn default border-input is neutral-200; changed for WCAG 1.4.11"
+        },
+        {
+          "aspect": "focus ring",
+          "contract": "3px solid ring color",
+          "realization": "shadcn uses ring/50, below 3:1 (WCAG 1.4.11)"
+        },
+        {
+          "aspect": "auto-grow",
+          "contract": "min height 64px, resize vertical",
+          "realization": "shadcn uses field-sizing-content (auto-grow); brief asks for vertical resize"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Textarea": 6
+        }
+      },
+      "coverage": [
+        "Textarea: 6 variant(s), State (Rest, Focus) x Validation (None, Error) x Disabled (False, True); read back ok"
+      ],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q0",
+      "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+      "status": "answered",
+      "answer": "Yes: modeled on Input; native textarea semantics.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q1",
+      "question": "Does Enter submit the form?",
+      "status": "answered",
+      "answer": "No. Native textarea inserts a newline; no implicit submission.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Auto-grow?",
+      "status": "answered",
+      "answer": "No. Min height 64px with vertical resize.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-003",
+    "D-005",
+    "D-011",
+    "D-016",
+    "D-024",
+    "D-025",
+    "D-027"
+  ]
+}

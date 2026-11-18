@@ -1,0 +1,116 @@
+{
+  "$description": "Generated from brand.config.json (typography). Edit brand.config.json, or edit here to record an override.",
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": "ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'"
+      },
+      "mono": {
+        "$value": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "xs": {
+        "$value": "12px"
+      },
+      "sm": {
+        "$value": "14px"
+      },
+      "base": {
+        "$value": "16px"
+      },
+      "lg": {
+        "$value": "18px"
+      },
+      "xl": {
+        "$value": "20px"
+      },
+      "2xl": {
+        "$value": "24px"
+      },
+      "3xl": {
+        "$value": "30px"
+      },
+      "4xl": {
+        "$value": "36px"
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semibold": {
+        "$value": 600
+      },
+      "bold": {
+        "$value": 700
+      },
+      "extrabold": {
+        "$value": 800
+      }
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "tighter": {
+        "$value": "-0.05em"
+      },
+      "tight": {
+        "$value": "-0.025em"
+      },
+      "normal": {
+        "$value": "0em"
+      },
+      "wide": {
+        "$value": "0.025em"
+      },
+      "wider": {
+        "$value": "0.05em"
+      },
+      "widest": {
+        "$value": "0.1em"
+      }
+    },
+    "line-height": {
+      "$type": "number",
+      "none": {
+        "$value": 1
+      },
+      "tight": {
+        "$value": 1.25
+      },
+      "normal": {
+        "$value": 1.5
+      },
+      "xs": {
+        "$value": 1.3333
+      },
+      "sm": {
+        "$value": 1.4286
+      },
+      "base": {
+        "$value": 1.5
+      },
+      "lg": {
+        "$value": 1.5556
+      },
+      "xl": {
+        "$value": 1.4
+      },
+      "2xl": {
+        "$value": 1.3333
+      },
+      "3xl": {
+        "$value": 1.2
+      },
+      "4xl": {
+        "$value": 1.1111
+      }
+    }
+  }
+}
