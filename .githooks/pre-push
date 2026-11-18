@@ -1,0 +1,25 @@
+#!/bin/sh
+# The same deterministic checks as pre-commit, so a push is still checked when a commit skipped the hook (--no-verify) or came from a merge or a rebase.
+"$(dirname "$0")/pre-commit" || { echo "\nPush blocked: the checks above failed. Fix them, then push again."; exit 1; }
+# The source repo also checks its maintainer outputs (Storybook and the docs site builds recorded by sketchbook propagate --maintainer).
+if [ -f scripts/build-harness.mjs ]; then
+  out=$(mktemp) || exit 1
+  trap 'rm -f "$out"' EXIT
+  node harness/checks/run.mjs --maintainer > "$out" 2>&1
+  status=$?
+  if [ "$status" -eq 1 ]; then
+    cat "$out"
+    echo "\nPush blocked: the maintainer checks failed. Run sketchbook propagate --maintainer, then push again."
+    exit 1
+  fi
+  # The fast part of npm run verify (SB-0120); Storybook and the component specs run with the full verify before a merge.
+  # Git exports GIT_DIR to hooks; from a worktree it points at this repo, so git in the tests' temp projects would read and write this repo instead.
+  unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_PREFIX
+  for step in test:harness typecheck lint; do
+    if ! npm run "$step" > "$out" 2>&1; then
+      cat "$out"
+      echo "\nPush blocked: npm run $step failed. Fix it, then push again."
+      exit 1
+    fi
+  done
+fi

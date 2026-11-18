@@ -1,0 +1,9 @@
+#!/bin/sh
+# Rule no-ai-attribution: an AI trailer or "Generated with" line blocks the commit.
+pattern='^(co-authored-by:.*(claude|anthropic|openai|codex|copilot|gemini|cursor|chatgpt)|.*generated (with|by) .*(claude|codex|copilot|gemini|cursor|chatgpt|ai\b)|.*🤖)'
+if grep -v '^#' "$1" | grep -qiE "$pattern"; then
+  grep -v '^#' "$1" | grep -iE "$pattern"
+  echo "Commit blocked: remove the AI attribution above (rule no-ai-attribution), then commit again."
+  exit 1
+fi
+exit 0
