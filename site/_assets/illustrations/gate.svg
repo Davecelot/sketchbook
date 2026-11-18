@@ -1,0 +1,27 @@
+<svg viewBox="0 0 720 240" role="img" aria-label="Many checks run and pass through one gate. The gate ends in one of three exits: 0 pass, 2 pass with overrides, or 1 fail.">
+<defs><filter id="sketch-gate" x="-3%" y="-5%" width="106%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter><marker id="arrow-gate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+<g filter="url(#sketch-gate)" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="24" y="24" width="210" height="36" rx="6"/>
+<rect x="24" y="78" width="210" height="36" rx="6"/>
+<rect x="24" y="132" width="210" height="36" rx="6"/>
+<rect x="24" y="186" width="210" height="36" rx="6"/>
+<path d="M240 42 L300 120" marker-end="url(#arrow-gate)"/>
+<path d="M240 96 L300 120" marker-end="url(#arrow-gate)"/>
+<path d="M240 150 L300 120" marker-end="url(#arrow-gate)"/>
+<path d="M240 204 L300 120" marker-end="url(#arrow-gate)"/>
+<rect x="300" y="24" width="14" height="192" rx="3" fill="var(--sb-color-primary)" stroke="var(--sb-color-primary)"/>
+<path d="M314 120 L400 120" marker-end="url(#arrow-gate)"/>
+<path d="M400 120 L440 60 L560 60" marker-end="url(#arrow-gate)"/>
+<path d="M400 120 L440 120 L560 120" marker-end="url(#arrow-gate)"/>
+<path d="M400 120 L440 180 L560 180" marker-end="url(#arrow-gate)" stroke-dasharray="5 4"/>
+</g>
+<g font-family="inherit" font-size="14">
+<text x="40" y="47" fill="var(--sb-color-foreground)">T1 <tspan fill="var(--sb-color-muted-foreground)">tokens are valid</tspan></text>
+<text x="40" y="101" fill="var(--sb-color-foreground)">C3 <tspan fill="var(--sb-color-muted-foreground)">code matches its contract</tspan></text>
+<text x="40" y="155" fill="var(--sb-color-foreground)">G1 <tspan fill="var(--sb-color-muted-foreground)">outputs match a fresh build</tspan></text>
+<text x="40" y="209" fill="var(--sb-color-foreground)">D1 <tspan fill="var(--sb-color-muted-foreground)">design file in step</tspan></text>
+<text x="572" y="65" fill="var(--sb-color-foreground)" font-weight="600">exit 0 <tspan font-weight="400" fill="var(--sb-color-muted-foreground)">pass</tspan></text>
+<text x="572" y="125" fill="var(--sb-color-foreground)" font-weight="600">exit 2 <tspan font-weight="400" fill="var(--sb-color-muted-foreground)">pass, with overrides</tspan></text>
+<text x="572" y="185" fill="var(--sb-color-primary)" font-weight="600">exit 1 <tspan font-weight="400" fill="var(--sb-color-muted-foreground)">fail</tspan></text>
+</g>
+</svg>

@@ -1,0 +1,17 @@
+<sb-command label="Search commands" style="display:block;width:450px;border:1px solid var(--sb-color-border);border-radius:var(--sb-radius-control)">
+  <sb-command-input placeholder="Type a command or search..."></sb-command-input>
+  <sb-command-list>
+    <sb-command-empty>No results found.</sb-command-empty>
+    <sb-command-group label="Suggestions">
+      <sb-command-item>Calendar</sb-command-item>
+      <sb-command-item keywords="emoji picker">Search Emoji</sb-command-item>
+      <sb-command-item disabled>Calculator</sb-command-item>
+    </sb-command-group>
+    <sb-command-separator></sb-command-separator>
+    <sb-command-group label="Settings">
+      <sb-command-item keywords="account user">Profile<sb-command-shortcut>⌘P</sb-command-shortcut></sb-command-item>
+      <sb-command-item>Billing<sb-command-shortcut>⌘B</sb-command-shortcut></sb-command-item>
+      <sb-command-item>Settings<sb-command-shortcut>⌘S</sb-command-shortcut></sb-command-item>
+    </sb-command-group>
+  </sb-command-list>
+</sb-command>

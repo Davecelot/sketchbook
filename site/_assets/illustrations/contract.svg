@@ -1,0 +1,21 @@
+<svg viewBox="0 0 720 240" role="img" aria-label="A contract file lists props, states, accessibility and tokens. The component is built from it, and the checks confirm the two still match.">
+<defs><filter id="sketch-contract" x="-3%" y="-5%" width="106%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter><marker id="arrow-contract" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+<g filter="url(#sketch-contract)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="24" y="28" width="290" height="184" rx="8"/>
+<path d="M44 66 L294 66" stroke="var(--sb-color-border)" stroke-width="1"/>
+<path d="M324 120 L384 120" marker-end="url(#arrow-contract)"/>
+<rect x="392" y="66" width="304" height="108" rx="8" stroke="var(--sb-color-primary)" stroke-width="2"/>
+<circle cx="680" cy="66" r="14" fill="var(--sb-color-background)" stroke="var(--sb-color-primary)" stroke-width="2"/>
+<path d="M673 66 L678 71 L687 61" stroke="var(--sb-color-primary)"/>
+</g>
+<g font-family="inherit">
+<text x="44" y="56" font-size="14" font-weight="600" fill="var(--sb-color-foreground)">button/contract.json</text>
+<text x="44" y="98" font-size="14" fill="var(--sb-color-foreground)">props <tspan fill="var(--sb-color-muted-foreground)">variant, size, disabled</tspan></text>
+<text x="44" y="130" font-size="14" fill="var(--sb-color-foreground)">states <tspan fill="var(--sb-color-muted-foreground)">loading, focus, pressed</tspan></text>
+<text x="44" y="162" font-size="14" fill="var(--sb-color-foreground)">a11y <tspan fill="var(--sb-color-muted-foreground)">name, keyboard, contrast</tspan></text>
+<text x="44" y="194" font-size="14" fill="var(--sb-color-foreground)">tokens <tspan fill="var(--sb-color-muted-foreground)">--sb-button-*</tspan></text>
+<text x="544" y="110" font-size="18" font-weight="600" text-anchor="middle" fill="var(--sb-color-foreground)">&lt;sb-button&gt;</text>
+<text x="544" y="140" font-size="13" text-anchor="middle" fill="var(--sb-color-muted-foreground)">built from the contract</text>
+<text x="544" y="206" font-size="13" text-anchor="middle" fill="var(--sb-color-muted-foreground)">checks confirm both still match</text>
+</g>
+</svg>

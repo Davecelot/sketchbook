@@ -1,0 +1,20 @@
+<svg viewBox="0 0 720 240" role="img" aria-label="A loop: you edit the sources, the harness rebuilds the outputs, and the checks pass or fail. A failed check sends you back to the sources.">
+<defs><filter id="sketch-loop" x="-3%" y="-5%" width="106%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter><marker id="arrow-loop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+<g filter="url(#sketch-loop)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="24" y="72" width="180" height="84" rx="8"/>
+<rect x="270" y="72" width="180" height="84" rx="8"/>
+<rect x="516" y="72" width="180" height="84" rx="8" stroke="var(--sb-color-primary)" stroke-width="2"/>
+<path d="M206 114 L262 114" marker-end="url(#arrow-loop)"/>
+<path d="M452 114 L508 114" marker-end="url(#arrow-loop)"/>
+<path d="M606 158 L606 206 L114 206 L114 162" marker-end="url(#arrow-loop)" stroke-dasharray="5 4"/>
+</g>
+<g font-family="inherit" text-anchor="middle">
+<text x="114" y="110" font-size="17" font-weight="600" fill="var(--sb-color-foreground)">Edit sources</text>
+<text x="114" y="134" font-size="13" fill="var(--sb-color-muted-foreground)">brand · tokens · contracts</text>
+<text x="360" y="110" font-size="17" font-weight="600" fill="var(--sb-color-foreground)">Rebuild outputs</text>
+<text x="360" y="134" font-size="13" fill="var(--sb-color-muted-foreground)">generated/ · styles</text>
+<text x="606" y="110" font-size="17" font-weight="600" fill="var(--sb-color-primary)">Check</text>
+<text x="606" y="134" font-size="13" fill="var(--sb-color-muted-foreground)">pass or fail</text>
+<text x="360" y="232" font-size="13" fill="var(--sb-color-muted-foreground)">a failed check sends you back to the sources</text>
+</g>
+</svg>
