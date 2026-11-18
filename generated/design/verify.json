@@ -1,0 +1,11 @@
+{
+  "tool": "figma",
+  "file": null,
+  "checkedAt": "2026-11-16",
+  "method": "sketchbook sync verify: the design file resolved every managed variable for every theme combination; compared with the spec for the same combination (composites skipped).",
+  "specHash": "9e1be0628ba11e43",
+  "readHash": "9e1be0628ba11e43",
+  "compared": 31656,
+  "skipped": 0,
+  "mismatches": []
+}

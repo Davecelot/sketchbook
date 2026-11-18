@@ -1,0 +1,166 @@
+{
+  "tool": "figma",
+  "file": null,
+  "tokens": {
+    "hash": "9e1be0628ba11e43",
+    "syncedAt": "2026-11-16T02:15:03.269Z"
+  },
+  "components": {
+    "spinner": {
+      "hash": "bc0c760556161981",
+      "syncedAt": "2026-11-15T17:30:26.090Z"
+    },
+    "button": {
+      "hash": "f765b44faa4b3e75",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "input": {
+      "hash": "6fdb0d5b00a8738e",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "checkbox": {
+      "hash": "37accce02d603175",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "radio-group": {
+      "hash": "d33ffd6fc61f9eb2",
+      "syncedAt": "2026-11-16T03:25:03.284Z"
+    },
+    "switch": {
+      "hash": "b02a4340be678e0f",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "toggle": {
+      "hash": "d6c03887326f5e3e",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "toggle-group": {
+      "hash": "ba2ca85cff443edf",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "textarea": {
+      "hash": "57bf0b7ead5c92bd",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "native-select": {
+      "hash": "40c6c9bebf4e1029",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "field": {
+      "hash": "9140d1d8ebe30d6b",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "input-group": {
+      "hash": "d41af07a81f9740d",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "label": {
+      "hash": "f68a47646b19f3d7",
+      "syncedAt": "2026-11-15T17:30:26.090Z"
+    },
+    "slider": {
+      "hash": "62b0ea3a1af112e5",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "separator": {
+      "hash": "2ac9ed53c449084a",
+      "syncedAt": "2026-11-15T03:44:16.182Z"
+    },
+    "skeleton": {
+      "hash": "8a30efe135a270f8",
+      "syncedAt": "2026-11-15T17:30:26.090Z"
+    },
+    "kbd": {
+      "hash": "d4b8003cb310e491",
+      "syncedAt": "2026-11-15T17:31:30.241Z"
+    },
+    "progress": {
+      "hash": "49142f997a10334a",
+      "syncedAt": "2026-11-15T17:30:26.090Z"
+    },
+    "aspect-ratio": {
+      "hash": "fef1c88ee13ff785",
+      "syncedAt": "2026-11-15T17:30:26.090Z"
+    },
+    "direction": {
+      "hash": "874057d39d3f64f2",
+      "syncedAt": "2026-11-15T17:30:26.090Z"
+    },
+    "badge": {
+      "hash": "6bb334ec44b547df",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "avatar": {
+      "hash": "f6057b2a31284b90",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "card": {
+      "hash": "0f4335c59fe992f9",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "alert": {
+      "hash": "db4a6485145da960",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "empty": {
+      "hash": "684c0ce597664d4f",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "item": {
+      "hash": "7a2163d1eeb1f63c",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "tabs": {
+      "hash": "8a7ba0802f677deb",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "accordion": {
+      "hash": "ad73fb1b0dc2f143",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "collapsible": {
+      "hash": "d4a52eaada5161a4",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "breadcrumb": {
+      "hash": "d3d7670893ba964d",
+      "syncedAt": "2026-11-16T03:25:03.284Z"
+    },
+    "pagination": {
+      "hash": "f7447595fcbb5a1e",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "button-group": {
+      "hash": "f77807c093be3775",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "table": {
+      "hash": "586615b15d8d07e6",
+      "syncedAt": "2026-11-16T03:25:03.284Z"
+    },
+    "scroll-area": {
+      "hash": "c2838430ca975bc5",
+      "syncedAt": "2026-11-16T03:25:03.284Z"
+    },
+    "typography": {
+      "hash": "fd820851187b190e",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "command": {
+      "hash": "4623bee2c525572b",
+      "syncedAt": "2026-11-16T04:10:20.164Z"
+    },
+    "dialog": {
+      "hash": "00a7fc4aa5a3435b",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    },
+    "sidebar": {
+      "hash": "6876ab80b5dae1a4",
+      "syncedAt": "2026-11-17T21:59:59.819Z"
+    }
+  },
+  "foundations": {
+    "hash": "74ddef679eb72149",
+    "syncedAt": "2026-11-12T19:11:04.638Z"
+  }
+}

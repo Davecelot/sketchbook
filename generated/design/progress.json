@@ -1,0 +1,282 @@
+{
+  "components": {
+    "spinner": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "button": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "input": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "checkbox": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "radio-group": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "switch": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "toggle": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "toggle-group": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "textarea": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "native-select": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "field": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "input-group": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "label": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "slider": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "separator": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "skeleton": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "kbd": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "progress": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "aspect-ratio": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "direction": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "badge": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "avatar": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "card": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "alert": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "empty": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "item": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "tabs": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T06:31:11.816Z"
+    },
+    "accordion": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "collapsible": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "breadcrumb": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T06:31:11.816Z"
+    },
+    "pagination": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "button-group": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "table": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T06:31:11.816Z"
+    },
+    "scroll-area": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-11T02:09:51.502Z"
+    },
+    "typography": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-15T17:35:37.589Z"
+    },
+    "command": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-13T02:14:35.678Z"
+    },
+    "dialog": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-13T02:36:49.709Z"
+    },
+    "sidebar": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-13T03:15:07.608Z"
+    }
+  },
+  "patterns": {
+    "sign-in": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T18:34:01.429Z"
+    },
+    "settings": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T18:34:01.429Z"
+    },
+    "profile": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T19:28:21.676Z"
+    },
+    "dashboard": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T19:28:21.676Z"
+    },
+    "docs-article": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T18:34:01.429Z"
+    },
+    "data-table": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T18:34:01.429Z"
+    },
+    "onboarding": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T19:28:21.676Z"
+    },
+    "form-states": {
+      "stage": "checked",
+      "needsFix": false,
+      "note": "",
+      "updatedAt": "2026-11-17T18:34:01.429Z"
+    }
+  }
+}
