@@ -1,0 +1,179 @@
+@use 'a11y';
+
+:host {
+  display: block;
+  font-family: var(--sb-tabs-font-family);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part='root'] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-tabs-gap);
+}
+
+:host([orientation='vertical']) [part='root'] {
+  flex-direction: row;
+}
+
+:host(sb-tabs-list) {
+  display: block;
+  width: fit-content;
+}
+
+[part='list'] {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--sb-tabs-list-height);
+  padding: var(--sb-tabs-list-padding);
+  border-radius: var(--sb-tabs-list-radius);
+  background: var(--sb-tabs-list-bg);
+  color: var(--sb-tabs-trigger-fg);
+  --_active-bg: var(--sb-tabs-trigger-active-bg);
+  --_active-border: var(--sb-tabs-trigger-active-border);
+  --_active-shadow: var(--sb-tabs-trigger-active-shadow);
+  --_active-fg: var(--sb-tabs-trigger-active-fg);
+  --_indicator-color: transparent;
+
+  // The selected tab's fill and shadow disappear in forced colors: mark it with the highlight pair.
+  @media (forced-colors: active) {
+    --_active-bg: Highlight;
+    --_active-fg: HighlightText;
+    --_active-border: Highlight;
+    --_active-adjust: none;
+  }
+}
+
+:host([data-orientation='vertical']) [part='list'] {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: fit-content;
+}
+
+:host([variant='line']) [part='list'] {
+  gap: var(--sb-tabs-list-gap-line);
+  border-radius: 0;
+  background: transparent;
+  --_active-bg: transparent;
+  --_active-border: transparent;
+  --_active-shadow: none;
+  --_active-fg: var(--sb-tabs-trigger-active-fg);
+  --_indicator-color: var(--sb-tabs-indicator-color);
+
+  // The line variant keeps its text color and shows the selection with the indicator.
+  @media (forced-colors: active) {
+    --_active-bg: transparent;
+    --_indicator-color: Highlight;
+    --_active-adjust: auto;
+  }
+}
+
+:host(sb-tabs-trigger) {
+  display: inline-flex;
+  flex: 1;
+  align-self: stretch;
+}
+
+[part='trigger'] {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sb-tabs-trigger-gap);
+  margin: 0;
+  padding-block: var(--sb-tabs-trigger-padding-y);
+  padding-inline: var(--sb-tabs-trigger-padding-x);
+  border: var(--sb-tabs-trigger-border-width) solid transparent;
+  border-radius: var(--sb-tabs-trigger-radius);
+  background: transparent;
+  color: var(--sb-tabs-trigger-fg);
+  font-family: var(--sb-tabs-font-family);
+  font-size: var(--sb-tabs-font-size);
+  font-weight: var(--sb-tabs-font-weight);
+  line-height: var(--sb-tabs-line-height);
+  white-space: nowrap;
+  cursor: pointer;
+  transition-property: color, background-color, box-shadow;
+  transition-duration: var(--sb-tabs-transition-duration);
+  transition-timing-function: var(--sb-tabs-transition-easing);
+  @include a11y.respect-reduced-motion;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: var(--sb-tabs-indicator-width);
+    background: var(--_indicator-color);
+    opacity: 0;
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--sb-tabs-trigger-active-fg);
+  }
+
+  &:disabled {
+    opacity: var(--sb-tabs-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  ::slotted(svg) {
+    flex-shrink: 0;
+    width: var(--sb-tabs-trigger-icon-size);
+    height: var(--sb-tabs-trigger-icon-size);
+  }
+}
+
+:host([data-orientation='vertical']) [part='trigger'] {
+  justify-content: flex-start;
+
+  &::after {
+    inset-inline: auto 0;
+    inset-block: 0;
+    width: var(--sb-tabs-indicator-width);
+    height: auto;
+  }
+}
+
+:host([data-state='active']) [part='trigger'] {
+  border-color: var(--_active-border);
+  background: var(--_active-bg);
+  color: var(--_active-fg);
+  box-shadow: var(--_active-shadow);
+
+  // With a Highlight fill, a Canvas backplate behind the text would leave HighlightText on white.
+  @media (forced-colors: active) {
+    forced-color-adjust: var(--_active-adjust, auto);
+  }
+
+  &::after {
+    opacity: 1;
+  }
+}
+
+// Outranks the selected tab's own box-shadow.
+:host([data-state]) [part='trigger']:focus-visible {
+  @include a11y.focus-ring(var(--sb-tabs-focus-ring-color), var(--sb-tabs-focus-ring-width));
+}
+
+:host(sb-tabs-content) {
+  flex: 1;
+  border-radius: var(--sb-tabs-trigger-radius);
+  outline: none;
+}
+
+:host(sb-tabs-content:not([data-state='active'])) {
+  display: none;
+}
+
+:host(sb-tabs-content:focus-visible) {
+  @include a11y.focus-ring(var(--sb-tabs-focus-ring-color), var(--sb-tabs-focus-ring-width));
+}

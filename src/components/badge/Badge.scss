@@ -1,0 +1,101 @@
+@use 'a11y';
+
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part='badge'] {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sb-badge-gap);
+  width: fit-content;
+  padding-block: var(--sb-badge-padding-y);
+  padding-inline: var(--sb-badge-padding-x);
+  border: var(--sb-badge-border-width) solid transparent;
+  border-radius: var(--sb-badge-radius);
+  overflow: hidden;
+  background: transparent;
+  color: inherit;
+  font-family: var(--sb-badge-font-family);
+  font-size: var(--sb-badge-font-size);
+  font-weight: var(--sb-badge-font-weight);
+  line-height: var(--sb-badge-line-height);
+  white-space: nowrap;
+  text-decoration: none;
+  transition-property: background-color, color, box-shadow;
+  transition-duration: var(--sb-badge-transition-duration);
+  transition-timing-function: var(--sb-badge-transition-easing);
+  @include a11y.respect-reduced-motion;
+}
+
+a[part='badge'] {
+  min-height: var(--sb-badge-link-min-height);
+
+  &:focus-visible {
+    @include a11y.focus-ring(var(--sb-badge-focus-ring-color), var(--sb-badge-focus-ring-width));
+  }
+}
+
+::slotted(svg) {
+  flex-shrink: 0;
+  width: var(--sb-badge-icon-size);
+  height: var(--sb-badge-icon-size);
+  pointer-events: none;
+}
+
+:host([variant='primary']) [part='badge'] {
+  background: var(--sb-badge-default-bg);
+  color: var(--sb-badge-default-fg);
+}
+:host([variant='primary']) a[part='badge']:hover {
+  background: color-mix(in oklab, var(--sb-badge-default-bg) 90%, transparent);
+}
+
+:host([variant='secondary']) [part='badge'] {
+  background: var(--sb-badge-secondary-bg);
+  color: var(--sb-badge-secondary-fg);
+}
+:host([variant='secondary']) a[part='badge']:hover {
+  background: color-mix(in oklab, var(--sb-badge-secondary-bg) 90%, transparent);
+}
+
+:host([variant='destructive']) [part='badge'] {
+  background: var(--sb-badge-destructive-bg);
+  color: var(--sb-badge-destructive-fg);
+}
+:host([variant='destructive']) a[part='badge']:hover {
+  background: color-mix(in oklab, var(--sb-badge-destructive-bg) 90%, transparent);
+}
+
+:host([variant='tertiary']) [part='badge'] {
+  border-color: var(--sb-badge-outline-border);
+  color: var(--sb-badge-outline-fg);
+}
+:host([variant='tertiary']) a[part='badge']:hover {
+  background: var(--sb-badge-outline-bg-hover);
+  color: var(--sb-badge-outline-fg-hover);
+}
+
+:host([variant='ghost']) [part='badge'] {
+  color: var(--sb-badge-ghost-fg);
+}
+:host([variant='ghost']) a[part='badge']:hover {
+  background: var(--sb-badge-ghost-bg-hover);
+  color: var(--sb-badge-ghost-fg-hover);
+}
+
+:host([variant='link']) [part='badge'] {
+  color: var(--sb-badge-link-fg);
+  text-underline-offset: var(--sb-badge-link-underline-offset);
+}
+:host([variant='link']) a[part='badge']:hover {
+  text-decoration-line: underline;
+}

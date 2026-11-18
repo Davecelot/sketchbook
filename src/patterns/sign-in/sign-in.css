@@ -1,0 +1,38 @@
+.sign-in {
+  display: grid;
+  place-items: center;
+  min-block-size: 100vh;
+  box-sizing: border-box;
+  padding: var(--sb-space-inset-surface);
+  background: var(--sb-color-muted);
+}
+
+.sign-in sb-card {
+  inline-size: min(100%, 52ch);
+}
+
+.sign-in sb-card-title h1 {
+  margin: 0;
+  font: inherit;
+}
+
+.sign-in__form {
+  display: grid;
+  gap: var(--sb-space-stack-lg);
+}
+
+.sign-in__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sb-space-stack-sm);
+}
+
+.sign-in__aside {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sb-space-stack-xs);
+}

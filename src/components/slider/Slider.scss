@@ -1,0 +1,214 @@
+@use 'a11y';
+
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part='field'] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-slider-gap);
+  font-family: var(--sb-slider-font-family);
+}
+
+[part='label'] {
+  color: var(--sb-slider-label-fg);
+  font-size: var(--sb-slider-label-font-size);
+  font-weight: var(--sb-slider-label-font-weight);
+  line-height: var(--sb-slider-label-line-height);
+}
+
+:host([hide-label]) [part='label'] {
+  @include a11y.visually-hidden;
+}
+
+[part='control'] {
+  --_thumb: var(--sb-slider-thumb-size);
+  --_target: var(--sb-slider-target-size);
+  --_start: 0px;
+  --_size: calc(var(--_to) * (100% - var(--_thumb)) + var(--_thumb) / 2);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--_target);
+  touch-action: none;
+}
+
+[part='control'][data-multi] {
+  --_start: calc(var(--_from) * (100% - var(--_thumb)) + var(--_thumb) / 2);
+  --_size: calc((var(--_to) - var(--_from)) * (100% - var(--_thumb)));
+}
+
+:host([orientation='vertical']) [part='control'] {
+  width: var(--_target);
+  height: calc(3 * var(--sb-slider-vertical-length));
+}
+
+:host(:disabled) [part='control'] {
+  opacity: var(--sb-slider-disabled-opacity);
+}
+
+[part='track'] {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: var(--sb-slider-track-size);
+  overflow: hidden;
+  border-radius: var(--sb-slider-track-radius);
+  background: var(--sb-slider-track-bg);
+  transform: translateY(-50%);
+
+  // Forced colors drop backgrounds to Canvas, which would erase the track.
+  @media (forced-colors: active) {
+    background: GrayText;
+  }
+}
+
+:host([orientation='vertical']) [part='track'] {
+  top: 0;
+  right: auto;
+  bottom: 0;
+  left: 50%;
+  width: var(--sb-slider-track-size);
+  height: auto;
+  transform: translateX(-50%);
+}
+
+[part='range'] {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: var(--_start);
+  width: var(--_size);
+  background: var(--sb-slider-range-bg);
+
+  // Forced colors drop backgrounds to Canvas, which would erase the fill.
+  @media (forced-colors: active) {
+    background: Highlight;
+  }
+}
+
+:host([orientation='vertical']) [part='range'] {
+  top: auto;
+  right: 0;
+  bottom: var(--_start);
+  left: 0;
+  width: auto;
+  height: var(--_size);
+}
+
+[part='thumb'] {
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  outline: none;
+  pointer-events: none;
+
+  &::-webkit-slider-runnable-track {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+  }
+
+  &::-moz-range-track {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+  }
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    box-sizing: border-box;
+    width: var(--_thumb);
+    height: var(--_thumb);
+    border: var(--sb-slider-thumb-border-width) solid var(--sb-slider-thumb-border);
+    border-radius: var(--sb-slider-track-radius);
+    background: var(--sb-slider-thumb-bg);
+    box-shadow: var(--sb-slider-thumb-shadow);
+    margin-block-start: calc((var(--_target) - var(--_thumb)) / 2);
+    cursor: grab;
+    pointer-events: auto;
+    transition: box-shadow var(--sb-slider-transition-duration) var(--sb-slider-transition-easing);
+    @include a11y.respect-reduced-motion;
+  }
+
+  &::-moz-range-thumb {
+    box-sizing: border-box;
+    width: var(--_thumb);
+    height: var(--_thumb);
+    border: var(--sb-slider-thumb-border-width) solid var(--sb-slider-thumb-border);
+    border-radius: var(--sb-slider-track-radius);
+    background: var(--sb-slider-thumb-bg);
+    box-shadow: var(--sb-slider-thumb-shadow);
+    cursor: grab;
+    pointer-events: auto;
+    transition: box-shadow var(--sb-slider-transition-duration) var(--sb-slider-transition-easing);
+    @include a11y.respect-reduced-motion;
+  }
+
+  &:focus-visible::-webkit-slider-thumb {
+    @include a11y.focus-ring(var(--sb-slider-focus-ring-color), var(--sb-slider-focus-ring-width));
+  }
+
+  &:focus-visible::-moz-range-thumb {
+    @include a11y.focus-ring(var(--sb-slider-focus-ring-color), var(--sb-slider-focus-ring-width));
+  }
+
+  &[aria-invalid='true']::-webkit-slider-thumb {
+    border-color: var(--sb-slider-border-invalid);
+  }
+
+  &[aria-invalid='true']::-moz-range-thumb {
+    border-color: var(--sb-slider-border-invalid);
+  }
+
+  &:disabled::-webkit-slider-thumb {
+    cursor: not-allowed;
+  }
+
+  &:disabled::-moz-range-thumb {
+    cursor: not-allowed;
+  }
+}
+
+[part='control']:not([data-multi]) [part='thumb'] {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+:host([orientation='vertical']) [part='thumb'] {
+  direction: rtl;
+  writing-mode: vertical-lr;
+}
+
+[part='description'],
+[part='error'] {
+  margin: 0;
+  font-size: var(--sb-slider-description-font-size);
+  line-height: var(--sb-slider-description-line-height);
+}
+
+[part='description'] {
+  color: var(--sb-slider-description-fg);
+}
+
+[part='error'] {
+  color: var(--sb-slider-error-fg);
+}
+
+[part='error']:empty {
+  @include a11y.visually-hidden;
+}

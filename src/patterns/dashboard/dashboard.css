@@ -1,0 +1,98 @@
+.dashboard__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sb-space-stack-md);
+  padding: var(--sb-space-inset-md) var(--sb-space-inset-surface);
+  border-block-end: var(--sb-border-width-default) solid var(--sb-color-border);
+}
+
+.dashboard__bar sb-separator {
+  block-size: var(--sb-size-icon-lg);
+}
+
+.dashboard__product {
+  margin: 0;
+  font-weight: var(--sb-font-weight-heading);
+}
+
+.dashboard__me {
+  margin-inline-start: auto;
+}
+
+.dashboard__main {
+  display: grid;
+  gap: var(--sb-space-stack-lg);
+  padding: var(--sb-space-inset-surface);
+}
+
+.dashboard__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sb-space-stack-md);
+}
+
+.dashboard__title h1 {
+  margin: 0;
+  margin-inline-end: auto;
+  font-size: var(--sb-font-size-heading-3);
+  font-weight: var(--sb-font-weight-heading);
+  line-height: var(--sb-font-line-height-heading-3);
+}
+
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 28ch), 1fr));
+  gap: var(--sb-space-stack-lg);
+  padding-block-start: var(--sb-space-stack-lg);
+}
+
+.dashboard__wide {
+  grid-column: 1 / -1;
+}
+
+.dashboard sb-card-title h2 {
+  margin: 0;
+  font: inherit;
+}
+
+.dashboard__value {
+  margin: 0;
+  font-size: var(--sb-font-size-heading-2);
+  font-weight: var(--sb-font-weight-heading);
+  line-height: var(--sb-font-line-height-heading-2);
+}
+
+.dashboard__value-placeholder {
+  display: block;
+  inline-size: 50%;
+  block-size: var(--sb-size-control-default);
+}
+
+.dashboard__cell-placeholder {
+  display: inline-block;
+  inline-size: 50%;
+  block-size: var(--sb-size-icon-default);
+}
+
+.dashboard__fill {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.dashboard__chart {
+  inline-size: 100%;
+  block-size: 100%;
+  color: var(--sb-color-primary);
+}
+
+.dashboard__amount {
+  text-align: end;
+}
+
+.dashboard__note {
+  margin: 0;
+  padding-block: var(--sb-space-stack-lg);
+  color: var(--sb-color-muted-foreground);
+}

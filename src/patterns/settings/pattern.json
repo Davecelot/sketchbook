@@ -1,0 +1,486 @@
+{
+  "name": "Settings",
+  "summary": "A preferences page split into tabs, each a card-wrapped form with selects, radios, switches, a slider and a save bar.",
+  "components": [
+    "sb-alert",
+    "sb-alert-description",
+    "sb-alert-title",
+    "sb-button",
+    "sb-button-group",
+    "sb-card",
+    "sb-card-content",
+    "sb-card-description",
+    "sb-card-footer",
+    "sb-card-header",
+    "sb-card-title",
+    "sb-field-set",
+    "sb-native-select",
+    "sb-radio-group",
+    "sb-radio-group-item",
+    "sb-separator",
+    "sb-slider",
+    "sb-switch",
+    "sb-tabs",
+    "sb-tabs-content",
+    "sb-tabs-list",
+    "sb-tabs-trigger",
+    "sb-textarea"
+  ],
+  "landmarks": [
+    "main",
+    "form per section (named by its h2)"
+  ],
+  "a11y": [
+    "Sections are tabs: one tab stop, arrows switch, and the panel takes the next Tab before its first control.",
+    "Every choice has a visible label; radio groups sit in a field set whose legend matches the group name.",
+    "A saved message uses the default alert, which is a polite status, not an interrupting alert."
+  ],
+  "states": [
+    "default",
+    "notifications",
+    "saved"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.background",
+      "pad": "space.inset.spacious",
+      "align": "center-x"
+    },
+    "states": {
+      "default": [
+        {
+          "stack": [
+            {
+              "stack": [
+                {
+                  "text": "Settings",
+                  "style": "font.size.heading-1",
+                  "color": "color.foreground"
+                },
+                {
+                  "text": "Manage your preferences. Changes apply after you save.",
+                  "style": "font.size.body",
+                  "color": "color.muted-foreground"
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "component": "tabs/tabs-list",
+                  "axes": {
+                    "Active": "1"
+                  },
+                  "text": {
+                    "trigger-label": "General",
+                    "trigger-other-label": "Notifications",
+                    "trigger-third-label": "Appearance"
+                  },
+                  "show": {
+                    "Third": true
+                  }
+                },
+                {
+                  "component": "card",
+                  "props": {
+                    "size": "medium"
+                  },
+                  "text": {
+                    "title": "General",
+                    "description": "Language and region apply to every workspace you belong to."
+                  },
+                  "slots": {
+                    "Content": [
+                      {
+                        "stack": [
+                          {
+                            "component": "native-select",
+                            "text": {
+                              "Label text": "Language",
+                              "value": "English"
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "native-select",
+                            "text": {
+                              "Label text": "Time zone",
+                              "value": "UTC−03:00",
+                              "Description text": "Used for reminders and reports."
+                            },
+                            "show": {
+                              "Description": true
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Week starts on",
+                                "style": "font.size.control",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "component": "radio-group",
+                                "props": {
+                                  "orientation": "horizontal"
+                                },
+                                "text": {
+                                  "label[0]": "Monday",
+                                  "label[1]": "Sunday"
+                                },
+                                "hide": [
+                                  "item[2]"
+                                ]
+                              }
+                            ],
+                            "gap": "space.stack.sm",
+                            "width": "fill"
+                          },
+                          {
+                            "component": "separator",
+                            "width": "fill"
+                          },
+                          {
+                            "component": "textarea",
+                            "text": {
+                              "Label text": "Email signature",
+                              "Description text": "Added to messages you send from the app."
+                            },
+                            "show": {
+                              "Description": true,
+                              "Placeholder": false
+                            },
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      }
+                    ],
+                    "Footer": [
+                      {
+                        "row": [
+                          {
+                            "component": "button-group",
+                            "text": {
+                              "Button 1/Label text": "Cancel",
+                              "Button 2/Label text": "Save changes",
+                              "Button 2/Variant": "Primary"
+                            },
+                            "hide": [
+                              "text"
+                            ]
+                          }
+                        ],
+                        "gap": "space.stack.sm",
+                        "width": "fill",
+                        "align": "end"
+                      }
+                    ]
+                  },
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.md",
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": {
+            "span": [
+              7,
+              12
+            ]
+          }
+        }
+      ],
+      "notifications": [
+        {
+          "stack": [
+            {
+              "stack": [
+                {
+                  "text": "Settings",
+                  "style": "font.size.heading-1",
+                  "color": "color.foreground"
+                },
+                {
+                  "text": "Manage your preferences. Changes apply after you save.",
+                  "style": "font.size.body",
+                  "color": "color.muted-foreground"
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "component": "tabs/tabs-list",
+                  "axes": {
+                    "Active": "2"
+                  },
+                  "text": {
+                    "trigger-label": "General",
+                    "trigger-other-label": "Notifications",
+                    "trigger-third-label": "Appearance"
+                  },
+                  "show": {
+                    "Third": true
+                  }
+                },
+                {
+                  "component": "card",
+                  "props": {
+                    "size": "medium"
+                  },
+                  "text": {
+                    "title": "Notifications",
+                    "description": "Pick what reaches your inbox."
+                  },
+                  "slots": {
+                    "Content": [
+                      {
+                        "stack": [
+                          {
+                            "component": "switch",
+                            "props": {
+                              "selected": "true"
+                            },
+                            "text": {
+                              "Label text": "Mentions",
+                              "Description text": "When someone mentions you in a comment."
+                            },
+                            "show": {
+                              "Description": true
+                            }
+                          },
+                          {
+                            "component": "switch",
+                            "text": {
+                              "Label text": "Weekly summary",
+                              "Description text": "A short recap every Monday."
+                            },
+                            "show": {
+                              "Description": true
+                            }
+                          },
+                          {
+                            "component": "switch",
+                            "text": {
+                              "Label text": "Product news",
+                              "Description text": "New features, at most once a month."
+                            },
+                            "show": {
+                              "Description": true
+                            }
+                          },
+                          {
+                            "component": "separator",
+                            "width": "fill"
+                          },
+                          {
+                            "component": "slider",
+                            "text": {
+                              "Label text": "Reminder lead time",
+                              "Description text": "Minutes before an event, from 0 to 60."
+                            },
+                            "show": {
+                              "Description": true
+                            },
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      }
+                    ],
+                    "Footer": [
+                      {
+                        "row": [
+                          {
+                            "component": "button-group",
+                            "text": {
+                              "Button 1/Label text": "Cancel",
+                              "Button 2/Label text": "Save changes",
+                              "Button 2/Variant": "Primary"
+                            },
+                            "hide": [
+                              "text"
+                            ]
+                          }
+                        ],
+                        "gap": "space.stack.sm",
+                        "width": "fill",
+                        "align": "end"
+                      }
+                    ]
+                  },
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.md",
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": {
+            "span": [
+              7,
+              12
+            ]
+          }
+        }
+      ],
+      "saved": [
+        {
+          "stack": [
+            {
+              "stack": [
+                {
+                  "text": "Settings",
+                  "style": "font.size.heading-1",
+                  "color": "color.foreground"
+                },
+                {
+                  "text": "Manage your preferences. Changes apply after you save.",
+                  "style": "font.size.body",
+                  "color": "color.muted-foreground"
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill"
+            },
+            {
+              "component": "alert",
+              "text": {
+                "title": "Changes saved",
+                "description": "Your notification settings are up to date."
+              },
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "component": "tabs/tabs-list",
+                  "axes": {
+                    "Active": "2"
+                  },
+                  "text": {
+                    "trigger-label": "General",
+                    "trigger-other-label": "Notifications",
+                    "trigger-third-label": "Appearance"
+                  },
+                  "show": {
+                    "Third": true
+                  }
+                },
+                {
+                  "component": "card",
+                  "props": {
+                    "size": "medium"
+                  },
+                  "text": {
+                    "title": "Notifications",
+                    "description": "Pick what reaches your inbox."
+                  },
+                  "slots": {
+                    "Content": [
+                      {
+                        "stack": [
+                          {
+                            "component": "switch",
+                            "props": {
+                              "selected": "true"
+                            },
+                            "text": {
+                              "Label text": "Mentions",
+                              "Description text": "When someone mentions you in a comment."
+                            },
+                            "show": {
+                              "Description": true
+                            }
+                          },
+                          {
+                            "component": "switch",
+                            "text": {
+                              "Label text": "Weekly summary",
+                              "Description text": "A short recap every Monday."
+                            },
+                            "show": {
+                              "Description": true
+                            }
+                          },
+                          {
+                            "component": "switch",
+                            "text": {
+                              "Label text": "Product news",
+                              "Description text": "New features, at most once a month."
+                            },
+                            "show": {
+                              "Description": true
+                            }
+                          },
+                          {
+                            "component": "separator",
+                            "width": "fill"
+                          },
+                          {
+                            "component": "slider",
+                            "text": {
+                              "Label text": "Reminder lead time",
+                              "Description text": "Minutes before an event, from 0 to 60."
+                            },
+                            "show": {
+                              "Description": true
+                            },
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      }
+                    ],
+                    "Footer": [
+                      {
+                        "row": [
+                          {
+                            "component": "button-group",
+                            "text": {
+                              "Button 1/Label text": "Cancel",
+                              "Button 2/Label text": "Save changes",
+                              "Button 2/Variant": "Primary"
+                            },
+                            "hide": [
+                              "text"
+                            ]
+                          }
+                        ],
+                        "gap": "space.stack.sm",
+                        "width": "fill",
+                        "align": "end"
+                      }
+                    ]
+                  },
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.md",
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": {
+            "span": [
+              7,
+              12
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

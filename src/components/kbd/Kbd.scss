@@ -1,0 +1,42 @@
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part='key'] {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sb-kbd-gap);
+  width: fit-content;
+  height: var(--sb-kbd-height);
+  min-width: var(--sb-kbd-min-width);
+  padding-inline: var(--sb-kbd-padding-x);
+  border-radius: var(--sb-kbd-radius);
+  background: var(--sb-kbd-bg);
+  color: var(--sb-kbd-fg);
+  font-family: var(--sb-kbd-font-family);
+  font-size: var(--sb-kbd-font-size);
+  font-weight: var(--sb-kbd-font-weight);
+  pointer-events: none;
+  user-select: none;
+}
+
+::slotted(svg) {
+  flex-shrink: 0;
+  width: var(--sb-kbd-icon-size);
+  height: var(--sb-kbd-icon-size);
+}
+
+[part='group'] {
+  // A native <kbd> defaults to monospace; the group only lays keys out and passes the surrounding font on.
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sb-kbd-group-gap);
+}

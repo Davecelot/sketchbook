@@ -1,0 +1,92 @@
+@use 'a11y';
+
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part='field'] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-input-gap);
+}
+
+[part='label'] {
+  color: var(--sb-input-label-fg);
+  font-family: var(--sb-input-font-family);
+  font-size: var(--sb-input-label-font-size);
+  font-weight: var(--sb-input-label-font-weight);
+  line-height: var(--sb-input-label-line-height);
+}
+
+:host([hide-label]) [part='label'] {
+  @include a11y.visually-hidden;
+}
+
+[part='input'] {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: var(--sb-input-height);
+  margin: 0;
+  padding: var(--sb-input-padding-y) var(--sb-input-padding-x);
+  border: var(--sb-input-border-width) solid var(--sb-input-border);
+  border-radius: var(--sb-input-radius);
+  background: var(--sb-input-bg);
+  color: var(--sb-input-fg);
+  font-family: var(--sb-input-font-family);
+  font-size: var(--sb-input-font-size);
+  line-height: var(--sb-input-line-height);
+  box-shadow: var(--sb-input-shadow);
+  transition-property: color, border-color, box-shadow;
+  transition-duration: var(--sb-input-transition-duration);
+  transition-timing-function: var(--sb-input-transition-easing);
+  @include a11y.respect-reduced-motion;
+
+  &::placeholder {
+    color: var(--sb-input-placeholder);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    border-color: var(--sb-input-focus-ring-color);
+    @include a11y.focus-ring(var(--sb-input-focus-ring-color), var(--sb-input-focus-ring-width));
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--sb-input-border-invalid);
+  }
+
+  &[aria-invalid='true']:focus-visible {
+    @include a11y.focus-ring(var(--sb-input-border-invalid), var(--sb-input-focus-ring-width));
+  }
+
+  &:disabled {
+    opacity: var(--sb-input-disabled-opacity);
+    cursor: not-allowed;
+  }
+}
+
+[part='description'],
+[part='error'] {
+  margin: 0;
+  font-family: var(--sb-input-font-family);
+  font-size: var(--sb-input-description-font-size);
+  line-height: var(--sb-input-description-line-height);
+}
+
+[part='description'] {
+  color: var(--sb-input-description-fg);
+}
+
+[part='error'] {
+  color: var(--sb-input-error-fg);
+}
+
+// The live region stays in the accessibility tree while empty, so its first message is announced.
+[part='error']:empty {
+  @include a11y.visually-hidden;
+}

@@ -1,0 +1,105 @@
+.onboarding {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-content: start;
+  gap: var(--sb-space-stack-xl);
+  min-block-size: 100vh;
+  box-sizing: border-box;
+  padding: var(--sb-space-inset-spacious) var(--sb-space-inset-surface);
+}
+
+.onboarding--wide {
+  justify-items: stretch;
+  max-inline-size: 80ch;
+  margin-inline: auto;
+}
+
+.onboarding__card {
+  inline-size: min(100%, 60ch);
+}
+
+.onboarding sb-card-title h1,
+.onboarding sb-empty-title h2 {
+  margin: 0;
+  font: inherit;
+}
+
+.onboarding__form {
+  display: grid;
+  gap: var(--sb-space-stack-xl);
+}
+
+/* Separate items (spacing) wrap at narrow widths instead of widening the card (WCAG 1.4.10 Reflow). */
+.onboarding__form sb-toggle-group::part(group) {
+  flex-wrap: wrap;
+}
+
+.onboarding__choices {
+  gap: var(--sb-space-stack-md);
+}
+
+.onboarding__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sb-space-stack-sm);
+}
+
+.onboarding__header {
+  display: grid;
+  gap: var(--sb-space-stack-xs);
+}
+
+.onboarding__header h1 {
+  margin: 0;
+  font-size: var(--sb-font-size-heading-3);
+  font-weight: var(--sb-font-weight-heading);
+  line-height: var(--sb-font-line-height-heading-3);
+}
+
+.onboarding__header p {
+  margin: 0;
+  color: var(--sb-color-muted-foreground);
+}
+
+.onboarding__next {
+  display: grid;
+  gap: var(--sb-space-stack-md);
+}
+
+.onboarding__next h2 {
+  margin: 0;
+  font-size: var(--sb-font-size-heading-4);
+  font-weight: var(--sb-font-weight-heading);
+  line-height: var(--sb-font-line-height-heading-4);
+}
+
+.onboarding__next sb-item-group {
+  gap: var(--sb-space-stack-sm);
+}
+
+.onboarding__working {
+  display: grid;
+  gap: var(--sb-space-stack-lg);
+}
+
+.onboarding__status {
+  display: flex;
+  align-items: center;
+  gap: var(--sb-space-stack-sm);
+  color: var(--sb-color-muted-foreground);
+}
+
+.onboarding__placeholder {
+  display: grid;
+  gap: var(--sb-space-stack-sm);
+}
+
+.onboarding__line {
+  display: block;
+  block-size: var(--sb-size-icon-default);
+}
+
+.onboarding__line--short {
+  inline-size: 60%;
+}

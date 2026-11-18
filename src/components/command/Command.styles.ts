@@ -1,0 +1,169 @@
+// GENERATED from Command.scss by scripts/build-styles.mjs. Do not edit.
+import { css } from 'lit';
+
+export const commandStyles = css`
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host(sb-command) {
+  height: 100%;
+  font-family: var(--sb-command-font-family);
+  font-size: var(--sb-command-font-size);
+  line-height: var(--sb-command-line-height);
+  color: var(--sb-command-fg);
+}
+
+[part=root] {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--sb-command-radius);
+  background: var(--sb-command-bg);
+  color: var(--sb-command-fg);
+}
+
+.status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+[part=input-row] {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--sb-command-input-gap);
+  height: var(--sb-command-input-height);
+  padding-inline: var(--sb-command-input-padding-x);
+  border-block-end: var(--sb-command-input-border-width) solid var(--sb-command-input-border);
+}
+[part=input-row].idle:focus-within {
+  outline: var(--sb-command-item-active-ring-width) solid var(--sb-command-item-active-ring-color);
+  outline-offset: calc(-1 * var(--sb-command-item-active-ring-width));
+}
+
+[part=icon] {
+  flex-shrink: 0;
+  width: var(--sb-command-input-icon-size);
+  height: var(--sb-command-input-icon-size);
+  color: var(--sb-command-input-icon-fg);
+}
+
+[part=input] {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+[part=input]::placeholder {
+  color: var(--sb-command-input-placeholder);
+}
+
+[part=list] {
+  max-height: var(--sb-command-list-max-height);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-padding-block: var(--sb-command-list-scroll-padding);
+}
+
+[part=empty] {
+  padding-block: var(--sb-command-empty-padding-y);
+  text-align: center;
+}
+
+[part=group] {
+  padding: var(--sb-command-group-padding);
+  overflow: hidden;
+}
+
+[part=heading] {
+  padding-block: var(--sb-command-group-heading-padding-y);
+  padding-inline: var(--sb-command-group-heading-padding-x);
+  color: var(--sb-command-group-heading-fg);
+  font-size: var(--sb-command-group-heading-font-size);
+  font-weight: var(--sb-command-group-heading-font-weight);
+}
+
+[part=separator] {
+  border-block-start: var(--sb-command-separator-width) solid var(--sb-command-separator-color);
+}
+
+:host(sb-command-item) {
+  --_shortcut-fg: var(--sb-command-shortcut-fg);
+  --_icon-fg: var(--sb-command-item-icon-fg);
+}
+
+[part=item] {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sb-command-item-gap);
+  padding-block: var(--sb-command-item-padding-y);
+  padding-inline: var(--sb-command-item-padding-x);
+  border-radius: var(--sb-command-item-radius);
+  cursor: default;
+  user-select: none;
+}
+[part=item] ::slotted(svg) {
+  flex-shrink: 0;
+  width: var(--sb-command-item-icon-size);
+  height: var(--sb-command-item-icon-size);
+  color: var(--_icon-fg);
+}
+
+:host(sb-command-item[aria-selected=true]) {
+  --_shortcut-fg: var(--sb-command-item-active-shortcut-fg);
+}
+@media (forced-colors: active) {
+  :host(sb-command-item[aria-selected=true]) {
+    --_shortcut-fg: HighlightText;
+    --_icon-fg: HighlightText;
+  }
+}
+
+:host([aria-selected=true]) [part=item] {
+  background: var(--sb-command-item-active-bg);
+  color: var(--sb-command-item-active-fg);
+  box-shadow: inset 0 0 0 var(--sb-command-item-active-ring-width) var(--sb-command-item-active-ring-color);
+}
+@media (forced-colors: active) {
+  :host([aria-selected=true]) [part=item] {
+    background: Highlight;
+    color: HighlightText;
+  }
+}
+
+:host([disabled]) [part=item] {
+  opacity: var(--sb-command-item-disabled-opacity);
+}
+
+:host(sb-command-shortcut) {
+  display: inline-block;
+  margin-inline-start: auto;
+}
+
+[part=shortcut] {
+  color: var(--_shortcut-fg, var(--sb-command-shortcut-fg));
+  font-size: var(--sb-command-shortcut-font-size);
+  letter-spacing: var(--sb-command-shortcut-letter-spacing);
+}
+`;
