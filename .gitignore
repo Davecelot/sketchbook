@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+storybook-static/
+generated/css/.tmp/
+
+# docs site output
+site-dist/
+
+# Test output
+playwright/playwright-report/
+playwright/test-results/
+test-results/
+
+# Claude Code
+.claude/.hammock-state.json
+.claude/worktrees/
+
+# Project-local
+.sketchbook-forbidden-terms
+
+# OS
+.DS_Store
+
+# Design sync outputs rebuilt by `sketchbook sync` / `sync compare` (Figma read-back *.fg.json and state JSON stay tracked)
+generated/design/figma/
+generated/design/compare/**/*.sb.json
+generated/design/compare/**/*.sb.png
+
+# Env, logs, packs, coverage
+.env
+.env.*
+.npmrc
+*.pem
+*.key
+npm-debug.log*
+*.tgz
+coverage/
+
+# Editors
+.vscode/
+.idea/
+
+# Local Claude settings
+.claude/settings.local.json

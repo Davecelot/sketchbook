@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "rootDir": ".",
+    "outDir": "node_modules/.cache/harness-build",
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "experimentalDecorators": false,
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsconfig.harness.tsbuildinfo"
+  },
+  "include": ["harness/**/*.mts", "scripts/**/*.mts", ".claude/hooks/**/*.mts", ".claude/skills/*/hooks/**/*.mts"],
+  "exclude": ["harness/templates", "harness/catalog", "node_modules", "**/*.d.mts"]
+}
