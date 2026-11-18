@@ -16,7 +16,7 @@
       "fileName": "Sketchbook",
       "docs": { "width": 1440 },
       "available": true,
-      "note": "Figma file key. Sync writes only to this file (variables, styles, docs); see docs/design-docs/tool-mapping.md."
+      "note": "Figma file key, empty until you set yours: import the example file (https://sketchbook-docs.vercel.app/assets/Sketchbook.fig) into Figma, then sketchbook swap design figma --file <key>, or set SKETCHBOOK_FIGMA_FILE to keep it out of the repository. Sync writes only to this file (variables, styles, docs); see docs/design-docs/tool-mapping.md."
     }
   },
   "features": {

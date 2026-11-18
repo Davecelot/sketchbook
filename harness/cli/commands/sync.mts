@@ -1,6 +1,6 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve as resolvePath } from 'node:path';
-import { ingestVerify, stamp, readStamp, setProgress, writeProgress, PROGRESS, PROGRESS_VIEW, STAMP, VERIFY } from '../../lib/design/sync.mjs';
+import { designFile, ingestVerify, noFileError, stamp, readStamp, setProgress, writeProgress, PROGRESS, PROGRESS_VIEW, STAMP, VERIFY } from '../../lib/design/sync.mjs';
 import { OUT, TARGETS, prepare, prepareVerify, writePushed } from '../../adapters/design/figma/sync.mjs';
 import { LIBRARY_VERIFY, ingestLibraryVerify, realize } from '../../lib/design/realize.mjs';
 import { readProgress } from '../../lib/design/sync.mjs';
@@ -30,6 +30,7 @@ type VerifyContext = Pick<CommandContext<typeof options>, 'root' | 'options' | '
 
 async function verify({ root, options, dryRun, out, file }: VerifyContext) {
   if (!options.ingest) {
+    if (!file) throw noFileError();
     if (dryRun) { out(`Would write ${OUT}/verify.js (read-only) for Figma file ${file}.`); return { changed: [`${OUT}/verify.js`] }; }
     const written = await prepareVerify(root, { detail: options.detail });
     const next = `Run ${written} with the Figma MCP use_figma tool, save the returned JSON (e.g. figma-verify.json), then: sketchbook sync verify --ingest figma-verify.json. A differing combination is located with sketchbook sync verify --detail "<combination>".`;
@@ -72,7 +73,7 @@ export default {
   async run({ root, args, options, dryRun, out }) {
     const config = parseJson<HarnessConfigJson>(await readFile(join(root, 'harness.config.json'), 'utf8'));
     if (config.adapters.design.tool !== 'figma') throw Object.assign(new Error('No Figma design adapter configured in harness.config.json.'), { fix: 'sketchbook swap design figma --file <file key>' });
-    const file = config.adapters.design.file;
+    const file = designFile(config.adapters.design);
     if (args[0] === 'compare') {
       const ids = args.length > 1 ? args.slice(1) : await patternIds(root);
       if (options.ingest) {
@@ -152,6 +153,7 @@ export default {
     }
     const what = args[0] ?? 'tokens';
     if (!TARGETS.includes(what)) throw Object.assign(new Error(`Unknown sync target "${what}".`), { fix: `Use ${TARGETS.join(', ')}, verify, stamp or progress.` });
+    if (!file) throw noFileError();
     const next = `Run each script with the Figma MCP use_figma tool, in file order, one call at a time (never in parallel); check its report has no errors${what === 'describe' ? '; then run the library verify scripts (they compare each description).' : what === 'patterns' ? '; patterns-runtime.js goes first (it stores the shared runtime in the file as hidden text) and patterns-runtime-remove.js goes last (it deletes it); patterns-verify.js must report ok and every screen is checked by eye against its Storybook story.' : what === 'components' ? `; then components-${args[1] ?? '<batch>'}-verify.js must report ok; then sketchbook sync stamp doc <the batch's components> and sketchbook sync progress.` : what === 'verify-library' ? '; every set must report ok (a problem names the variant: sketchbook sync library <name> --detail <variant> lists the nodes).' : ['pages', 'brand', 'guide', 'foundations', 'icons', 'layout', 'theme-matrix'].includes(what) ? '.' : `; then sketchbook sync stamp ${what} and sketchbook sync verify.`}`;
     if (dryRun) { out(`Would write the ${what} scripts to ${OUT}/ for Figma file ${file}.`); return { changed: [`${OUT}/`], next, data: { file } }; }
     const { written, skipped, delta, coverage } = await prepare(root, what, { full: options.full, names: args.slice(1), detail: options.detail });

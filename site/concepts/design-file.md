@@ -6,7 +6,7 @@ order: 60
 
 The design file is generated from `spec/`. It is never a source. Do not edit variables, styles or docs in the file by hand: change the spec, then sync. A hand edit shows up as a mismatch in check D1.
 
-[Download the example Figma file](/assets/Sketchbook.fig) and import it into Figma to explore a reference snapshot of one possible Sketchbook output. For your own project, configure a separate design file in `harness.config.json` as the sync target.
+[Download the example Figma file](/assets/Sketchbook.fig) and import it into Figma to explore a reference snapshot of one possible Sketchbook output. Sketchbook ships with no file key: start by importing the example, then set your own file as the sync target with `sketchbook swap design figma --file <your file key>`. To sync without committing the key, set the `SKETCHBOOK_FIGMA_FILE` environment variable instead; it takes precedence over `adapters.design.file`.
 
 ## What sync writes
 

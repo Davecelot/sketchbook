@@ -42,6 +42,7 @@ Do not use this skill for:
 ### 1. Requirements (check first; explain plainly if one is missing)
 
 - The Figma MCP with `use_figma`. Load the `figma:figma-use` skill (and `figma:figma-generate-library` for library work) before the first `use_figma` call; call `create_session` with the file key once per task.
+- A file key: `SKETCHBOOK_FIGMA_FILE`, else `adapters.design.file`. The repository ships none; without one, `sketchbook sync` points to the example file to import first. Never write a key into a tracked file on the person's behalf.
 - The file must belong to a paid plan: `Semantic - Shape` has 4 modes and `Semantic - Density` 3. A Starter team allows one mode per collection; if `addMode` fails, say so and stop (`docs/research/figma-plans.md`).
 - The calls take at most 50,000 characters of code and return at most 48,000 bytes: scripts are generated to fit, verify returns digests.
 - Never write to any file other than `adapters.design.file`.

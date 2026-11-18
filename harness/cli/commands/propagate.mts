@@ -1,5 +1,10 @@
 import { spawnSync } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { designFile, noFileError } from '../../lib/design/sync.mjs';
+import { parseJson } from '../../lib/files.mjs';
+import type { HarnessConfigJson } from '../../../generated/types/harness-config.js';
 import { inputsHash, docsInputsHash, readRecord, writeRecord, hashFile, keepTime, RECORD } from '../../lib/propagation.mjs';
 import type { PropagationRecord } from '../../lib/propagation.mjs';
 import type { Command, OptionSpecs } from '../types.mjs';
@@ -32,7 +37,10 @@ export default {
   async run({ root, options, out }) {
     const changed: string[] = [];
     for (const s of STEPS) { out(`npm run ${s}`); run(root, ['npm', 'run', s], `npm run ${s}`); changed.push(`npm run ${s}`); }
-    for (const what of ['tokens', 'foundations']) {
+    const design = parseJson<HarnessConfigJson>(await readFile(join(root, 'harness.config.json'), 'utf8')).adapters?.design ?? {};
+    const syncDesign = design.tool === 'figma' && Boolean(designFile(design));
+    if (design.tool === 'figma' && !syncDesign) out(`sync skipped: ${(noFileError() as Error & { fix: string }).fix}`);
+    for (const what of syncDesign ? ['tokens', 'foundations'] : []) {
       out(`sync ${what}`);
       run(root, ['node', HARNESS_CLI, 'sync', what], `sync ${what}`);
       changed.push(`generated/design/figma (${what} scripts)`);

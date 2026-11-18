@@ -183,7 +183,14 @@ test('FG3 value comparison normalizes colors and numbers', () => {
 
 test('FG4 CLI: sync verify writes verify.js; --ingest writes verify.json that D1 reads', async () => {
   const dir = await fixture();
-  const cli = (...args: string[]): CliResult<{ changed: string[]; data: { mismatches: Mismatch[] } }> => { const r = spawnSync('node', [join(ROOT, 'harness/cli.mjs'), ...args, '--json'], { cwd: dir, encoding: 'utf8' }); return { code: r.status, json: parseJson(r.stdout) }; };
+  const run = (env: NodeJS.ProcessEnv, args: string[]) => spawnSync('node', [join(ROOT, 'harness/cli.mjs'), ...args, '--json'], { cwd: dir, encoding: 'utf8', env });
+  const { SKETCHBOOK_FIGMA_FILE: _ignored, ...noKey } = process.env;
+  for (const args of [['verify'], ['tokens']]) {
+    const r = run(noKey, ['sync', ...args]);
+    assert.equal(r.status, 1, `sync ${args.join(' ')} with no file key`);
+    assert.match(r.stdout + r.stderr, /Sketchbook\.fig/, 'points to the example file');
+  }
+  const cli = (...args: string[]): CliResult<{ changed: string[]; data: { mismatches: Mismatch[] } }> => { const r = run({ ...noKey, SKETCHBOOK_FIGMA_FILE: 'file-1' }, args); return { code: r.status, json: parseJson(r.stdout) }; };
   for (const args of [['verify'], ['--verify']]) {
     const v = cli('sync', ...args);
     assert.equal(v.code, 0, args.join(' '));

@@ -15,6 +15,7 @@ import { parseJson } from '../lib/files.mjs';
 import type { Envelope } from '../cli/types.mjs';
 import type { KnownCommands } from '../lib/claude-layer.mjs';
 import type { ComponentRegistry } from '../../generated/types/registry.js';
+import type { HarnessConfigJson } from '../../generated/types/harness-config.js';
 
 // The parts of `data` these tests read (status, presets): D types the --json boundary per call.
 interface StatusData { prefix: string; brand: { name: string }; components: { total: number; byStatus: unknown }; overrides: number; design: object }
@@ -47,6 +48,7 @@ test('L1 every registered command declares its contract', () => {
 test('L2 + L6 --json envelope on every command; dry runs write nothing', async () => {
   const dir = await fixture();
   await edit<ComponentRegistry>(dir, 'spec/registry.json', (r) => r.components.push({ name: 'Probe Widget', tier: 3, status: 'planned' }));
+  await edit<HarnessConfigJson>(dir, 'harness.config.json', (j) => { j.adapters.design.file = 'file-1'; });
   const files = ['brand.config.json', 'harness.config.json', 'spec/registry.json', 'src/components/button/Button.ts'];
   const before = await Promise.all(files.map((f) => readFile(join(dir, f), 'utf8')));
   const runs = [

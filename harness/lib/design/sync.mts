@@ -17,6 +17,14 @@ type DesignAdapter = Partial<HarnessConfigJson['adapters']['design']>;
 export interface Synced { hash: string; syncedAt: string }
 export interface Stamp { tool: DesignAdapter['tool']; file: DesignAdapter['file']; tokens: Synced | null; foundations?: Synced; components: Record<string, Synced | undefined> }
 
+// The env key lets a maintainer sync their own file without committing its key; a shared config ships with none.
+export const FILE_ENV = 'SKETCHBOOK_FIGMA_FILE';
+export const EXAMPLE_FILE = 'https://sketchbook-docs.vercel.app/assets/Sketchbook.fig';
+export const designFile = (design: DesignAdapter): string | null => process.env[FILE_ENV] || design.file || null;
+export const noFileError = (): Error => Object.assign(new Error('No design file set yet (adapters.design.file is empty).'), {
+  fix: `Import the example file (${EXAMPLE_FILE}) into Figma, then sketchbook swap design figma --file <your file key>, or set ${FILE_ENV} to keep the key out of the repository.`,
+});
+
 export async function readStamp(root: string): Promise<Stamp | null> {
   try { return parseJson<Stamp>(await readFile(join(root, STAMP), 'utf8')); } catch { return null; }
 }
@@ -52,7 +60,7 @@ export async function ingestVerify<R extends IngestReadback>(root: string, readb
   const design = await designOf(root);
   const r = await compare(root, readback);
   const doc = {
-    tool: design.tool, file: design.file, readFile: readback.file ?? null, checkedAt: new Date().toISOString().slice(0, 10),
+    tool: design.tool, file: design.file ?? null, checkedAt: new Date().toISOString().slice(0, 10),
     method: 'sketchbook sync verify: the design file resolved every managed variable for every theme combination; compared with the spec for the same combination (composites skipped).',
     specHash: r.hash, readHash: readback.hash ?? null, compared: r.compared, skipped: r.skipped, mismatches: r.mismatches,
   };
@@ -60,7 +68,8 @@ export async function ingestVerify<R extends IngestReadback>(root: string, readb
     await mkdir(join(root, 'generated/design'), { recursive: true });
     await writeFile(join(root, VERIFY), JSON.stringify(doc, null, 2) + '\n');
   }
-  return { ...doc, stale: r.stale, wrongFile: Boolean(readback.file && design.file && readback.file !== design.file) };
+  const file = designFile(design);
+  return { ...doc, file, readFile: readback.file ?? null, stale: r.stale, wrongFile: Boolean(readback.file && file && readback.file !== file) };
 }
 
 // ---- progress register: the stage of every component doc (generated/design/progress.json), a readable list

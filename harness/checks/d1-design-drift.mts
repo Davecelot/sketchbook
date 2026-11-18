@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tokenPayload } from '../lib/design/tokens.mjs';
 import { contractHash, mdOf } from '../lib/design/components.mjs';
-import { STAMP, VERIFY } from '../lib/design/sync.mjs';
+import { EXAMPLE_FILE, STAMP, VERIFY, designFile } from '../lib/design/sync.mjs';
 import { parseJson } from '../lib/files.mjs';
 import type { CheckContext, CheckIssue, CheckResult } from './types.mjs';
 
@@ -23,6 +23,7 @@ export async function run({ root, config, all }: CheckContext): Promise<CheckRes
   if (config.adapters.design.available === false) return { errors, warnings, info: [{ note: 'design adapter marked unavailable; drift not checked until the preflight passes' }] };
   let stamp: Stamp;
   try { stamp = parseJson<Stamp>(await readFile(join(root, STAMP), 'utf8')); } catch {
+    if (!designFile(config.adapters.design)) return { errors, warnings, info: [{ note: `no design file set yet: import the example (${EXAMPLE_FILE}) into Figma, then sketchbook swap design figma --file <your file key>` }] };
     // Never synced: an error only once the project has propagated (generated/propagation.json), so a new project is not failed before its first build.
     const propagated = await readFile(join(root, 'generated/propagation.json'), 'utf8').then(() => true, () => false);
     if (propagated) errors.push({ file: STAMP, msg: `the design file (${tool}) was never synced`, fix: 'Run sketchbook propagate, then the sync scripts it lists.' });
