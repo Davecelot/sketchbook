@@ -1,0 +1,91 @@
+{
+  "name": "alert",
+  "component": "Alert",
+  "displayName": "Alert",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-alert",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/alert-2026-11-15.md",
+      "hash": "9cf980ba345db73d493b"
+    },
+    {
+      "path": "docs/parity-audits/alert-2026-11-08.md",
+      "hash": "acbff53556d78aa71c4a"
+    },
+    {
+      "path": "playwright/tests/alert/__screen-reader__/stories/components-alert--danger.txt",
+      "hash": "5c30877339f63c1098e7"
+    },
+    {
+      "path": "playwright/tests/alert/__screen-reader__/stories/components-alert--default.txt",
+      "hash": "52150c86b71449888f16"
+    },
+    {
+      "path": "playwright/tests/alert/__screen-reader__/stories/components-alert--title-only.txt",
+      "hash": "47cebb310b907f59b96f"
+    },
+    {
+      "path": "playwright/tests/alert/__screen-reader__/stories/components-alert--variants.txt",
+      "hash": "a24ca0bc70f381d50059"
+    },
+    {
+      "path": "playwright/tests/alert/__screen-reader__/stories/components-alert--with-action-no-icon.txt",
+      "hash": "67630242c9c940463652"
+    },
+    {
+      "path": "playwright/tests/alert/__screen-reader__/stories/components-alert--with-action.txt",
+      "hash": "67630242c9c940463652"
+    },
+    {
+      "path": "playwright/tests/alert/__screen-reader__/stories/components-alert--without-icon.txt",
+      "hash": "52150c86b71449888f16"
+    },
+    {
+      "path": "playwright/tests/alert/alert.behavior.spec.ts",
+      "hash": "6b631857d33e60b3b59e"
+    },
+    {
+      "path": "spec/components/alert/contract.json",
+      "hash": "16a43bc5189d44e14292"
+    },
+    {
+      "path": "spec/components/alert/contract.md",
+      "hash": "6ae7cb35ae4d69883a3b"
+    },
+    {
+      "path": "src/components/alert/Alert.scss",
+      "hash": "be66155fe522eb0f75e4"
+    },
+    {
+      "path": "src/components/alert/Alert.stories.ts",
+      "hash": "b1f8249847af028c520e"
+    },
+    {
+      "path": "src/components/alert/Alert.ts",
+      "hash": "16eb63459233148e6a59"
+    },
+    {
+      "path": "src/components/alert/AlertAction.ts",
+      "hash": "e392d4a74e9d1b717ee1"
+    },
+    {
+      "path": "src/components/alert/AlertDescription.ts",
+      "hash": "d9376dbfc0c412d43f02"
+    },
+    {
+      "path": "src/components/alert/AlertTitle.ts",
+      "hash": "919ddd492eb1fa90aadc"
+    },
+    {
+      "path": "src/components/alert/index.ts",
+      "hash": "52cc35ea0d55324a9212"
+    }
+  ]
+}

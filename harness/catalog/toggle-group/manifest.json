@@ -1,0 +1,111 @@
+{
+  "name": "toggle-group",
+  "component": "ToggleGroup",
+  "displayName": "Toggle Group",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-toggle-group",
+  "prefix": "sb",
+  "dependsOn": [
+    "toggle"
+  ],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/toggle-group-2026-11-15.md",
+      "hash": "ebcee45fa104cfa89d4f"
+    },
+    {
+      "path": "docs/parity-audits/toggle-group-2026-11-08.md",
+      "hash": "a43866348a36242e2b4e"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--default.txt",
+      "hash": "6f6c143c8a199c913076"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--disabled-item.txt",
+      "hash": "cb207321ae902ad2316b"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--disabled.txt",
+      "hash": "b39b752eca28b0def9f6"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--in-fieldset.txt",
+      "hash": "65b5cdec43bfefa463f5"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--multiple.txt",
+      "hash": "599a5a04bc484ca3b63a"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--outline.txt",
+      "hash": "6f6c143c8a199c913076"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--rtl.txt",
+      "hash": "6f6c143c8a199c913076"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--spacing.txt",
+      "hash": "6f6c143c8a199c913076"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--variants.txt",
+      "hash": "bd424f103ce11b4028bf"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--vertical.txt",
+      "hash": "6f6c143c8a199c913076"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/stories/components-toggle-group--with-text.txt",
+      "hash": "5a8079fac7a37e9643e4"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/toggle-group-moved.txt",
+      "hash": "f846b21b23d9e132fded"
+    },
+    {
+      "path": "playwright/tests/toggle-group/__screen-reader__/toggle-group-pressed.txt",
+      "hash": "0fa34763f042c43ce73b"
+    },
+    {
+      "path": "playwright/tests/toggle-group/toggle-group.behavior.spec.ts",
+      "hash": "d0677f0dfb61de88dd9e"
+    },
+    {
+      "path": "spec/components/toggle-group/contract.json",
+      "hash": "ed9cb4818db1e6341ad9"
+    },
+    {
+      "path": "spec/components/toggle-group/contract.md",
+      "hash": "190b8f8c8a7ae50ab17d"
+    },
+    {
+      "path": "src/components/toggle-group/ToggleGroup.scss",
+      "hash": "838108eb3fe1ef7caf97"
+    },
+    {
+      "path": "src/components/toggle-group/ToggleGroup.stories.ts",
+      "hash": "19433a77dc520968adc7"
+    },
+    {
+      "path": "src/components/toggle-group/ToggleGroup.ts",
+      "hash": "e1c72518f6c3a4cb47f6"
+    },
+    {
+      "path": "src/components/toggle-group/ToggleGroupItem.ts",
+      "hash": "9871546bf65ecfd8194e"
+    },
+    {
+      "path": "src/components/toggle-group/context.ts",
+      "hash": "c6d49c47cbca3721c6e0"
+    },
+    {
+      "path": "src/components/toggle-group/index.ts",
+      "hash": "2962515e0df1a6578234"
+    }
+  ]
+}

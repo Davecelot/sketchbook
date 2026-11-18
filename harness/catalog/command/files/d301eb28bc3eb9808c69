@@ -1,0 +1,7 @@
+- combobox "Search commands" [focused, autocomplete=list, expanded=true, active "Calendar"] value "cal"
+- listbox "Search commands" [orientation=vertical]
+  - group "Suggestions"
+    - option "Calendar" [selected]
+    - option "Calculator"
+- status [live=polite]
+  - text "2 results"

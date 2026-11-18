@@ -1,0 +1,557 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Dialog",
+  "tag": "sb-dialog",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A modal window over the page: the rest of the page is inert until it closes. Used for a focused task (search, a short form, a confirmation). Eight custom elements share the open state through context.",
+  "dependsOn": [
+    "Button"
+  ],
+  "props": {
+    "open": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Whether the dialog is showing. The trigger, the close controls, Escape and a backdrop click change it; code can set it too. Set on first render, the dialog opens as soon as it is connected."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "notes": "sb-dialog: light-DOM wrapper that owns the open state and shares it with its parts through context. No visible box of its own."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "component": "sb-dialog-trigger, sb-dialog-content",
+      "notes": "Optionally one trigger, then one content. Without a trigger the dialog is opened from code (open = true), for example from a keyboard shortcut."
+    }
+  },
+  "events": {
+    "sb-toggle": {
+      "bubbles": true,
+      "composed": true,
+      "cancelable": false,
+      "native": false,
+      "detail": null,
+      "note": "PROPOSAL: fires on the sb-dialog host after open changes, from a person or from code (like the native dialog's toggle and Collapsible). Read host.open for the new state. Bubbles and is composed, so a listener on an outer dialog also receives a nested dialog's sb-toggle: check event.target."
+    },
+    "sb-cancel": {
+      "bubbles": true,
+      "composed": true,
+      "cancelable": true,
+      "native": false,
+      "detail": null,
+      "note": "PROPOSAL: fires on the sb-dialog host before Escape or a backdrop click closes the dialog (like the native dialog's cancel). preventDefault() keeps it open, for example to confirm discarding unsaved input. Not fired for the close button, sb-dialog-close or code. Bubbles and is composed, so a listener on an outer dialog also receives a nested dialog's sb-cancel: check event.target before calling preventDefault()."
+    }
+  },
+  "states": {
+    "open": {
+      "trigger": "open attribute",
+      "tokens": [
+        "dialog.bg",
+        "dialog.shadow",
+        "dialog.backdrop"
+      ],
+      "note": "The surface shows over a dimmed backdrop; the rest of the page is inert and does not scroll."
+    }
+  },
+  "accessibility": {
+    "role": "dialog (modal)",
+    "native": "dialog",
+    "accessibleNameSource": "PROPOSAL: the sb-dialog-title text, through an element reference (ID references do not cross shadow roots, SB-0009); with no title, host aria-label on sb-dialog-content is forwarded. The description, when present, is the accessible description.",
+    "missingNameWarning": "Dev-only console warning, once per element, when the content opens with no sb-dialog-title and no aria-label.",
+    "targetSize": "The built-in close button is a Button at size icon-small (32x32px, WCAG 2.5.8). Controls placed in the dialog follow their own components.",
+    "focusRingVisible": "The dialog surface takes no focus ring; controls inside show their own.",
+    "keyboard": {
+      "Escape": "close the dialog (fires sb-cancel first; a prevented sb-cancel keeps it open); ignored while an input method is composing text",
+      "Tab": "move to the next focusable element inside the dialog; from the last it wraps to the first (Shift+Tab from the first wraps to the last); the page behind is inert",
+      "Shift+Tab": "move to the previous focusable element inside the dialog",
+      "Enter": "on the trigger's control, open the dialog",
+      "Space": "on the trigger's control, open the dialog"
+    },
+    "aria": [
+      "PROPOSAL: role=dialog and the modal state come from the native dialog shown modally, so the page behind is inert and out of the accessibility tree while it is open",
+      "on open, focus moves to the first element with autofocus inside the content, otherwise to the first focusable element, otherwise to the close button (APG); for long or read-first content an author puts autofocus on a static start element with tabindex=-1 (APG)",
+      "on close, focus returns to the element that was focused before opening (normally the trigger's control); if that element is gone, focus falls back to the document",
+      "name: the dialog is labelled by sb-dialog-title through an element reference; with no title, aria-label on sb-dialog-content is forwarded; where element references are unsupported, the title text is copied into aria-label",
+      "description: the dialog is described by sb-dialog-description through an element reference; omitted where unsupported (a description is optional, APG)",
+      "references are re-resolved when a title or description is added or removed later",
+      "sb-dialog-title is a heading at level 2 (the dialog is its own context)",
+      "the built-in close button is a Button named by closeLabel (default \"Close\"; translate it); its icon is aria-hidden",
+      "the backdrop is presentational; a press and release both on it close the dialog, a drag that starts inside the surface does not",
+      "the trigger and close wrappers add no role: the slotted control keeps its own role and name",
+      "while open, the page behind does not scroll; nested dialogs keep it locked until the last one closes",
+      "forced colors: the surface keeps a visible border"
+    ],
+    "announcements": [
+      "Opening announces the dialog role, its name and its description (from the screen reader, no live region)."
+    ],
+    "contrast": [
+      {
+        "fg": "dialog.fg",
+        "bg": "dialog.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "dialog.description.fg",
+        "bg": "dialog.bg",
+        "kind": "text"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.10",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "dialog.font-family": "{font.family.body}",
+    "dialog.bg": "{color.background}",
+    "dialog.fg": "{color.foreground}",
+    "dialog.border": "{color.border}",
+    "dialog.border-width": "{border-width.default}",
+    "dialog.radius": "{radius.surface}",
+    "dialog.shadow": "{elevation.lg}",
+    "dialog.backdrop": "{color.overlay}",
+    "dialog.padding": "{space.inset.surface}",
+    "dialog.max-width": "{size.dialog.max-width}",
+    "dialog.gap": "{space.stack.loose}",
+    "dialog.viewport-margin": "{space.inset.md}",
+    "dialog.close.inset": "{space.inset.md}",
+    "dialog.header.gap": "{space.stack.sm}",
+    "dialog.header.close-space": "{size.control.sm}",
+    "dialog.footer.gap": "{space.stack.sm}",
+    "dialog.title.font-size": "{font.size.heading-lg}",
+    "dialog.title.font-weight": "{font.weight.heading}",
+    "dialog.title.line-height": "{font.line-height.heading}",
+    "dialog.description.fg": "{color.muted-foreground}",
+    "dialog.description.font-size": "{font.size.body}",
+    "dialog.description.line-height": "{font.line-height.body}"
+  },
+  "elements": [
+    {
+      "tag": "sb-dialog-trigger",
+      "summary": "Opens its dialog when the control inside it is activated. Adds no box or role of its own.",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "component": "sb-button",
+          "notes": "One control, usually a Button. Its own text names it."
+        }
+      },
+      "events": {},
+      "notes": "Must be a child of sb-dialog."
+    },
+    {
+      "tag": "sb-dialog-content",
+      "summary": "The modal surface: a bordered, shadowed panel centered over a dimmed backdrop, with a close button in its top inline-end corner.",
+      "role": "dialog",
+      "props": {
+        "hideCloseButton": {
+          "type": "boolean",
+          "default": false,
+          "attribute": "hide-close-button",
+          "reflect": true,
+          "proposal": true,
+          "note": "Hides the built-in close button. Named so the attribute is off by default (the visual reference shows the button by default). Keep another visible way to close, such as a Cancel button in sb-dialog-close (APG)."
+        },
+        "closeLabel": {
+          "type": "text",
+          "default": "Close",
+          "attribute": "close-label",
+          "proposal": true,
+          "note": "Accessible name of the built-in close button. Translate it."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "backdrop",
+          "role": "container",
+          "parent": null,
+          "notes": "Dims the page behind the surface; a press and release on it closes the dialog."
+        },
+        {
+          "name": "dialog",
+          "role": "container",
+          "parent": null,
+          "part": "dialog",
+          "notes": "The surface: background, border, radius, shadow, padding, vertical gap between its children; scrolls when taller than the viewport."
+        },
+        {
+          "name": "close",
+          "role": "control",
+          "parent": "dialog",
+          "part": "close",
+          "optional": true,
+          "controlledBy": "hideCloseButton",
+          "component": "Button",
+          "notes": "Ghost Button at size icon-small with an x icon, named by closeLabel; after the content in focus order."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Any content: usually sb-dialog-header, a body (a form, a Command, text), then sb-dialog-footer."
+        }
+      },
+      "events": {},
+      "notes": "Must be a child of sb-dialog. Exactly one per dialog."
+    },
+    {
+      "tag": "sb-dialog-header",
+      "summary": "Stacks the title and the description. Centered on narrow screens, start-aligned from 40em.",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-dialog-title, sb-dialog-description",
+          "notes": "A title, then an optional description."
+        }
+      },
+      "events": {},
+      "notes": "Inside sb-dialog-content."
+    },
+    {
+      "tag": "sb-dialog-footer",
+      "summary": "Holds the actions. Stacked full width in reading order on narrow screens; a row aligned to the end from 40em.",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Buttons, in reading order: the dismissive one (in sb-dialog-close) first, the primary one last."
+        }
+      },
+      "events": {},
+      "notes": "Inside sb-dialog-content."
+    },
+    {
+      "tag": "sb-dialog-title",
+      "summary": "The dialog's title and accessible name: a level 2 heading.",
+      "role": "heading",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Short plain text."
+        }
+      },
+      "events": {},
+      "notes": "One per dialog, inside sb-dialog-content (usually in sb-dialog-header)."
+    },
+    {
+      "tag": "sb-dialog-description",
+      "summary": "One short line of supporting text in muted color; the dialog's accessible description.",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Plain text. Structured content (lists, several paragraphs) belongs in the body instead (APG)."
+        }
+      },
+      "events": {},
+      "notes": "Optional; at most one per dialog, inside sb-dialog-content."
+    },
+    {
+      "tag": "sb-dialog-close",
+      "summary": "Closes its dialog when the control inside it is activated. Adds no box or role of its own.",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "component": "sb-button",
+          "notes": "One control, usually a Button such as Cancel or Done."
+        }
+      },
+      "events": {},
+      "notes": "Inside sb-dialog-content."
+    }
+  ],
+  "aiHints": {
+    "category": "organism",
+    "keywords": [
+      "dialog",
+      "modal",
+      "popup",
+      "overlay",
+      "search palette",
+      "confirm"
+    ],
+    "useCases": [
+      {
+        "when": "A short task that needs full attention before returning to the page (edit a profile, a short form)",
+        "use": "sb-dialog with a trigger, header, the form and a footer with Cancel (sb-dialog-close) and Save"
+      },
+      {
+        "when": "A search or command palette opened from a button or a shortcut",
+        "use": "sb-dialog opened from code, sb-dialog-content with aria-label and hide-close-button, a Command with autofocus inside"
+      },
+      {
+        "when": "Long content that scrolls",
+        "use": "sb-dialog; the surface scrolls within the viewport"
+      },
+      {
+        "when": "Optional detail that can stay on the page",
+        "use": "Collapsible or Accordion instead of a dialog"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "A dialog with no title and no aria-label",
+        "why": "The dialog needs an accessible name (APG)",
+        "alternative": "Add sb-dialog-title, or aria-label on sb-dialog-content"
+      },
+      {
+        "pattern": "Removing every visible way to close",
+        "why": "A visible close control is strongly recommended (APG)",
+        "alternative": "Keep the close button, or add a Cancel button in sb-dialog-close"
+      },
+      {
+        "pattern": "Lists or several paragraphs in sb-dialog-description",
+        "why": "The description is read as one string; structure is lost (APG)",
+        "alternative": "Keep the description to one short line and put structured content in the body"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/dialog/Dialog.ts",
+        "src/components/dialog/DialogTrigger.ts",
+        "src/components/dialog/DialogContent.ts",
+        "src/components/dialog/DialogHeader.ts",
+        "src/components/dialog/DialogFooter.ts",
+        "src/components/dialog/DialogTitle.ts",
+        "src/components/dialog/DialogDescription.ts",
+        "src/components/dialog/DialogClose.ts",
+        "src/components/dialog/context.ts",
+        "src/components/dialog/Dialog.scss",
+        "src/components/dialog/Dialog.styles.ts",
+        "src/components/dialog/Dialog.stories.ts",
+        "src/components/dialog/index.ts"
+      ],
+      "parts": [
+        "dialog",
+        "close"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/dialog/dialog.behavior.spec.ts",
+      "coverage": [
+        "open reflects; set in markup opens on connect; set from code opens and closes",
+        "hideCloseButton removes the built-in close button; closeLabel names it (\"Close\" by default), icon aria-hidden",
+        "sb-toggle bubbles, composed, after each change from a person or code",
+        "sb-cancel bubbles, composed, cancelable on Escape and on a backdrop press and release; not on the close button, sb-dialog-close or code",
+        "a prevented sb-cancel keeps the dialog open (Escape twice, backdrop); the close button still closes it after",
+        "trigger opens on click, Enter and Space; trigger and close wrappers add no role (display contents)",
+        "sb-dialog-close control and the built-in close button close",
+        "native modal dialog in the accessibility tree; the page behind cannot be clicked or focused",
+        "page does not scroll on wheel while open, scrolls again after; nested dialogs keep the lock until the last closes",
+        "moved to another container while open: stays modal with its backdrop and scroll lock; the lock is released on close",
+        "nested: Escape closes the top dialog first",
+        "focus on open: autofocus element, a Command with autofocus, else the first focusable, else the close button",
+        "focus on close returns to the trigger control; a removed trigger raises no error and focus falls to the document",
+        "Escape inside a Command closes the dialog (Q5)",
+        "Tab and Shift+Tab stay among the dialog controls, close button last",
+        "a drag from inside the surface released on the backdrop and a click on the surface padding do not close and fire no sb-cancel; a backdrop click still closes after",
+        "name from the title and description from the description (element references, accessibility tree)",
+        "name from aria-label on sb-dialog-content without a title",
+        "title is a level 2 heading (ElementInternals, accessibility tree)",
+        "a title and description added after opening are linked again",
+        "missing-name warning once",
+        "axe clean: default, open in markup, no close button, form, long content, search palette, nested, RTL (opened through the trigger), dark mode",
+        "320px wide: viewport margin kept, surface scrolls inside, no horizontal page scroll; wide: max-width token",
+        "from 40em header start-aligned and footer a row at the end; below, header centered and footer stacked in DOM order",
+        "close button at the inline end, mirrors in RTL",
+        "a long title on a narrow screen does not run under the close button",
+        "forced colors: CanvasText border",
+        "form inside: required blocks submit, FormData values, open = false in the submit handler closes and returns focus",
+        "surface, backdrop, title and description read their component tokens",
+        "moved while open stays modal with the scroll lock; re-rendered while detached stays open; autofocus re-applied after a move"
+      ],
+      "drift": [
+        {
+          "aspect": "surface element",
+          "contract": "modal dialog, page behind inert, Escape closes, top of every stack",
+          "realization": "A native <dialog part=\"dialog\"> in sb-dialog-content's shadow root, shown with showModal(), with a default slot; it provides the top layer, inertness and focus restore. Backdrop via ::backdrop. The reference uses a portal and a focus-trap script."
+        },
+        {
+          "aspect": "name and description",
+          "contract": "labelled by the title, described by the description",
+          "realization": "ariaLabelledByElements / ariaDescribedByElements on the inner <dialog> pointing at the title and description hosts; aria-label copy of the title text where element references are unsupported (the title is observed, so a later change to its text is copied again; the description has no fallback and is omitted there); host aria-label on sb-dialog-content forwarded when there is no title. The title host is role heading, level 2 through ElementInternals (Playwright's role engine does not read it; the spec reads the browser's accessibility tree)."
+        },
+        {
+          "aspect": "trigger and close",
+          "contract": "the slotted control opens or closes the dialog",
+          "realization": "display:contents wrappers listening for click on the host (the reference's asChild). aria-haspopup is not set: attributes on an sb-button host do not reach its inner button (SB-0009), and the APG does not require it."
+        },
+        {
+          "aspect": "initial focus",
+          "contract": "the first element with autofocus, otherwise the first focusable, otherwise the close button",
+          "realization": "The platform's dialog focusing steps do not look for autofocus in slotted content, so after showModal() the content focuses its own first [autofocus] element; the first-focusable and close-button fallbacks are the platform's."
+        },
+        {
+          "aspect": "Escape",
+          "contract": "Escape fires sb-cancel; a prevented sb-cancel keeps the dialog open",
+          "realization": "Handled on keydown inside the dialog (preventDefault, then sb-cancel), not on the platform cancel event, which is cancelable only once per user activation; an Escape that a control inside already prevented is left alone. The platform cancel and close events are still handled for close requests that do not come from the key."
+        },
+        {
+          "aspect": "sb-toggle on first render",
+          "contract": "fires after open changes",
+          "realization": "open set in markup opens on connect without an sb-toggle (not a change), as Collapsible's sb-toggle."
+        },
+        {
+          "aspect": "scroll lock",
+          "contract": "the page behind does not scroll while open",
+          "realization": "overflow hidden and scrollbar-gutter stable on the document element while any sb-dialog is open (counted for nested dialogs), the author's inline values restored on close. Blocks user scrolling (wheel, keys, touch); script can still call scrollBy, as with any overflow hidden. A native modal dialog does not lock scrolling."
+        },
+        {
+          "aspect": "light dismiss",
+          "contract": "a press and release on the backdrop closes",
+          "realization": "pointerdown and click both outside the surface's box. closedby=any is not used: not in every supported browser."
+        },
+        {
+          "aspect": "form method=dialog",
+          "contract": "close with sb-dialog-close or open = false",
+          "realization": "A form in the light DOM has no ancestor dialog (the dialog is in a shadow root), so method=dialog does not close it."
+        },
+        {
+          "aspect": "header and footer at 40em",
+          "contract": "narrow and wide layouts",
+          "realization": "A wider-viewport rule (media query at 40em, as Breadcrumb); the design file draws the wide layout."
+        },
+        {
+          "aspect": "footer order on narrow screens",
+          "contract": "actions stacked full width",
+          "realization": "footer on narrow screens stacks in DOM order (owner, WCAG 1.3.2/2.4.3); the visual reference reverses it"
+        },
+        {
+          "aspect": "close button and title",
+          "contract": "the close button sits in the top inline-end corner",
+          "realization": "The button is absolutely positioned; a slotted sb-dialog-header reserves inline-end space for it (dialog.header.close-space) while it is shown, so a long title wraps before it. The reference does not reserve the space."
+        },
+        {
+          "aspect": "motion",
+          "contract": "no enter or exit animation in this version",
+          "realization": "The reference fades and zooms; deferred (Q2)."
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Dialog": 2
+        }
+      },
+      "coverage": [
+        "Dialog: 2 variant(s), Open (False, True); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "dialog.close.inset",
+          "contract": "Offset of the close button from the top and inline-end edges.",
+          "realization": "The close button sits in the header row of the auto layout; an absolutely positioned inset is not drawn."
+        },
+        {
+          "aspect": "dialog.header.close-space",
+          "contract": "Inline-end space reserved in the header while the close button shows.",
+          "realization": "The header row lays the title and the close button side by side, so the space is implied by the layout."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q0",
+      "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Yes: the visual reference's Dialog docs page and registry entry, the APG Dialog (Modal) pattern, existing semantic tokens."
+    },
+    {
+      "id": "Q1",
+      "question": "Two semantic tokens are missing: the backdrop color (black at 50% in the visual reference) and the surface max width (32rem in the visual reference). Add color.overlay and size.dialog.max-width (plan.md, Semantic tokens to add)?",
+      "recommendation": "Yes, add both with sketchbook tokens add; the contract uses them through dialog.backdrop and dialog.max-width. Blocks the build.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Yes. color.overlay and size.dialog.max-width are added (approved by the owner); the contract uses them through dialog.backdrop and dialog.max-width."
+    },
+    {
+      "id": "Q2",
+      "question": "Deferred: non-modal dialog, alert dialog (confirmations), sheet/drawer, enter/exit animation, header and footer that stay in view while only the body scrolls. Confirm they stay out of this version?",
+      "recommendation": "Defer all five; the whole surface scrolls for now. Alert dialog becomes its own contract when the first confirm dialog is needed (role alertdialog, no light dismiss, focus on the least destructive action); sheet reuses sb-dialog-content with a side placement later; animation comes with motion tokens and is removed under reduced motion.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Defer all five (non-modal, alert dialog, sheet, animation, sticky header and footer); the whole surface scrolls for now."
+    },
+    {
+      "id": "Q3",
+      "question": "Built-in close button (the visual reference's default; the APG recommends a visible close) with hideCloseButton and closeLabel, or compose-only with sb-dialog-close?",
+      "recommendation": "Built-in, as proposed: faithful to the reference and accessible by default; closeLabel keeps it translatable.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Built-in close button, hideable with hideCloseButton, translatable with closeLabel."
+    },
+    {
+      "id": "Q4",
+      "question": "Tab at the last element: accept the native modal behavior (focus may pass through the browser's controls) or wrap inside the page with script, as the APG and the reference do?",
+      "recommendation": "Accept native: the page stays inert either way, and a script trap re-implements what the platform does and fights it on nested content.",
+      "status": "answered",
+      "answeredOn": "2026-11-16",
+      "answer": "Revised by the owner on 2026-11-16: wrap inside the page, as the APG and the reference do. Tab from the last control wraps to the first and Shift+Tab from the first wraps to the last, inside the page (APG; Q4 revised 2026-11-16), through the shared focus-wrap helper also used by the Sidebar drawer. (First answer, 2026-11-12: native modal behavior, no script trap.)"
+    },
+    {
+      "id": "Q5",
+      "question": "Composition with sb-command (authored concurrently): does Command honor autofocus on its host and call preventDefault on an Escape it consumes itself?",
+      "recommendation": "Ask the Command author to support both; Dialog depends only on these two platform behaviors, not on Command internals.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Confirmed: sb-command focuses its search field through autofocus on its host and never consumes Escape (both covered by its behavior spec), so a dialog around it closes on Escape."
+    },
+    {
+      "id": "Q6",
+      "question": "Manual screen-reader pass (VoiceOver, NVDA) on the name and description through element references and on the aria-label fallback.",
+      "recommendation": "Run it before beta.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "The manual pass is replaced by the automated screen-reader views (SB-0113): playwright/tests/dialog/__screen-reader__/dialog-closed.txt and dialog-open.txt, plus the story views in playwright/tests/dialog/__screen-reader__/stories/."
+    }
+  ],
+  "decisions": [
+    "SB-0007",
+    "SB-0009",
+    "SB-0102"
+  ]
+}

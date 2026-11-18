@@ -1,0 +1,84 @@
+# Accessibility audit: Sidebar (2026-11-16)
+
+Scope: `spec/components/sidebar/contract.json` and `contract.md`, `src/components/sidebar/*`, `src/controllers/labelled-by.ts` (SidebarGroup's label now goes through `LabelledByController`), `playwright/tests/sidebar/*`. Standard: WCAG 2.2 AA and the WAI-ARIA APG patterns the contract names (landmarks, disclosure for the trigger, modal dialog for the drawer). Method: behavior spec, `check`, and live probes in Chromium against the running Storybook (real key presses, CDP `Accessibility.getFullAXTree`, computed styles, media emulation).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.3 / 1.4.11 contrast | Pass | Contract pairs are in T6, which passes. Live: focus ring `rgb(115,115,115)` on panel `rgb(250,250,250)` (light) and `rgb(161,161,161)` on `rgb(23,23,23)` (dark), both above 3:1; group label text is the same two colors, above 4.5:1 |
+| P | 1.4.1 color alone | Pass | The current page is `aria-current="page"` on the link as well as fill and weight; the trigger state is `aria-expanded` |
+| P | forced-colors | Pass | `forced-colors: active`: current item computes a system-color fill with contrasting text; behavior spec asserts the Highlight marker and the panel border |
+| P | prefers-reduced-motion (2.3.3) | Pass | `reducedMotion: reduce`: drawer `transition-duration` computes to `0s`; spec covers the wide panel too |
+| P | 1.4.10 reflow, 1.4.12 text spacing | Pass | Narrow story at 320px wide: `scrollWidth` 320, no horizontal scroll; spec checks that a long label wraps and grows the row |
+| O | 2.1.1 keyboard, wide | Pass | Default story, Tab from the page start: six links in document order, then the trigger, then "Back to top". Enter and Space on the trigger toggle `open` (true to false to true); focus stays on the trigger. A collapsed panel adds no stops (next Tab goes to "Back to top") |
+| O | 2.1.1 keyboard, drawer (APG modal dialog) | Pass | 600px story: Tab reaches the trigger, Enter opens the drawer and focus lands on the first link; nine more Tabs wrap Sidebar to Introduction (no escape to the page, no trap); Shift+Tab walks back; Escape closes and focus is on the trigger; reopening with Enter works; Enter on a link closes the drawer and focus is on the trigger |
+| O | 2.1.2 no keyboard trap | Pass | The wrap is the modal pattern and Escape always leaves; in the wide panel Tab passes through |
+| O | Toggle shortcut | Not applicable | No shortcut is implemented or specified (`contract.md` section 1 defers it); Ctrl+B and Cmd+B change nothing, so there is no conflict to check |
+| O | 2.4.7 focus visible | Pass | 3px ring on `:focus-visible` for links and trigger in light and dark; keyboard-only is covered by the spec |
+| O | 2.4.3 focus order | Pass | Sidebar before main, as the DOM reads; inside the drawer the trigger is inert and out of the order |
+| O | 2.5.8 target size | Pass | Measured: menu buttons 239x32, trigger 32x32 |
+| O | Inert background | Pass | While the drawer is open the AX tree holds the modal dialog only (no heading or "Back to top") |
+| U | 2.4.6 / 3.3.2 names | Pass | AX: `navigation "Documentation"`, `dialog "Documentation"` (`modal=true`), `button "Toggle Sidebar"`, links by their text; icons are `aria-hidden` |
+| U | 3.2.x predictable | Pass | Focus and hover change nothing; only an activation toggles or opens; crossing the breakpoint moves focus to the trigger rather than dropping it (spec) |
+| R | 4.1.2 roles, states | Pass | `button expanded=true/false` follows the visible state in both modes; `group` x2; `list`/`listitem` hosts; no menu roles; the active link carries `aria-current=page` |
+| R | LabelledByController, group names | Pass | Live AX: `group "Getting started"` and `group "Components"` with no `aria-label` attribute (element reference through `ElementInternals`); renaming the label text updates the name to "Renamed"; removing the label leaves a group with an empty name (see low finding 2) |
+| R | ID references across shadow roots (SB-0009) | Pass | `nav` and `dialog` use `aria-label` in their own root; trigger and groups use element references; no `aria-controls` or `aria-labelledby` ID is used. Chromium shows `controls=""` on the trigger, as the contract's drift entry says |
+| R | axe | Pass | Behavior spec: Default, Collapsed, Not collapsible, Narrow drawer open, RTL, Dark clean |
+| R | RTL | Pass | RTL story Tab order is the four links, trigger, "Back to top"; panel and drawer sides covered by the spec |
+| R | Screen-reader evidence | Pass | AX trees above and check S1 (`playwright/tests/sidebar/__screen-reader__/*.txt`); no manual pass required |
+| R | Behavior spec and `check` | Pass | `tests/sidebar`: 53 passed; `node harness/cli.mjs check`: all checks passed (warnings are for Table and the API vocabulary, not Sidebar) |
+
+## Failures
+
+None high or medium.
+
+### Low
+
+1. Focus is dropped to the page when the panel is hidden from code while focus is inside it. Location: `src/components/sidebar/SidebarProvider.ts:85` (`open` change; only the viewport change at `:56` moves focus). Criterion: 2.4.3 Focus Order (best practice; the trigger is outside the panel, so no user action causes it). Verified: focused "Installation", set `provider.open = false`, `document.activeElement` became `body`; the next Tab did land on the trigger because Chromium keeps its sequential starting point. Fix: in `updated()`, when `open` turned false and focus was inside the sidebar, focus the trigger, as the viewport handler does. Not a blocker.
+2. A group whose label is removed keeps `role="group"` with an empty name. Location: `src/controllers/labelled-by.ts:37`. Criterion: 1.3.1 / 4.1.2 (a group with no label is noise, not a barrier). Verified: removed the first group label, AX shows `group ""`. Fix: not needed when a label is optional by design (contract allows it); if desired, drop the role when no label is found.
+
+Observations, not failures:
+- Wide Tab order puts the trigger after the panel links by DOM order (documented in the spec's "Tab order" coverage); a keyboard user passes six links to reach it. Acceptable under 2.4.1 with the `nav` landmark, but a skip link is the team's call.
+- Tab wrap inside the drawer relies on `FOCUSABLE` plus `delegatesFocus` (`Sidebar.ts:10`); slotted custom controls without delegated focus are skipped as first or last. Recorded in the contract's known drift.
+
+## Parity audit 2026-11-12: what is still open
+
+- Items 1 to 4 and 5 (text and `FOCUSABLE`): closed. `FOCUSABLE` at `src/components/sidebar/Sidebar.ts:10-11` now has `summary`, `audio/video[controls]` and `[contenteditable]`.
+- Q6 "screen-reader pass": covered by S1 and the AX inspection above; not open.
+- "Figma not realized": stale in code terms. `contract.json` `realizations.design.status` is `complete`, but the prose still says it is not. Still open, in text only: `spec/components/sidebar/contract.md:131-132` ("### Figma / Not realized yet.") and `spec/components/sidebar/contract.md:3` (`status: draft` while `contract.json` and `spec/registry.json` say `beta`). Fix: contract-author update of both lines.
+- Truncation drift (`contract.md:171`): decided and recorded; wrapping is the accessible choice. Not a defect.
+
+## Initial assessment
+
+Semantics, real keyboard behavior in the wide panel and the modal drawer (open, Tab wrap both ways, Escape, link close, focus return), the new `LabelledByController` group names (live, dynamic, no ID crossing shadow roots), 24px targets, contrast and focus ring in light and dark, forced colors, reduced motion, reflow, RTL, axe, S1, the 53/53 behavior spec and `check` all pass. Only two low findings and a stale contract.md line pair remained; the initial call was ready.
+
+## Status (2026-11-16, after fixes)
+
+Re-verified live in Chromium against Storybook (real key presses, CDP AX tree):
+- Low 1 closed: with focus on "Installation", `provider.open = false` from code moves focus to the trigger (`SidebarProvider.ts` willUpdate/updated, `#refocus`); Enter on the trigger reopens the panel.
+- Low 2 closed: removing a group's label leaves no group role and no empty-named group in the AX tree (`SidebarGroup.ts:34` `#syncRole`); a label added later restores `role=group` named "Back"; an author `aria-label` names the group "Author"; an author role is kept by design.
+- Stale contract.md lines closed: `contract.md` frontmatter says `status: beta` and the Figma section says it is drawn and read back.
+- `tests/sidebar`: 55 passed (53 plus the two new tests).
+
+Nothing remained open at that point.
+
+## Status (2026-11-16, after the second round)
+
+Re-verified live in Chromium with real key presses (Storybook on 6117); `tests/sidebar` 58 passed.
+
+Passing:
+- Shortcut, wide: Control+B and Meta+B each toggle the panel off and on; Shift+ and Alt+ variants are ignored; `collapsible=none` ignores it (panel stays open, key not consumed). With focus on a panel link, Control+B closes the panel and focus moves to the trigger; pressing it again reopens.
+- Typing guard: with focus in an `<input>`, a `<textarea>` and a `contenteditable` div, Control+B and Meta+B leave `open` unchanged (the key keeps meaning bold).
+- Trigger: `aria-keyshortcuts="Control+B Meta+B"` present on the inner button (`SidebarTrigger.ts:40`).
+- Shortcut, narrow: Control+B opens the drawer (focus on the first link); Meta+B closes it; Escape still returns focus to the trigger.
+- Drawer wrap (`src/utils/focus-wrap.ts`): 8 Tabs cycle the six links and wrap with no escape; Shift+Tab from the first wraps; unchanged from round one.
+
+Open finding, MEDIUM: after the drawer is closed with the shortcut, focus does not return to the trigger as the contract says (`contract.json` aria, drawer entry), so it lands on whatever held focus before opening. Location: `src/components/sidebar/SidebarProvider.ts:120-124` (`#closeDrawer` focuses `#opener`) racing `src/components/sidebar/Sidebar.ts:47` (`dialog.close()` runs afterwards in `updated()` and the browser restores focus to the element focused before `showModal()`, overriding it). Criterion: 2.4.3 Focus Order. Verified with fresh pages, open with Control+B then close with Control+B: nothing focused before gives `body`; focus on "Back to top" gives that link; only focus already on the trigger gives the trigger. Escape after a shortcut open is correct (the `close` event fires after the native restore). Fix: focus the opener after the dialog has closed, for example in `Sidebar.ts` `updated()` right after `dialog.close()` call the provider's opener focus (or move the `#opener.focus()` into the `close` handler path), and add a spec step that opens the drawer by shortcut with focus elsewhere and expects the trigger after the shortcut close. The same ordering also affects closing by an activated link if the drawer was opened without the trigger holding focus (for example by the shortcut, or a click in a browser that does not focus buttons on click).
+
+## Status (2026-11-16, third round)
+
+The MEDIUM focus-return finding is closed (`SidebarProvider.ts` `#closeDrawer` now waits for the native dialog to close before focusing the opener). Re-verified live with real key presses: with nothing focused and with focus on "Back to top" before opening by Control+B, focus ends on the trigger after each of: Control+B close, Enter on an activated menu link, Escape, and a click on the backdrop. The trigger-driven flows (Enter then Escape, backdrop, Control+B) still return to the trigger. `tests/sidebar` 59 passed. Nothing remains open.
+
+Verdict: ready
+Approved-by: Davecelot (2026-11-16)

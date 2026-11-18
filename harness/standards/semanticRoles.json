@@ -1,0 +1,76 @@
+{
+  "family": "semanticRoles",
+  "$description": "Color roles the semantic layer exposes. accent = the brand.config accent name used for the role (color.roles overrides it); seed = the color generated when no accent has that name; darkOffset = ramp steps toward light in dark mode.",
+  "default": null,
+  "presets": [
+    {
+      "id": "primary",
+      "label": "Primary",
+      "values": {
+        "accent": "brand",
+        "darkOffset": -2,
+        "neutral": {
+          "light": {
+            "solid": 900,
+            "foreground": 50
+          },
+          "dark": {
+            "solid": 200,
+            "foreground": 900
+          }
+        }
+      },
+      "description": "Main action color: the brand ramp, or near-black / near-white when the brand is neutral.",
+      "source": null,
+      "verified": false
+    },
+    {
+      "id": "destructive",
+      "label": "Destructive",
+      "values": {
+        "accent": "danger",
+        "seed": "#E7000B",
+        "darkOffset": -1
+      },
+      "description": "Irreversible or dangerous actions and errors. Never the only signal: pair it with text or an icon.",
+      "source": "https://atlassian.design/foundations/design-tokens/",
+      "verified": false
+    },
+    {
+      "id": "success",
+      "label": "Success",
+      "values": {
+        "accent": "green",
+        "seed": "#16A34A",
+        "darkOffset": -1
+      },
+      "description": "Completed or positive outcomes.",
+      "source": "https://atlassian.design/foundations/design-tokens/",
+      "verified": false
+    },
+    {
+      "id": "warning",
+      "label": "Warning",
+      "values": {
+        "accent": "amber",
+        "seed": "#D97706",
+        "darkOffset": -1
+      },
+      "description": "Something needs attention but is not broken. Amber usually needs dark text.",
+      "source": "https://atlassian.design/foundations/design-tokens/",
+      "verified": false
+    },
+    {
+      "id": "info",
+      "label": "Info",
+      "values": {
+        "accent": "blue",
+        "seed": "#2563EB",
+        "darkOffset": -1
+      },
+      "description": "Neutral, helpful information. Keep it distinct from the brand color.",
+      "source": "https://atlassian.design/foundations/design-tokens/",
+      "verified": false
+    }
+  ]
+}

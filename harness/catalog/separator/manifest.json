@@ -1,0 +1,65 @@
+{
+  "name": "separator",
+  "component": "Separator",
+  "displayName": "Separator",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-separator",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/separator-2026-11-15.md",
+      "hash": "d8a31d391f75f3a61fb3"
+    },
+    {
+      "path": "docs/parity-audits/separator-2026-11-08.md",
+      "hash": "d1d489b25ae8086dd004"
+    },
+    {
+      "path": "playwright/tests/separator/__screen-reader__/stories/components-separator--default.txt",
+      "hash": "9290cde82ff35a18d670"
+    },
+    {
+      "path": "playwright/tests/separator/__screen-reader__/stories/components-separator--semantic-vertical.txt",
+      "hash": "a9afc792add2b428f1e8"
+    },
+    {
+      "path": "playwright/tests/separator/__screen-reader__/stories/components-separator--semantic.txt",
+      "hash": "cf582f7054769bcef6eb"
+    },
+    {
+      "path": "playwright/tests/separator/__screen-reader__/stories/components-separator--vertical.txt",
+      "hash": "374b9df00179421eddf2"
+    },
+    {
+      "path": "playwright/tests/separator/separator.behavior.spec.ts",
+      "hash": "f9759af59a3ba93dae9b"
+    },
+    {
+      "path": "spec/components/separator/contract.json",
+      "hash": "6d7eafd5d259b4a18d8c"
+    },
+    {
+      "path": "spec/components/separator/contract.md",
+      "hash": "b35a57ea93c2a3cb70f8"
+    },
+    {
+      "path": "src/components/separator/Separator.scss",
+      "hash": "84cb34e3692a988ae594"
+    },
+    {
+      "path": "src/components/separator/Separator.stories.ts",
+      "hash": "eb2517d531a9906643d7"
+    },
+    {
+      "path": "src/components/separator/Separator.ts",
+      "hash": "4e8122ded69b8f101fb2"
+    },
+    {
+      "path": "src/components/separator/index.ts",
+      "hash": "dd83a998ab6abc4d4a62"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "name": "button",
+  "component": "Button",
+  "displayName": "Button",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-button",
+  "prefix": "sb",
+  "dependsOn": [
+    "spinner"
+  ],
+  "uses": [
+    "spinner"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/button-2026-11-15.md",
+      "hash": "6b986f514e833629d08a"
+    },
+    {
+      "path": "docs/parity-audits/button-2026-11-08.md",
+      "hash": "284457fc8187e1fdbf44"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/button-focused.txt",
+      "hash": "d61eff9f7bd5360fe661"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/button-loading.txt",
+      "hash": "5854b02c74605818b042"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--as-link.txt",
+      "hash": "66bb1fb61fe6aad35c1c"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--default.txt",
+      "hash": "5e1469fe306037cd9573"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--disabled.txt",
+      "hash": "e6f6ca2db758ab78f21d"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--icon-only.txt",
+      "hash": "23017794095f7b922f0b"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--in-form.txt",
+      "hash": "0cff7f90b517fc2c5a87"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--loading.txt",
+      "hash": "506cb8a95609ba0d2d3a"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--variants.txt",
+      "hash": "5803b77577535ac55a89"
+    },
+    {
+      "path": "playwright/tests/button/__screen-reader__/stories/components-button--with-icon.txt",
+      "hash": "609be73e1c7a8bcdc550"
+    },
+    {
+      "path": "playwright/tests/button/button.behavior.spec.ts",
+      "hash": "2460af04d1ef41c23154"
+    },
+    {
+      "path": "spec/components/button/contract.json",
+      "hash": "d6888f505d4934c73e87"
+    },
+    {
+      "path": "spec/components/button/contract.md",
+      "hash": "1b6ed7bb8c564c65bbaa"
+    },
+    {
+      "path": "src/components/button/Button.scss",
+      "hash": "f328806fe07f25cdd07a"
+    },
+    {
+      "path": "src/components/button/Button.stories.ts",
+      "hash": "0d1f72f94e7ce318e921"
+    },
+    {
+      "path": "src/components/button/Button.ts",
+      "hash": "962687149a672a920383"
+    },
+    {
+      "path": "src/components/button/index.ts",
+      "hash": "1a21ad2c3bcaad6b4114"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "direction",
+  "component": "Direction",
+  "displayName": "Direction",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-direction",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "pagination",
+    "tabs"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/direction-2026-11-15.md",
+      "hash": "f4dcc74509fba14c2f9b"
+    },
+    {
+      "path": "docs/parity-audits/direction-2026-11-08.md",
+      "hash": "e953ad5071ef37e0b922"
+    },
+    {
+      "path": "playwright/tests/direction/__screen-reader__/stories/components-direction--default.txt",
+      "hash": "8fca474498a374fe7da7"
+    },
+    {
+      "path": "playwright/tests/direction/__screen-reader__/stories/components-direction--nested.txt",
+      "hash": "02506a3763c0825c1b2e"
+    },
+    {
+      "path": "playwright/tests/direction/__screen-reader__/stories/components-direction--right-to-left.txt",
+      "hash": "8fca474498a374fe7da7"
+    },
+    {
+      "path": "playwright/tests/direction/direction.behavior.spec.ts",
+      "hash": "255fe8b7f16e99e2b8dd"
+    },
+    {
+      "path": "spec/components/direction/contract.json",
+      "hash": "c69ce45deb5ff6ef0953"
+    },
+    {
+      "path": "spec/components/direction/contract.md",
+      "hash": "02cfc0e8be9401edca36"
+    },
+    {
+      "path": "src/components/direction/Direction.scss",
+      "hash": "8b99e167ec2c974cc2a9"
+    },
+    {
+      "path": "src/components/direction/Direction.stories.ts",
+      "hash": "ee8a89015d44a06d8310"
+    },
+    {
+      "path": "src/components/direction/Direction.ts",
+      "hash": "103e6063fccaaf929d1b"
+    },
+    {
+      "path": "src/components/direction/index.ts",
+      "hash": "75f8f89d2292a8284167"
+    }
+  ]
+}

@@ -1,0 +1,299 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Alert",
+  "tag": "sb-alert",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A static message box for news people should notice without being interrupted: optional icon, title, description and action (a family of Web Components).",
+  "dependsOn": [],
+  "props": {
+    "feedback": {
+      "type": "variant",
+      "values": [
+        "neutral",
+        "danger"
+      ],
+      "default": "neutral",
+      "reflect": true,
+      "note": "neutral: card colors, announced politely (role=status). danger: error colors, announced assertively (role=alert)."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "notes": "The host is the callout (border, radius, grid). Its parts are child elements."
+    },
+    {
+      "name": "icon",
+      "role": "icon",
+      "parent": "root",
+      "optional": true,
+      "controlledBy": "icon",
+      "notes": "Decorative 16px icon in the first column."
+    }
+  ],
+  "content": {
+    "icon": {
+      "required": false,
+      "multiple": false,
+      "notes": "Optional decorative icon (svg), 16px. Mark it aria-hidden."
+    },
+    "default": {
+      "required": false,
+      "multiple": true,
+      "notes": "sb-alert-title, sb-alert-description and an optional sb-alert-action."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "status (feedback=neutral) or alert (feedback=danger); an explicit role attribute on the host wins",
+    "accessibleNameSource": "None needed: the content is the message.",
+    "keyboard": {},
+    "aria": [
+      "host role is set before the first render: status for feedback=neutral, alert for feedback=danger, and follows feedback while the author has not set a role",
+      "an authored role attribute is never overwritten",
+      "icon is decorative: authors mark it aria-hidden",
+      "sb-alert-title is a plain block, not a heading; use a real heading element inside it when the alert belongs in the document outline",
+      "data-has-icon and data-has-action are presentation-only host attributes set from slotchange"
+    ],
+    "announcements": [
+      "role=alert (danger): assertive; announced when inserted with content or when its content changes",
+      "role=status (neutral): polite; only changes to a live region that already exists are reliably announced, so insert the empty sb-alert first and add the message afterwards, or render it with the page when it needs no announcement"
+    ],
+    "targetSize": "An action control inside follows its own component (at least 24px).",
+    "contrast": [
+      {
+        "fg": "alert.fg",
+        "bg": "alert.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "alert.description.fg",
+        "bg": "alert.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "alert.destructive.fg",
+        "bg": "alert.bg",
+        "kind": "text"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "4.1.3"
+    ]
+  },
+  "tokens": {
+    "alert.font-family": "{font.family.body}",
+    "alert.font-size": "{font.size.body}",
+    "alert.line-height": "{font.line-height.control}",
+    "alert.bg": "{color.card}",
+    "alert.fg": "{color.card-foreground}",
+    "alert.border": "{color.border}",
+    "alert.border-width": "{border-width.default}",
+    "alert.radius": "{radius.surface}",
+    "alert.padding-x": "{space.stack.loose}",
+    "alert.padding-y": "{space.stack.md}",
+    "alert.row-gap": "{space.stack.2xs}",
+    "alert.column-gap": "{space.stack.md}",
+    "alert.icon-size": "{size.icon.default}",
+    "alert.icon-offset": "{space.stack.2xs}",
+    "alert.title.font-weight": "{font.weight.label}",
+    "alert.description.fg": "{color.muted-foreground}",
+    "alert.description.gap": "{space.stack.tight}",
+    "alert.destructive.fg": "{color.destructive}"
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/alert/Alert.ts",
+        "src/components/alert/AlertTitle.ts",
+        "src/components/alert/AlertDescription.ts",
+        "src/components/alert/AlertAction.ts",
+        "src/components/alert/Alert.scss",
+        "src/components/alert/Alert.styles.ts",
+        "src/components/alert/Alert.stories.ts",
+        "src/components/alert/index.ts"
+      ],
+      "parts": [],
+      "slots": [
+        "icon",
+        "default"
+      ],
+      "spec": "playwright/tests/alert/alert.behavior.spec.ts",
+      "coverage": [
+        "all four elements registered",
+        "neutral is role=status, danger role=alert",
+        "empty alert already has its role; adding content keeps it",
+        "role set before first render, no flicker",
+        "role follows feedback; authored role kept",
+        "border, radius, padding, grid",
+        "icon column geometry with and without icon",
+        "action without an icon: no empty icon column, title at the padding edge",
+        "action at the end spanning both rows",
+        "data-has-icon and data-has-action follow slotted content",
+        "feedback colors in light and dark",
+        "title weight, no truncation",
+        "axe clean (all stories)"
+      ],
+      "drift": [
+        {
+          "aspect": "role",
+          "contract": "status for neutral, alert for danger",
+          "realization": "shadcn sets role=alert on every variant"
+        },
+        {
+          "aspect": "title truncation",
+          "contract": "title wraps in full",
+          "realization": "shadcn clamps the title to one line (line-clamp-1); hides content, WCAG 1.4.10"
+        },
+        {
+          "aspect": "destructive description color",
+          "contract": "full destructive color",
+          "realization": "shadcn uses destructive/90; lower contrast, WCAG 1.4.3"
+        },
+        {
+          "aspect": "title tracking",
+          "contract": "normal letter-spacing",
+          "realization": "shadcn uses tracking-tight; no letter-spacing token exists"
+        },
+        {
+          "aspect": "action placement",
+          "contract": "third grid column spanning both rows",
+          "realization": "shadcn positions the action absolutely"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Alert": 2
+        }
+      },
+      "coverage": [
+        "Alert: 2 variant(s), Feedback (Neutral, Danger); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "alert.description.gap",
+          "contract": "Gap between paragraphs of one description.",
+          "realization": "The sample description is one paragraph: there is no gap to bind."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "role=alert for every variant (visual reference) or role=status for the default variant?",
+      "recommendation": "status for default (polite), alert for destructive (assertive). An authored role wins. Document that live regions must exist before their content changes.",
+      "status": "answered",
+      "answer": "Default is role=status, destructive is role=alert; authored role wins.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Title line-clamp-1 and the description's destructive/90 color?",
+      "recommendation": "Drop both: truncating a title hides content (WCAG 1.4.10) and 90% destructive text risks 4.5:1.",
+      "status": "answered",
+      "answer": "Dropped; logged as drift.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "SB-0007",
+    "SB-0011"
+  ],
+  "variantMatrix": {
+    "dimensions": {
+      "feedback": [
+        "neutral",
+        "danger"
+      ]
+    }
+  },
+  "elements": [
+    {
+      "tag": "sb-alert-title",
+      "summary": "The alert's headline, in medium weight.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "Short title."
+        }
+      }
+    },
+    {
+      "tag": "sb-alert-description",
+      "summary": "Supporting text. Muted when neutral, in the alert color when danger.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "Description text or paragraphs."
+        }
+      }
+    },
+    {
+      "tag": "sb-alert-action",
+      "summary": "An action (button or link) placed at the end of the alert, spanning title and description.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "A control such as sb-button."
+        }
+      }
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "alert",
+      "callout",
+      "message",
+      "banner",
+      "notice",
+      "error",
+      "status"
+    ],
+    "useCases": [
+      {
+        "when": "Tell the user something important that stays on screen",
+        "use": "sb-alert with a title and description"
+      },
+      {
+        "when": "An error that needs attention now",
+        "use": "feedback=danger (role=alert)"
+      },
+      {
+        "when": "The message can be dismissed or acted on",
+        "use": "sb-alert-action with a sb-button"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Using alert for every inline note",
+        "why": "Assertive live regions interrupt screen-reader users",
+        "alternative": "Plain text, or feedback=neutral which is polite"
+      },
+      {
+        "pattern": "Inserting a status alert already filled and expecting it to be announced",
+        "why": "Live regions announce changes to a region that already exists",
+        "alternative": "Insert it empty, then add the text"
+      }
+    ]
+  }
+}

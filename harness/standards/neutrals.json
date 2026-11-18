@@ -1,0 +1,62 @@
+{
+  "family": "neutrals",
+  "$description": "Neutral (gray) ramps as an OKLCH hue and chroma. Tinted grays are approximations of common families, not exact copies.",
+  "default": "neutral",
+  "presets": [
+    {
+      "id": "neutral",
+      "label": "Pure gray",
+      "values": {
+        "hue": 0,
+        "chroma": 0
+      },
+      "description": "No tint. The default.",
+      "source": "https://tailwindcss.com/docs/colors",
+      "verified": true
+    },
+    {
+      "id": "slate",
+      "label": "Slate (cool blue)",
+      "values": {
+        "hue": 257,
+        "chroma": 0.03
+      },
+      "description": "Noticeably blue gray; pairs with blue and violet brands.",
+      "source": "https://tailwindcss.com/docs/colors",
+      "verified": false
+    },
+    {
+      "id": "gray",
+      "label": "Gray (cool)",
+      "values": {
+        "hue": 264,
+        "chroma": 0.02
+      },
+      "description": "Lightly cool gray.",
+      "source": "https://tailwindcss.com/docs/colors",
+      "verified": false
+    },
+    {
+      "id": "zinc",
+      "label": "Zinc (faint cool)",
+      "values": {
+        "hue": 286,
+        "chroma": 0.01
+      },
+      "description": "Almost neutral with a faint cool cast.",
+      "source": "https://tailwindcss.com/docs/colors",
+      "verified": false
+    },
+    {
+      "id": "stone",
+      "label": "Stone (warm)",
+      "values": {
+        "hue": 58,
+        "chroma": 0.01
+      },
+      "description": "Faintly warm gray; pairs with earthy and orange brands.",
+      "source": "https://tailwindcss.com/docs/colors",
+      "verified": false
+    }
+  ]
+}

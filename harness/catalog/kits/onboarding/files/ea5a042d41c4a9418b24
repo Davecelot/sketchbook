@@ -1,0 +1,4 @@
+- main
+  - heading "Almost there" [level=1]
+  - text "This takes a few seconds. You can leave the page; we keep going."
+  - status "Setting up your workspace" [live=polite]

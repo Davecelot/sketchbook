@@ -1,0 +1,67 @@
+- navigation "On this page"
+  - paragraph
+    - text "On this page"
+  - list
+    - listitem [level=1]
+      - link "Install"
+    - listitem [level=1]
+      - link "Build a first page"
+    - listitem [level=1]
+      - link "Questions"
+- main
+  - navigation "Breadcrumb"
+    - list
+      - listitem [level=1]
+        - link "Docs"
+      - listitem [level=1]
+        - link "Guides"
+      - listitem [level=1]
+        - link "Getting started" [disabled]
+  - article
+    - heading "Getting started" [level=1]
+    - paragraph
+      - text "Install the package, load the tokens and put your first component on a page."
+    - image "Diagram: tokens feed components, components feed pages"
+    - region "Install"
+      - heading "Install" [level=2]
+      - paragraph
+        - text "Add the package with your package manager. It brings the components and one stylesheet of tokens."
+      - code
+        - text "npm install @your-scope/design-system && npx design-system init --prefix acme --with-tokens"
+      - status [live=polite]
+        - text "Load the tokens once"
+        - text "Import the token stylesheet at the root of the app; every component reads from it."
+      - button "Show advanced options" [expanded=false]
+    - region "Build a first page"
+      - heading "Build a first page" [level=2]
+      - paragraph
+        - text "Write the markup as plain HTML. Components are custom elements, so any framework can render them."
+      - list
+        - listitem [level=1]
+          - ListMarker "•"
+          - text "Start from a kit that is close to what you need."
+        - listitem [level=1]
+          - ListMarker "•"
+          - text "Replace the sample text and data."
+        - listitem [level=1]
+          - ListMarker "•"
+          - text "Run the checks before you commit."
+      - paragraph
+        - text "Press"
+        - text "Ctrl"
+        - text "K"
+        - text "in the docs to search them."
+      - blockquote
+        - text "Small pages first: a sign-in form tells you more about the system than a style guide does."
+    - region "Questions"
+      - heading "Questions" [level=2]
+      - heading "Does it work offline?" [level=3]
+        - button "Does it work offline?" [expanded=false]
+      - heading "Can I change the colors?" [level=3]
+        - button "Can I change the colors?" [expanded=false]
+    - navigation "Article pages"
+      - list
+        - listitem [level=1]
+          - link "Introduction"
+        - listitem [level=1]
+          - link "Theming"

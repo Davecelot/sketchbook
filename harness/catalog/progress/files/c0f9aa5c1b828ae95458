@@ -1,0 +1,21 @@
+# Parity audit: Progress (2026-11-08)
+
+Reference: `spec/components/progress/contract.{md,json}`. Implementation: `src/components/progress/`. Evidence: `npm run check` all pass; `tsc`, `eslint` clean; `playwright tests/progress` pass (serially; see flake note in the review). Tokens use only `--sb-progress-*`.
+
+| Aspect | Contract | Realization | |
+| --- | --- | --- | --- |
+| `value` (null = indeterminate), `max`, `label` | yes | Progress.ts | ✅ |
+| role, valuemin/max/now, name | yes | Progress.ts willUpdate | ⚠️ |
+| Clamping, max scaling | yes | Progress.ts | ✅ |
+| Indeterminate animation, reduced motion | yes | Progress.scss | ✅ |
+| "Dev-only" missing-name warning | dev-only | Progress.ts:46 warns in every build | ⚠️ |
+| Size 8px, radius, colors from tokens | yes | Progress.scss | ✅ |
+
+## Differences and action plan
+1. Clearing `label` leaves the old `aria-label` on the host (verified by probe: stays "A"). Fix in code: remove the attribute when `label` is empty, unless the author set one.
+2. `value=""` attribute converts to 0 (determinate, aria-valuenow=0) via the Number converter (verified). Treat empty string as indeterminate or document.
+3. Warning is not dev-only; contract wording or code (gate behind a dev flag).
+
+Verdict: needs code fix (low severity).
+
+Status (2026-11-15): already fixed (0563e8b: clearing label drops its aria-label, empty value is indeterminate, contract says the warning fires in every build).

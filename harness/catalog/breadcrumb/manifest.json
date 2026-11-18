@@ -1,0 +1,89 @@
+{
+  "name": "breadcrumb",
+  "component": "Breadcrumb",
+  "displayName": "Breadcrumb",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-breadcrumb",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/breadcrumb-2026-11-15.md",
+      "hash": "2991c2998d868bde74af"
+    },
+    {
+      "path": "docs/parity-audits/breadcrumb-2026-11-08.md",
+      "hash": "24012e0492e093ddee3f"
+    },
+    {
+      "path": "playwright/tests/breadcrumb/__screen-reader__/stories/components-breadcrumb--custom-separator.txt",
+      "hash": "b5c54c838715e9cd134a"
+    },
+    {
+      "path": "playwright/tests/breadcrumb/__screen-reader__/stories/components-breadcrumb--default.txt",
+      "hash": "810adc630d7d7d41f42d"
+    },
+    {
+      "path": "playwright/tests/breadcrumb/__screen-reader__/stories/components-breadcrumb--with-ellipsis.txt",
+      "hash": "269b4f59060369e2689d"
+    },
+    {
+      "path": "playwright/tests/breadcrumb/__screen-reader__/stories/components-breadcrumb--wrapping.txt",
+      "hash": "f5cc0c4e34882f901b1a"
+    },
+    {
+      "path": "playwright/tests/breadcrumb/breadcrumb.behavior.spec.ts",
+      "hash": "ae82c56d4144711f9ab5"
+    },
+    {
+      "path": "spec/components/breadcrumb/contract.json",
+      "hash": "90712a337d693eacb94d"
+    },
+    {
+      "path": "spec/components/breadcrumb/contract.md",
+      "hash": "a8692cf836f911223481"
+    },
+    {
+      "path": "src/components/breadcrumb/Breadcrumb.scss",
+      "hash": "551a25d7280214170b8c"
+    },
+    {
+      "path": "src/components/breadcrumb/Breadcrumb.stories.ts",
+      "hash": "f47fc1574cfce8f9448b"
+    },
+    {
+      "path": "src/components/breadcrumb/Breadcrumb.ts",
+      "hash": "78f75efba91a8ad5f90f"
+    },
+    {
+      "path": "src/components/breadcrumb/BreadcrumbEllipsis.ts",
+      "hash": "9bdd89a2adc4b6878b6f"
+    },
+    {
+      "path": "src/components/breadcrumb/BreadcrumbItem.ts",
+      "hash": "8083e6bfcb1cebb4f9af"
+    },
+    {
+      "path": "src/components/breadcrumb/BreadcrumbLink.ts",
+      "hash": "10c965db958092f69cca"
+    },
+    {
+      "path": "src/components/breadcrumb/BreadcrumbList.ts",
+      "hash": "d713aa4dccbb037a0e12"
+    },
+    {
+      "path": "src/components/breadcrumb/BreadcrumbPage.ts",
+      "hash": "c2e3f8f6e4cb9fc735a8"
+    },
+    {
+      "path": "src/components/breadcrumb/BreadcrumbSeparator.ts",
+      "hash": "b8b4c12d89f8ab647b5e"
+    },
+    {
+      "path": "src/components/breadcrumb/index.ts",
+      "hash": "17521ad2cbc3514221af"
+    }
+  ]
+}

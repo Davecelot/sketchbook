@@ -1,0 +1,45 @@
+- main
+  - sectionheader
+    - heading "Settings" [level=1]
+    - paragraph
+      - text "Manage your preferences. Changes apply after you save."
+  - tablist "Settings sections" [orientation=horizontal]
+    - tab "General" [selected]
+    - tab "Notifications"
+    - tab "Appearance"
+  - tabpanel "General"
+    - form "General"
+      - heading "General" [level=2]
+      - text "Language and region apply to every workspace you belong to."
+      - text "Language"
+      - combobox "Language" [expanded=false] value "English"
+        - MenuListPopup
+          - option "English" [selected]
+          - option "Spanish"
+          - option "Portuguese"
+      - paragraph [live=polite]
+      - text "Time zone"
+      - combobox "Time zone" [expanded=false] value "UTC−03:00" desc "Used for reminders and reports."
+        - MenuListPopup
+          - option "UTC−05:00"
+          - option "UTC−03:00" [selected]
+          - option "UTC"
+      - paragraph
+        - text "Used for reminders and reports."
+      - paragraph [live=polite]
+      - group "Week starts on"
+        - Legend
+          - text "Week starts on"
+        - radiogroup "Week starts on"
+          - radio "Monday" [checked=true]
+          - text "Monday"
+          - radio "Sunday" [checked=false]
+          - text "Sunday"
+      - text "Email signature"
+      - textbox "Email signature" desc "Added to messages you send from the app."
+      - paragraph
+        - text "Added to messages you send from the app."
+      - paragraph [live=polite]
+      - group "Form actions"
+        - button "Cancel"
+        - button "Save changes"

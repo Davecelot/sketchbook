@@ -1,0 +1,77 @@
+- banner
+  - paragraph
+    - text "Workspace"
+  - text "North region"
+  - image "Ada Example"
+    - text "AE"
+- main
+  - heading "Overview" [level=1]
+  - button "Export"
+  - tablist "Dashboard views" [orientation=horizontal]
+    - tab "Overview" [selected]
+    - tab "Customers"
+    - tab "Reports"
+  - tabpanel "Overview"
+    - heading "Revenue" [level=2]
+    - text "This month"
+    - text "+12%"
+    - paragraph
+      - text "$48,200"
+    - heading "Active customers" [level=2]
+    - text "Signed in this month"
+    - text "+4%"
+    - paragraph
+      - text "1,284"
+    - heading "Open orders" [level=2]
+    - text "Waiting to ship"
+    - text "−3"
+    - paragraph
+      - text "36"
+    - heading "Refund rate" [level=2]
+    - text "Last 30 days"
+    - text "+0.2%"
+    - paragraph
+      - text "1.8%"
+    - heading "Quarterly goal" [level=2]
+    - text "$136,000 of $200,000"
+    - progressbar "Quarterly goal" value "68"
+    - heading "Visits" [level=2]
+    - text "Last seven days"
+    - image "Weekly visits: rising from 1,200 on Monday to 2,100 on Sunday"
+    - heading "Recent activity" [level=2]
+    - list
+      - listitem [level=1]
+        - text "Grace Sample"
+        - text "Paid invoice INV-2041"
+        - text ","
+        - text "5 minutes ago"
+      - listitem [level=1]
+        - text "Linus Demo"
+        - text "Upgraded to the Team plan"
+        - text ","
+        - text "1 hour ago"
+      - listitem [level=1]
+        - text "Mary Placeholder"
+        - text "Asked for a refund"
+        - text ","
+        - text "Yesterday"
+    - heading "Recent orders" [level=2]
+    - table "Recent orders"
+      - rowgroup
+        - row
+          - columnheader "Order"
+          - columnheader "Status"
+          - columnheader "Amount"
+      - rowgroup
+        - row
+          - cell "ORD-1001"
+          - cell "Paid"
+          - cell "$250.00"
+        - row
+          - cell "ORD-1002"
+          - cell "Pending"
+          - cell "$150.00"
+        - row
+          - cell "ORD-1003"
+          - cell "Paid"
+          - cell "$350.00"

@@ -1,0 +1,9 @@
+{
+  "id": "foundations",
+  "title": "Foundations first",
+  "for": "Teams settling tokens before any component: foundations, their Storybook pages and Figma variables.",
+  "foundations": null,
+  "components": "none",
+  "kits": "none",
+  "next": ["/foundations guided", "npm run storybook (Foundations pages)", "sketchbook sync tokens"]
+}

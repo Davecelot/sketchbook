@@ -1,0 +1,840 @@
+{
+  "name": "Dashboard",
+  "summary": "An overview page: a top bar, a page title with an action, view tabs, stat cards, a goal, a chart, recent activity and recent orders.",
+  "components": [
+    "sb-aspect-ratio",
+    "sb-avatar",
+    "sb-avatar-fallback",
+    "sb-badge",
+    "sb-button",
+    "sb-card",
+    "sb-card-action",
+    "sb-card-content",
+    "sb-card-description",
+    "sb-card-header",
+    "sb-card-title",
+    "sb-item",
+    "sb-item-content",
+    "sb-item-description",
+    "sb-item-group",
+    "sb-item-media",
+    "sb-item-separator",
+    "sb-item-title",
+    "sb-progress",
+    "sb-separator",
+    "sb-skeleton",
+    "sb-spinner",
+    "sb-table",
+    "sb-table-body",
+    "sb-table-cell",
+    "sb-table-head",
+    "sb-table-header",
+    "sb-table-row",
+    "sb-tabs",
+    "sb-tabs-content",
+    "sb-tabs-list",
+    "sb-tabs-trigger",
+    "sb-typography"
+  ],
+  "landmarks": [
+    "banner",
+    "main"
+  ],
+  "a11y": [
+    "Each card title is an h2, so the overview reads as a list of sections under the h1.",
+    "The chart is one image with a text alternative that states the trend; replace it with your chart and keep the alternative.",
+    "Loading announces once through a labelled spinner next to the h1; placeholders are hidden from assistive technology and the panel is aria-busy."
+  ],
+  "states": [
+    "default",
+    "loading"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.background"
+    },
+    "states": {
+      "default": [
+        {
+          "stack": [
+            {
+              "row": [
+                {
+                  "row": [
+                    {
+                      "text": "Workspace",
+                      "style": "font.size.control",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "component": "separator",
+                      "props": {
+                        "orientation": "vertical"
+                      }
+                    },
+                    {
+                      "text": "North region",
+                      "style": "font.size.caption",
+                      "color": "color.muted-foreground"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "hug"
+                },
+                {
+                  "component": "avatar",
+                  "props": {
+                    "size": "small"
+                  },
+                  "text": {
+                    "initials": "AE"
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "between",
+              "pad": "space.inset.md"
+            },
+            {
+              "component": "separator",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "row": [
+                    {
+                      "text": "Overview",
+                      "style": "font.size.heading-3",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "component": "button",
+                          "props": {
+                            "variant": "tertiary"
+                          },
+                          "text": {
+                            "Label text": "Export"
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.md",
+                      "width": "hug"
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill",
+                  "align": "between"
+                },
+                {
+                  "stack": [
+                    {
+                      "component": "tabs/tabs-list",
+                      "axes": {
+                        "Active": "1"
+                      },
+                      "text": {
+                        "trigger-label": "Overview",
+                        "trigger-other-label": "Customers",
+                        "trigger-third-label": "Reports"
+                      },
+                      "show": {
+                        "Third": true
+                      }
+                    },
+                    {
+                      "stack": [
+                        {
+                          "row": [
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Revenue",
+                                "description": "This month"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "text": "$48,200",
+                                    "style": "font.size.heading-2",
+                                    "color": "color.foreground",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [
+                                  {
+                                    "component": "badge",
+                                    "props": {
+                                      "variant": "secondary"
+                                    },
+                                    "text": {
+                                      "Label text": "+12%"
+                                    }
+                                  }
+                                ],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            },
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Active customers",
+                                "description": "Signed in this month"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "text": "1,284",
+                                    "style": "font.size.heading-2",
+                                    "color": "color.foreground",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [
+                                  {
+                                    "component": "badge",
+                                    "props": {
+                                      "variant": "secondary"
+                                    },
+                                    "text": {
+                                      "Label text": "+4%"
+                                    }
+                                  }
+                                ],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            },
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Open orders",
+                                "description": "Waiting to ship"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "text": "36",
+                                    "style": "font.size.heading-2",
+                                    "color": "color.foreground",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [
+                                  {
+                                    "component": "badge",
+                                    "props": {
+                                      "variant": "secondary"
+                                    },
+                                    "text": {
+                                      "Label text": "−3"
+                                    }
+                                  }
+                                ],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            },
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Refund rate",
+                                "description": "Last 30 days"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "text": "1.8%",
+                                    "style": "font.size.heading-2",
+                                    "color": "color.foreground",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [
+                                  {
+                                    "component": "badge",
+                                    "props": {
+                                      "variant": "secondary"
+                                    },
+                                    "text": {
+                                      "Label text": "+0.2%"
+                                    }
+                                  }
+                                ],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Quarterly goal",
+                            "description": "$136,000 of $200,000"
+                          },
+                          "slots": {
+                            "Content": [
+                              {
+                                "component": "progress",
+                                "text": {
+                                  "indicator": "68%"
+                                },
+                                "width": "fill"
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Visits",
+                            "description": "Last seven days"
+                          },
+                          "slots": {
+                            "Content": [
+                              {
+                                "component": "aspect-ratio",
+                                "ratio": "16/9",
+                                "slots": {
+                                  "Content": [
+                                    {
+                                      "stack": [],
+                                      "fill": "color.muted",
+                                      "radius": "radius.surface",
+                                      "width": "fill",
+                                      "height": "fill"
+                                    }
+                                  ]
+                                },
+                                "width": "fill"
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Recent activity"
+                          },
+                          "hide": [
+                            "description"
+                          ],
+                          "slots": {
+                            "Content": [
+                              {
+                                "stack": [
+                                  {
+                                    "component": "item",
+                                    "props": {
+                                      "size": "small"
+                                    },
+                                    "text": {
+                                      "title": "Grace Sample",
+                                      "description": "Paid invoice INV-2041, 5 minutes ago",
+                                      "avatar-media/initials": "GS"
+                                    },
+                                    "show": {
+                                      "Avatar": true,
+                                      "Icon": false
+                                    },
+                                    "slots": {
+                                      "Actions": []
+                                    },
+                                    "width": "fill"
+                                  },
+                                  {
+                                    "component": "separator",
+                                    "width": "fill"
+                                  },
+                                  {
+                                    "component": "item",
+                                    "props": {
+                                      "size": "small"
+                                    },
+                                    "text": {
+                                      "title": "Linus Demo",
+                                      "description": "Upgraded to the Team plan, 1 hour ago",
+                                      "avatar-media/initials": "LD"
+                                    },
+                                    "show": {
+                                      "Avatar": true,
+                                      "Icon": false
+                                    },
+                                    "slots": {
+                                      "Actions": []
+                                    },
+                                    "width": "fill"
+                                  },
+                                  {
+                                    "component": "separator",
+                                    "width": "fill"
+                                  },
+                                  {
+                                    "component": "item",
+                                    "props": {
+                                      "size": "small"
+                                    },
+                                    "text": {
+                                      "title": "Mary Placeholder",
+                                      "description": "Asked for a refund, Yesterday",
+                                      "avatar-media/initials": "MP"
+                                    },
+                                    "show": {
+                                      "Avatar": true,
+                                      "Icon": false
+                                    },
+                                    "slots": {
+                                      "Actions": []
+                                    },
+                                    "width": "fill"
+                                  }
+                                ],
+                                "gap": "space.stack.sm",
+                                "width": "fill"
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Recent orders"
+                          },
+                          "hide": [
+                            "description"
+                          ],
+                          "slots": {
+                            "Content": [
+                              {
+                                "component": "table",
+                                "text": {
+                                  "head-a-text": "Order",
+                                  "head-b-text": "Status",
+                                  "head-c-text": "Amount",
+                                  "head-c-text@end": true,
+                                  "cell-a-text": "ORD-1001",
+                                  "badge-1-b/Label text": "Paid",
+                                  "badge-1-b/Variant": "Primary",
+                                  "cell-c-text": "$250.00",
+                                  "cell-c-text@end": true,
+                                  "cell-2-a-text": "ORD-1002",
+                                  "badge-2-b/Label text": "Pending",
+                                  "badge-2-b/Variant": "Tertiary",
+                                  "cell-2-c-text": "$150.00",
+                                  "cell-2-c-text@end": true,
+                                  "cell-3-a-text": "ORD-1003",
+                                  "badge-3-b/Label text": "Paid",
+                                  "badge-3-b/Variant": "Primary",
+                                  "cell-3-c-text": "$350.00",
+                                  "cell-3-c-text@end": true
+                                },
+                                "show": {
+                                  "Row 3": true,
+                                  "Status text": false,
+                                  "Status badge": true
+                                },
+                                "hide": [
+                                  "footer",
+                                  "footer-border",
+                                  "caption"
+                                ],
+                                "width": "fill",
+                                "clear": [
+                                  "row-2"
+                                ]
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill",
+              "pad": "space.inset.surface"
+            }
+          ],
+          "width": "fill"
+        }
+      ],
+      "loading": [
+        {
+          "stack": [
+            {
+              "row": [
+                {
+                  "row": [
+                    {
+                      "text": "Workspace",
+                      "style": "font.size.control",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "component": "separator",
+                      "props": {
+                        "orientation": "vertical"
+                      }
+                    },
+                    {
+                      "text": "North region",
+                      "style": "font.size.caption",
+                      "color": "color.muted-foreground"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "hug"
+                },
+                {
+                  "component": "avatar",
+                  "props": {
+                    "size": "small"
+                  },
+                  "text": {
+                    "initials": "AE"
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "between",
+              "pad": "space.inset.md"
+            },
+            {
+              "component": "separator",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "row": [
+                    {
+                      "text": "Overview",
+                      "style": "font.size.heading-3",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "component": "spinner"
+                        },
+                        {
+                          "component": "button",
+                          "props": {
+                            "variant": "tertiary"
+                          },
+                          "text": {
+                            "Label text": "Export"
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.md",
+                      "width": "hug"
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill",
+                  "align": "between"
+                },
+                {
+                  "stack": [
+                    {
+                      "component": "tabs/tabs-list",
+                      "axes": {
+                        "Active": "1"
+                      },
+                      "text": {
+                        "trigger-label": "Overview",
+                        "trigger-other-label": "Customers",
+                        "trigger-third-label": "Reports"
+                      },
+                      "show": {
+                        "Third": true
+                      }
+                    },
+                    {
+                      "stack": [
+                        {
+                          "row": [
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Revenue",
+                                "description": "This month"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "component": "skeleton",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            },
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Active customers",
+                                "description": "Signed in this month"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "component": "skeleton",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            },
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Open orders",
+                                "description": "Waiting to ship"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "component": "skeleton",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            },
+                            {
+                              "component": "card",
+                              "props": {
+                                "size": "small"
+                              },
+                              "text": {
+                                "title": "Refund rate",
+                                "description": "Last 30 days"
+                              },
+                              "slots": {
+                                "Content": [
+                                  {
+                                    "component": "skeleton",
+                                    "width": "fill"
+                                  }
+                                ],
+                                "Action": [],
+                                "Footer": []
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Quarterly goal",
+                            "description": "$136,000 of $200,000"
+                          },
+                          "slots": {
+                            "Content": [
+                              {
+                                "component": "progress",
+                                "text": {
+                                  "indicator": "68%"
+                                },
+                                "width": "fill"
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Visits",
+                            "description": "Last seven days"
+                          },
+                          "slots": {
+                            "Content": [
+                              {
+                                "component": "aspect-ratio",
+                                "ratio": "16/9",
+                                "slots": {
+                                  "Content": [
+                                    {
+                                      "component": "skeleton",
+                                      "width": "fill",
+                                      "height": "fill"
+                                    }
+                                  ]
+                                },
+                                "width": "fill"
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Recent activity"
+                          },
+                          "hide": [
+                            "description"
+                          ],
+                          "slots": {
+                            "Content": [
+                              {
+                                "component": "spinner"
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        },
+                        {
+                          "component": "card",
+                          "props": {
+                            "size": "medium"
+                          },
+                          "text": {
+                            "title": "Recent orders"
+                          },
+                          "hide": [
+                            "description"
+                          ],
+                          "slots": {
+                            "Content": [
+                              {
+                                "component": "table",
+                                "text": {
+                                  "head-a-text": "Order",
+                                  "head-b-text": "Status",
+                                  "head-c-text": "Amount",
+                                  "head-c-text@end": true,
+                                  "cell-a-text": "ORD-1001",
+                                  "badge-1-b/Label text": "Paid",
+                                  "badge-1-b/Variant": "Primary",
+                                  "cell-c-text@end": true,
+                                  "cell-2-a-text": "ORD-1002",
+                                  "badge-2-b/Label text": "Pending",
+                                  "badge-2-b/Variant": "Tertiary",
+                                  "cell-2-c-text@end": true,
+                                  "cell-3-a-text": "ORD-1003",
+                                  "badge-3-b/Label text": "Paid",
+                                  "badge-3-b/Variant": "Primary",
+                                  "cell-3-c-text@end": true
+                                },
+                                "show": {
+                                  "Row 3": true,
+                                  "Status text": false,
+                                  "Status badge": true
+                                },
+                                "hide": [
+                                  "footer",
+                                  "footer-border",
+                                  "caption",
+                                  "cell-c-text",
+                                  "cell-2-c-text",
+                                  "cell-3-c-text"
+                                ],
+                                "width": "fill",
+                                "clear": [
+                                  "row-2"
+                                ]
+                              }
+                            ],
+                            "Footer": []
+                          },
+                          "width": "fill"
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill",
+              "pad": "space.inset.surface"
+            }
+          ],
+          "width": "fill"
+        }
+      ]
+    }
+  }
+}

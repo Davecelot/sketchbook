@@ -1,0 +1,115 @@
+{
+  "name": "field",
+  "component": "Field",
+  "displayName": "Field",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-field",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "input"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/field-2026-11-15.md",
+      "hash": "aff6e70b48d33ce18356"
+    },
+    {
+      "path": "docs/parity-audits/field-2026-11-08.md",
+      "hash": "de723d33b8f3cc3a1ae6"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--choice-title.txt",
+      "hash": "1b59c2405c87e7172caa"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--default.txt",
+      "hash": "2b3cd42da8f154db221c"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--field-set.txt",
+      "hash": "d413eed2b0a4706d87dd"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--horizontal.txt",
+      "hash": "475a598be605bbadb769"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--invalid.txt",
+      "hash": "cf526a36ce845c550978"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--plain.txt",
+      "hash": "6e692b7158a826bbb947"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--with-ds-controls.txt",
+      "hash": "245f94156a26a4f69b7d"
+    },
+    {
+      "path": "playwright/tests/field/__screen-reader__/stories/components-field--with-separator.txt",
+      "hash": "98f5ffd7c690677bb092"
+    },
+    {
+      "path": "playwright/tests/field/field.behavior.spec.ts",
+      "hash": "d55783ea6832f7a48404"
+    },
+    {
+      "path": "spec/components/field/contract.json",
+      "hash": "1de85848606fad492a52"
+    },
+    {
+      "path": "spec/components/field/contract.md",
+      "hash": "7d6b6a3ab1daebba7cb8"
+    },
+    {
+      "path": "src/components/field/Field.scss",
+      "hash": "f386f1400a0c1d04e219"
+    },
+    {
+      "path": "src/components/field/Field.stories.ts",
+      "hash": "bb70812c4e051c4d318c"
+    },
+    {
+      "path": "src/components/field/Field.ts",
+      "hash": "6adeae4eb58d78ea9f30"
+    },
+    {
+      "path": "src/components/field/FieldContent.ts",
+      "hash": "652049b91be028101cf9"
+    },
+    {
+      "path": "src/components/field/FieldDescription.ts",
+      "hash": "b17a1e6ee355f3a6196f"
+    },
+    {
+      "path": "src/components/field/FieldError.ts",
+      "hash": "ab27c00164159d57b0dd"
+    },
+    {
+      "path": "src/components/field/FieldGroup.ts",
+      "hash": "afa021fa0a297ad1fe23"
+    },
+    {
+      "path": "src/components/field/FieldLabel.ts",
+      "hash": "35b3f29fc98483b4c80f"
+    },
+    {
+      "path": "src/components/field/FieldSeparator.ts",
+      "hash": "14f219e6b80e72e5c3bb"
+    },
+    {
+      "path": "src/components/field/FieldSet.ts",
+      "hash": "b4cce9970056872f98aa"
+    },
+    {
+      "path": "src/components/field/FieldTitle.ts",
+      "hash": "4a38ec4400cf7d298644"
+    },
+    {
+      "path": "src/components/field/index.ts",
+      "hash": "4ff10d27a916182c1738"
+    }
+  ]
+}

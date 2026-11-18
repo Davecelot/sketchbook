@@ -1,0 +1,9 @@
+{
+  "id": "blank",
+  "title": "Blank",
+  "for": "Teams designing every component from zero.",
+  "foundations": null,
+  "components": "none",
+  "kits": "none",
+  "next": ["/foundations guided", "sketchbook add <name> (from the catalog) or sketchbook add <Name> --blank (a new design)"]
+}

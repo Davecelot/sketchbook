@@ -1,0 +1,50 @@
+{
+  "id": "docs-article",
+  "title": "Docs article",
+  "summary": "A long-form documentation page: contents sidebar, breadcrumb, typography for prose, a diagram, a code sample, a callout, a collapsible, an FAQ and previous/next links.",
+  "path": "src/patterns/docs-article",
+  "components": [
+    "accordion",
+    "alert",
+    "aspect-ratio",
+    "breadcrumb",
+    "collapsible",
+    "direction",
+    "kbd",
+    "pagination",
+    "scroll-area",
+    "separator",
+    "typography"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/docs-article/patterns-docs-article--default.txt",
+      "hash": "4cc9189b0d6a2bd7f59a"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/docs-article/patterns-docs-article--right-to-left.txt",
+      "hash": "4cc9189b0d6a2bd7f59a"
+    },
+    {
+      "path": "playwright/tests/patterns/docs-article.behavior.spec.ts",
+      "hash": "642e7bd0b80a4a207c44"
+    },
+    {
+      "path": "src/patterns/docs-article/DocsArticle.stories.ts",
+      "hash": "c2018b502a8094818d8f"
+    },
+    {
+      "path": "src/patterns/docs-article/README.md",
+      "hash": "7f36cb5f0d4f5e103bde"
+    },
+    {
+      "path": "src/patterns/docs-article/docs-article.css",
+      "hash": "be0fb62d1c30dee65c74"
+    },
+    {
+      "path": "src/patterns/docs-article/pattern.json",
+      "hash": "dbc2840f315f672e1d74"
+    }
+  ]
+}

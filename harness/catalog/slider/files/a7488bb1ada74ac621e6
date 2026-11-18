@@ -1,0 +1,3 @@
+- text "Volume"
+- slider "Volume" [orientation=vertical, valuetext=40] value "40"
+- paragraph [live=polite]

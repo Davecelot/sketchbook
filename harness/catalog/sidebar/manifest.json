@@ -1,0 +1,129 @@
+{
+  "name": "sidebar",
+  "component": "Sidebar",
+  "displayName": "Sidebar",
+  "tier": 2,
+  "status": "stable",
+  "tag": "sb-sidebar",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/sidebar-2026-11-16.md",
+      "hash": "a80295e689cbd36a473f"
+    },
+    {
+      "path": "docs/parity-audits/sidebar-2026-11-12.md",
+      "hash": "b82a3010959395a48e1a"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/sidebar-drawer-closed.txt",
+      "hash": "42912dae260a1877fca7"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/sidebar-drawer-open.txt",
+      "hash": "4ecc4d8ff1bf3d164a8b"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/sidebar-wide.txt",
+      "hash": "508f864b7864c8394ca3"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/stories/components-sidebar--collapsed.txt",
+      "hash": "88cc94ff5db8b8216376"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/stories/components-sidebar--dark.txt",
+      "hash": "508f864b7864c8394ca3"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/stories/components-sidebar--default.txt",
+      "hash": "508f864b7864c8394ca3"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/stories/components-sidebar--narrow-drawer.txt",
+      "hash": "508f864b7864c8394ca3"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/stories/components-sidebar--not-collapsible.txt",
+      "hash": "ee8db7c1694c46686557"
+    },
+    {
+      "path": "playwright/tests/sidebar/__screen-reader__/stories/components-sidebar--rtl.txt",
+      "hash": "02c393cb36580af098d9"
+    },
+    {
+      "path": "playwright/tests/sidebar/sidebar.behavior.spec.ts",
+      "hash": "1703dc3e2ad661ccbf64"
+    },
+    {
+      "path": "spec/components/sidebar/contract.json",
+      "hash": "0baeb5c4c8b7893d5fcf"
+    },
+    {
+      "path": "spec/components/sidebar/contract.md",
+      "hash": "3e189ffc0c2682c10cf2"
+    },
+    {
+      "path": "src/components/sidebar/Sidebar.scss",
+      "hash": "4e5ba4ef0af42f6a7adb"
+    },
+    {
+      "path": "src/components/sidebar/Sidebar.stories.ts",
+      "hash": "c964f937cad048b84944"
+    },
+    {
+      "path": "src/components/sidebar/Sidebar.ts",
+      "hash": "5e75aef8fec95baad132"
+    },
+    {
+      "path": "src/components/sidebar/SidebarContent.ts",
+      "hash": "68079b1aea589468b91b"
+    },
+    {
+      "path": "src/components/sidebar/SidebarFooter.ts",
+      "hash": "daaaa332bc0d9d13ed98"
+    },
+    {
+      "path": "src/components/sidebar/SidebarGroup.ts",
+      "hash": "33842af58a18280c36aa"
+    },
+    {
+      "path": "src/components/sidebar/SidebarGroupLabel.ts",
+      "hash": "e4218aaf235e989cbd53"
+    },
+    {
+      "path": "src/components/sidebar/SidebarHeader.ts",
+      "hash": "bc1e527aadf296b8d0ff"
+    },
+    {
+      "path": "src/components/sidebar/SidebarMenu.ts",
+      "hash": "a84bff2047ae8764783d"
+    },
+    {
+      "path": "src/components/sidebar/SidebarMenuButton.ts",
+      "hash": "f673ab38a8d4ae19f321"
+    },
+    {
+      "path": "src/components/sidebar/SidebarMenuItem.ts",
+      "hash": "184473a92ca8fb31600e"
+    },
+    {
+      "path": "src/components/sidebar/SidebarProvider.ts",
+      "hash": "7fc791d49df7f259257b"
+    },
+    {
+      "path": "src/components/sidebar/SidebarTrigger.ts",
+      "hash": "1a887b38be934ce59719"
+    },
+    {
+      "path": "src/components/sidebar/context.ts",
+      "hash": "91d221fdce2c9e43bd8c"
+    },
+    {
+      "path": "src/components/sidebar/index.ts",
+      "hash": "bcbd1ae5b1fd97c72c53"
+    }
+  ]
+}

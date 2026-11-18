@@ -1,0 +1,56 @@
+{
+  "id": "data-table",
+  "title": "Data table",
+  "summary": "A list page: title and main action, search with a slash shortcut, a status filter, a selectable table, pagination, and loading and empty states.",
+  "path": "src/patterns/data-table",
+  "components": [
+    "avatar",
+    "badge",
+    "button",
+    "checkbox",
+    "empty",
+    "input",
+    "input-group",
+    "kbd",
+    "pagination",
+    "scroll-area",
+    "skeleton",
+    "table",
+    "toggle-group"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/data-table/patterns-data-table--default.txt",
+      "hash": "d5dd11475a87206462f1"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/data-table/patterns-data-table--empty.txt",
+      "hash": "460135fc626b5c2e7c33"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/data-table/patterns-data-table--loading.txt",
+      "hash": "5bafa7b36216f575d9cd"
+    },
+    {
+      "path": "playwright/tests/patterns/data-table.behavior.spec.ts",
+      "hash": "9cbb532f9f52b5b1b1cb"
+    },
+    {
+      "path": "src/patterns/data-table/DataTable.stories.ts",
+      "hash": "36bac8f8e53119768b2e"
+    },
+    {
+      "path": "src/patterns/data-table/README.md",
+      "hash": "1786ba4d3e0dba1d6a1f"
+    },
+    {
+      "path": "src/patterns/data-table/data-table.css",
+      "hash": "4cb7b4e9113b8414562f"
+    },
+    {
+      "path": "src/patterns/data-table/pattern.json",
+      "hash": "b5d5d7f18347734138e0"
+    }
+  ]
+}

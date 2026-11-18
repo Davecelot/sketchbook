@@ -1,0 +1,4 @@
+- strong
+  - text "Order details"
+- button "Toggle details" [expanded=false]
+- text "Shipping address"

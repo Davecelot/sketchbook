@@ -1,0 +1,158 @@
+{
+  "$description": "Template kits: page patterns composed only of system components and semantic tokens. Check K1 keeps this list in step with src/patterns.",
+  "kits": [
+    {
+      "id": "sign-in",
+      "title": "Sign in",
+      "summary": "Sign-in and sign-up pages: a centered card with email, a password that can be revealed, a remember-me choice, single sign-on and a form-level error.",
+      "path": "src/patterns/sign-in",
+      "components": [
+        "alert",
+        "button",
+        "card",
+        "checkbox",
+        "field",
+        "input",
+        "input-group",
+        "typography"
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "summary": "A preferences page split into tabs, each a card-wrapped form with selects, radios, switches, a slider and a save bar.",
+      "path": "src/patterns/settings",
+      "components": [
+        "alert",
+        "button",
+        "button-group",
+        "card",
+        "field",
+        "native-select",
+        "radio-group",
+        "separator",
+        "slider",
+        "switch",
+        "tabs",
+        "textarea"
+      ]
+    },
+    {
+      "id": "data-table",
+      "title": "Data table",
+      "summary": "A list page: title and main action, search with a slash shortcut, a status filter, a selectable table, pagination, and loading and empty states.",
+      "path": "src/patterns/data-table",
+      "components": [
+        "avatar",
+        "badge",
+        "button",
+        "checkbox",
+        "empty",
+        "input",
+        "input-group",
+        "kbd",
+        "pagination",
+        "scroll-area",
+        "skeleton",
+        "table",
+        "toggle-group"
+      ]
+    },
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "summary": "An overview page: a top bar, a page title with an action, view tabs, stat cards, a goal, a chart, recent activity and recent orders.",
+      "path": "src/patterns/dashboard",
+      "components": [
+        "aspect-ratio",
+        "avatar",
+        "badge",
+        "button",
+        "card",
+        "item",
+        "progress",
+        "separator",
+        "skeleton",
+        "spinner",
+        "table",
+        "tabs",
+        "typography"
+      ]
+    },
+    {
+      "id": "profile",
+      "title": "Profile",
+      "summary": "An account page: breadcrumb, the person with avatar and role, an editable public profile and a list of connected services.",
+      "path": "src/patterns/profile",
+      "components": [
+        "avatar",
+        "badge",
+        "breadcrumb",
+        "button",
+        "card",
+        "input",
+        "item",
+        "separator",
+        "textarea"
+      ]
+    },
+    {
+      "id": "docs-article",
+      "title": "Docs article",
+      "summary": "A long-form documentation page: contents sidebar, breadcrumb, typography for prose, a diagram, a code sample, a callout, a collapsible, an FAQ and previous/next links.",
+      "path": "src/patterns/docs-article",
+      "components": [
+        "accordion",
+        "alert",
+        "aspect-ratio",
+        "breadcrumb",
+        "collapsible",
+        "direction",
+        "kbd",
+        "pagination",
+        "scroll-area",
+        "separator",
+        "typography"
+      ]
+    },
+    {
+      "id": "onboarding",
+      "title": "Onboarding",
+      "summary": "First-run screens: a setup step with progress and choices, an empty workspace with next steps, and a setting-up wait state.",
+      "path": "src/patterns/onboarding",
+      "components": [
+        "button",
+        "card",
+        "checkbox",
+        "empty",
+        "field",
+        "item",
+        "progress",
+        "skeleton",
+        "spinner",
+        "toggle-group"
+      ]
+    },
+    {
+      "id": "form-states",
+      "title": "Form states",
+      "summary": "A gallery of every form control in its default, disabled, invalid and read-only states, for checking tokens, focus rings and right to left in one place.",
+      "path": "src/patterns/form-states",
+      "components": [
+        "checkbox",
+        "direction",
+        "field",
+        "input",
+        "input-group",
+        "label",
+        "native-select",
+        "radio-group",
+        "slider",
+        "switch",
+        "textarea",
+        "toggle",
+        "toggle-group"
+      ]
+    }
+  ]
+}

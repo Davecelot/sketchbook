@@ -1,0 +1,281 @@
+{
+  "family": "motion",
+  "$description": "Durations (ms) and easings (cubic-bezier). roles map the semantic motion tokens (duration.fast/normal/slow/loop, easing.standard/enter/exit/linear). Every preset assumes components drop movement under prefers-reduced-motion and keep state feedback.",
+  "default": "tailwind-like",
+  "presets": [
+    {
+      "id": "tailwind-like",
+      "label": "Utility defaults",
+      "values": {
+        "durations": {
+          "100": 100,
+          "150": 150,
+          "200": 200,
+          "300": 300,
+          "500": 500,
+          "1000": 1000
+        },
+        "easings": {
+          "standard": [
+            0.4,
+            0,
+            0.2,
+            1
+          ],
+          "in": [
+            0.4,
+            0,
+            1,
+            1
+          ],
+          "out": [
+            0,
+            0,
+            0.2,
+            1
+          ],
+          "linear": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "roles": {
+          "duration.fast": "150",
+          "duration.normal": "200",
+          "duration.slow": "300",
+          "duration.loop": "1000",
+          "easing.standard": "standard",
+          "easing.enter": "out",
+          "easing.exit": "in",
+          "easing.linear": "linear"
+        }
+      },
+      "description": "Short, quiet transitions with classic ease curves. The default.",
+      "source": "https://tailwindcss.com/docs/transition-timing-function",
+      "verified": true
+    },
+    {
+      "id": "material-like",
+      "label": "Standard and emphasized",
+      "values": {
+        "durations": {
+          "50": 50,
+          "100": 100,
+          "150": 150,
+          "200": 200,
+          "250": 250,
+          "300": 300,
+          "350": 350,
+          "400": 400,
+          "450": 450,
+          "500": 500,
+          "550": 550,
+          "600": 600,
+          "700": 700,
+          "800": 800,
+          "900": 900,
+          "1000": 1000
+        },
+        "easings": {
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "standard-decelerate": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "standard-accelerate": [
+            0.3,
+            0,
+            1,
+            1
+          ],
+          "emphasized-decelerate": [
+            0.05,
+            0.7,
+            0.1,
+            1
+          ],
+          "emphasized-accelerate": [
+            0.3,
+            0,
+            0.8,
+            0.15
+          ],
+          "linear": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "roles": {
+          "duration.fast": "150",
+          "duration.normal": "300",
+          "duration.slow": "500",
+          "duration.loop": "1000",
+          "easing.standard": "standard",
+          "easing.enter": "emphasized-decelerate",
+          "easing.exit": "emphasized-accelerate",
+          "easing.linear": "linear"
+        }
+      },
+      "description": "A fine 50 ms duration ladder; entering elements slow down sharply, leaving ones speed up. Expressive but still brief.",
+      "source": "https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Motion.md",
+      "verified": true
+    },
+    {
+      "id": "carbon-productive",
+      "label": "Productive",
+      "values": {
+        "durations": {
+          "70": 70,
+          "110": 110,
+          "150": 150,
+          "240": 240,
+          "400": 400,
+          "700": 700,
+          "1000": 1000
+        },
+        "easings": {
+          "standard": [
+            0.2,
+            0,
+            0.38,
+            0.9
+          ],
+          "entrance": [
+            0,
+            0,
+            0.38,
+            0.9
+          ],
+          "exit": [
+            0.2,
+            0,
+            1,
+            0.9
+          ],
+          "linear": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "roles": {
+          "duration.fast": "110",
+          "duration.normal": "150",
+          "duration.slow": "240",
+          "duration.loop": "1000",
+          "easing.standard": "standard",
+          "easing.enter": "entrance",
+          "easing.exit": "exit",
+          "easing.linear": "linear"
+        }
+      },
+      "description": "Fast and efficient curves for task-focused tools. The 1000 ms loop (spinners) and linear curve are our additions.",
+      "source": "https://carbondesignsystem.com/elements/motion/overview/",
+      "verified": true
+    },
+    {
+      "id": "carbon-expressive",
+      "label": "Expressive",
+      "values": {
+        "durations": {
+          "70": 70,
+          "110": 110,
+          "150": 150,
+          "240": 240,
+          "400": 400,
+          "700": 700,
+          "1000": 1000
+        },
+        "easings": {
+          "standard": [
+            0.4,
+            0.14,
+            0.3,
+            1
+          ],
+          "entrance": [
+            0,
+            0,
+            0.3,
+            1
+          ],
+          "exit": [
+            0.4,
+            0.14,
+            1,
+            1
+          ],
+          "linear": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "roles": {
+          "duration.fast": "150",
+          "duration.normal": "240",
+          "duration.slow": "400",
+          "duration.loop": "1000",
+          "easing.standard": "standard",
+          "easing.enter": "entrance",
+          "easing.exit": "exit",
+          "easing.linear": "linear"
+        }
+      },
+      "description": "Livelier curves and longer durations for moments that deserve attention. Loop and linear are our additions.",
+      "source": "https://carbondesignsystem.com/elements/motion/overview/",
+      "verified": true
+    },
+    {
+      "id": "minimal",
+      "label": "Minimal",
+      "values": {
+        "durations": {
+          "100": 100,
+          "150": 150,
+          "1000": 1000
+        },
+        "easings": {
+          "standard": [
+            0.4,
+            0,
+            0.2,
+            1
+          ],
+          "linear": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "roles": {
+          "duration.fast": "100",
+          "duration.normal": "100",
+          "duration.slow": "150",
+          "duration.loop": "1000",
+          "easing.standard": "standard",
+          "easing.enter": "standard",
+          "easing.exit": "standard",
+          "easing.linear": "linear"
+        }
+      },
+      "description": "One short curve for everything: feedback without choreography. A good base when most users prefer reduced motion.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion",
+      "verified": true
+    }
+  ]
+}

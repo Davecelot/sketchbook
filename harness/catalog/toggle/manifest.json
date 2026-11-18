@@ -1,0 +1,89 @@
+{
+  "name": "toggle",
+  "component": "Toggle",
+  "displayName": "Toggle",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-toggle",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/toggle-2026-11-15.md",
+      "hash": "4ff925b4bd7f7a54adbf"
+    },
+    {
+      "path": "docs/parity-audits/toggle-2026-11-08.md",
+      "hash": "cc3e62779d904733edbb"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--default.txt",
+      "hash": "552756c181edbe2ea36e"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--disabled.txt",
+      "hash": "e1dd7f07ac462c85e350"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--icon-only.txt",
+      "hash": "06e728076ff3708d9731"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--in-fieldset.txt",
+      "hash": "7ca72db6ef05e84c818d"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--outline.txt",
+      "hash": "552756c181edbe2ea36e"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--pressed.txt",
+      "hash": "25c5c34ba3643df243fe"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--variants.txt",
+      "hash": "e98252325970f8f0de47"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/stories/components-toggle--with-text.txt",
+      "hash": "e50481803ad0d9f7c606"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/toggle-off.txt",
+      "hash": "caa7211387429abff9ad"
+    },
+    {
+      "path": "playwright/tests/toggle/__screen-reader__/toggle-on.txt",
+      "hash": "d29935b92deece7918e8"
+    },
+    {
+      "path": "playwright/tests/toggle/toggle.behavior.spec.ts",
+      "hash": "ecd68b4d77b8b659e0cd"
+    },
+    {
+      "path": "spec/components/toggle/contract.json",
+      "hash": "101275fbf8e9a92f05bd"
+    },
+    {
+      "path": "spec/components/toggle/contract.md",
+      "hash": "ebd668effb5c2ec9b74f"
+    },
+    {
+      "path": "src/components/toggle/Toggle.scss",
+      "hash": "dc0582c85be71895b397"
+    },
+    {
+      "path": "src/components/toggle/Toggle.stories.ts",
+      "hash": "e5de72e6307749961d2b"
+    },
+    {
+      "path": "src/components/toggle/Toggle.ts",
+      "hash": "86a49ecdda597c2abc1f"
+    },
+    {
+      "path": "src/components/toggle/index.ts",
+      "hash": "c69429348ba9b2349c41"
+    }
+  ]
+}

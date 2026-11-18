@@ -1,0 +1,40 @@
+# Parity audit: Button (2026-11-08)
+
+Reference: `spec/components/button/contract.{md,json}`. Implementation: `src/components/button/`. Evidence: `npm run check` all pass; `playwright tests/button` 11/11 pass; button tokens in `generated/css/tokens.css` resolve as contract.json says (heights 24/32/36/40, padding 8/12/16/24 and icon 6/10/12/16, gap 4/6/8, 14px/500/20px, radius 8px, ring 3px neutral-500, opacity 0.5, 150ms).
+
+| Aspect | Contract | Realization | |
+| --- | --- | --- | --- |
+| Props variant/size/type/disabled/loading/name/value/href, defaults, reflection | json | Button.ts:26-40 (variant, size, disabled, loading, name reflect; type/value/href not, as contract) | ✅ |
+| Sizes | json: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg. md: 6 sizes, 33 combos | implemented per json (Button.ts:14, scss:112-161) | ⚠️ (md/json disagree) |
+| Slots default, icon-start, icon-end | yes | Button.ts:109-113 | ✅ |
+| Anatomy parts button, icon-start, spinner, label, icon-end | yes | Button.ts:109-137 | ✅ |
+| Events: click bubbles/composed, cancelled while disabled/loading | yes | `#handleClick` Button.ts:70-75 only covers clicks on the inner element | ⚠️ |
+| Variant colors and hover (90/90/80 color-mix) | yes | Button.scss:61-110 | ✅ |
+| States hover/focus-visible/disabled/loading | yes | scss:40-42, 163-173 | ✅ |
+| State `active` | listed in json states | no styling | ⚠️ |
+| Disabled wins over loading | yes | both set: spinner, aria-busy and `cursor: progress` still shown (Button.ts:109, 130-131; scss:171-173) | ⚠️ |
+| Dimensions, padding with icon, gap, radius | yes | tokens + scss:112-161 | ✅ |
+| Typography 14/500/20, body font | yes | scss:27-30 | ✅ |
+| Focus ring 3px solid ring color, forced-colors | yes | scss:40-42, `_a11y.scss` | ✅ |
+| Reduced motion | transitions off | scss:38 | ✅ |
+| ARIA: native button, forwarded aria-label/labelledby/describedby, aria-busy/aria-disabled on loading | yes | Button.ts:126-138 | ✅ |
+| `href` link: disabled removes href, type/name/value ignored | yes | Button.ts:115-124 | ⚠️ |
+| Form association (submit with name/value, reset) | via ElementInternals | Button.ts:18, 70-85 (own code, not the shared FormAssociated mixin) | ✅ |
+| Missing-name dev warning | once | Button.ts:92-100 | ✅ |
+| Target size >= 24px | json: "the smallest is 32px" | xs is 24px | ⚠️ |
+| Tokens own only | `--sb-button-*` | T4 pass; scss:57 also writes `--sb-spinner-size` (not a read, but another component's variable) | ⚠️ |
+| Drift list (dark outline bg, solid ring) | | accurate but incomplete (see 3) | ⚠️ |
+| contract.md vs json / Realizations | md Web "Not started", Coverage "None yet", Q4 open, 6 sizes, 33 combos, heights 32/36/40 | json: complete, Q4 answered, href and xs exist | ❌ |
+
+## Differences and action plan
+
+1. contract.md is stale against contract.json (contract). Add the `xs`/`icon-xs` sizes (24px, 12px font, 12px icon), the `href` prop, recompute the variant matrix, update Realizations (Web built, coverage) and mark Q4 answered. Fix json `targetSize` ("smallest is 32px" -> 24px).
+2. Disabled/loading on the `<a>` (code). The anchor has no `aria-disabled`/`aria-busy`; without href it loses link role; hover styles (`:not(:disabled, [aria-disabled])`) still apply because `:disabled` never matches an anchor. Fix: set `aria-disabled="true"` and `role="link"` on the anchor when disabled, `aria-busy`/`aria-disabled` when loading, and include `:host([disabled])`/`[loading]` in the hover exclusion.
+3. Cancelled click on the host (code). `host.click()` dispatches on the host and bypasses `#handleClick`, so listeners fire while disabled/loading. Fix: capture-phase click listener on the host that stops the event when disabled or loading (as Input overrides `click()`).
+4. Disabled + loading (code). When both, `cursor: progress` wins over `not-allowed` and the spinner/aria-busy show. Fix: render the spinner and aria-busy only when `loading && !isDisabled`; order the cursor rules so disabled wins.
+5. `active` state (contract or code). Contract lists it with no tokens; nothing implements it. shadcn has none, so remove it from `states` (documented exclusion) unless a pressed style is wanted.
+6. Drift to record (realization.web.drift): `xs` sizes beyond md; button duplicates the form-association logic instead of the shared `FormAssociated` base (md of Input says Button shares it); `--sb-spinner-size` is set from Button.scss:57 (acceptable, document it, or expose a `--sb-button-spinner-size` token that the spinner reads).
+
+Verdict: needs code fix (items 2-4, minor) and a contract update (items 1, 5). No blocking divergence in visuals, tokens or tests.
+
+Status (2026-11-15): fixed in this PR (contract.md no longer lists the removed `active` state); items 1-4 and 6 already fixed (6dfe5c9: link aria-disabled/aria-busy and role, host.click() guarded, disabled wins over loading, contract.md and drift updated).

@@ -1,0 +1,16 @@
+- main
+  - sectionheader
+    - heading "Welcome, Ada" [level=1]
+    - paragraph
+      - text "Your workspace is ready. Start with a project, or set up the rest first."
+  - heading "No projects yet" [level=2]
+  - text "A project holds your files, comments and reviews in one place."
+  - button "Create project"
+  - button "Import files"
+  - region "Next steps"
+    - heading "Next steps" [level=2]
+    - list
+      - listitem [level=1]
+        - link "Invite your team Reviews go faster with more eyes."
+      - listitem [level=1]
+        - link "Connect a tool Bring in files from where you keep them."

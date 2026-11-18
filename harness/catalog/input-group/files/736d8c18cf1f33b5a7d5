@@ -1,0 +1,2 @@
+- textbox "Share link" [readonly] value "https://example.com/share/42"
+- button "Copy link"

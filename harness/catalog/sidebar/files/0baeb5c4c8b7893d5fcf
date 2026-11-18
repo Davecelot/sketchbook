@@ -1,0 +1,756 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Sidebar",
+  "tag": "sb-sidebar",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A named navigation panel at the start edge of an app or docs layout: a header, groups of links with a group label, the current page marked, and a footer. On wide viewports it can collapse off-canvas; on narrow viewports it becomes a modal drawer opened by a trigger. Eleven custom elements share state through a provider.",
+  "dependsOn": [],
+  "props": {
+    "label": {
+      "type": "text",
+      "default": "Sidebar",
+      "reflect": true,
+      "note": "Accessible name of the navigation landmark, and of the drawer on narrow viewports. Give a page's navigations distinct names.",
+      "proposal": true
+    },
+    "collapsible": {
+      "type": "variant",
+      "values": [
+        "offcanvas",
+        "none"
+      ],
+      "default": "offcanvas",
+      "reflect": true,
+      "note": "Wide viewports only. offcanvas slides the panel out of the layout when the provider is closed; none keeps it always shown and hides the trigger there. Narrow viewports always use the drawer."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "part": "root",
+      "notes": "sb-sidebar: the panel at the inline-start edge, a column of header, content and footer."
+    },
+    {
+      "name": "nav",
+      "role": "container",
+      "parent": "root",
+      "part": "nav",
+      "notes": "The navigation landmark, named by label; holds every slotted part."
+    },
+    {
+      "name": "drawer",
+      "role": "container",
+      "parent": "root",
+      "part": "drawer",
+      "optional": true,
+      "notes": "PROPOSAL. Narrow viewports only: the modal surface the nav sits in while open."
+    }
+  ],
+  "variantMatrix": {
+    "dimensions": {
+      "collapsible": [
+        "offcanvas",
+        "none"
+      ]
+    }
+  },
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "component": "sb-sidebar-header, sb-sidebar-content, sb-sidebar-footer",
+      "notes": "Optional header, one content region, optional footer, in that order."
+    }
+  },
+  "events": {},
+  "states": {
+    "hover": {
+      "trigger": "pointer over a menu button or the trigger",
+      "tokens": [
+        "sidebar.menu-button.hover.bg",
+        "sidebar.menu-button.hover.fg",
+        "sidebar.trigger.hover.bg"
+      ]
+    },
+    "selected": {
+      "trigger": "active on a menu button (the current page)",
+      "tokens": [
+        "sidebar.menu-button.active.bg",
+        "sidebar.menu-button.active.fg",
+        "sidebar.menu-button.active.font-weight"
+      ],
+      "note": "Spelled active in code, like the pagination link; exposed as the current page."
+    },
+    "focus-visible": {
+      "trigger": "keyboard focus on a menu button or the trigger",
+      "tokens": [
+        "sidebar.focus-ring.color",
+        "sidebar.focus-ring.width"
+      ]
+    },
+    "open": {
+      "trigger": "the provider opens or closes the panel (wide) or the drawer (narrow)",
+      "tokens": [
+        "sidebar.transition-duration",
+        "sidebar.transition-easing",
+        "sidebar.drawer.shadow"
+      ],
+      "note": "The panel slides along the inline axis; no motion under reduced-motion preferences."
+    }
+  },
+  "accessibility": {
+    "role": "navigation (panel); list and listitem (menu); group (group); button with aria-expanded (trigger); modal dialog (drawer, narrow viewports)",
+    "native": "nav, a, button, dialog",
+    "accessibleNameSource": "Landmark and drawer: the label prop. Group: its group label. Menu button: its text. Trigger: its label prop (default \"Toggle Sidebar\").",
+    "missingNameWarning": "Warns when label is set to an empty string: an unnamed drawer has no dialog name.",
+    "targetSize": "Menu buttons are at least 32px high and full width; the trigger is 32px square (WCAG 2.5.8). Menu button and group label text wraps and grows the row instead of clipping (WCAG 1.4.12, 1.4.10).",
+    "focusRingVisible": ":focus-visible only; 3px solid ring in sidebar.focus-ring.color.",
+    "keyboard": {
+      "Tab": "moves through the trigger and the links in document order; inside the open drawer it stays within the drawer",
+      "Shift+Tab": "moves backwards; stays within the open drawer",
+      "Enter": "follows the focused link; on the trigger, toggles the panel or opens the drawer",
+      "Space": "on the trigger, toggles the panel or opens the drawer",
+      "Escape": "closes the open drawer and returns focus to the trigger",
+      "Control+B / Meta+B": "toggles the sidebar like the trigger (panel on wide viewports unless collapsible=none, drawer on narrow); ignored while typing in a text field or editable region"
+    },
+    "aria": [
+      "panel: a native nav landmark named by label (aria-label inside the panel's own tree, so no ID reference crosses a shadow root, SB-0009)",
+      "menu: role=list; menu item: role=listitem, set on the hosts only when the author set no role (the pagination pattern); no menu or menuitem roles, since these are site links",
+      "group: role=group named by its group label through an element reference (ariaLabelledByElements, as in Tabs); where unsupported the label text is copied into aria-label; with no label (and no author aria-label or aria-labelledby) the group has no role",
+      "menu button: a native link when href is set, otherwise a native button; active sets aria-current=page on the link",
+      "trigger: a native button with aria-expanded that follows the visible state (panel shown on wide viewports, drawer open on narrow) and aria-controls through an element reference to the panel (ariaControlsElements), never an ID",
+      "drawer: a native modal dialog named by label; the rest of the page is inert while it is open; Escape and a press and release both on the backdrop close it (as in Dialog); focus moves to the first focusable element inside and returns to the trigger on close, whether Escape, the backdrop or an activated menu link closed it",
+      "viewport change: when the panel and the drawer swap while focus is inside the sidebar, focus moves to the trigger (or to the first menu button when the trigger is hidden)",
+      "a collapsed panel (wide) and a closed drawer (narrow) are removed from the accessibility tree and the tab order",
+      "trigger with collapsible=none on a wide viewport: hidden, since it controls nothing there",
+      "forced colors: the current item keeps a visible marker (Highlight) and the panel keeps its border",
+      "closing the panel from code (expanded = false) while focus is inside it moves focus to the trigger",
+      "trigger: aria-keyshortcuts=\"Control+B Meta+B\" announces the toggle shortcut"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "sidebar.fg",
+        "bg": "sidebar.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "sidebar.group-label.fg",
+        "bg": "sidebar.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "sidebar.menu-button.hover.fg",
+        "bg": "sidebar.menu-button.hover.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "sidebar.menu-button.active.fg",
+        "bg": "sidebar.menu-button.active.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "sidebar.focus-ring.color",
+        "bg": "sidebar.bg",
+        "kind": "ui"
+      },
+      {
+        "fg": "sidebar.trigger.fg",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "sidebar.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.11",
+      "1.4.10",
+      "2.1.1",
+      "2.1.2",
+      "2.4.1",
+      "2.4.3",
+      "2.4.7",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "sidebar.bg": "{color.sidebar}",
+    "sidebar.fg": "{color.sidebar-foreground}",
+    "sidebar.border.color": "{color.sidebar-border}",
+    "sidebar.border.width": "{border-width.default}",
+    "sidebar.width": "{size.sidebar.width}",
+    "sidebar.drawer-width": "{size.sidebar.drawer-width}",
+    "sidebar.breakpoint": "{size.breakpoint.narrow}",
+    "sidebar.font-family": "{font.family.body}",
+    "sidebar.padding": "{space.inset.sm}",
+    "sidebar.gap": "{space.stack.sm}",
+    "sidebar.group-label.fg": "{color.muted-foreground}",
+    "sidebar.group-label.font-size": "{font.size.caption}",
+    "sidebar.group-label.font-weight": "{font.weight.label}",
+    "sidebar.group-label.line-height": "{font.line-height.caption}",
+    "sidebar.group-label.height": "{size.control.sm}",
+    "sidebar.group-label.padding-x": "{space.inset.sm}",
+    "sidebar.menu.gap": "{space.stack.tight}",
+    "sidebar.menu-button.height": "{size.control.sm}",
+    "sidebar.menu-button.padding": "{space.inset.sm}",
+    "sidebar.menu-button.gap": "{space.control.gap.default}",
+    "sidebar.menu-button.radius": "{radius.control}",
+    "sidebar.menu-button.font-size": "{font.size.control}",
+    "sidebar.menu-button.font-weight": "{font.weight.body}",
+    "sidebar.menu-button.line-height": "{font.line-height.control}",
+    "sidebar.menu-button.icon-size": "{size.icon.default}",
+    "sidebar.menu-button.hover.bg": "{color.accent}",
+    "sidebar.menu-button.hover.fg": "{color.accent-foreground}",
+    "sidebar.menu-button.active.bg": "{color.accent}",
+    "sidebar.menu-button.active.fg": "{color.accent-foreground}",
+    "sidebar.menu-button.active.font-weight": "{font.weight.label}",
+    "sidebar.trigger.size": "{size.control.sm}",
+    "sidebar.trigger.radius": "{radius.control}",
+    "sidebar.trigger.icon-size": "{size.icon.default}",
+    "sidebar.trigger.fg": "{color.foreground}",
+    "sidebar.trigger.hover.bg": "{color.accent}",
+    "sidebar.drawer.shadow": "{elevation.lg}",
+    "sidebar.backdrop": "{color.overlay}",
+    "sidebar.focus-ring.color": "{color.ring}",
+    "sidebar.focus-ring.width": "{focus.ring.width}",
+    "sidebar.transition-duration": "{motion.duration.normal}",
+    "sidebar.transition-easing": "{motion.easing.standard}"
+  },
+  "elements": [
+    {
+      "tag": "sb-sidebar-provider",
+      "summary": "Wraps the sidebar and the main content: lays them out side by side, owns the expanded state and shares it with the sidebar and its trigger.",
+      "props": {
+        "expanded": {
+          "type": "boolean",
+          "default": true,
+          "reflect": true,
+          "note": "Wide viewports: whether the panel is shown. Unlike Collapsible's expanded, it defaults to true on purpose: the navigation is visible until someone hides it. The trigger flips it; code can set it too. The narrow-viewport drawer has its own state, which always starts closed."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "wrapper",
+          "role": "container",
+          "parent": null,
+          "part": "wrapper",
+          "notes": "Row with the panel at the inline start and the main content filling the rest."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-sidebar",
+          "notes": "One sb-sidebar and the page's main content, which holds the sb-sidebar-trigger."
+        }
+      },
+      "events": {
+        "sb-toggle": {
+          "bubbles": true,
+          "composed": true,
+          "cancelable": false,
+          "native": false,
+          "detail": null,
+          "note": "Fires on the provider after expanded changes, from the trigger or from code. Named and shaped like Collapsible's and Dialog's sb-toggle on purpose. Read host.expanded. Not fired for the drawer."
+        }
+      },
+      "notes": "Every sb-sidebar and sb-sidebar-trigger must be a descendant of one provider. One sb-sidebar per provider; a sidebar added later is picked up. If --sb-sidebar-breakpoint resolves empty, the provider warns once and stays wide."
+    },
+    {
+      "tag": "sb-sidebar-header",
+      "summary": "Region at the top of the panel that does not scroll (a product name, a search).",
+      "anatomy": [
+        {
+          "name": "header",
+          "role": "container",
+          "parent": null,
+          "part": "header",
+          "notes": "Column with the panel's padding and gap."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Any content."
+        }
+      },
+      "notes": "Optional; first child of sb-sidebar."
+    },
+    {
+      "tag": "sb-sidebar-content",
+      "summary": "The region between header and footer that holds the groups and scrolls when they overflow.",
+      "anatomy": [
+        {
+          "name": "content",
+          "role": "container",
+          "parent": null,
+          "part": "content",
+          "notes": "Column that fills the remaining height and scrolls on the block axis."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-sidebar-group",
+          "notes": "One or more groups."
+        }
+      },
+      "notes": "Required; one per sb-sidebar."
+    },
+    {
+      "tag": "sb-sidebar-footer",
+      "summary": "Region at the bottom of the panel that does not scroll.",
+      "anatomy": [
+        {
+          "name": "footer",
+          "role": "container",
+          "parent": null,
+          "part": "footer",
+          "notes": "Column with the panel's padding and gap."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Any content."
+        }
+      },
+      "notes": "Optional; last child of sb-sidebar."
+    },
+    {
+      "tag": "sb-sidebar-group",
+      "summary": "A section of the navigation: an optional group label followed by a menu.",
+      "role": "group",
+      "anatomy": [
+        {
+          "name": "group",
+          "role": "container",
+          "parent": null,
+          "part": "group",
+          "notes": "Column with the panel's padding."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-sidebar-group-label, sb-sidebar-menu",
+          "notes": "An optional group label, then one menu."
+        }
+      },
+      "notes": "Named by its sb-sidebar-group-label when it has one."
+    },
+    {
+      "tag": "sb-sidebar-group-label",
+      "summary": "The short visible name of a group.",
+      "anatomy": [
+        {
+          "name": "label",
+          "role": "text",
+          "parent": null,
+          "part": "label",
+          "notes": "One line, small muted text."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "notes": "Text."
+        }
+      },
+      "notes": "Direct child of sb-sidebar-group. Not a heading."
+    },
+    {
+      "tag": "sb-sidebar-menu",
+      "summary": "The list of items in a group.",
+      "role": "list",
+      "anatomy": [
+        {
+          "name": "menu",
+          "role": "container",
+          "parent": null,
+          "part": "menu",
+          "notes": "Column of items with the menu gap."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-sidebar-menu-item",
+          "notes": "Items only."
+        }
+      },
+      "notes": "Inside sb-sidebar-group (or directly in sb-sidebar-content)."
+    },
+    {
+      "tag": "sb-sidebar-menu-item",
+      "summary": "One entry of a menu.",
+      "role": "listitem",
+      "anatomy": [
+        {
+          "name": "item",
+          "role": "container",
+          "parent": null,
+          "part": "item",
+          "notes": "Wraps one menu button."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "component": "sb-sidebar-menu-button",
+          "notes": "One menu button."
+        }
+      },
+      "notes": "Direct child of sb-sidebar-menu."
+    },
+    {
+      "tag": "sb-sidebar-menu-button",
+      "summary": "The interactive row of an item: a link when href is set, otherwise a button.",
+      "props": {
+        "href": {
+          "type": "text",
+          "default": "",
+          "reflect": true,
+          "note": "The address the item links to. Navigation items always set it. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115)."
+        },
+        "active": {
+          "type": "boolean",
+          "default": false,
+          "reflect": true,
+          "note": "The current page: aria-current=\"page\" and the filled look. Only one item per sidebar. Ignored without href."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "button",
+          "role": "control",
+          "parent": null,
+          "part": "button",
+          "notes": "Full-width row: optional icon, then the text, which wraps; the row is at least 32px high and grows with the text."
+        }
+      ],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Text, optionally preceded by a decorative icon."
+        }
+      },
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "Follows the link, or activates the button."
+        }
+      },
+      "notes": "Inside sb-sidebar-menu-item."
+    },
+    {
+      "tag": "sb-sidebar-trigger",
+      "summary": "An icon button that toggles the panel on wide viewports and opens the drawer on narrow ones.",
+      "props": {
+        "label": {
+          "type": "text",
+          "default": "Toggle Sidebar",
+          "reflect": true,
+          "note": "Accessible name of the button (its only text is an icon)."
+        }
+      },
+      "anatomy": [
+        {
+          "name": "trigger",
+          "role": "control",
+          "parent": null,
+          "part": "trigger",
+          "notes": "Square ghost icon button."
+        },
+        {
+          "name": "icon",
+          "role": "icon",
+          "parent": "trigger",
+          "part": "icon",
+          "notes": "Panel icon, decorative."
+        }
+      ],
+      "events": {
+        "click": {
+          "bubbles": true,
+          "composed": true,
+          "native": true,
+          "detail": null,
+          "note": "Pointer, Enter or Space; toggles."
+        }
+      },
+      "notes": "Anywhere inside sb-sidebar-provider, usually in the main content's header so it stays visible while the panel is hidden."
+    }
+  ],
+  "aiHints": {
+    "category": "organism",
+    "keywords": [
+      "sidebar",
+      "side navigation",
+      "nav",
+      "drawer",
+      "off-canvas",
+      "docs navigation",
+      "app shell"
+    ],
+    "useCases": [
+      {
+        "when": "Primary navigation of an app or docs site with many pages in a few sections",
+        "use": "sb-sidebar-provider with sb-sidebar, groups with a group label, menu buttons with href and active on the current page"
+      },
+      {
+        "when": "The panel may be hidden on wide screens to give the content room",
+        "use": "collapsible=offcanvas (default) and an sb-sidebar-trigger in the content header"
+      },
+      {
+        "when": "The panel must always stay visible on wide screens",
+        "use": "collapsible=none; the trigger still opens the drawer on narrow screens"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Menu or menuitem roles on the site links",
+        "why": "The APG reserves menu roles for application menus; site navigation is a landmark with a list of links",
+        "alternative": "Keep the list and link semantics the sidebar provides"
+      },
+      {
+        "pattern": "Two navigations on a page with the same name",
+        "why": "The APG asks for a unique label per navigation landmark so they can be told apart",
+        "alternative": "Set a distinct label on the sidebar (for example \"Documentation\")"
+      },
+      {
+        "pattern": "Placing the trigger inside the sidebar",
+        "why": "The trigger must stay reachable while the panel is collapsed or the drawer closed",
+        "alternative": "Put sb-sidebar-trigger in the main content's header, inside the provider"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/sidebar/SidebarProvider.ts",
+        "src/components/sidebar/Sidebar.ts",
+        "src/components/sidebar/SidebarHeader.ts",
+        "src/components/sidebar/SidebarContent.ts",
+        "src/components/sidebar/SidebarFooter.ts",
+        "src/components/sidebar/SidebarGroup.ts",
+        "src/components/sidebar/SidebarGroupLabel.ts",
+        "src/components/sidebar/SidebarMenu.ts",
+        "src/components/sidebar/SidebarMenuItem.ts",
+        "src/components/sidebar/SidebarMenuButton.ts",
+        "src/components/sidebar/SidebarTrigger.ts",
+        "src/components/sidebar/context.ts",
+        "src/components/sidebar/index.ts",
+        "src/components/sidebar/Sidebar.scss",
+        "src/components/sidebar/Sidebar.styles.ts",
+        "src/components/sidebar/Sidebar.stories.ts"
+      ],
+      "parts": [
+        "wrapper",
+        "root",
+        "nav",
+        "drawer",
+        "header",
+        "content",
+        "footer",
+        "group",
+        "label",
+        "menu",
+        "item",
+        "button",
+        "trigger",
+        "icon"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/sidebar/sidebar.behavior.spec.ts",
+      "coverage": [
+        "native nav landmark named by label; label and collapsible reflect their defaults",
+        "empty label warns once in the console",
+        "menus are role=list with role=listitem items; an author role is kept; no menu roles",
+        "groups named by their group label through ariaLabelledByElements (Chromium accessibility tree), including a label added later",
+        "menu button renders a link with href, a button without; click is native, bubbles and composes",
+        "active sets aria-current=page only with href; one current item",
+        "trigger: native button named by label, aria-expanded per mode, ariaControlsElements to sb-sidebar, no ID",
+        "provider expanded reflects, defaults to true; sb-toggle bubbles and composes from the trigger and from code",
+        "offcanvas: collapsed panel has zero width, is hidden from the accessibility tree and the tab order; Enter and Space toggle",
+        "Collapsed story starts hidden; collapsible=none never hides and hides the trigger (wide)",
+        "Tab order: links in document order, then the trigger",
+        "focus ring keyboard-only in the focus-ring token; hover and current fill, color and weight from tokens",
+        "panel width, height, colors and border, menu button height and trigger size from tokens",
+        "the media query equals (width < sidebar.breakpoint), inlined at build time",
+        "RTL: panel at the right edge (wide), drawer at the right edge (narrow)",
+        "dark mode panel color; forced colors: Highlight marker on the current item, panel border kept; reduced motion: no transition",
+        "narrow: panel out of the layout; trigger opens a modal dialog drawer named by label; Enter opens it; focus moves inside",
+        "Tab wraps from the last focusable to the first and Shift+Tab back, inside the open drawer; a summary counts, hidden candidates do not",
+        "Escape and a press and release on the backdrop close it and return focus to the trigger; a drag from inside does not",
+        "activating a menu link closes the drawer; crossing to wide closes it and shows the panel",
+        "focus inside the sidebar moves to the trigger when the viewport crosses the breakpoint, both ways",
+        "an empty breakpoint token warns once and keeps the wide layout",
+        "trigger re-links to a sidebar added later; warns once without ariaControlsElements",
+        "without ariaLabelledByElements, the copied group name follows a label text change",
+        "a long menu button or group label wraps without clipping and grows the row",
+        "the drawer leaves expanded and sb-toggle alone; drawer width, surface and backdrop from tokens; collapsible=none still gives a drawer",
+        "axe clean: Default, Collapsed, Not collapsible, Narrow drawer open, RTL, Dark",
+        "a modified or non-primary click on a menu link keeps the drawer open"
+      ],
+      "drift": [
+        {
+          "aspect": "trigger size",
+          "contract": "32px square",
+          "realization": "the visual reference is 28px; 32px is the system small control size (WCAG 2.5.8 target size)"
+        },
+        {
+          "aspect": "collapsible=none on narrow viewports",
+          "contract": "narrow viewports always use the drawer",
+          "realization": "the visual reference renders a plain block and loses the navigation on phones; here the trigger still opens the drawer"
+        },
+        {
+          "aspect": "drawer focus wrap",
+          "contract": "Tab and Shift+Tab stay within the open drawer",
+          "realization": "the native modal lets Tab leave the last control for the browser UI, so a keydown handler on the drawer wraps from last to first and back; custom elements count as focusable only when their shadow root delegates focus, and hidden or inert candidates are skipped"
+        },
+        {
+          "aspect": "drawer motion",
+          "contract": "the drawer slides in from the inline start",
+          "realization": "it slides in on open (@starting-style) and closes without an exit slide"
+        },
+        {
+          "aspect": "menu button and group label text",
+          "contract": "the text wraps and the row grows past 32px",
+          "realization": "the visual reference truncates on one line; wrapping keeps text spacing and zoom readable (WCAG 1.4.12, 1.4.10), and one line still renders 32px high"
+        },
+        {
+          "aspect": "aria-controls",
+          "contract": "element reference, never an ID",
+          "realization": "set through ariaControlsElements; Chromium reflects it as an empty aria-controls attribute; where the property is missing there is no aria-controls (informative only) and the trigger warns once in the console (SB-0108)"
+        },
+        {
+          "aspect": "href default",
+          "contract": "href defaults to an empty string and reflects",
+          "realization": "a menu button without an address carries href=\"\" on the host and renders a native button"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Sidebar": 12
+        }
+      },
+      "coverage": [
+        "Sidebar: 12 variant(s), State (Rest, Hover, Focus) x Selected (False, True) x Open (False, True); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "sidebar.backdrop",
+          "contract": "Backdrop color behind the narrow-viewport drawer.",
+          "realization": "The library draws the wide-viewport panel; the drawer exists only below the breakpoint."
+        },
+        {
+          "aspect": "sidebar.drawer-width",
+          "contract": "Width of the narrow-viewport drawer.",
+          "realization": "The drawer exists only below the breakpoint and is not a library variant."
+        },
+        {
+          "aspect": "sidebar.drawer.shadow",
+          "contract": "Shadow of the narrow-viewport drawer.",
+          "realization": "The drawer exists only below the breakpoint and is not a library variant."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q0",
+      "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Yes: the visual reference docs and registry entry, and the APG landmark, disclosure and modal dialog patterns."
+    },
+    {
+      "id": "Q1",
+      "question": "Sidebar surface colors: the visual reference has its own sidebar color roles (light neutral 50, dark neutral 900); no semantic token matches both modes. Add semantic tokens?",
+      "recommendation": "Add color.sidebar and color.sidebar-foreground only (plan, Semantic tokens to add); keep accent, border and ring shared. Until then the panel uses color.card, which matches dark and is white in light. color.muted is not usable: in dark it equals color.accent, so hover and the current item would vanish.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Yes. color.sidebar, color.sidebar-foreground and color.sidebar-border are added (approved by the owner)."
+    },
+    {
+      "id": "Q2",
+      "question": "Panel width (16rem wide, 18rem in the drawer): no foundation or semantic size covers it. Which token?",
+      "recommendation": "Add size.sidebar.width and size.sidebar.width-drawer as semantic tokens on new foundation steps (size 256 and 288) through brand.config; until approved the widths are not in the contract.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Yes. size.sidebar.width (256px) and size.sidebar.drawer-width (288px) are added (approved by the owner)."
+    },
+    {
+      "id": "Q3",
+      "question": "Drawer backdrop color: no semantic scrim token exists (Dialog needs the same).",
+      "recommendation": "One shared semantic token color.overlay (black at 50% in both modes), agreed with the Dialog contract; until then the drawer uses the platform's default backdrop.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Yes. The shared color.overlay (also used by Dialog) is the drawer backdrop."
+    },
+    {
+      "id": "Q4",
+      "question": "Narrow-viewport breakpoint (the visual reference uses 768px). Tokens cannot be used in a media query.",
+      "recommendation": "768px as a documented literal with an allow-literal reason, read by the same media query in styles and script; a breakpoint foundation can replace it later.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "A breakpoint token with a build step (owner decision): breakpoint foundation tokens from the breakpoints standard and a semantic size.breakpoint.narrow; sidebar.breakpoint is inlined into the stylesheet's media query at build time and read at runtime by the provider from --sb-sidebar-breakpoint (getComputedStyle); no literal and no script constant (SB-0109, SB-0110)."
+    },
+    {
+      "id": "Q5",
+      "question": "Should activating a link in the open drawer close it (for single-page apps that do not reload)?",
+      "recommendation": "Yes: close the drawer when a menu button link is activated; a full page load closes it anyway.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "Yes: activating a menu link in the open drawer closes it."
+    },
+    {
+      "id": "Q6",
+      "question": "Manual screen-reader pass (VoiceOver and NVDA) of the landmark name, group names, current page and the drawer.",
+      "recommendation": "Run it before beta, as for the other composites.",
+      "status": "answered",
+      "answeredOn": "2026-11-12",
+      "answer": "The manual pass is replaced by the automated screen-reader views (SB-0113): playwright/tests/sidebar/__screen-reader__/sidebar-drawer-closed.txt, sidebar-drawer-open.txt and sidebar-wide.txt, plus the story views in playwright/tests/sidebar/__screen-reader__/stories/."
+    }
+  ],
+  "decisions": [
+    "SB-0007",
+    "SB-0009",
+    "SB-0101",
+    "SB-0109",
+    "SB-0110",
+    "SB-0115"
+  ]
+}

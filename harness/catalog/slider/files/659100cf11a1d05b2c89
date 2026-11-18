@@ -1,0 +1,3 @@
+- text "Opacity"
+- slider "Opacity" [focused, orientation=horizontal, valuetext=60] value "60"
+- paragraph [live=polite]

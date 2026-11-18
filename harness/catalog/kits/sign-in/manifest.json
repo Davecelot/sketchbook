@@ -1,0 +1,55 @@
+{
+  "id": "sign-in",
+  "title": "Sign in",
+  "summary": "Sign-in and sign-up pages: a centered card with email, a password that can be revealed, a remember-me choice, single sign-on and a form-level error.",
+  "path": "src/patterns/sign-in",
+  "components": [
+    "alert",
+    "button",
+    "card",
+    "checkbox",
+    "field",
+    "input",
+    "input-group",
+    "typography"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/sign-in/patterns-sign-in--default.txt",
+      "hash": "e50f092f7e5fa4ef4c22"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/sign-in/patterns-sign-in--loading.txt",
+      "hash": "276055c567cb979af600"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/sign-in/patterns-sign-in--sign-up.txt",
+      "hash": "1778d506d6768426a33a"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/sign-in/patterns-sign-in--with-error.txt",
+      "hash": "0457945d67f57a0956b0"
+    },
+    {
+      "path": "playwright/tests/patterns/sign-in.behavior.spec.ts",
+      "hash": "5ccdff5683e7c3fc7b66"
+    },
+    {
+      "path": "src/patterns/sign-in/README.md",
+      "hash": "552bdad5ce7559849e81"
+    },
+    {
+      "path": "src/patterns/sign-in/SignIn.stories.ts",
+      "hash": "ca224349b746c530f922"
+    },
+    {
+      "path": "src/patterns/sign-in/pattern.json",
+      "hash": "361745a3ed43c753c615"
+    },
+    {
+      "path": "src/patterns/sign-in/sign-in.css",
+      "hash": "5f8c4d12ea47ece52a44"
+    }
+  ]
+}

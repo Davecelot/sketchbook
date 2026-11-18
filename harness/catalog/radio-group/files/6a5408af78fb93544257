@@ -1,0 +1,11 @@
+- form
+  - text "Plan"
+  - radiogroup "Plan" [required]
+    - radio "Free" [checked=false]
+    - text "Free"
+    - radio "Pro" [checked=true]
+    - text "Pro"
+    - radio "Team" [checked=false]
+    - text "Team"
+  - button "Submit"
+  - button "Reset"

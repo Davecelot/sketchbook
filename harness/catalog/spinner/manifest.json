@@ -1,0 +1,65 @@
+{
+  "name": "spinner",
+  "component": "Spinner",
+  "displayName": "Spinner",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-spinner",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/spinner-2026-11-15.md",
+      "hash": "c8addaaad7e52c7db0ae"
+    },
+    {
+      "path": "docs/parity-audits/spinner-2026-11-08.md",
+      "hash": "56c45ae3c12de700ab2e"
+    },
+    {
+      "path": "playwright/tests/spinner/__screen-reader__/stories/components-spinner--custom-label.txt",
+      "hash": "6df67fa7b71cc2d5a264"
+    },
+    {
+      "path": "playwright/tests/spinner/__screen-reader__/stories/components-spinner--decorative.txt",
+      "hash": "01ba4719c80b6fe911b0"
+    },
+    {
+      "path": "playwright/tests/spinner/__screen-reader__/stories/components-spinner--default.txt",
+      "hash": "e445cd25a2db6a2e2a8b"
+    },
+    {
+      "path": "playwright/tests/spinner/__screen-reader__/stories/components-spinner--inherits-color.txt",
+      "hash": "e445cd25a2db6a2e2a8b"
+    },
+    {
+      "path": "playwright/tests/spinner/spinner.behavior.spec.ts",
+      "hash": "0fee74c552acfcd09b79"
+    },
+    {
+      "path": "spec/components/spinner/contract.json",
+      "hash": "72eebb972f647017cb66"
+    },
+    {
+      "path": "spec/components/spinner/contract.md",
+      "hash": "2a5417a598cfa5c61d41"
+    },
+    {
+      "path": "src/components/spinner/Spinner.scss",
+      "hash": "38ff39afe202b65ee51b"
+    },
+    {
+      "path": "src/components/spinner/Spinner.stories.ts",
+      "hash": "6f49277820d19b30bf3e"
+    },
+    {
+      "path": "src/components/spinner/Spinner.ts",
+      "hash": "bf8438f942deebfd1eb1"
+    },
+    {
+      "path": "src/components/spinner/index.ts",
+      "hash": "a21c624000065c68760a"
+    }
+  ]
+}

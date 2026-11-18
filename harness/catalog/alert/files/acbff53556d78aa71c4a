@@ -1,0 +1,17 @@
+# Parity audit: alert (2026-11-08)
+
+Reference: spec/components/alert/contract.{md,json}. Implementation: src/components/alert/. Evidence: npm run check all pass (T1-T6, C1-C3, R1, G1); playwright tests/alert pass (full group run 160 passed, 1 unrelated Storybook-navigation flake in empty); no literals in the SCSS (T4/T5 pass).
+
+| Aspect | Result | |
+| --- | --- | --- |
+| 4 elements, variant, role by variant before first render, authored role kept | Alert.ts:23-31 | ✅ |
+| data-has-icon / data-has-action | Alert.ts:20-24 | ✅ |
+| Grid: with no icon first column 0 and the gap disappears | With an action and no icon, column-gap is still applied: title starts 29px from the host edge instead of 17px (probe: with-action story, icon removed; columns 0px / content / action) | ❌ |
+| Action spans both rows at end | Alert.scss:63-67 | ✅ |
+
+## Differences
+1. Action without icon keeps a 12px empty gutter (code, Alert.scss:30-33 sets column-gap when only data-has-action). No story or spec covers action-without-icon. Fix: for action-only use columns 1fr auto and put title/description in column 1, or drop column-gap and add it only between icon and content; add a WithActionNoIcon story and a spec.
+
+Verdict: needs code fix.
+
+Status (2026-11-15): already fixed (020444d: no column gap without an icon, the action brings its own spacing; WithActionNoIcon story and spec).

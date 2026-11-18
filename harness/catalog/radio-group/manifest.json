@@ -1,0 +1,101 @@
+{
+  "name": "radio-group",
+  "component": "RadioGroup",
+  "displayName": "Radio Group",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-radio-group",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/radio-group-2026-11-15.md",
+      "hash": "cf90166db3ba9acc2194"
+    },
+    {
+      "path": "docs/parity-audits/radio-group-2026-11-08.md",
+      "hash": "85a4b3266a6a1d28e98e"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/radio-group-arrow-down-again.txt",
+      "hash": "f0716924e08378be93db"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/radio-group-arrow-down.txt",
+      "hash": "3ba2bc3ba6f029b80ca0"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--default.txt",
+      "hash": "9aed7c5fa69a16e32877"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--disabled-item.txt",
+      "hash": "8bc1af58d460a1f08417"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--disabled.txt",
+      "hash": "b5794de89d7617056bd7"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--horizontal.txt",
+      "hash": "15d87655c6fce7cbdd87"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--in-fieldset.txt",
+      "hash": "1ab7aeaf41bd11881118"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--in-form.txt",
+      "hash": "6a5408af78fb93544257"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--preselected.txt",
+      "hash": "2e172c357c5ad16851b0"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--required.txt",
+      "hash": "b517f83f11efd06cecc6"
+    },
+    {
+      "path": "playwright/tests/radio-group/__screen-reader__/stories/components-radio-group--rtl.txt",
+      "hash": "15d87655c6fce7cbdd87"
+    },
+    {
+      "path": "playwright/tests/radio-group/radio-group.behavior.spec.ts",
+      "hash": "2f70078682b30a266fdb"
+    },
+    {
+      "path": "spec/components/radio-group/contract.json",
+      "hash": "df1cd5a2eb01d19cbecf"
+    },
+    {
+      "path": "spec/components/radio-group/contract.md",
+      "hash": "6d46f6c13443b681492a"
+    },
+    {
+      "path": "src/components/radio-group/RadioGroup.scss",
+      "hash": "1f92eedd59d862a251bc"
+    },
+    {
+      "path": "src/components/radio-group/RadioGroup.stories.ts",
+      "hash": "924c3130eda5e6a89b8c"
+    },
+    {
+      "path": "src/components/radio-group/RadioGroup.ts",
+      "hash": "1ac26e4aaaf55d172a29"
+    },
+    {
+      "path": "src/components/radio-group/RadioGroupItem.ts",
+      "hash": "0524023470cd6e82adc8"
+    },
+    {
+      "path": "src/components/radio-group/context.ts",
+      "hash": "105409e5b8bba6c04d90"
+    },
+    {
+      "path": "src/components/radio-group/index.ts",
+      "hash": "965cd8ee2804c8db885f"
+    }
+  ]
+}

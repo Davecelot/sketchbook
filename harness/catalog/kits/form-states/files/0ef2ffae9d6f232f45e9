@@ -1,0 +1,124 @@
+- main
+  - sectionheader
+    - heading "Form states" [level=1]
+    - paragraph
+      - text "Every form control in its default, disabled, invalid and read-only states, side by side. Check focus rings by tabbing through."
+  - region "Input"
+    - heading "Input" [level=2]
+    - text "Default input"
+    - textbox "Default input"
+    - paragraph [live=polite]
+    - text "Disabled input"
+    - textbox "Disabled input" [disabled] value "Cannot change"
+    - paragraph [live=polite]
+    - text "Invalid input"
+    - textbox "Invalid input" [invalid=true] value "not-an-email" desc "Enter an address like name@example.com."
+    - paragraph [live=polite]
+      - text "Enter an address like name@example.com."
+    - text "Read-only input"
+    - textbox "Read-only input" [readonly] value "Shown, not edited"
+    - paragraph [live=polite]
+  - region "Input group"
+    - heading "Input group" [level=2]
+    - text "Default group"
+    - textbox "Default group"
+    - text "Invalid group"
+    - textbox "Invalid group" [invalid=true] value "no spaces allowed" desc "Use letters, numbers and dashes."
+    - alert [live=assertive]
+      - text "Use letters, numbers and dashes."
+  - region "Textarea"
+    - heading "Textarea" [level=2]
+    - text "Default textarea"
+    - textbox "Default textarea"
+    - paragraph [live=polite]
+    - text "Disabled textarea"
+    - textbox "Disabled textarea" [disabled] value "Cannot change"
+    - paragraph [live=polite]
+    - text "Invalid textarea"
+    - textbox "Invalid textarea" [invalid=true] value "Too short" desc "Write at least 20 characters."
+    - paragraph [live=polite]
+      - text "Write at least 20 characters."
+  - region "Native select"
+    - heading "Native select" [level=2]
+    - text "Default select"
+    - combobox "Default select" [expanded=false] value "Choose one"
+      - MenuListPopup
+        - option "Choose one" [selected]
+        - option "First option"
+        - option "Second option"
+    - paragraph [live=polite]
+    - text "Disabled select"
+    - combobox "Disabled select" [disabled, expanded=false] value "Choose one"
+      - MenuListPopup
+        - option "Choose one" [disabled]
+        - option "First option" [disabled]
+        - option "Second option" [disabled]
+    - paragraph [live=polite]
+    - text "Invalid select"
+    - combobox "Invalid select" [invalid=true, expanded=false] value "Choose one" desc "Choose an option."
+      - MenuListPopup
+        - option "Choose one" [selected]
+        - option "First option"
+        - option "Second option"
+    - paragraph [live=polite]
+      - text "Choose an option."
+  - region "Checkbox"
+    - heading "Checkbox" [level=2]
+    - checkbox "Default checkbox" [checked=false]
+    - paragraph [live=polite]
+    - checkbox "Checked checkbox" [checked=true]
+    - paragraph [live=polite]
+    - checkbox "Disabled checkbox" [disabled, checked=false]
+    - paragraph [live=polite]
+    - checkbox "Invalid checkbox" [invalid=true, checked=false] desc "Accept to continue."
+    - paragraph [live=polite]
+      - text "Accept to continue."
+  - region "Radio group"
+    - heading "Radio group" [level=2]
+    - radiogroup "Default radio group"
+      - radio "Option one" [checked=true]
+      - text "Option one"
+      - radio "Option two" [checked=false]
+      - text "Option two"
+    - radiogroup "Disabled radio group"
+      - radio "Locked one" [disabled, checked=true]
+      - text "Locked one"
+      - radio "Locked two" [disabled, checked=false]
+      - text "Locked two"
+  - region "Switch"
+    - heading "Switch" [level=2]
+    - switch "Default switch" [checked=false]
+    - paragraph [live=polite]
+    - switch "Checked switch" [checked=true]
+    - paragraph [live=polite]
+    - switch "Disabled switch" [disabled, checked=false]
+    - paragraph [live=polite]
+  - region "Slider"
+    - heading "Slider" [level=2]
+    - text "Default slider"
+    - slider "Default slider" [orientation=horizontal, valuetext=40] value "40"
+    - paragraph [live=polite]
+    - text "Disabled slider"
+    - slider "Disabled slider" [disabled, orientation=horizontal, valuetext=40] value "40"
+    - paragraph [live=polite]
+  - region "Toggle"
+    - heading "Toggle" [level=2]
+    - button "Default toggle" [pressed=false]
+    - button "Pressed toggle" [pressed=true]
+    - button "Disabled toggle" [disabled, pressed=false]
+  - region "Toggle group"
+    - heading "Toggle group" [level=2]
+    - group "Default toggle group"
+      - button "Day" [pressed=true]
+      - button "Week" [pressed=false]
+    - group "Disabled toggle group"
+      - button "Day" [disabled, pressed=true]
+      - button "Week" [disabled, pressed=false]
+  - region "Field and label"
+    - heading "Field and label" [level=2]
+    - text "Native input in a field"
+    - textbox "Native input in a field" desc "Label, description and error wire themselves to the control."
+    - paragraph
+      - text "Label, description and error wire themselves to the control."
+    - text "Label element"
+    - textbox "Label element"

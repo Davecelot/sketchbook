@@ -1,0 +1,12 @@
+{
+  "id": "from-codebase",
+  "title": "From a codebase",
+  "for": "Teams with a product: audit its CSS and propose foundations from the values it repeats; the library and kits stay as they are.",
+  "foundations": null,
+  "components": "all",
+  "kits": "all",
+  "next": [
+    "sketchbook audit-css <path|glob>",
+    "/foundations import (on generated/import/codebase.proposal.json)"
+  ]
+}

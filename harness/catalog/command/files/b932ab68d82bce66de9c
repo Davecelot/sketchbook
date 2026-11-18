@@ -1,0 +1,56 @@
+# Parity audit: Command (2026-11-12)
+
+Reference: `spec/components/command/contract.md` + `contract.json` (status draft, 0.1.0).
+Audited: `src/components/command/*` (8 elements, `context.ts`, `Command.scss`, stories), `playwright/tests/command/command.behavior.spec.ts` (34 tests listed), decision SB-0103.
+Method: read-only comparison of contract against code; `npm run check` run (read-only). Tests were not re-run by this audit.
+
+## Comparison table
+
+| Aspect | Contract | Implementation | Result |
+| --- | --- | --- | --- |
+| Props sb-command | label, filter (auto/manual, reflected), loop (reflected), results-label | all four, same defaults | ✅ |
+| Props input/group/item | placeholder, value; label; value, keywords, disabled (reflected) | all present, same defaults | ✅ |
+| Events | `sb-select` `{ value }`, bubbles, composed, not cancelable; native `input` | `chooseItem` dispatches exactly that; native input is not stopped | ✅ |
+| Anatomy / parts | root, input-row, icon, input, list, empty, group, heading, item, separator, shortcut; status region | all parts present; status is `.status` with role=status | ✅ |
+| Filtering | all terms, case/accent insensitive, value + keywords, document order; empty groups hidden, separators hidden while searching | `normalize` (NFD) + `every(term)`; groups/separators handled | ✅ |
+| Filter manual | nothing hides | items never hidden; groups/separators never hidden (recorded drift); empty follows items | ⚠️ (drift recorded) |
+| Active item | first enabled match after typing; arrows skip disabled, stop at ends unless loop; hover; scroll into view | `#refresh(true)`, `#move`, `pointermove`, `scrollIntoView nearest` | ✅ |
+| Enter / click | fires sb-select; never from disabled or code; never submits a form | preventDefault on Enter; `chooseItem` checks disabled | ✅ |
+| Keyboard | Home/End move caret, Escape unhandled, one tab stop | no handler for these; native input only focusable part | ✅ |
+| ARIA field/list | combobox, aria-expanded=true, autocomplete=list, aria-label; aria-controls and aria-activedescendant as element references | all set (`ariaControlsElements`, `ariaActiveDescendantElement` in `updated()`); cleared with no match | ✅ |
+| ARIA list/group/item | listbox + aria-label; group + label, heading aria-hidden; option, aria-selected only on active, aria-disabled | all as host attributes | ✅ |
+| Empty, separator, shortcut exposure | role none (empty, separator); shortcut aria-hidden | empty also `aria-hidden` (recorded drift); separator role none; shortcut aria-hidden | ⚠️ (drift recorded) |
+| Announcement | polite status after typing pauses: count, or empty text | 500 ms debounce, `resultsLabel`, empty text | ✅ |
+| Missing label | one console warning | rAF check in `firstUpdated`, once | ✅ |
+| Form association | not form-associated (Q3, SB-0103) | plain LitElement, no mixin | ✅ (documented exception) |
+| Tokens | CSS only `--sb-command-*` and private `--_*`; no literals | SCSS uses only those; `--_shortcut-fg`, `--_icon-fg`; no allow-literal comments; max-height and letter-spacing use the new tokens | ✅ |
+| Dimensions / layout | 36px row, 300px max height, item padding, separator, root fills container | all via tokens; root `height:100%`, list scrolls | ✅ |
+| Typography | control size, caption heading with label weight, shortcut caption + 0.1em | tokens as listed | ✅ |
+| States / forced colors | active = accent fill + accent-foreground + 2px inset ring; disabled opacity; Highlight/HighlightText | SCSS matches; shortcut takes active-shortcut-fg | ✅ |
+| Focus | caret only on field, no ring; field is delegatesFocus target | `outline:none` on input; delegatesFocus on sb-command and sb-command-input | ✅ |
+| Dialog composition | focus lands in field, Escape closes, no dependency on dialog | test and story present; no import of dialog | ✅ |
+| Test coverage | one test per prop, state, key, event, a11y rule | 34 tests cover every `realizations.web.coverage` line | ✅ |
+| Contract documents agree | contract.md and contract.json describe the same state | contract.md Realizations is stale (see D1) | ❌ |
+| Repo checks | `npm run check` green | O1 fails (stale outputs); all other checks pass | ⚠️ (D4) |
+
+## Differences and action plan
+
+D1. contract.md Realizations does not match contract.json (documentation, fix in the contract). `## Realizations -> Web` still says "Not started. Planned: ..." and `### Coverage` says "None yet", while `realizations.web` is `complete` with 14 coverage lines. `### Known drift` lists 6 entries; the JSON has 12. Missing in the md: axe `scrollable-region-focusable` filter (owner decision 2026-11-12), empty state also `aria-hidden`, first enabled item active on load, mousedown prevented on items, manual filter never hides groups/separators, 500 ms announcement debounce. Action: regenerate or update contract.md Realizations (Web, Coverage, Known drift) from the JSON. Code needs no change.
+
+D2. Empty state exposure (drift already recorded): contract says role `none`; code also sets `aria-hidden="true"` because axe flags `aria-required-children` otherwise. Consequence: the empty text is announced only through the status region (as the contract says), so the contract and code agree in effect. Action: add the one-line note to contract.md section 9 so the "role none" wording is not read as the whole truth; keep the code.
+
+D3. Manual filter vs "nothing hides" (drift recorded): groups and separators are never hidden in manual mode, which matches "nothing hides" literally. No gap; only the md omission (D1). One wording check for the owner: the contract's behavior text says "the empty state, the active item and the announcement still follow the items present", which the code does.
+
+D4. `npm run check` fails O1 (outputs stale: "foundations or contracts changed since the last propagate"). The contract edit (uncommitted `spec/components/command/contract.json`) is the cause. Action: run `sketchbook propagate`, then the Figma scripts it lists, before merge. Not a component defect.
+
+D5. Items outside the contract, small, all recorded as drift except the first: (a) `Enter` is ignored while `isComposing` (IME), not in the contract; add one line to the keyboard table or accept as implementation detail; (b) the announcement delay of 500 ms is a PROPOSAL "to confirm in review"; (c) contract status is still `draft` (correct until beta review and the owed manual screen-reader pass, Q5).
+
+D6. Owed before beta, not a parity defect: manual VoiceOver (Safari) and NVDA (Chrome, Firefox) pass for element-reference `aria-activedescendant` (Q5); `a11y-auditor` live keyboard pass (Q4); design realization is `not-started`.
+
+No code-versus-contract behavior divergence was found. Every drift entry is deliberate, the 12 entries in `realizations.web.drift` each correspond to observed code, and the contract-side entries are consistent with SB-0103.
+
+## Verdict
+
+Needs contract update. The implementation matches the contract on props, events, anatomy, filtering, keyboard, ARIA, tokens and states, with the recorded drift. The only gaps are documentation: contract.md Realizations/Coverage/Known drift are stale versus contract.json (D1, D2), plus check O1 needs `sketchbook propagate` (D4). No code fix is required.
+
+Status (2026-11-15): fixed in this PR (contract.md Known drift gains the two entries it lacked, input method composition and browser floor); D1 rest, D2 and D4 already fixed (Realizations and Coverage match contract.json, section 9 says the empty text is not exposed in the listbox, O1 passes).

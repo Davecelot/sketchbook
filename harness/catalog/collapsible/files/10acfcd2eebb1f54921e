@@ -1,0 +1,62 @@
+@use 'a11y';
+
+:host {
+  display: block;
+  color: var(--sb-collapsible-fg);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host(sb-collapsible-trigger) {
+  display: inline-block;
+}
+
+[part='trigger'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--sb-collapsible-trigger-min-size);
+  min-height: var(--sb-collapsible-trigger-min-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sb-collapsible-radius);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    @include a11y.focus-ring(var(--sb-collapsible-focus-ring-color), var(--sb-collapsible-focus-ring-width));
+  }
+
+  &:disabled {
+    opacity: var(--sb-collapsible-disabled-opacity);
+    cursor: not-allowed;
+  }
+}
+
+// The row animates between 0fr and 1fr; visibility switches at the end of the close so closed content
+// leaves the tab order and the accessibility tree.
+[part='content'] {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition-property: grid-template-rows, visibility;
+  transition-duration: var(--sb-collapsible-transition-duration);
+  transition-timing-function: var(--sb-collapsible-transition-easing);
+  @include a11y.respect-reduced-motion;
+}
+
+:host([data-state='open']) [part='content'] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+[part='inner'] {
+  min-height: 0;
+  overflow: hidden;
+}

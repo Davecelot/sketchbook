@@ -1,0 +1,126 @@
+{
+  "family": "rampMethods",
+  "$description": "How a color ramp is built from one brand color. Only implemented methods can be chosen in brand.config (color.ramp.method); the others are catalogued for later.",
+  "default": "oklch",
+  "presets": [
+    {
+      "id": "oklch",
+      "label": "OKLCH perceptual (11 steps)",
+      "values": {
+        "steps": [
+          50,
+          100,
+          200,
+          300,
+          400,
+          500,
+          600,
+          700,
+          800,
+          900,
+          950
+        ],
+        "lightness": {
+          "50": 0.985,
+          "100": 0.97,
+          "200": 0.922,
+          "300": 0.87,
+          "400": 0.708,
+          "500": 0.556,
+          "600": 0.439,
+          "700": 0.371,
+          "800": 0.269,
+          "900": 0.205,
+          "950": 0.145
+        }
+      },
+      "description": "Fixed lightness per step and a chroma curve per hue; the step closest to the brand color keeps its exact hex. The default.",
+      "source": "https://oklch.com/",
+      "verified": true,
+      "implemented": true
+    },
+    {
+      "id": "tailwind-11",
+      "label": "Hand-tuned 11 steps",
+      "values": {
+        "steps": [
+          50,
+          100,
+          200,
+          300,
+          400,
+          500,
+          600,
+          700,
+          800,
+          900,
+          950
+        ]
+      },
+      "description": "Hand-tuned palettes in OKLCH; cannot be derived from one color.",
+      "source": "https://tailwindcss.com/docs/colors",
+      "verified": true,
+      "implemented": false
+    },
+    {
+      "id": "radix-12",
+      "label": "12 steps with jobs",
+      "values": {
+        "steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "description": "Each step has a job (backgrounds, borders, solids, text), with separate dark scales.",
+      "source": "https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale",
+      "verified": true,
+      "implemented": false
+    },
+    {
+      "id": "m3-tonal",
+      "label": "Tonal palette 0-100",
+      "values": {
+        "tones": [
+          0,
+          10,
+          20,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          95,
+          99,
+          100
+        ]
+      },
+      "description": "Tone means lightness; roles pick tones per mode.",
+      "source": "https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Color.md",
+      "verified": true,
+      "implemented": false
+    },
+    {
+      "id": "contrast-targeted",
+      "label": "Contrast-targeted",
+      "values": {
+        "input": "target contrast ratios"
+      },
+      "description": "Steps generated to hit target contrast ratios against a background.",
+      "source": "https://leonardocolor.io/",
+      "verified": true,
+      "implemented": false
+    }
+  ]
+}

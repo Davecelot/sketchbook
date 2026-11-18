@@ -1,0 +1,85 @@
+{
+  "name": "input",
+  "component": "Input",
+  "displayName": "Input",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-input",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/input-2026-11-15.md",
+      "hash": "74013a390a4a820194f2"
+    },
+    {
+      "path": "docs/parity-audits/input-2026-11-08.md",
+      "hash": "45aea55aede567795da6"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/input-error.txt",
+      "hash": "c7482318af88664d7dcc"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/input-typed.txt",
+      "hash": "a310eb8a50ef91f63464"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/stories/components-input--default.txt",
+      "hash": "9a072aedd4835d8302d0"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/stories/components-input--disabled.txt",
+      "hash": "ab7eccdc1ed0cf9e8d2a"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/stories/components-input--hidden-label.txt",
+      "hash": "63785352f2e1083afad0"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/stories/components-input--readonly.txt",
+      "hash": "7f39502d3fb907d14714"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/stories/components-input--required.txt",
+      "hash": "f3896b6e9d2f4b53cc9c"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/stories/components-input--with-description.txt",
+      "hash": "5d05203ba89dfffc5672"
+    },
+    {
+      "path": "playwright/tests/input/__screen-reader__/stories/components-input--with-error.txt",
+      "hash": "c7482318af88664d7dcc"
+    },
+    {
+      "path": "playwright/tests/input/input.behavior.spec.ts",
+      "hash": "bfe480c8577cbf45dd5e"
+    },
+    {
+      "path": "spec/components/input/contract.json",
+      "hash": "3928022bc657cfd275c8"
+    },
+    {
+      "path": "spec/components/input/contract.md",
+      "hash": "0374ecc1c70cfbeb5477"
+    },
+    {
+      "path": "src/components/input/Input.scss",
+      "hash": "2e4f4f932ac53b3ed0f8"
+    },
+    {
+      "path": "src/components/input/Input.stories.ts",
+      "hash": "130029580ebe2410854d"
+    },
+    {
+      "path": "src/components/input/Input.ts",
+      "hash": "01c8e9c337c9d9ec3b56"
+    },
+    {
+      "path": "src/components/input/index.ts",
+      "hash": "b8f3934a052b4cb749da"
+    }
+  ]
+}

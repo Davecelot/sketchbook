@@ -1,0 +1,119 @@
+{
+  "family": "typeScale",
+  "$description": "Font size scales. Steps are named xs, sm, base, lg, xl, 2xl, 3xl, 4xl (base = typography.baseSize). Modular scales multiply the base by a ratio per step and round to even pixels.",
+  "default": "tailwind",
+  "presets": [
+    {
+      "id": "tailwind",
+      "label": "Hand-tuned utility scale",
+      "values": {
+        "sizes": {
+          "xs": 12,
+          "sm": 14,
+          "base": 16,
+          "lg": 18,
+          "xl": 20,
+          "2xl": 24,
+          "3xl": 30,
+          "4xl": 36
+        },
+        "leading": {
+          "xs": 1.3333,
+          "sm": 1.4286,
+          "base": 1.5,
+          "lg": 1.5556,
+          "xl": 1.4,
+          "2xl": 1.3333,
+          "3xl": 1.2,
+          "4xl": 1.1111
+        }
+      },
+      "description": "Fixed sizes picked by hand rather than by a ratio, each paired with its own line height. The default; ignores baseSize.",
+      "source": "https://tailwindcss.com/docs/font-size",
+      "verified": true
+    },
+    {
+      "id": "minor-second",
+      "label": "Minor second (1.067)",
+      "values": {
+        "ratio": 1.067
+      },
+      "description": "Very gentle growth; steps are hard to tell apart. Suits dense data screens with few levels.",
+      "source": "https://www.modularscale.com/",
+      "verified": true
+    },
+    {
+      "id": "major-second",
+      "label": "Major second (1.125)",
+      "values": {
+        "ratio": 1.125
+      },
+      "description": "Small steps for product UI with many text levels.",
+      "source": "https://www.modularscale.com/",
+      "verified": true
+    },
+    {
+      "id": "minor-third",
+      "label": "Minor third (1.2)",
+      "values": {
+        "ratio": 1.2
+      },
+      "description": "Balanced growth for most interfaces.",
+      "source": "https://www.modularscale.com/",
+      "verified": true,
+      "recommended": true
+    },
+    {
+      "id": "major-third",
+      "label": "Major third (1.25)",
+      "values": {
+        "ratio": 1.25
+      },
+      "description": "Clear hierarchy without very large headings.",
+      "source": "https://www.modularscale.com/",
+      "verified": true,
+      "recommended": true
+    },
+    {
+      "id": "perfect-fourth",
+      "label": "Perfect fourth (1.333)",
+      "values": {
+        "ratio": 1.333
+      },
+      "description": "Strong contrast between levels; good for content and marketing pages. Small steps get small fast.",
+      "source": "https://www.modularscale.com/",
+      "verified": true,
+      "recommended": true
+    },
+    {
+      "id": "augmented-fourth",
+      "label": "Augmented fourth (1.414)",
+      "values": {
+        "ratio": 1.414
+      },
+      "description": "Large jumps; few levels fit before headings get huge.",
+      "source": "https://www.modularscale.com/",
+      "verified": true
+    },
+    {
+      "id": "perfect-fifth",
+      "label": "Perfect fifth (1.5)",
+      "values": {
+        "ratio": 1.5
+      },
+      "description": "Dramatic scale for editorial layouts.",
+      "source": "https://www.modularscale.com/",
+      "verified": true
+    },
+    {
+      "id": "golden",
+      "label": "Golden ratio (1.618)",
+      "values": {
+        "ratio": 1.618
+      },
+      "description": "The largest common ratio; display-heavy pages only.",
+      "source": "https://www.modularscale.com/",
+      "verified": true
+    }
+  ]
+}

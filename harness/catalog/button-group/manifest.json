@@ -1,0 +1,85 @@
+{
+  "name": "button-group",
+  "component": "ButtonGroup",
+  "displayName": "Button Group",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-button-group",
+  "prefix": "sb",
+  "dependsOn": [
+    "button"
+  ],
+  "uses": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/button-group-2026-11-15.md",
+      "hash": "4bda2f3cc2a97b49bf59"
+    },
+    {
+      "path": "docs/parity-audits/button-group-2026-11-08.md",
+      "hash": "7c7ad2130eddf9a1513b"
+    },
+    {
+      "path": "playwright/tests/button-group/__screen-reader__/stories/components-button-group--default.txt",
+      "hash": "a33602cbe19396ffaeed"
+    },
+    {
+      "path": "playwright/tests/button-group/__screen-reader__/stories/components-button-group--rtl.txt",
+      "hash": "a33602cbe19396ffaeed"
+    },
+    {
+      "path": "playwright/tests/button-group/__screen-reader__/stories/components-button-group--single.txt",
+      "hash": "c3af09f47753a0346516"
+    },
+    {
+      "path": "playwright/tests/button-group/__screen-reader__/stories/components-button-group--vertical.txt",
+      "hash": "a33602cbe19396ffaeed"
+    },
+    {
+      "path": "playwright/tests/button-group/__screen-reader__/stories/components-button-group--with-separator.txt",
+      "hash": "6afe96e91fc22fd70152"
+    },
+    {
+      "path": "playwright/tests/button-group/__screen-reader__/stories/components-button-group--with-text.txt",
+      "hash": "91da6c854f746349f833"
+    },
+    {
+      "path": "playwright/tests/button-group/button-group.behavior.spec.ts",
+      "hash": "d7e1964ea5ad56231d79"
+    },
+    {
+      "path": "spec/components/button-group/contract.json",
+      "hash": "80dc20a145bf1531dba0"
+    },
+    {
+      "path": "spec/components/button-group/contract.md",
+      "hash": "47d4b9403faec8dec952"
+    },
+    {
+      "path": "src/components/button-group/ButtonGroup.scss",
+      "hash": "d27c685fdbf67bd48901"
+    },
+    {
+      "path": "src/components/button-group/ButtonGroup.stories.ts",
+      "hash": "f01251791f5d7d6c788f"
+    },
+    {
+      "path": "src/components/button-group/ButtonGroup.ts",
+      "hash": "7474213871cfec7877de"
+    },
+    {
+      "path": "src/components/button-group/ButtonGroupSeparator.ts",
+      "hash": "0044c16e6d6408d70f97"
+    },
+    {
+      "path": "src/components/button-group/ButtonGroupText.ts",
+      "hash": "b8999a731d121b733b2a"
+    },
+    {
+      "path": "src/components/button-group/index.ts",
+      "hash": "322bb11b902b9b5e38f4"
+    }
+  ]
+}

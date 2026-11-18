@@ -1,0 +1,48 @@
+{
+  "id": "profile",
+  "title": "Profile",
+  "summary": "An account page: breadcrumb, the person with avatar and role, an editable public profile and a list of connected services.",
+  "path": "src/patterns/profile",
+  "components": [
+    "avatar",
+    "badge",
+    "breadcrumb",
+    "button",
+    "card",
+    "input",
+    "item",
+    "separator",
+    "textarea"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/profile/patterns-profile--default.txt",
+      "hash": "cefb8073e21695cbf74b"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/profile/patterns-profile--with-errors.txt",
+      "hash": "4a3c9a0031274cf07290"
+    },
+    {
+      "path": "playwright/tests/patterns/profile.behavior.spec.ts",
+      "hash": "881ef28864ed23ed93c8"
+    },
+    {
+      "path": "src/patterns/profile/Profile.stories.ts",
+      "hash": "5b58bb5f93ecf12d69ff"
+    },
+    {
+      "path": "src/patterns/profile/README.md",
+      "hash": "0fdd3c14afbdadcf1969"
+    },
+    {
+      "path": "src/patterns/profile/pattern.json",
+      "hash": "4aeca453e4792abf29de"
+    },
+    {
+      "path": "src/patterns/profile/profile.css",
+      "hash": "75b211244911b7cc480a"
+    }
+  ]
+}

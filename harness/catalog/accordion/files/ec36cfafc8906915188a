@@ -1,0 +1,8 @@
+- heading "Shipping" [level=3]
+  - button "Shipping" [expanded=false]
+- heading "Returns" [level=3]
+  - button "Returns" [focused, expanded=true]
+- region "Returns"
+  - text "Returns are accepted for a month."
+- heading "Warranty" [level=3]
+  - button "Warranty" [expanded=false]

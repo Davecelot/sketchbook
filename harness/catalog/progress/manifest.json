@@ -1,0 +1,73 @@
+{
+  "name": "progress",
+  "component": "Progress",
+  "displayName": "Progress",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-progress",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/progress-2026-11-15.md",
+      "hash": "9d3d72f2c3df4816a72f"
+    },
+    {
+      "path": "docs/parity-audits/progress-2026-11-08.md",
+      "hash": "c0f9aa5c1b828ae95458"
+    },
+    {
+      "path": "playwright/tests/progress/__screen-reader__/stories/components-progress--complete.txt",
+      "hash": "124314b4921167293987"
+    },
+    {
+      "path": "playwright/tests/progress/__screen-reader__/stories/components-progress--custom-max.txt",
+      "hash": "3f37f1d3cb4dfc6c6fe2"
+    },
+    {
+      "path": "playwright/tests/progress/__screen-reader__/stories/components-progress--default.txt",
+      "hash": "06cd5195c1465d18cf67"
+    },
+    {
+      "path": "playwright/tests/progress/__screen-reader__/stories/components-progress--empty.txt",
+      "hash": "ba1f86715e56b9d87904"
+    },
+    {
+      "path": "playwright/tests/progress/__screen-reader__/stories/components-progress--indeterminate.txt",
+      "hash": "fbdbab9c99c0e52e7e93"
+    },
+    {
+      "path": "playwright/tests/progress/__screen-reader__/stories/components-progress--named-by-text.txt",
+      "hash": "683d8646b127ec5dd66e"
+    },
+    {
+      "path": "playwright/tests/progress/progress.behavior.spec.ts",
+      "hash": "98f3165379840778060d"
+    },
+    {
+      "path": "spec/components/progress/contract.json",
+      "hash": "ac4c4532f20085614826"
+    },
+    {
+      "path": "spec/components/progress/contract.md",
+      "hash": "b9d67aae522deb2f2874"
+    },
+    {
+      "path": "src/components/progress/Progress.scss",
+      "hash": "b1cf02fc7ecba00d0a5d"
+    },
+    {
+      "path": "src/components/progress/Progress.stories.ts",
+      "hash": "52bb3ada2f1d1325d95a"
+    },
+    {
+      "path": "src/components/progress/Progress.ts",
+      "hash": "cce615b40b94edc2bd0a"
+    },
+    {
+      "path": "src/components/progress/index.ts",
+      "hash": "46b8ec7859c9c59094a8"
+    }
+  ]
+}

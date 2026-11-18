@@ -1,0 +1,570 @@
+{
+  "$description": "Mode-independent semantic tokens (shadcn/ui sizing and type defaults). Generated once; owned by the team from then on.",
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "body": {
+        "$value": "{font.family.sans}"
+      },
+      "code": {
+        "$value": "{font.family.mono}"
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "control": {
+        "$value": "{font.size.sm}"
+      },
+      "body": {
+        "$value": "{font.size.sm}"
+      },
+      "caption": {
+        "$value": "{font.size.xs}"
+      },
+      "control-xs": {
+        "$value": "{font.size.xs}"
+      },
+      "heading-1": {
+        "$value": "{font.size.4xl}"
+      },
+      "heading-2": {
+        "$value": "{font.size.3xl}"
+      },
+      "heading-3": {
+        "$value": "{font.size.2xl}"
+      },
+      "heading-4": {
+        "$value": "{font.size.xl}"
+      },
+      "prose": {
+        "$value": "{font.size.base}"
+      },
+      "lead": {
+        "$value": "{font.size.xl}"
+      },
+      "large": {
+        "$value": "{font.size.lg}"
+      },
+      "heading": {
+        "$value": "{font.size.base}"
+      },
+      "heading-lg": {
+        "$value": "{font.size.lg}"
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "control": {
+        "$value": "{font.weight.medium}"
+      },
+      "label": {
+        "$value": "{font.weight.medium}"
+      },
+      "body": {
+        "$value": "{font.weight.regular}"
+      },
+      "heading": {
+        "$value": "{font.weight.semibold}"
+      },
+      "display": {
+        "$value": "{font.weight.extrabold}"
+      }
+    },
+    "line-height": {
+      "$type": "number",
+      "control": {
+        "$value": "{font.line-height.sm}"
+      },
+      "label": {
+        "$value": "{font.line-height.none}"
+      },
+      "body": {
+        "$value": "{font.line-height.normal}"
+      },
+      "heading-1": {
+        "$value": "{font.line-height.4xl}"
+      },
+      "heading-2": {
+        "$value": "{font.line-height.3xl}"
+      },
+      "heading-3": {
+        "$value": "{font.line-height.2xl}"
+      },
+      "heading-4": {
+        "$value": "{font.line-height.xl}"
+      },
+      "lead": {
+        "$value": "{font.line-height.xl}"
+      },
+      "large": {
+        "$value": "{font.line-height.lg}"
+      },
+      "prose": {
+        "$value": "{size.28}",
+        "$type": "dimension"
+      },
+      "caption": {
+        "$value": "{font.line-height.xs}"
+      },
+      "heading": {
+        "$value": "{font.line-height.none}"
+      },
+      "heading-lg": {
+        "$value": "{font.line-height.lg}"
+      }
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "heading": {
+        "$value": "{font.letter-spacing.tight}"
+      },
+      "body": {
+        "$value": "{font.letter-spacing.normal}"
+      },
+      "key": {
+        "$value": "{font.letter-spacing.widest}"
+      }
+    }
+  },
+  "size": {
+    "control": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{size.32}"
+      },
+      "default": {
+        "$value": "{size.36}"
+      },
+      "lg": {
+        "$value": "{size.40}"
+      },
+      "xs": {
+        "$value": "{size.24}"
+      },
+      "textarea-min": {
+        "$value": "{space.16}"
+      }
+    },
+    "icon": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{size.12}"
+      },
+      "default": {
+        "$value": "{size.16}"
+      },
+      "lg": {
+        "$value": "{size.20}"
+      },
+      "xl": {
+        "$value": "{size.24}"
+      }
+    },
+    "brand": {
+      "$type": "dimension",
+      "mark": {
+        "$value": "{size.56}"
+      }
+    },
+    "switch": {
+      "$type": "dimension",
+      "width": {
+        "$value": "{size.32}"
+      },
+      "height": {
+        "$value": "{size.20}"
+      },
+      "width-sm": {
+        "$value": "{size.24}"
+      },
+      "height-sm": {
+        "$value": "{size.16}"
+      }
+    },
+    "slider": {
+      "$type": "dimension",
+      "vertical-length": {
+        "$value": "{space.16}"
+      },
+      "track": {
+        "$value": "{space.1-5}"
+      }
+    },
+    "key": {
+      "$value": "{size.20}",
+      "$type": "dimension"
+    },
+    "media": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{size.24}"
+      },
+      "default": {
+        "$value": "{size.32}"
+      },
+      "lg": {
+        "$value": "{size.40}"
+      }
+    },
+    "track": {
+      "$type": "dimension",
+      "default": {
+        "$value": "{space.2}"
+      }
+    },
+    "list": {
+      "max-height": {
+        "$value": "300px",
+        "$type": "dimension"
+      }
+    },
+    "dialog": {
+      "max-width": {
+        "$value": "512px",
+        "$type": "dimension"
+      }
+    },
+    "sidebar": {
+      "width": {
+        "$value": "256px",
+        "$type": "dimension"
+      },
+      "drawer-width": {
+        "$value": "288px",
+        "$type": "dimension"
+      }
+    },
+    "breakpoint": {
+      "narrow": {
+        "$value": "{breakpoint.md}",
+        "$type": "dimension"
+      }
+    }
+  },
+  "space": {
+    "control": {
+      "$type": "dimension",
+      "padding-x": {
+        "sm": {
+          "$value": "{space.3}"
+        },
+        "default": {
+          "$value": "{space.4}"
+        },
+        "lg": {
+          "$value": "{space.6}"
+        },
+        "field": {
+          "$value": "{space.3}"
+        },
+        "xs": {
+          "$value": "{space.2}"
+        }
+      },
+      "padding-x-icon": {
+        "sm": {
+          "$value": "{space.2-5}"
+        },
+        "default": {
+          "$value": "{space.3}"
+        },
+        "lg": {
+          "$value": "{space.4}"
+        },
+        "xs": {
+          "$value": "{space.1-5}"
+        }
+      },
+      "padding-y": {
+        "field": {
+          "$value": "{space.1}"
+        },
+        "textarea": {
+          "$value": "{space.2}"
+        }
+      },
+      "gap": {
+        "sm": {
+          "$value": "{space.1-5}"
+        },
+        "default": {
+          "$value": "{space.2}"
+        },
+        "xs": {
+          "$value": "{space.1}"
+        }
+      }
+    },
+    "field": {
+      "$type": "dimension",
+      "gap": {
+        "$value": "{space.3}"
+      }
+    },
+    "inset": {
+      "$type": "dimension",
+      "surface": {
+        "$value": "{space.6}"
+      },
+      "spacious": {
+        "$value": "{space.12}"
+      },
+      "sm": {
+        "$value": "{space.2}"
+      },
+      "md": {
+        "$value": "{space.4}"
+      },
+      "track": {
+        "$value": "{border.width.3}"
+      }
+    },
+    "text": {
+      "$type": "dimension",
+      "underline-offset": {
+        "$value": "{space.1}"
+      }
+    },
+    "switch": {
+      "$type": "dimension",
+      "inset": {
+        "$value": "{space.0-5}"
+      }
+    },
+    "unit": {
+      "$type": "dimension",
+      "$value": "{space.1}"
+    },
+    "stack": {
+      "$type": "dimension",
+      "xs": {
+        "$value": "{space.1-5}"
+      },
+      "sm": {
+        "$value": "{space.2}"
+      },
+      "md": {
+        "$value": "{space.3}"
+      },
+      "lg": {
+        "$value": "{space.6}"
+      },
+      "2xs": {
+        "$value": "{space.0-5}"
+      },
+      "snug": {
+        "$value": "{space.1-5}"
+      },
+      "cozy": {
+        "$value": "{space.2-5}"
+      },
+      "xl": {
+        "$value": "{space.6}"
+      },
+      "tight": {
+        "$value": "{space.1}"
+      },
+      "loose": {
+        "$value": "{space.4}"
+      }
+    },
+    "prose": {
+      "$type": "dimension",
+      "flow": {
+        "$value": "{space.6}"
+      },
+      "heading-2": {
+        "$value": "{space.10}"
+      },
+      "heading-3": {
+        "$value": "{space.8}"
+      },
+      "rule-gap": {
+        "$value": "{space.2}"
+      },
+      "indent": {
+        "$value": "{space.6}"
+      },
+      "list-gap": {
+        "$value": "{space.2}"
+      },
+      "code-x": {
+        "$value": "{space.1-5}"
+      },
+      "code-y": {
+        "$value": "{space.1}"
+      }
+    },
+    "key": {
+      "padding-x": {
+        "$value": "{space.1}",
+        "$type": "dimension"
+      }
+    },
+    "badge": {
+      "padding-y": {
+        "$value": "{space.0-5}",
+        "$type": "dimension"
+      }
+    },
+    "none": {
+      "$value": "{space.0}",
+      "$type": "dimension",
+      "$description": "Zero, so a 0 in the design file is bound to a token instead of left unlinked."
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "small": {
+      "$value": "{radius.sm}"
+    },
+    "control": {
+      "$value": "{radius.md}"
+    },
+    "surface": {
+      "$value": "{radius.lg}"
+    },
+    "large": {
+      "$value": "{radius.xl}"
+    },
+    "pill": {
+      "$value": "{radius.full}"
+    },
+    "xsmall": {
+      "$value": "{radius.xs}",
+      "$description": "Smallest corner (checkbox). Follows radius.style through the foundation radius.xs."
+    },
+    "square": {
+      "$value": "{radius.none}",
+      "$description": "Zero corner (square), so a 0 radius in the design file is bound to a token. Named square: radius.none is the foundation step."
+    }
+  },
+  "border-width": {
+    "$type": "dimension",
+    "default": {
+      "$value": "{border.width.1}"
+    },
+    "quote": {
+      "$value": "{border.width.2}"
+    },
+    "thick": {
+      "$value": "{border.width.2}"
+    },
+    "indicator": {
+      "$value": "{border.width.2}"
+    },
+    "none": {
+      "$value": "{border.width.0}",
+      "$description": "Zero, so a 0 in the design file is bound to a token instead of left unlinked."
+    }
+  },
+  "focus": {
+    "ring": {
+      "$type": "dimension",
+      "width": {
+        "$value": "{border.width.3}"
+      },
+      "offset": {
+        "$value": "{border.width.0}"
+      }
+    }
+  },
+  "opacity": {
+    "$type": "number",
+    "disabled": {
+      "$value": "{opacity.50}"
+    },
+    "pulse": {
+      "$value": "{opacity.50}",
+      "$type": "number"
+    },
+    "none": {
+      "$value": "{opacity.0}",
+      "$description": "Zero, so a 0 in the design file is bound to a token instead of left unlinked."
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "xs": {
+      "$value": "{shadow.xs}"
+    },
+    "sm": {
+      "$value": "{shadow.sm}"
+    },
+    "md": {
+      "$value": "{shadow.md}"
+    },
+    "lg": {
+      "$value": "{shadow.lg}"
+    }
+  },
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": {
+        "$value": "{duration.150}"
+      },
+      "normal": {
+        "$value": "{duration.200}"
+      },
+      "slow": {
+        "$value": "{duration.300}"
+      },
+      "loop": {
+        "$value": "{duration.1000}"
+      }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "standard": {
+        "$value": "{easing.standard}"
+      },
+      "enter": {
+        "$value": "{easing.out}"
+      },
+      "exit": {
+        "$value": "{easing.in}"
+      },
+      "linear": {
+        "$value": "{easing.linear}"
+      }
+    }
+  },
+  "layer": {
+    "$type": "number",
+    "base": {
+      "$value": "{z.0}"
+    },
+    "dropdown": {
+      "$value": "{z.10}"
+    },
+    "sticky": {
+      "$value": "{z.20}"
+    },
+    "overlay": {
+      "$value": "{z.30}"
+    },
+    "modal": {
+      "$value": "{z.40}"
+    },
+    "toast": {
+      "$value": "{z.50}"
+    }
+  },
+  "layout": {
+    "grid": {
+      "columns": {
+        "$type": "number",
+        "$value": "{grid.columns}"
+      },
+      "gutter": {
+        "$type": "dimension",
+        "$value": "{grid.gutter}"
+      },
+      "margin": {
+        "$type": "dimension",
+        "$value": "{grid.margin}"
+      }
+    }
+  }
+}

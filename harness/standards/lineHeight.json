@@ -1,0 +1,39 @@
+{
+  "family": "lineHeight",
+  "$description": "Line heights. named = font.line-height.none/tight/normal; text and display are the per-size values for modular scales (text up to base, display above). A type scale with its own pairs keeps them unless this is set.",
+  "default": "standard",
+  "presets": [
+    {
+      "id": "standard",
+      "label": "Standard",
+      "values": {
+        "named": {
+          "none": 1,
+          "tight": 1.25,
+          "normal": 1.5
+        },
+        "text": 1.5,
+        "display": 1.25
+      },
+      "description": "Body text at 1.5, headings at 1.25. The default.",
+      "source": "https://tailwindcss.com/docs/line-height",
+      "verified": false
+    },
+    {
+      "id": "relaxed",
+      "label": "Relaxed",
+      "values": {
+        "named": {
+          "none": 1,
+          "tight": 1.3,
+          "normal": 1.625
+        },
+        "text": 1.625,
+        "display": 1.3
+      },
+      "description": "More air for long reading; body stays above the 1.5 minimum that user text-spacing settings must survive.",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html",
+      "verified": true
+    }
+  ]
+}

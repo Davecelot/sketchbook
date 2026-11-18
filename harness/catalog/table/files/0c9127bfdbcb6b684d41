@@ -1,0 +1,9 @@
+- table "Stock levels"
+  - rowgroup
+    - row
+      - columnheader "Item"
+      - columnheader "Units"
+  - rowgroup
+    - row
+      - cell "Widget"
+      - cell "12"

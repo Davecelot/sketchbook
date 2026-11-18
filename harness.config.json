@@ -1,0 +1,50 @@
+{
+  "$schema": "./spec/schemas/harness-config.schema.json",
+  "prefix": "sb",
+  "language": {
+    "ai": "en",
+    "human": "en"
+  },
+  "adapters": {
+    "components": "lit",
+    "tokens": "style-dictionary",
+    "preview": "storybook",
+    "tests": "playwright",
+    "design": {
+      "tool": "figma",
+      "file": null,
+      "fileName": "Sketchbook",
+      "docs": { "width": 1440 },
+      "available": true,
+      "note": "Figma file key. Sync writes only to this file (variables, styles, docs); see docs/design-docs/tool-mapping.md."
+    }
+  },
+  "features": {
+    "planningGate": true,
+    "specTasks": false,
+    "testFirst": true,
+    "issueTracker": false,
+    "reviewGate": false,
+    "releaseFlow": false
+  },
+  "ui": {
+    "reference": "shadcn/ui",
+    "note": "Visuals and theme variables follow shadcn/ui; the component API speaks spec/api.json (SB-0122); deviations are listed in each contract (realizations.*.drift)."
+  },
+  "process": {
+    "reference": "contract-first standard",
+    "note": "Contract pair, file layout, Lit mixins, behavior specs, decision log format."
+  },
+  "contextBudget": {
+    "alwaysOnBytes": 16000,
+    "note": "What the Claude layer puts in context in every session: CLAUDE.md, rules without paths:, skill and command descriptions, hook output (check H1, SB-0114). Team-owned: raise it only with a reason, and measure the change with docs/research/value-benchmark/scripts/fixed-context.mjs. H1 warns at 90%."
+  },
+  "whiteLabel": {
+    "forbiddenTerms": [],
+    "note": "Brand or product names that must never appear in components, stories, tests or contracts (check W1). The visual reference may be named only in contract source lines and drift."
+  },
+  "catalog": {
+    "source": true,
+    "note": "This repo is the source of harness/catalog: G1 keeps the catalog equal to its components (npm run catalog:build). sketchbook init --start keeps it unless --detach-catalog (--yes never detaches); catalog:build is a no-op when source is false (SB-0061, SB-0071)."
+  }
+}

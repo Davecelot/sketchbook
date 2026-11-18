@@ -1,0 +1,24 @@
+{
+  "family": "opacity",
+  "$description": "Opacity steps (0-1).",
+  "default": "standard",
+  "presets": [
+    {
+      "id": "standard",
+      "label": "Eight steps, from 0",
+      "values": {
+        "0": 0,
+        "10": 0.1,
+        "15": 0.15,
+        "20": 0.2,
+        "30": 0.3,
+        "50": 0.5,
+        "80": 0.8,
+        "90": 0.9
+      },
+      "description": "A zero step for anything bound to nothing, and enough steps for overlays, disabled states and subtle fills. Disabled at 50% can fail contrast; it is exempt for inactive controls only. The default.",
+      "source": "https://tailwindcss.com/docs/opacity",
+      "verified": false
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+- textbox "Message"
+- text "0 / 280"
+- button "Send"

@@ -1,0 +1,81 @@
+{
+  "name": "pagination",
+  "component": "Pagination",
+  "displayName": "Pagination",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-pagination",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/pagination-2026-11-15.md",
+      "hash": "13f03f9f29240862e939"
+    },
+    {
+      "path": "docs/parity-audits/pagination-2026-11-08.md",
+      "hash": "932e0ff1f3e4e70c7664"
+    },
+    {
+      "path": "playwright/tests/pagination/__screen-reader__/stories/components-pagination--default.txt",
+      "hash": "60e0a8630f1f1b0c9860"
+    },
+    {
+      "path": "playwright/tests/pagination/__screen-reader__/stories/components-pagination--translated-labels.txt",
+      "hash": "60027b10f4f6405b078b"
+    },
+    {
+      "path": "playwright/tests/pagination/pagination.behavior.spec.ts",
+      "hash": "95f794d2b6a64320b411"
+    },
+    {
+      "path": "spec/components/pagination/contract.json",
+      "hash": "f737799eba73ede286c6"
+    },
+    {
+      "path": "spec/components/pagination/contract.md",
+      "hash": "18d235614c5082754f87"
+    },
+    {
+      "path": "src/components/pagination/Pagination.scss",
+      "hash": "2772d7dca5a9b736fa27"
+    },
+    {
+      "path": "src/components/pagination/Pagination.stories.ts",
+      "hash": "a7618526ce3fc0595aa8"
+    },
+    {
+      "path": "src/components/pagination/Pagination.ts",
+      "hash": "04910095041172b5656d"
+    },
+    {
+      "path": "src/components/pagination/PaginationContent.ts",
+      "hash": "af2f75c1c60f40148e41"
+    },
+    {
+      "path": "src/components/pagination/PaginationEllipsis.ts",
+      "hash": "dc3354029b3743fa4607"
+    },
+    {
+      "path": "src/components/pagination/PaginationItem.ts",
+      "hash": "636bdc45e5b52eb2fc36"
+    },
+    {
+      "path": "src/components/pagination/PaginationLink.ts",
+      "hash": "4178ae22ed24b8b0b2e3"
+    },
+    {
+      "path": "src/components/pagination/PaginationNext.ts",
+      "hash": "2d6272cfbd3cd586ab9a"
+    },
+    {
+      "path": "src/components/pagination/PaginationPrevious.ts",
+      "hash": "73cef46d42733ef6d11b"
+    },
+    {
+      "path": "src/components/pagination/index.ts",
+      "hash": "393ce6151781df4f73b1"
+    }
+  ]
+}

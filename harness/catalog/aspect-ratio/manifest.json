@@ -1,0 +1,65 @@
+{
+  "name": "aspect-ratio",
+  "component": "AspectRatio",
+  "displayName": "Aspect Ratio",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-aspect-ratio",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/aspect-ratio-2026-11-15.md",
+      "hash": "9078421b339ea5791f40"
+    },
+    {
+      "path": "docs/parity-audits/aspect-ratio-2026-11-08.md",
+      "hash": "de9fd92e0ba9ea351caf"
+    },
+    {
+      "path": "playwright/tests/aspect-ratio/__screen-reader__/stories/components-aspectratio--default.txt",
+      "hash": "9f8655de70ea15e3229d"
+    },
+    {
+      "path": "playwright/tests/aspect-ratio/__screen-reader__/stories/components-aspectratio--fraction.txt",
+      "hash": "9f8655de70ea15e3229d"
+    },
+    {
+      "path": "playwright/tests/aspect-ratio/__screen-reader__/stories/components-aspectratio--square.txt",
+      "hash": "9f8655de70ea15e3229d"
+    },
+    {
+      "path": "playwright/tests/aspect-ratio/__screen-reader__/stories/components-aspectratio--tall-content.txt",
+      "hash": "19788b65a76cdaec18bf"
+    },
+    {
+      "path": "playwright/tests/aspect-ratio/aspect-ratio.behavior.spec.ts",
+      "hash": "836f9ffafb34278fe961"
+    },
+    {
+      "path": "spec/components/aspect-ratio/contract.json",
+      "hash": "d6fdd5d41eb32b1d9fd3"
+    },
+    {
+      "path": "spec/components/aspect-ratio/contract.md",
+      "hash": "2591d39bae9388ba807b"
+    },
+    {
+      "path": "src/components/aspect-ratio/AspectRatio.scss",
+      "hash": "fdf6f2d2beefd1d1dbe3"
+    },
+    {
+      "path": "src/components/aspect-ratio/AspectRatio.stories.ts",
+      "hash": "209c5411dde91bdcc849"
+    },
+    {
+      "path": "src/components/aspect-ratio/AspectRatio.ts",
+      "hash": "b1beccd5cb1056d38428"
+    },
+    {
+      "path": "src/components/aspect-ratio/index.ts",
+      "hash": "4402c050863e9c25c737"
+    }
+  ]
+}

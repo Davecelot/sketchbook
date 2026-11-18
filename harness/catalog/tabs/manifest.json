@@ -1,0 +1,101 @@
+{
+  "name": "tabs",
+  "component": "Tabs",
+  "displayName": "Tabs",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-tabs",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/tabs-2026-11-15.md",
+      "hash": "73e91381aa7e8daf88a7"
+    },
+    {
+      "path": "docs/parity-audits/tabs-2026-11-08.md",
+      "hash": "6baa7760f7e987f3ef6a"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/stories/components-tabs--default.txt",
+      "hash": "c0984c7ad455c6b0cc4c"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/stories/components-tabs--disabled-tab.txt",
+      "hash": "5a911ebff6c576edf6e2"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/stories/components-tabs--line.txt",
+      "hash": "bf00a8f1a90c35508882"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/stories/components-tabs--manual-activation.txt",
+      "hash": "c0984c7ad455c6b0cc4c"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/stories/components-tabs--vertical.txt",
+      "hash": "695a8dbd85e48a6df664"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/stories/components-tabs--with-form-control.txt",
+      "hash": "ccdbaeb3df0390b93d29"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/tabs-first.txt",
+      "hash": "21d28a1591efd7f95f0c"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/tabs-manual-focused.txt",
+      "hash": "84a3fabd049bcd7acfdc"
+    },
+    {
+      "path": "playwright/tests/tabs/__screen-reader__/tabs-second.txt",
+      "hash": "cdea93ffff588335d13f"
+    },
+    {
+      "path": "playwright/tests/tabs/tabs.behavior.spec.ts",
+      "hash": "07313e4500aa9db5bea9"
+    },
+    {
+      "path": "spec/components/tabs/contract.json",
+      "hash": "648e7828551135a79fe0"
+    },
+    {
+      "path": "spec/components/tabs/contract.md",
+      "hash": "417c2aab1ac8fc02bea8"
+    },
+    {
+      "path": "src/components/tabs/Tabs.scss",
+      "hash": "3af8b9df88190e5769e3"
+    },
+    {
+      "path": "src/components/tabs/Tabs.stories.ts",
+      "hash": "a5164ae6a24abaec4ac6"
+    },
+    {
+      "path": "src/components/tabs/Tabs.ts",
+      "hash": "a6bbaee4752f6c2390e2"
+    },
+    {
+      "path": "src/components/tabs/TabsContent.ts",
+      "hash": "0e09bb234c2d987563c5"
+    },
+    {
+      "path": "src/components/tabs/TabsList.ts",
+      "hash": "ba5b8143d45ad81e1c60"
+    },
+    {
+      "path": "src/components/tabs/TabsTrigger.ts",
+      "hash": "f3d876e31487d62c6b73"
+    },
+    {
+      "path": "src/components/tabs/context.ts",
+      "hash": "7aae2037e305f96b0b32"
+    },
+    {
+      "path": "src/components/tabs/index.ts",
+      "hash": "edec052d6f4e11eb127b"
+    }
+  ]
+}

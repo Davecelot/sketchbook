@@ -1,0 +1,56 @@
+# Accessibility audit: Button (2026-11-15)
+
+Scope: `spec/components/button/contract.json`, `src/components/button/*`, `playwright/tests/button/*`. Standard: WCAG 2.2 AA and the WAI-ARIA `button` pattern (native `<button>`, or native `<a>` with `href`).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.3 text contrast | Pass | `npm run check` T6 passes for every variant pair, hover pairs included |
+| P | 1.4.11 focus ring contrast, light | Pass (fixed) | Re-probe: ring `rgb(115,115,115)` 3px on white = 4.74:1 on all six variants, outline included (before: outline had no ring) |
+| P | 1.4.11 focus ring contrast, dark (`&globals=theme:dark`) | Pass (fixed) | Re-probe: ring `rgb(161,161,161)` on `rgb(10,10,10)` = 7.66:1 on all six variants |
+| P | 1.4.11 outline border | Pass | Border token pair is covered by T6; the border is not the only identifier (label text) |
+| P | 1.4.1 color alone | Pass | Disabled and loading differ by cursor and state exposure as well as opacity; link variant underlines on hover |
+| P | forced-colors | Pass | Probe with `forced-colors: active`: all variants compute Canvas background, CanvasText text and a 1px CanvasText border (including ghost and link); focus is `3px solid CanvasText` outline (`_a11y.scss` focus-ring mixin); disabled uses GrayText |
+| P | prefers-reduced-motion | Pass | `a11y.respect-reduced-motion` on the transition (`Button.scss:38`) |
+| O | 2.1.1 keyboard | Pass | Native control; Enter and Space activate it (behavior spec); `delegatesFocus` puts the inner button in the tab order |
+| O | 2.4.7 focus visible | Pass (fixed) | Re-probe: ring paints on all six variants |
+| O | 2.1.2 no keyboard trap | Pass | Tab and Shift+Tab pass through in the matrix story |
+| O | 2.5.8 target size | Pass | Probe over the matrix story: smallest boxes are `xs` and `icon-xs` at 24x24; no button is under 24 in either axis |
+| O | Disabled vs aria-disabled | Pass | `disabled`: native disabled, out of tab order, opacity 0.5. `loading`: AX tree `button "Saving" disabled busy focusable`, so focus is kept by design (contract Q2) |
+| O | Implicit form submission | Pass (fixed) | See Fixed MEDIUM; Re-probe: Enter in a field of a two-field form with only an `sb-button type=submit` now submits, like the native reference |
+| O | Explicit submit and reset | Pass | Enter and Space on the focused submit button submit (`requestSubmit`); reset spec passes |
+| U | 3.2.x predictable | Pass | `type` defaults to `button`; nothing changes on focus |
+| U | 3.3.x errors, labels | Not applicable | No input or error state of its own |
+| R | 4.1.2 role, name, state | Pass | CDP `Accessibility.getFullAXTree`: default `button "Button"`; disabled `button "Button" disabled`; loading `button "Saving" disabled busy focusable`; icon-only `button "Add item"`; in-form buttons named Save, Reset, Plain |
+| R | Link variant | Pass | `as-link` exposes `link "Read the docs"` with a `url`; disabled keeps `role=link`, drops href, sets `aria-disabled` (behavior spec) |
+| R | Icon-only accessible name | Pass | Forwarded host `aria-label` names the inner button; one-time console warning when there is no name (spec) |
+| R | ID references across shadow roots | Pass | `aria-labelledby` and `aria-describedby` are not forwarded by design (SB-0009); contract and `Button.ts` say so |
+| R | axe | Pass | Behavior spec: axe clean on matrix and loading |
+| R | Behavior spec and `npm run check` | Pass | `tests/button/` 18/18 passed (includes the every-variant ring and implicit-submission specs); all checks pass (A1 warn on spec/api.json is unrelated) |
+| R | Screen-reader evidence | Pass | AX trees above plus the `__screen-reader__` snapshots (check S1) |
+
+## Failures
+
+None open.
+
+### Fixed: outline variant showed no focus ring - was HIGH
+Location: `src/components/button/Button.scss` (outline `box-shadow` overriding the ring)
+Before: computed `box-shadow` on a focused outline button was `rgba(0,0,0,.05) 0 1px 2px` in light and dark.
+After (commit 4cfde77): the outline variant restates the ring through the focus-ring mixin; probe shows `0 0 0 3px` ring on all six variants, 4.74:1 light and 7.66:1 dark; new spec 'every variant shows the focus ring on keyboard focus' passes.
+
+### Fixed: implicit form submission did not work - was MEDIUM
+Location: `src/components/button/Button.ts`
+Before: Enter in a field of a two-field form with only `<sb-button type="submit">` fired no `submit` event (native button did).
+After: the first submit sb-button handles Enter on text-like inputs in its form; probe shows the `submit` event fires, matching the native reference; new spec covers two fields, disabled and single field with a native button; `contract.md` records it.
+
+### Fixed: slotted icon exposed as an unnamed image - was LOW
+Location: `src/components/button/Button.stories.ts`
+Before: AX tree for `icon-only` listed an unnamed `image` beside the button.
+After: story svg is `aria-hidden`; tree shows only `button "Add item"`.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-16)
+
+All three findings are fixed and re-verified in the browser; the button spec (18/18) and `npm run check` pass. No open findings.

@@ -1,0 +1,95 @@
+- main
+  - sectionheader
+    - heading "Customers" [level=1]
+    - paragraph
+      - text "Everyone with access to your workspace."
+    - button "Add customer"
+  - search "Customers"
+    - text "Search customers"
+    - searchbox "Search customers"
+    - paragraph [live=polite]
+    - paragraph
+      - text "Press"
+      - text "/"
+      - text "to search"
+  - group "Status"
+    - button "All" [pressed=true]
+    - button "Active" [pressed=false]
+    - button "Invited" [pressed=false]
+  - status [live=polite]
+    - text "Showing 6 of 6 customers"
+  - table "Customers"
+    - caption
+      - text "Customers"
+    - rowgroup
+      - row
+        - cell "Select all customers"
+          - checkbox "Select all customers" [checked=false]
+          - paragraph [live=polite]
+        - columnheader "Name"
+        - columnheader "Status"
+        - columnheader "Plan"
+        - columnheader "Last seen"
+    - rowgroup
+      - row
+        - cell "Select Ada Example"
+          - checkbox "Select Ada Example" [checked=false]
+          - paragraph [live=polite]
+        - cell "AE Ada Example ada@example.com"
+        - cell "Active"
+        - cell "Team"
+        - cell "Today"
+      - row
+        - cell "Select Grace Sample"
+          - checkbox "Select Grace Sample" [checked=false]
+          - paragraph [live=polite]
+        - cell "GS Grace Sample grace@example.com"
+        - cell "Invited"
+        - cell "Team"
+        - cell "Never"
+      - row
+        - cell "Select Linus Demo"
+          - checkbox "Select Linus Demo" [checked=false]
+          - paragraph [live=polite]
+        - cell "LD Linus Demo linus@example.com"
+        - cell "Active"
+        - cell "Starter"
+        - cell "Yesterday"
+      - row
+        - cell "Select Mary Placeholder"
+          - checkbox "Select Mary Placeholder" [checked=false]
+          - paragraph [live=polite]
+        - cell "MP Mary Placeholder mary@example.com"
+        - cell "Paused"
+        - cell "Starter"
+        - cell "3 weeks ago"
+      - row
+        - cell "Select Alan Testcase"
+          - checkbox "Select Alan Testcase" [checked=false]
+          - paragraph [live=polite]
+        - cell "AT Alan Testcase alan@example.com"
+        - cell "Invited"
+        - cell "Enterprise"
+        - cell "Never"
+      - row
+        - cell "Select Edsger Mock"
+          - checkbox "Select Edsger Mock" [checked=false]
+          - paragraph [live=polite]
+        - cell "EM Edsger Mock edsger@example.com"
+        - cell "Active"
+        - cell "Enterprise"
+        - cell "2 days ago"
+  - navigation "Customer pages"
+    - list
+      - listitem [level=1]
+        - link "Go to previous page"
+          - text "Previous"
+      - listitem [level=1]
+        - link "1" [current=page]
+      - listitem [level=1]
+        - link "2"
+      - listitem [level=1]
+        - link "3"
+      - listitem [level=1]
+        - link "Go to next page"
+          - text "Next"

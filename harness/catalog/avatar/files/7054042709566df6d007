@@ -1,0 +1,46 @@
+# Accessibility audit: Avatar (2026-11-15)
+
+Scope: `spec/components/avatar/contract.json`, `src/components/avatar/*` (avatar, image, fallback, badge, group, group-count), `playwright/tests/avatar/*`. Standard: WCAG 2.2 AA; static, non-interactive image-with-text-alternative pattern.
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.1.1 image alt | Pass | CDP `Accessibility.getFullAXTree`: `default` exposes `image` named "Ada Example" (image `alt`); the hidden fallback is absent |
+| P | 1.1.1 broken-image path | Pass | Probe: `/nope.png` with alt "Zed" gives `data-image-status=error`, image `hidden`, fallback visible; tree has only the fallback text. `fallback-only` story exposes `image` "Grace Sample" |
+| P | 1.1.1 empty alt keeps the name | Pass | Empty `alt` takes the sibling fallback `label` (`AvatarImage.ts:38`); spec covers it |
+| P | 1.1.1 initials naming | Pass | `label` sets `role=img` and `aria-label` in `willUpdate` (`AvatarFallback.ts:20`); no label means plain text, no role |
+| P | 1.1.1 badge | Pass | `with-badge` exposes `image` "Online"; without `label` it is `aria-hidden` |
+| P | 1.1.1 group count | Pass (fixed) | AX tree: `group` story exposes `image` "3 more members"; `group-with-icon-count` exposes `image` "Add member" |
+| P | 1.4.3 text contrast | Pass | `npm run check` T6 passes for fallback and count pairs |
+| P | 1.4.11 / forced-colors | Pass (fixed) | Probe with `forced-colors: active`: badge background `rgb(0,0,0)`; fallback and count `outline: 1px solid rgb(0,0,0)`; normal mode passes T6 |
+| P | 1.4.1 color alone | Pass | Status badge has an optional text name; presence is not color-only |
+| P | prefers-reduced-motion | Not applicable | No transitions or animation |
+| O | 2.1.1 / 2.4.7 / 2.1.2 keyboard, focus, trap | Not applicable | Not interactive, no focusable parts |
+| O | 2.5.8 target size | Not applicable | Contract: placed inside a button or link, which sets the size |
+| U | 3.2.x, 3.3.x | Not applicable | No input, no errors; behavior is predictable (image swap only) |
+| R | 4.1.2 role, name, state | Pass | `with-badge`: `image` "Ada Example", `image` "Online"; `group` story: `group` "Project members", three named images |
+| R | ID references across shadow roots | Not applicable | None used |
+| R | axe | Pass | Behavior spec: axe clean on all stories |
+| R | Behavior spec and `npm run check` | Pass | 19/19 passed (includes group-count label and forced-colors specs); `npm run check` fails only D1 and D4 (Avatar Figma re-sync pending, done at promotion; not an a11y failure); A1 warn is unrelated |
+| R | Screen-reader evidence | Pass | AX tree above plus `__screen-reader__` snapshots (check S1) |
+
+## Failures
+
+None open.
+
+### Fixed: group count had no accessible name - was MEDIUM
+Location: `src/components/avatar/AvatarGroupCount.ts`
+Before: authored `aria-label` on a generic element was ignored; tree showed only `StaticText|+3`, and the icon-only count exposed nothing.
+After: `label` prop sets `role=img` and `aria-label` before first render; tree shows `image|3 more members` and `image|Add member`; behavior spec covers it.
+
+### Fixed: badge and fallback circle vanished in forced colors - was LOW
+Location: `src/components/avatar/Avatar.scss`
+Before: badge background Canvas with no shadow, fallback and count without outline.
+After: forced-colors block; probe shows badge `rgb(0,0,0)` and fallback and count `outline: 1px solid rgb(0,0,0)` on with-badge, fallback-only and group; behavior spec covers it.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-15)
+
+Both findings are fixed and re-verified; AX tree, forced colors, axe and the behavior spec (19/19) pass. `npm run check` fails only D1 and D4, the pending Avatar Figma re-sync done at promotion.

@@ -1,0 +1,7 @@
+- main
+  - sectionheader
+    - button "Toggle Sidebar" [expanded=false]
+    - heading "Introduction" [level=1]
+  - paragraph
+    - text "A first draft of a design system: tokens, components and the harness that checks them."
+  - link "Back to top"

@@ -1,0 +1,4 @@
+- text "Budget"
+- slider "Budget minimum" [orientation=horizontal, valuetext=20] value "20"
+- slider "Budget maximum" [orientation=horizontal, valuetext=80] value "80"
+- paragraph [live=polite]

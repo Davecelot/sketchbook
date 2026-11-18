@@ -1,0 +1,73 @@
+{
+  "name": "kbd",
+  "component": "Kbd",
+  "displayName": "Kbd",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-kbd",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/kbd-2026-11-15.md",
+      "hash": "cc42ed656bc00ebb6c52"
+    },
+    {
+      "path": "docs/parity-audits/kbd-2026-11-08.md",
+      "hash": "2e7b2a85ecc2605cfe09"
+    },
+    {
+      "path": "playwright/tests/kbd/__screen-reader__/stories/components-kbd--default.txt",
+      "hash": "6f02f0895e7dd3bb032d"
+    },
+    {
+      "path": "playwright/tests/kbd/__screen-reader__/stories/components-kbd--group.txt",
+      "hash": "255034504e8b67636ac2"
+    },
+    {
+      "path": "playwright/tests/kbd/__screen-reader__/stories/components-kbd--in-text.txt",
+      "hash": "8c47d035d84342a21cc4"
+    },
+    {
+      "path": "playwright/tests/kbd/__screen-reader__/stories/components-kbd--with-icon.txt",
+      "hash": "1961ef478e61504f5c56"
+    },
+    {
+      "path": "playwright/tests/kbd/__screen-reader__/stories/components-kbd--with-separator.txt",
+      "hash": "0ac105576d98be3d9e38"
+    },
+    {
+      "path": "playwright/tests/kbd/kbd.behavior.spec.ts",
+      "hash": "bf22ec90d5d876dffc8c"
+    },
+    {
+      "path": "spec/components/kbd/contract.json",
+      "hash": "16d922c45b58989ddc86"
+    },
+    {
+      "path": "spec/components/kbd/contract.md",
+      "hash": "268b00d6dcba45995ab3"
+    },
+    {
+      "path": "src/components/kbd/Kbd.scss",
+      "hash": "1a00b9bc0991be4b3318"
+    },
+    {
+      "path": "src/components/kbd/Kbd.stories.ts",
+      "hash": "ba6e45ce6b38bf9c70e8"
+    },
+    {
+      "path": "src/components/kbd/Kbd.ts",
+      "hash": "4d3887237a475f16d9f4"
+    },
+    {
+      "path": "src/components/kbd/KbdGroup.ts",
+      "hash": "97e104896e092af6b35b"
+    },
+    {
+      "path": "src/components/kbd/index.ts",
+      "hash": "9b4ed30c2c7457a659b5"
+    }
+  ]
+}

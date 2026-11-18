@@ -1,0 +1,85 @@
+{
+  "name": "textarea",
+  "component": "Textarea",
+  "displayName": "Textarea",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-textarea",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/textarea-2026-11-15.md",
+      "hash": "ce80d7e5afc76abd4959"
+    },
+    {
+      "path": "docs/parity-audits/textarea-2026-11-08.md",
+      "hash": "1179ca65c96f2c4c7a62"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/stories/components-textarea--default.txt",
+      "hash": "669e6acaa0b92e26f625"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/stories/components-textarea--disabled.txt",
+      "hash": "0a144b3a4ff8b760723f"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/stories/components-textarea--hidden-label.txt",
+      "hash": "bc3570e5272f5184ad9e"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/stories/components-textarea--readonly.txt",
+      "hash": "3b4902e2330b9e9e9cab"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/stories/components-textarea--required.txt",
+      "hash": "cf73481c223c131e6c11"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/stories/components-textarea--with-description.txt",
+      "hash": "62d0c969f21365d6b1b1"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/stories/components-textarea--with-error.txt",
+      "hash": "3823c388f816fde1b42a"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/textarea-error.txt",
+      "hash": "3823c388f816fde1b42a"
+    },
+    {
+      "path": "playwright/tests/textarea/__screen-reader__/textarea-typed.txt",
+      "hash": "43436aab74885a39c202"
+    },
+    {
+      "path": "playwright/tests/textarea/textarea.behavior.spec.ts",
+      "hash": "ece8fd9c92b58896f533"
+    },
+    {
+      "path": "spec/components/textarea/contract.json",
+      "hash": "814e737b0611c5065988"
+    },
+    {
+      "path": "spec/components/textarea/contract.md",
+      "hash": "4d71c9cadff18e09886a"
+    },
+    {
+      "path": "src/components/textarea/Textarea.scss",
+      "hash": "7077fee35ef05f1bbe4a"
+    },
+    {
+      "path": "src/components/textarea/Textarea.stories.ts",
+      "hash": "7045c50006094d7fc509"
+    },
+    {
+      "path": "src/components/textarea/Textarea.ts",
+      "hash": "fa6d6b7547b43d802c91"
+    },
+    {
+      "path": "src/components/textarea/index.ts",
+      "hash": "3a82f5bd2f742c0e128c"
+    }
+  ]
+}

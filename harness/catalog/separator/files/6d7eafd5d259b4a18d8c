@@ -1,0 +1,168 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Separator",
+  "tag": "sb-separator",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A thin line that separates content, horizontal or vertical, decorative or announced as a separator.",
+  "dependsOn": [],
+  "props": {
+    "orientation": {
+      "type": "variant",
+      "values": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal",
+      "reflect": true,
+      "note": "Direction of the line. Horizontal is full width and 1px high; vertical is 1px wide and as high as its container."
+    },
+    "decorative": {
+      "type": "boolean",
+      "default": true,
+      "reflect": true,
+      "note": "Default true. True removes the separator from the accessibility tree (role none). Set decorative=\"false\" (or the property to false) to expose role separator. Because an attribute cannot default to true in HTML, the value \"false\" turns it off."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "line",
+      "role": "container",
+      "parent": null,
+      "part": "line",
+      "notes": "The drawn line (border color, thickness token)."
+    }
+  ],
+  "content": {},
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "separator when decorative is false; none when decorative",
+    "accessibleNameSource": "None: a separator is not named.",
+    "targetSize": "Not interactive.",
+    "keyboard": {},
+    "aria": [
+      "decorative (default): role=\"none\" on the host, nothing exposed",
+      "not decorative: role=\"separator\" on the host; aria-orientation=\"vertical\" only when vertical (horizontal is the implicit value)",
+      "semantics are set on the host before the first render (willUpdate)"
+    ],
+    "announcements": [],
+    "contrast": [],
+    "wcag": [
+      "1.3.1",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "separator.color": "{color.border}",
+    "separator.thickness": "{border-width.default}"
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/separator/Separator.ts",
+        "src/components/separator/Separator.scss",
+        "src/components/separator/Separator.styles.ts",
+        "src/components/separator/Separator.stories.ts",
+        "src/components/separator/index.ts"
+      ],
+      "parts": [
+        "line"
+      ],
+      "slots": [],
+      "spec": "playwright/tests/separator/separator.behavior.spec.ts",
+      "coverage": [
+        "decorative by default: role none, absent from the accessibility tree",
+        "decorative=\"false\": role separator; aria-orientation only when vertical",
+        "role correct from first render and follows the property",
+        "horizontal 1px high full width; vertical 1px wide stretching a flex row",
+        "color and thickness from tokens; not focusable; axe clean"
+      ],
+      "drift": [
+        {
+          "aspect": "decorative default",
+          "contract": "decorative defaults to true; decorative=\"false\" turns it off",
+          "realization": "HTML attributes cannot default to true, so the string \"false\" is the off value (custom converter)"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Separator": 2
+        }
+      },
+      "coverage": [
+        "Separator: 2 variant(s), Orientation (Horizontal, Vertical); read back ok"
+      ],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Decorative by default?",
+      "recommendation": "Yes: decorative by default; only meaningful boundaries are exposed.",
+      "status": "answered",
+      "answer": "Yes, default true; decorative=\"false\" exposes the separator.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "No contrast pair for the line?",
+      "recommendation": "Correct: the line is a decorative divider, not a graphical object needed to understand content (WCAG 1.4.11 does not apply); border-on-background is 1.2:1; the light line is intentional.",
+      "status": "answered",
+      "answer": "No contrast pair; documented.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-005",
+    "D-011",
+    "SB-0007",
+    "SB-0011"
+  ],
+  "aiHints": {
+    "category": "atom",
+    "keywords": [
+      "separator",
+      "divider",
+      "hr",
+      "line",
+      "rule"
+    ],
+    "useCases": [
+      {
+        "when": "Visual spacing between groups of content",
+        "use": "decorative (default)"
+      },
+      {
+        "when": "A divider that marks a real section boundary for screen-reader users",
+        "use": "decorative=\"false\""
+      },
+      {
+        "when": "Dividing items in a horizontal toolbar or row",
+        "use": "orientation=vertical"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Separator instead of a heading to start a section",
+        "why": "A line has no name for navigation",
+        "alternative": "Use a heading (Typography)"
+      },
+      {
+        "pattern": "Marking every separator as non-decorative",
+        "why": "Screen readers announce each one and add noise",
+        "alternative": "Keep the default decorative"
+      }
+    ]
+  }
+}

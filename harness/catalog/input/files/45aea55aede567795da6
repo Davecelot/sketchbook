@@ -1,0 +1,38 @@
+# Parity audit: Input (2026-11-08)
+
+Reference: `spec/components/input/contract.{md,json}`. Implementation: `src/components/input/` plus mixins `src/mixins/form-associated.ts`, `native-control.ts`. Evidence: `npm run check` all pass; `playwright tests/input` 9/9 pass; input tokens resolve (36px, padding 12x4, radius 8px, border neutral-500 / 1px, shadow-xs, label 14/500/1, description 14/1.5, ring 3px, opacity 0.5, 150ms).
+
+| Aspect | Contract | Realization | |
+| --- | --- | --- | --- |
+| Props, types, reflection | json | Input.ts:22-40 + mixins (label, description, name, disabled, required reflect) | ⚠️ |
+| Defaults | `null` for name, placeholder, autocomplete, description, error, minlength, maxlength | strings default to `''` (Input.ts:24-40, mixin) | ⚠️ |
+| Anatomy parts field, label, required-indicator, input, description, error | yes | Input.ts:97-125 | ✅ |
+| Label: native `<label for>` in same root, `hide-label` | yes | Input.ts:98, scss:25 | ✅ |
+| Events `input`, `change` composed | yes | native input is composed; change re-dispatched (native-control.ts) | ✅ |
+| Enter commits (change) and submits the form natively | yes | Enter does not submit: the inner input is in a shadow tree and has no form owner (verified with a minimal form-associated element in Chromium; no keydown handling in Input.ts). Not covered by the spec | ❌ |
+| Form: value, validity, reset, disabled excluded, restore | yes | form-associated.ts, Input.ts:55-67 | ✅ |
+| aria-describedby, aria-invalid, live error region | yes | Input.ts:96, 115-116, 124 (persistent `aria-live=polite`) | ✅ |
+| Invalid only after blur/submit | yes | Input.ts:43, 79-83 | ✅ |
+| Required: native + aria-hidden asterisk | yes | Input.ts:99, 112 | ✅ |
+| Role textbox / searchbox | yes | tested | ✅ |
+| Focus ring 3px + border in ring; invalid ring 20% | yes | scss:54-68 | ✅ |
+| Disabled: opacity .5, not-allowed | yes | scss:70-73 applies to the input only; label and description stay full opacity | ⚠️ |
+| Readonly | state, no tokens | not styled | ✅ |
+| Dimensions, typography | yes | scss:29-47, label 17-23 | ✅ |
+| Reduced motion | transitions off | scss:47 | ✅ |
+| Tokens own only | `--sb-input-*` | T4 pass | ✅ |
+| Missing-label warning | once | native-control.ts | ✅ |
+| Drift list (API shape, border color, dark bg) | | accurate; missing focus ring and Enter behavior | ⚠️ |
+| contract.md Realizations | | Web "Not started", Coverage "None yet" vs json complete | ⚠️ |
+
+## Differences and action plan
+
+1. Enter does not submit the form (code, ❌). Add a keydown handler on the inner input: on Enter (not composing, not a modifier), call `this.form?.requestSubmit()` (after the native change), and add a Playwright test (type, press Enter, expect submit). Alternatively, if this is deemed out of scope, remove "and submits the form natively" from contract.json `accessibility.keyboard.Enter` and the md, and record a drift entry. Recommended: fix the code; users expect Enter to submit.
+2. Defaults null vs '' (contract or code). Either change the contract to `""` for these string props (simplest, matches `.value` semantics) or reflect null. Also `label` and `description` reflect long text to attributes (mixin), which the contract does not declare; declare `reflect` or drop it.
+3. Disabled dimming (code or contract). shadcn Field dims the whole field when disabled. Dim label and description too (a `:host([disabled])` rule using `--sb-input-disabled-opacity`) or state in the contract that only the control is dimmed.
+4. Drift list incomplete (realization.web.drift). Add: focus ring solid `ring` rather than shadcn ring/50 (stated in json states.focus-visible note, absent from drift); Enter submit gap until fixed; mixin-provided `describedBy`/`renderDescription` are unused by Input (dead code, not a contract issue).
+5. contract.md Realizations stale (contract): mark Web built, add coverage.
+
+Verdict: needs code fix (Enter submit, item 1) and a small contract update (items 2-5).
+
+Status (2026-11-15): open: item 2, contract.json does not declare that label, description and name reflect (a contract.json change needs a Figma re-sync of Input). Fixed in this PR: item 3, contract.md says only the control dims when disabled. Already fixed: item 1 (6dfe5c9, Enter submits the owning form), item 2 defaults (string props default to ""), items 4 and 5 (drift and Realizations updated).

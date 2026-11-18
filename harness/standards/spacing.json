@@ -1,0 +1,141 @@
+{
+  "family": "spacing",
+  "$description": "Spacing grids. space.N = N x base (px). The step set is what the semantic layer aliases, so every preset keeps the default steps and may add more.",
+  "default": "grid-4",
+  "presets": [
+    {
+      "id": "grid-4",
+      "label": "4 px unit",
+      "values": {
+        "base": 4,
+        "steps": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16
+        ]
+      },
+      "description": "Every space is a multiple of 4 px, with 2 px half steps. Divides common type and control sizes cleanly. The default.",
+      "source": "https://tailwindcss.com/docs/theme",
+      "verified": true,
+      "recommended": true
+    },
+    {
+      "id": "grid-2",
+      "label": "2 px unit",
+      "values": {
+        "base": 2,
+        "steps": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16,
+          20,
+          24,
+          32
+        ]
+      },
+      "description": "Fine 2 px unit for dense tools that need hairline adjustments; the same step names give half the default distances, so extra large steps are added.",
+      "source": "https://carbondesignsystem.com/elements/spacing/overview/",
+      "verified": true
+    },
+    {
+      "id": "grid-8",
+      "label": "8 px unit",
+      "values": {
+        "base": 8,
+        "steps": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16
+        ]
+      },
+      "description": "Coarser 8 px unit with 4 px half steps. Quick to apply and roomy; every default distance doubles.",
+      "source": "https://carbondesignsystem.com/elements/2x-grid/overview/",
+      "verified": true
+    },
+    {
+      "id": "grid-10",
+      "label": "10 px unit",
+      "values": {
+        "base": 10,
+        "steps": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16
+        ]
+      },
+      "description": "Round 10 px unit with 5 px half steps, for teams that think in tens. Not taken from a published system.",
+      "source": null,
+      "verified": false
+    },
+    {
+      "id": "grid-5",
+      "label": "5 px unit (static)",
+      "values": {
+        "base": 5,
+        "steps": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16
+        ]
+      },
+      "description": "A 5 px unit, in the spirit of public-service systems whose line heights are multiples of 5. Static: no responsive shrink.",
+      "source": "https://design-system.service.gov.uk/styles/spacing/",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "family": "density",
+  "$description": "Control sizing. height = control heights in px (sm, default, lg); padding-x and gap = spacing step keys (space.N). Linked into the semantic layer by spec/tokens/brand-links.json.",
+  "default": "comfortable",
+  "presets": [
+    {
+      "id": "compact",
+      "label": "Compact",
+      "values": {
+        "height": {
+          "sm": 28,
+          "default": 32,
+          "lg": 36
+        },
+        "padding-x": {
+          "xs": "1-5",
+          "sm": "2-5",
+          "default": "3",
+          "lg": "5",
+          "field": "2-5"
+        },
+        "gap": {
+          "xs": "1",
+          "sm": "1",
+          "default": "1-5"
+        }
+      },
+      "description": "Smaller controls for data-heavy screens. Keep pointer targets at least 24 px.",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+      "verified": true
+    },
+    {
+      "id": "comfortable",
+      "label": "Comfortable",
+      "values": {
+        "height": {
+          "sm": 32,
+          "default": 36,
+          "lg": 40
+        },
+        "padding-x": {
+          "xs": "2",
+          "sm": "3",
+          "default": "4",
+          "lg": "6",
+          "field": "3"
+        },
+        "gap": {
+          "xs": "1",
+          "sm": "1-5",
+          "default": "2"
+        }
+      },
+      "description": "Balanced controls for most products. The default.",
+      "source": null,
+      "verified": false
+    },
+    {
+      "id": "spacious",
+      "label": "Spacious",
+      "values": {
+        "height": {
+          "sm": 36,
+          "default": 40,
+          "lg": 44
+        },
+        "padding-x": {
+          "xs": "2-5",
+          "sm": "4",
+          "default": "5",
+          "lg": "8",
+          "field": "4"
+        },
+        "gap": {
+          "xs": "1-5",
+          "sm": "2",
+          "default": "2-5"
+        }
+      },
+      "description": "Larger controls for touch and occasional users.",
+      "source": null,
+      "verified": false
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+- heading "Shipping" [level=3]
+  - button "Shipping" [expanded=false]
+- heading "Returns" [level=3]
+  - button "Returns" [expanded=false]
+- heading "Warranty" [level=3]
+  - button "Warranty" [expanded=false]

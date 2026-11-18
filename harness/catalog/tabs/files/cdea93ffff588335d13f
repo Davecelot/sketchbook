@@ -1,0 +1,7 @@
+- tablist "Project sections" [orientation=horizontal]
+  - tab "Overview"
+  - tab "Activity" [focused, selected]
+  - tab "Settings"
+- tabpanel "Activity"
+  - paragraph
+    - text "Recent changes appear here."

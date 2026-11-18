@@ -1,0 +1,12 @@
+- dialog "Edit profile" [focused, modal] desc "Make changes to your profile here. Click save when you're done."
+  - heading "Edit profile" [level=2]
+  - text "Make changes to your profile here. Click save when you're done."
+  - text "Name"
+  - textbox "Name" value "Pedro Duarte"
+  - paragraph [live=polite]
+  - text "Username"
+  - textbox "Username" value "@peduarte"
+  - paragraph [live=polite]
+  - button "Cancel"
+  - button "Save changes"
+  - button "Close"

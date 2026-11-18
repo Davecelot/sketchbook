@@ -1,0 +1,9 @@
+- text "Full name"
+- textbox "Full name" desc "As it appears on your card."
+- paragraph
+  - text "As it appears on your card."
+- paragraph [live=polite]
+- text "Email"
+- textbox "Email" [invalid=true] value "nope" desc "Enter a valid email address."
+- paragraph [live=polite]
+  - text "Enter a valid email address."

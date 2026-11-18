@@ -1,0 +1,3 @@
+- checkbox "Send me product updates" [invalid=true, checked=false] desc "Select this option to continue."
+- paragraph [live=polite]
+  - text "Select this option to continue."

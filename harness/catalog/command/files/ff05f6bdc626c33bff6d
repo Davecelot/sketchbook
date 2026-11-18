@@ -1,0 +1,3 @@
+- combobox "Search commands" [autocomplete=list, expanded=true] value "zzz"
+- listbox "Search commands" [orientation=vertical]
+- status [live=polite]

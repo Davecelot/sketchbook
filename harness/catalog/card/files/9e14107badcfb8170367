@@ -1,0 +1,40 @@
+# Accessibility audit: Card (2026-11-15)
+
+Scope: `spec/components/card/contract.json`, `src/components/card/*` (`sb-card`, `-header`, `-title`, `-description`, `-action`, `-content`, `-footer`), `playwright/tests/card/*`. Standard: WCAG 2.2 AA; no APG pattern (generic container, no role).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.3 text contrast | Pass | Contract pairs `card.fg`/`card.bg` and `card.description.fg`/`card.bg`; `npm run check` T6 passes (light and dark); behavior spec checks colors in both modes |
+| P | 1.4.11 non-text contrast | Not applicable | Card is not a control; border is decoration, content keeps its own semantics |
+| P | 1.4.1 color alone | Pass | Description is muted color plus smaller size, but carries no meaning by color |
+| P | forced-colors | Pass | Probe with `forced-colors: active`: border `rgb(0,0,0)` 1px, text `rgb(0,0,0)`, background `rgb(255,255,255)`; the shadow is dropped but the border keeps the surface visible |
+| P | prefers-reduced-motion | Not applicable | No transitions or animation |
+| P | 1.4.10 reflow | Pass | Component has no fixed width. At a 320px viewport the story overflows (scrollWidth 376) only because the story sets `style="width: 360px"`; with `width:auto` scrollWidth is 320 |
+| O | 2.1.1 / 2.1.2 keyboard, trap | Pass | Probe: parts and host have `tabIndex` -1; Tab in `with-action` goes Refresh then View report then leaves; no trap; `content-only` has no tab stop |
+| O | 2.4.7 focus visible | Not applicable | Nothing in the card is focusable; slotted `sb-button` owns its ring |
+| O | 2.4.3 focus order | Pass | Tab order follows DOM and visual order (action after description in DOM, first in the header) |
+| O | 2.5.8 target size | Not applicable | Not interactive; slotted controls follow their own components |
+| U | 3.2.x, 3.3.x, labels | Not applicable | No input, no name by design |
+| U | 1.3.1 heading semantics | Pass with note | By contract, title is a visual heading; the consumer puts a real heading inside `sb-card-title` for the outline (low note below) |
+| R | 4.1.2 role, name, state | Pass | CDP `Accessibility.getFullAXTree` on all four stories: no role exposed for any card part; text in reading order; slotted `sb-button` exposes `button` with its name |
+| R | ID references across shadow roots | Not applicable | No ID references; no ARIA on any part (spec asserts it) |
+| R | axe | Pass | Behavior spec: axe clean on default, with action, small, content only |
+| R | Behavior spec and `npm run check` | Pass | 13/13 passed; all checks pass (A1 warn on spec/api.json is unrelated) |
+| R | Screen-reader evidence | Pass | AX tree above plus `__screen-reader__` snapshots (check S1) |
+
+## Failures
+
+None open.
+
+### Note: title is not a heading by default - LOW
+Location: `src/components/card/CardTitle.ts` (no heading semantics; contract.md section 9)
+Issue: 1.3.1 info and relationships: a visually emphasized title is plain text in the AX tree unless the consumer nests a heading. Documented and intentional (the component cannot choose the heading level), so not counted as a failure.
+Fix: none required; keep the contract guidance and have stories show a real heading when the outline matters.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-15)
+
+Semantics, keyboard exclusion, forced-colors, reflow, contrast pairs, axe, the behavior spec (13/13) and `npm run check` all pass. No open findings.

@@ -1,0 +1,161 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Spinner",
+  "tag": "sb-spinner",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A small rotating mark that says work is in progress and its end is unknown.",
+  "dependsOn": [],
+  "props": {
+    "label": {
+      "type": "text",
+      "default": "Loading",
+      "note": "Accessible name announced by the status role. Change it to say what is loading."
+    },
+    "decorative": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Hides the spinner from assistive technology. Use it when the container already announces busy (e.g. a loading Button)."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "label",
+      "role": "text",
+      "parent": null,
+      "part": "label",
+      "controlledBy": "label",
+      "notes": "Visually hidden text inside the status, so the live region has content to announce."
+    },
+    {
+      "name": "icon",
+      "role": "icon",
+      "parent": null,
+      "part": "icon",
+      "notes": "Inline SVG of Lucide's loader icon, stroked in currentColor."
+    }
+  ],
+  "content": {},
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "status",
+    "accessibleNameSource": "The label prop as aria-label on the host (default \"Loading\").",
+    "keyboard": {},
+    "aria": [
+      "host: role=\"status\" and aria-label=label, set before the first render",
+      "label is also visually hidden text inside the status",
+      "decorative: aria-hidden=\"true\" on the host, no role, no label text"
+    ],
+    "announcements": [
+      "status role: polite announcement of the label when the spinner is inserted"
+    ],
+    "contrast": [],
+    "wcag": [
+      "1.1.1",
+      "2.2.2",
+      "4.1.3"
+    ]
+  },
+  "tokens": {
+    "spinner.size": "{size.icon.default}",
+    "spinner.duration": "{motion.duration.loop}",
+    "spinner.easing": "{motion.easing.linear}"
+  },
+  "aiHints": {
+    "category": "atom",
+    "keywords": [
+      "spinner",
+      "loading",
+      "busy",
+      "progress"
+    ],
+    "useCases": [
+      {
+        "when": "Content or an action is loading and its duration is unknown",
+        "use": "sb-spinner with a label that names what is loading"
+      },
+      {
+        "when": "Inside a loading Button",
+        "use": "Button renders it decorative; Button announces busy"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Spinner for a long task with known progress",
+        "why": "People can't tell how long is left",
+        "alternative": "Progress"
+      },
+      {
+        "pattern": "Several spinners at once on one screen",
+        "why": "Several status announcements compete",
+        "alternative": "One spinner or Skeleton placeholders"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/spinner/Spinner.ts",
+        "src/components/spinner/Spinner.scss",
+        "src/components/spinner/Spinner.styles.ts",
+        "src/components/spinner/Spinner.stories.ts",
+        "src/components/spinner/index.ts"
+      ],
+      "parts": [
+        "label",
+        "icon"
+      ],
+      "slots": [],
+      "spec": "playwright/tests/spinner/spinner.behavior.spec.ts",
+      "coverage": [
+        "role status + default name",
+        "label changes the name",
+        "decorative hides it",
+        "16px + --sb-spinner-size override",
+        "animation + reduced motion",
+        "inherits color",
+        "axe clean"
+      ],
+      "drift": [
+        {
+          "aspect": "size",
+          "contract": "spinner.size token (16px); consumers resize with --sb-spinner-size",
+          "realization": "shadcn resizes with size-* utility classes"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Spinner": 1
+        }
+      },
+      "coverage": [
+        "Spinner: 1 variant(s); read back ok"
+      ],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Keep spinning under prefers-reduced-motion?",
+      "recommendation": "Yes, slower: it conveys essential state, so it keeps moving (WCAG 2.2.2 allows essential motion) at double duration.",
+      "status": "answered",
+      "answer": "Yes, at double duration.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-027",
+    "SB-0006"
+  ]
+}

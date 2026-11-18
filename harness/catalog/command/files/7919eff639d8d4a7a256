@@ -1,0 +1,11 @@
+- combobox "Search pages" [autocomplete=list, expanded=true, active "Accordion"]
+- listbox "Search pages" [orientation=vertical]
+  - option "Accordion" [selected]
+  - option "Alert"
+  - option "Badge"
+  - option "Billing"
+  - option "Button"
+  - option "Calendar"
+  - option "Card"
+  - option "Checkbox"
+- status [live=polite]

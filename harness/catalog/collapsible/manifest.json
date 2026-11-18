@@ -1,0 +1,85 @@
+{
+  "name": "collapsible",
+  "component": "Collapsible",
+  "displayName": "Collapsible",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-collapsible",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/collapsible-2026-11-15.md",
+      "hash": "996628c9381baa5dd9a2"
+    },
+    {
+      "path": "docs/parity-audits/collapsible-2026-11-08.md",
+      "hash": "0ef860186a5d77f0a02c"
+    },
+    {
+      "path": "playwright/tests/collapsible/__screen-reader__/collapsible-closed.txt",
+      "hash": "90fb6b218f5837e2b9af"
+    },
+    {
+      "path": "playwright/tests/collapsible/__screen-reader__/collapsible-open.txt",
+      "hash": "80a66bc01fbd7557bc5c"
+    },
+    {
+      "path": "playwright/tests/collapsible/__screen-reader__/stories/components-collapsible--default.txt",
+      "hash": "4d256e6719507cfe8374"
+    },
+    {
+      "path": "playwright/tests/collapsible/__screen-reader__/stories/components-collapsible--disabled.txt",
+      "hash": "563ee7ce5fce1f77ee5f"
+    },
+    {
+      "path": "playwright/tests/collapsible/__screen-reader__/stories/components-collapsible--open.txt",
+      "hash": "1ecfe2f1f1d99815477f"
+    },
+    {
+      "path": "playwright/tests/collapsible/__screen-reader__/stories/components-collapsible--text-trigger.txt",
+      "hash": "bc6adfb746c3e16ed828"
+    },
+    {
+      "path": "playwright/tests/collapsible/collapsible.behavior.spec.ts",
+      "hash": "30c5ce1473315a1690d8"
+    },
+    {
+      "path": "spec/components/collapsible/contract.json",
+      "hash": "f26dc650128b402e1f3e"
+    },
+    {
+      "path": "spec/components/collapsible/contract.md",
+      "hash": "93f866f818a699d0d579"
+    },
+    {
+      "path": "src/components/collapsible/Collapsible.scss",
+      "hash": "10acfcd2eebb1f54921e"
+    },
+    {
+      "path": "src/components/collapsible/Collapsible.stories.ts",
+      "hash": "e8da0cd63c0b7de97808"
+    },
+    {
+      "path": "src/components/collapsible/Collapsible.ts",
+      "hash": "b1d517e0bb72963d6efe"
+    },
+    {
+      "path": "src/components/collapsible/CollapsibleContent.ts",
+      "hash": "91d5114689dc3d3813fc"
+    },
+    {
+      "path": "src/components/collapsible/CollapsibleTrigger.ts",
+      "hash": "902584654862eec8d0f0"
+    },
+    {
+      "path": "src/components/collapsible/context.ts",
+      "hash": "ea39495978fcf333dbc3"
+    },
+    {
+      "path": "src/components/collapsible/index.ts",
+      "hash": "a38a70b8f5bd307fb7ec"
+    }
+  ]
+}

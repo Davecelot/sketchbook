@@ -1,0 +1,101 @@
+{
+  "name": "switch",
+  "component": "Switch",
+  "displayName": "Switch",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-switch",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/switch-2026-11-15.md",
+      "hash": "a195aa181ef4d92ffe20"
+    },
+    {
+      "path": "docs/parity-audits/switch-2026-11-08.md",
+      "hash": "3fc789ad053403f6c0a9"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--checked.txt",
+      "hash": "0c1c3cb6e26d717784fc"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--default.txt",
+      "hash": "592404eea89d590aca7a"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--disabled-checked.txt",
+      "hash": "c365a534cf1a1122900d"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--disabled.txt",
+      "hash": "7a9c672629fef0bd0dec"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--hidden-label.txt",
+      "hash": "a6b8c28ba62b79ec987d"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--required.txt",
+      "hash": "49d0024b39574e56612f"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--sizes.txt",
+      "hash": "eff1c0d843da2d594748"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--small.txt",
+      "hash": "0c1c3cb6e26d717784fc"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--with-description.txt",
+      "hash": "910ca4e571bb756e4687"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/stories/components-switch--with-error.txt",
+      "hash": "f7eb67e0d31b393f05ae"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/switch-focused.txt",
+      "hash": "fa365adda5b6c224f55f"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/switch-off.txt",
+      "hash": "fa365adda5b6c224f55f"
+    },
+    {
+      "path": "playwright/tests/switch/__screen-reader__/switch-on.txt",
+      "hash": "00386133e411f7f9f2b6"
+    },
+    {
+      "path": "playwright/tests/switch/switch.behavior.spec.ts",
+      "hash": "8733d3a60ffcb6ade494"
+    },
+    {
+      "path": "spec/components/switch/contract.json",
+      "hash": "44df1872eb49ea4e1e08"
+    },
+    {
+      "path": "spec/components/switch/contract.md",
+      "hash": "ea1e13f86f2d9ea47d84"
+    },
+    {
+      "path": "src/components/switch/Switch.scss",
+      "hash": "e65b2ec11fa9a263d727"
+    },
+    {
+      "path": "src/components/switch/Switch.stories.ts",
+      "hash": "6805184e8897c82550c4"
+    },
+    {
+      "path": "src/components/switch/Switch.ts",
+      "hash": "92d0e744cb47aecc36bc"
+    },
+    {
+      "path": "src/components/switch/index.ts",
+      "hash": "df46601cb34ccf35b908"
+    }
+  ]
+}

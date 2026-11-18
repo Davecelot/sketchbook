@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "noEmit": true,
+    "declaration": false,
+    "rootDir": ".",
+    "verbatimModuleSyntax": false,
+    "allowJs": true
+  },
+  "include": ["playwright", "eslint.config.js", "eslint-plugins.d.ts", "prettier.config.ts"]
+}

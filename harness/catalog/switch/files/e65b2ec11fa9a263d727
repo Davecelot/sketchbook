@@ -1,0 +1,153 @@
+@use 'a11y';
+
+:host {
+  display: block;
+  --_width: var(--sb-switch-width);
+  --_height: var(--sb-switch-height);
+  --_thumb: var(--sb-switch-thumb-size);
+}
+
+:host([size='small']) {
+  --_width: var(--sb-switch-sm-width);
+  --_height: var(--sb-switch-sm-height);
+  --_thumb: var(--sb-switch-sm-thumb-size);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part='field'] {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--sb-switch-gap);
+  row-gap: var(--sb-switch-content-gap);
+  align-items: start;
+  font-family: var(--sb-switch-font-family);
+}
+
+[part='control'] {
+  position: relative;
+  display: inline-flex;
+  grid-column: 1;
+  grid-row: 1;
+  margin-block: calc((var(--sb-switch-label-font-size) * var(--sb-switch-label-line-height) - var(--_height)) / 2);
+}
+
+[part='input'] {
+  appearance: none;
+  box-sizing: border-box;
+  width: var(--_width);
+  height: var(--_height);
+  margin: 0;
+  border: var(--sb-switch-border-width) solid var(--sb-switch-border);
+  border-radius: var(--sb-switch-radius);
+  background: var(--sb-switch-track-bg);
+  box-shadow: var(--sb-switch-shadow);
+  cursor: pointer;
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: var(--sb-switch-transition-duration);
+  transition-timing-function: var(--sb-switch-transition-easing);
+  @include a11y.respect-reduced-motion;
+
+  &:checked {
+    border-color: var(--sb-switch-checked-bg);
+    background: var(--sb-switch-checked-bg);
+  }
+
+  &:focus-visible {
+    border-color: var(--sb-switch-focus-ring-color);
+    @include a11y.focus-ring(var(--sb-switch-focus-ring-color), var(--sb-switch-focus-ring-width));
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--sb-switch-border-invalid);
+  }
+
+  &[aria-invalid='true']:focus-visible {
+    @include a11y.focus-ring(var(--sb-switch-border-invalid), var(--sb-switch-focus-ring-width));
+  }
+
+  &:disabled {
+    opacity: var(--sb-switch-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  &:checked ~ [part='thumb'] {
+    transform: translateX(calc(var(--_width) - var(--_thumb) - 2 * var(--sb-switch-inset)));
+    background: var(--sb-switch-thumb-checked-bg);
+  }
+
+  &:disabled ~ [part='thumb'] {
+    opacity: var(--sb-switch-disabled-opacity);
+  }
+}
+
+[part='thumb'] {
+  position: absolute;
+  top: calc((var(--_height) - var(--_thumb)) / 2);
+  left: var(--sb-switch-inset);
+  width: var(--_thumb);
+  height: var(--_thumb);
+  border-radius: var(--sb-switch-radius);
+  background: var(--sb-switch-thumb-bg);
+  pointer-events: none;
+  transition: transform var(--sb-switch-transition-duration) var(--sb-switch-transition-easing);
+  @include a11y.respect-reduced-motion;
+}
+
+[part='label'] {
+  grid-column: 2;
+  grid-row: 1;
+  color: var(--sb-switch-label-fg);
+  font-size: var(--sb-switch-label-font-size);
+  font-weight: var(--sb-switch-label-font-weight);
+  line-height: var(--sb-switch-label-line-height);
+  cursor: pointer;
+}
+
+:host(:disabled) [part='label'] {
+  opacity: var(--sb-switch-disabled-opacity);
+  cursor: not-allowed;
+}
+
+:host([hide-label]) [part='label'] {
+  @include a11y.visually-hidden;
+}
+
+[part='description'],
+[part='error'] {
+  grid-column: 2;
+  margin: 0;
+  font-size: var(--sb-switch-description-font-size);
+  line-height: var(--sb-switch-description-line-height);
+}
+
+[part='description'] {
+  grid-row: 2;
+  color: var(--sb-switch-description-fg);
+}
+
+[part='error'] {
+  grid-row: auto;
+  color: var(--sb-switch-error-fg);
+}
+
+[part='error']:empty {
+  @include a11y.visually-hidden;
+}
+
+// Last, so it wins over the rules above: forced colors drop both fills to Canvas, hiding the thumb and the on state.
+@media (forced-colors: active) {
+  [part='thumb'] {
+    background: CanvasText;
+  }
+
+  [part='input']:checked {
+    background: Highlight;
+  }
+
+  [part='input']:checked ~ [part='thumb'] {
+    background: HighlightText;
+  }
+}

@@ -1,0 +1,7 @@
+- radiogroup "Spacing"
+  - radio "Available" [checked=false]
+  - text "Available"
+  - radio "Sold out" [disabled, checked=false]
+  - text "Sold out"
+  - radio "Also available" [checked=false]
+  - text "Also available"

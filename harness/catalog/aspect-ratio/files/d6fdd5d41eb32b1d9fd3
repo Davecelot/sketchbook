@@ -1,0 +1,159 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "AspectRatio",
+  "tag": "sb-aspect-ratio",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A box that keeps a fixed width-to-height ratio for the media or content placed inside it.",
+  "dependsOn": [],
+  "props": {
+    "ratio": {
+      "type": "number",
+      "default": 1,
+      "note": "Width divided by height. Accepts a number (1.7778) or a fraction written as 16/9. Invalid or non-positive values fall back to 1."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "frame",
+      "role": "container",
+      "parent": null,
+      "part": "frame",
+      "notes": "The box that holds the ratio; the slotted child is stretched to fill it."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": false,
+      "notes": "One child, usually an image, video or iframe. It is stretched to fill the box; set object-fit on it to crop or contain."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "none: the box adds no semantics",
+    "accessibleNameSource": "None. The slotted content is named as usual (alt text on an img, title on an iframe).",
+    "targetSize": "Not interactive.",
+    "keyboard": {},
+    "aria": [
+      "adds no role, no ARIA and no focus stop",
+      "the slotted content keeps its own semantics and accessible name"
+    ],
+    "announcements": [],
+    "contrast": [],
+    "wcag": [
+      "1.1.1",
+      "1.4.4",
+      "1.4.10"
+    ]
+  },
+  "tokens": {},
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/aspect-ratio/AspectRatio.ts",
+        "src/components/aspect-ratio/AspectRatio.scss",
+        "src/components/aspect-ratio/AspectRatio.styles.ts",
+        "src/components/aspect-ratio/AspectRatio.stories.ts",
+        "src/components/aspect-ratio/index.ts"
+      ],
+      "parts": [
+        "frame"
+      ],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/aspect-ratio/aspect-ratio.behavior.spec.ts",
+      "coverage": [
+        "square by default; numeric, fraction and changing ratio",
+        "invalid ratios fall back to 1",
+        "slotted child fills the box; tall content does not stretch it",
+        "no role or focus stop; child keeps its name; axe clean"
+      ],
+      "drift": [
+        {
+          "aspect": "ratio syntax",
+          "contract": "number or a/b fraction in the attribute",
+          "realization": "the visual reference takes a number only"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "AspectRatio": 1
+        }
+      },
+      "coverage": [
+        "AspectRatio: 1 variant(s); read back ok"
+      ],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "How is the ratio written?",
+      "recommendation": "A number, plus the fraction form 16/9 which is easier to read than 1.7778.",
+      "status": "answered",
+      "answer": "Number or a/b fraction in the ratio attribute.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Crop or contain the child?",
+      "recommendation": "Neither: the child fills the box; the author chooses object-fit, so the component stays neutral.",
+      "status": "answered",
+      "answer": "The author sets object-fit on the child.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-005",
+    "D-011",
+    "SB-0007",
+    "SB-0011"
+  ],
+  "aiHints": {
+    "category": "atom",
+    "keywords": [
+      "aspect ratio",
+      "ratio",
+      "16:9",
+      "media",
+      "image",
+      "video",
+      "frame"
+    ],
+    "useCases": [
+      {
+        "when": "An image or video must keep its shape while the width changes",
+        "use": "sb-aspect-ratio with ratio=16/9 around the media"
+      },
+      {
+        "when": "A square avatar or thumbnail slot",
+        "use": "the default ratio of 1"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Image without alt text inside the box",
+        "why": "The box does not name its content",
+        "alternative": "Give the img alt text, or alt=\"\" if purely decorative"
+      },
+      {
+        "pattern": "Several children in the box",
+        "why": "They are all stretched over each other",
+        "alternative": "Wrap them in one element"
+      }
+    ]
+  }
+}

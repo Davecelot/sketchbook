@@ -1,0 +1,38 @@
+# Accessibility audit: Progress (2026-11-15)
+
+Scope: `spec/components/progress/contract.json`, `src/components/progress/*`, `playwright/tests/progress/*`, parity audit `docs/parity-audits/progress-2026-11-08.md`. Standard: WCAG 2.2 AA and the WAI-ARIA `progressbar` role (static, non-focusable).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.11 non-text contrast, indicator | Pass | Probe on all 6 stories (canvas-normalized computed colors, track composited over page background): indicator vs page background 6.64:1 light, 7.50:1 dark; indicator vs track 4.92:1 light, 5.60:1 dark; all above 3:1. T6 passes |
+| P | 1.4.1 color alone | Pass | Value is exposed as `aria-valuenow`; fill length also shows it |
+| P | forced-colors | Pass | `Progress.scss`: track gets `outline: thin solid CanvasText`, indicator `background: Highlight`; probe with `forcedColors: active` on all 6 stories: indicator `rgba(5, 0, 73, 0.8)` equals the resolved `Highlight`, track `outline: solid rgb(0, 0, 0)` (CanvasText); fill widths 192, 0, 320, 120, 128 and 112px of a 320px track (default, empty, complete, custom-max, indeterminate, named-by-text), so the fill is visible against Canvas; behavior spec also passes |
+| P | 2.2.2 / 2.3.3 reduced motion | Pass | `Progress.scss`: width transition and the indeterminate slide are `none` under `prefers-reduced-motion: reduce`; the indeterminate segment stays static at 40%; spec covers it |
+| O | 2.1.1 / 2.4.7 / 2.1.2 keyboard, focus, trap | Not applicable | Static, no focusable parts (APG progressbar is not focusable) |
+| O | 2.5.8 target size | Not applicable | Not interactive |
+| U | 3.2.x, 3.3.x | Not applicable | No input or errors |
+| U | Accessible name | Pass | `label` sets `aria-label`; author `aria-label` and `aria-labelledby` are honored; clearing `label` restores the author value; single console warning when unnamed (specs 'named by label', 'page aria-label or aria-labelledby', 'clearing label', 'warns once') |
+| R | 4.1.2 role, value, range | Pass | CDP `Accessibility.getFullAXTree` on all 6 stories (light and dark identical): one `progressbar` each. default name 'Upload progress' now 60 min 0 max 100; empty now 0; complete now 100; custom-max 'Files processed' now 3 max 8; indeterminate 'Preparing export' no value (min 0 max 100); named-by-text 'Syncing library' (aria-labelledby) now 35. Host `role=progressbar`, `aria-valuemin=0`, `aria-valuemax`, `aria-valuenow` set in `willUpdate` before first render; values clamped to the range; non-positive `max` falls back to 100 |
+| R | Indeterminate state | Pass | `value` null or empty attribute removes `aria-valuenow` (parity item 2 fixed, spec 'empty value attribute is indeterminate') |
+| R | `aria-valuetext` | Not applicable | Not in the contract; browsers announce the percentage from now/min/max, which is adequate for a bare bar |
+| R | ID references across shadow roots | Pass | `aria-labelledby` is read on the host from the light DOM (story NamedByText); nothing inside the shadow root is referenced |
+| R | axe | Pass | Behavior spec axe test clean |
+| R | Behavior spec | Pass | `playwright tests/progress`: 12/12 passed |
+| R | `npm run check` | Pass for this component | All checks pass except G1, which reports `harness/catalog/skeleton/manifest.json` out of date; that belongs to the concurrent skeleton work, not Progress |
+| R | Screen-reader evidence | Pass | `__screen-reader__` snapshots (check S1 passes) |
+
+## Parity audit follow-up
+
+The three "needs code fix" items from `progress-2026-11-08.md` (stale `aria-label` after clearing `label`, empty `value` read as 0, warning not dev-only) are fixed (0563e8b) and each has a passing behavior spec.
+
+## Failures
+
+None.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-15)
+
+Role, name, value and range semantics are correct in determinate and indeterminate states, the indicator keeps contrast (T6) and stays visible in forced colors, motion stops under reduced motion, and axe, the behavior spec (12/12) and the Progress checks pass. No open findings. The G1 failure is in the skeleton catalog manifest, outside this component.

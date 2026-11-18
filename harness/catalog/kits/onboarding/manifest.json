@@ -1,0 +1,53 @@
+{
+  "id": "onboarding",
+  "title": "Onboarding",
+  "summary": "First-run screens: a setup step with progress and choices, an empty workspace with next steps, and a setting-up wait state.",
+  "path": "src/patterns/onboarding",
+  "components": [
+    "button",
+    "card",
+    "checkbox",
+    "empty",
+    "field",
+    "item",
+    "progress",
+    "skeleton",
+    "spinner",
+    "toggle-group"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/onboarding/patterns-onboarding--default.txt",
+      "hash": "3468d9690d9a781191ec"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/onboarding/patterns-onboarding--first-run.txt",
+      "hash": "6b468153260c66cd0413"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/onboarding/patterns-onboarding--setting-up.txt",
+      "hash": "ea5a042d41c4a9418b24"
+    },
+    {
+      "path": "playwright/tests/patterns/onboarding.behavior.spec.ts",
+      "hash": "7921743050eaf6de1a3d"
+    },
+    {
+      "path": "src/patterns/onboarding/Onboarding.stories.ts",
+      "hash": "ce466020247ecf1ff5fe"
+    },
+    {
+      "path": "src/patterns/onboarding/README.md",
+      "hash": "322cf4dfc2ee0a035d85"
+    },
+    {
+      "path": "src/patterns/onboarding/onboarding.css",
+      "hash": "ae75e02daf70b4c8592f"
+    },
+    {
+      "path": "src/patterns/onboarding/pattern.json",
+      "hash": "e669d75a65f4d15d8289"
+    }
+  ]
+}

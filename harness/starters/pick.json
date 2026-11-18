@@ -1,0 +1,9 @@
+{
+  "id": "pick",
+  "title": "Pick components",
+  "for": "Teams that need a subset: the chosen components (--components a,b) and what they depend on.",
+  "foundations": null,
+  "components": [],
+  "kits": "none",
+  "next": ["sketchbook list --available", "sketchbook add <name>", "/foundations guided"]
+}

@@ -1,0 +1,9 @@
+- form
+  - radiogroup "Spacing" [required]
+    - radio "Default" [checked=false]
+    - text "Default"
+    - radio "Comfortable" [checked=false]
+    - text "Comfortable"
+    - radio "Compact" [checked=false]
+    - text "Compact"
+  - button "Submit"

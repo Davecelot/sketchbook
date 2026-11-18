@@ -1,0 +1,61 @@
+- main
+  - sectionheader
+    - heading "Customers" [level=1]
+    - paragraph
+      - text "Everyone with access to your workspace."
+    - button "Add customer"
+  - search "Customers"
+    - text "Search customers"
+    - searchbox "Search customers"
+    - paragraph [live=polite]
+    - paragraph
+      - text "Press"
+      - text "/"
+      - text "to search"
+  - group "Status"
+    - button "All" [pressed=true]
+    - button "Active" [pressed=false]
+    - button "Invited" [pressed=false]
+  - table "Customers" [busy]
+    - caption
+      - text "Customers"
+    - rowgroup
+      - row
+        - cell "Select all customers"
+          - checkbox "Select all customers" [disabled, checked=false]
+          - paragraph [live=polite]
+        - columnheader "Name"
+        - columnheader "Status"
+        - columnheader "Plan"
+        - columnheader "Last seen"
+    - rowgroup
+      - row
+        - cell
+        - cell
+        - cell
+        - cell
+        - cell
+      - row
+        - cell
+        - cell
+        - cell
+        - cell
+        - cell
+      - row
+        - cell
+        - cell
+        - cell
+        - cell
+        - cell
+      - row
+        - cell
+        - cell
+        - cell
+        - cell
+        - cell
+      - row
+        - cell
+        - cell
+        - cell
+        - cell
+        - cell

@@ -1,0 +1,118 @@
+{
+  "family": "elevation",
+  "$description": "Shadow sets as [offsetY, blur, spread, alpha] in px on black. roles map the semantic elevation tokens to these keys.",
+  "default": "tailwind",
+  "presets": [
+    {
+      "id": "tailwind",
+      "label": "Subtle utility shadows",
+      "values": {
+        "shadows": {
+          "xs": [
+            1,
+            2,
+            0,
+            0.05
+          ],
+          "sm": [
+            1,
+            3,
+            0,
+            0.1
+          ],
+          "md": [
+            4,
+            6,
+            -1,
+            0.1
+          ],
+          "lg": [
+            10,
+            15,
+            -3,
+            0.1
+          ]
+        }
+      },
+      "description": "Soft, single-layer shadows that grow with height. The default.",
+      "source": "https://tailwindcss.com/docs/box-shadow",
+      "verified": true
+    },
+    {
+      "id": "flat",
+      "label": "Flat",
+      "values": {
+        "shadows": {
+          "xs": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "sm": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "md": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "lg": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "description": "No shadows: layers separate by border and surface color only. Works the same in dark mode.",
+      "source": null,
+      "verified": false
+    },
+    {
+      "id": "layered-5",
+      "label": "Five levels",
+      "values": {
+        "shadows": {
+          "xs": [
+            1,
+            2,
+            0,
+            0.06
+          ],
+          "sm": [
+            2,
+            4,
+            -1,
+            0.1
+          ],
+          "md": [
+            4,
+            8,
+            -2,
+            0.12
+          ],
+          "lg": [
+            8,
+            16,
+            -4,
+            0.14
+          ],
+          "xl": [
+            12,
+            24,
+            -6,
+            0.16
+          ]
+        }
+      },
+      "description": "Five clearly separated levels, in the spirit of tonal elevation systems. Our own values.",
+      "source": "https://m3.material.io/styles/elevation/overview",
+      "verified": false
+    }
+  ]
+}

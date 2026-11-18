@@ -1,0 +1,20 @@
+{
+  "family": "borderWidth",
+  "$description": "Border widths in px.",
+  "default": "standard",
+  "presets": [
+    {
+      "id": "standard",
+      "label": "0 to 3 px",
+      "values": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3
+      },
+      "description": "Hairline borders, 2 px emphasis and a 3 px focus ring. The default.",
+      "source": "https://atlassian.design/components/tokens/all-tokens",
+      "verified": false
+    }
+  ]
+}

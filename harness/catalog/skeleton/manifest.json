@@ -1,0 +1,57 @@
+{
+  "name": "skeleton",
+  "component": "Skeleton",
+  "displayName": "Skeleton",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-skeleton",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/skeleton-2026-11-15.md",
+      "hash": "376c8cba27f74bac0cb9"
+    },
+    {
+      "path": "docs/parity-audits/skeleton-2026-11-08.md",
+      "hash": "4612f603a58593ca55e0"
+    },
+    {
+      "path": "playwright/tests/skeleton/__screen-reader__/stories/components-skeleton--card-placeholder.txt",
+      "hash": "01ba4719c80b6fe911b0"
+    },
+    {
+      "path": "playwright/tests/skeleton/__screen-reader__/stories/components-skeleton--default.txt",
+      "hash": "01ba4719c80b6fe911b0"
+    },
+    {
+      "path": "playwright/tests/skeleton/skeleton.behavior.spec.ts",
+      "hash": "96d701044834f6a5836a"
+    },
+    {
+      "path": "spec/components/skeleton/contract.json",
+      "hash": "4d046332fd9d8d606983"
+    },
+    {
+      "path": "spec/components/skeleton/contract.md",
+      "hash": "bbaabfa0b8dc2e8ea11a"
+    },
+    {
+      "path": "src/components/skeleton/Skeleton.scss",
+      "hash": "0e6d882ff78e3beba2d6"
+    },
+    {
+      "path": "src/components/skeleton/Skeleton.stories.ts",
+      "hash": "cbccb00a131579632ae9"
+    },
+    {
+      "path": "src/components/skeleton/Skeleton.ts",
+      "hash": "c67fd2e5aaaba5a9d580"
+    },
+    {
+      "path": "src/components/skeleton/index.ts",
+      "hash": "a634338190d8728efc1c"
+    }
+  ]
+}

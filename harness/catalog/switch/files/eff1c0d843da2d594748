@@ -1,0 +1,4 @@
+- switch "Size medium" [checked=true]
+- paragraph [live=polite]
+- switch "Size small" [checked=true]
+- paragraph [live=polite]

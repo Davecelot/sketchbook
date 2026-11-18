@@ -1,0 +1,52 @@
+{
+  "id": "form-states",
+  "title": "Form states",
+  "summary": "A gallery of every form control in its default, disabled, invalid and read-only states, for checking tokens, focus rings and right to left in one place.",
+  "path": "src/patterns/form-states",
+  "components": [
+    "checkbox",
+    "direction",
+    "field",
+    "input",
+    "input-group",
+    "label",
+    "native-select",
+    "radio-group",
+    "slider",
+    "switch",
+    "textarea",
+    "toggle",
+    "toggle-group"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/form-states/patterns-form-states--default.txt",
+      "hash": "0ef2ffae9d6f232f45e9"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/form-states/patterns-form-states--right-to-left.txt",
+      "hash": "0ef2ffae9d6f232f45e9"
+    },
+    {
+      "path": "playwright/tests/patterns/form-states.behavior.spec.ts",
+      "hash": "96f75e622f16e97f3ea4"
+    },
+    {
+      "path": "src/patterns/form-states/FormStates.stories.ts",
+      "hash": "b0b51ebf587b21fd89a1"
+    },
+    {
+      "path": "src/patterns/form-states/README.md",
+      "hash": "b52fb2fc480f0c6352bd"
+    },
+    {
+      "path": "src/patterns/form-states/form-states.css",
+      "hash": "437cb4c87ea365713cdd"
+    },
+    {
+      "path": "src/patterns/form-states/pattern.json",
+      "hash": "88252259f19ed675a0dc"
+    }
+  ]
+}

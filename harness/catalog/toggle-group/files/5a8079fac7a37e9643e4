@@ -1,0 +1,3 @@
+- group "View"
+  - button "List" [pressed=true]
+  - button "Grid" [pressed=false]

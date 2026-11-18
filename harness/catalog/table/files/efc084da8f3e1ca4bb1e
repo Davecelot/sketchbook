@@ -1,0 +1,20 @@
+# Parity audit: Table (2026-11-08)
+
+Reference: `spec/components/table/contract.{md,json}`. Implementation: `src/components/table/`. Evidence: `npm run check` all pass; `tsc`, `eslint` clean; `playwright tests/table` pass (serially; see flake note in the review). Tokens use only `--sb-table-*`.
+
+| Aspect | Contract | Realization | |
+| --- | --- | --- | --- |
+| Roles table, rowgroup, row, columnheader, cell, caption | yes | Table*.ts | ✅ |
+| Caption names the table; author name wins | yes | Table.ts #nameFromCaption | ⚠️ |
+| `selected` row, aria-selected | yes | TableRow.ts | ✅ |
+| Heads/cells take another role (e.g. rowheader) | yes | TableHead.ts, TableCell.ts | ⚠️ (works, no test) |
+| Dimensions, borders, hover/footer fills | yes | Table.scss | ✅ |
+| Parts | "Parts: ." (empty) | no parts | ✅ (contract.md text is a stray period) |
+
+## Differences and action plan
+1. Role override on heads and cells is promised by the contract but unproven by any spec (add a test).
+2. `Table.ts` sets `role="table"` unconditionally; every other host respects an existing role. Harmless but inconsistent.
+3. The caption fallback `aria-label` is written once and not updated when the caption text changes.
+4. contract.md Realizations "Parts: ." typo.
+
+Verdict: matches contract (test gap).

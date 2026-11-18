@@ -1,0 +1,53 @@
+# Parity audit: Dialog (2026-11-12)
+
+Reference: `spec/components/dialog/contract.md` + `contract.json` (status draft, 0.1.0).
+Audited: `src/components/dialog/*` (8 elements, `context.ts`, `Dialog.scss`, stories), `playwright/tests/dialog/dialog.behavior.spec.ts` (47 `test(` calls, 53 cases with loops and story iterations), decision SB-0102 (and SB-0103 for the Command composition).
+Method: read-only comparison of contract against code; `node harness/cli.mjs check` run. Tests were not re-run by this audit.
+
+## Comparison table
+
+| Aspect | Contract | Implementation | Result |
+| --- | --- | --- | --- |
+| Props | `sb-dialog.open` (reflected, default false); content `hideCloseButton`, `closeLabel` ("Close") | all present, attribute names `hide-close-button`, `close-label`, same defaults | ✅ |
+| Events | `sb-toggle` (bubbles, composed, not cancelable, no detail); `sb-cancel` (cancelable) | `updated()` fires `sb-toggle` only when `open` changed after first render; `#dismiss` fires cancelable `sb-cancel`, closes unless prevented; close button, `sb-dialog-close` and code call `setOpen` (not cancelable) | ✅ |
+| Anatomy | 8 elements, built-in close button after content | all 8 exist; close `sb-button` rendered after the slot (last in focus order), top inline-end via `inset-inline-end` | ✅ |
+| Trigger and close | role-less wrappers, display contents, open/close on click | click listener on host, `:host{display:contents}` | ✅ |
+| Open and modal | native modal, page inert, no scroll | `showModal()` in content, document-element scroll lock counted for nesting | ✅ |
+| Dismiss | Escape and backdrop press+release fire `sb-cancel`; drag from inside to backdrop does not close | keydown handler skips defaultPrevented/IME, pointerdown+click both outside the box; native cancel handled as fallback | ✅ |
+| Name | title names it; `aria-label` without title; dev warning once; element references | `ariaLabelledByElements`/`ariaDescribedByElements`, aria-label copy fallback, host aria-label forwarded, warning once per content | ✅ |
+| Title role | heading level 2 | ElementInternals role heading, ariaLevel 2 | ✅ |
+| Focus | autofocus, else first focusable, else close button; restore on close | manual `[autofocus]` focus after `showModal()`; rest is platform | ✅ (drift recorded) |
+| Tab at last control | may pass through browser controls (Q4) | native behavior | ✅ (drift recorded) |
+| Nesting | Escape closes top first; lock until last closes | native top layer; lock counter | ✅ |
+| Layout | max width token or viewport minus 16px; height to content, scrolls inside; padding 24; gap 16; border 1px; radius surface | SCSS uses only `--sb-dialog-*` tokens; `overflow-y:auto` on whole surface | ✅ |
+| Header and footer | centered below 40em, start-aligned from; footer stacked with last on top below 40em, row at end from | `text-align`, `column-reverse` / `row` + `flex-end` at `min-width:40em` (literal in media query, as Breadcrumb) | ✅ (drift recorded) |
+| Typography | title heading-lg semibold, line height none; description 14px muted | tokens as listed | ✅ |
+| Roles and color | surface bg/fg, border, elevation, overlay scrim, muted description, ghost close | tokens match; close is `sb-button variant="ghost" size="icon-sm"` | ✅ |
+| Forced colors | visible border | `CanvasText` border in forced-colors | ✅ |
+| Motion | none in this version | no animation | ✅ |
+| Form | form in body submits, `open = false` closes; `method=dialog` does not apply | not form-associated (not a control); light-DOM form has no ancestor dialog | ✅ (drift recorded) |
+| Tokens | 21 component tokens in contract.json, CSS only uses them | T4 passes (own tokens, every one used); T5 passes | ✅ |
+| Contract vs code | props, parts, slots, events | C3 passes; C1, C2, A1, R1, X1, M1 pass | ✅ |
+| Contract documents agree | contract.md and contract.json describe the same state | both: web `complete`, 12 drift entries with the same aspects, coverage matches | ✅ |
+| Test coverage | one test per prop, state, key, event, form behavior, a11y rule | coverage list (27 lines) is reflected in the spec: events, focus, dismiss, scroll lock, nested, name, heading, 320px, 40em, RTL, forced colors, form, axe on 8 stories, tokens | ✅ |
+| Repo checks | green | O1, D1 and a G1 catalog entry fail (expected, stale until propagate; G1 names `harness/catalog/index.json` and the Command manifest, not Dialog files); everything else passes | ⚠️ (not a Dialog defect) |
+
+## Differences and action plan
+
+D1. Decision SB-0102 text is stale against the contract (documentation; the decision is `proposed`, so it can be edited, otherwise supersede). Its "Watch out" says "Two semantic tokens are missing (backdrop color, surface max width)", but Q1 added `color.overlay` and `size.dialog.max-width` and the contract uses both (`dialog.backdrop`, `dialog.max-width`). Action: update the Watch out line (and the `plan.md` token list if it still says "missing"). No code change.
+
+D2. Title text copy is not live (small code gap, within recorded drift). Where element references are unsupported, `#name()` copies `title.textContent` at render time; changing the title text later does not re-render the content, so the dialog name goes stale. Contract.md section 9 says "the title text is copied into the name" without saying it follows later edits; the contract's tests only cover a title added after opening. Action: either accept as a known limitation of the fallback path (add to the "name and description" drift entry) or have the content re-render on title text change (code). Owner decides; low severity, only affects browsers without element references.
+
+D3. `sb-dialog-content` `aria-label` is read through `observedAttributes` and forwarded to the inner dialog, which matches the drift entry, but the host element itself keeps `aria-label` on a `display: contents` wrapper with no role. Axe is clean in the spec (search-palette story), so no action; noted for the owed screen-reader pass.
+
+D4. Items outside the contract, all deliberate and small: (a) Escape is ignored while `isComposing` (IME) and when a control already prevented it (the second is in the contract via Q5, the first is not; add one line to section 9 Keyboard); (b) `aria-haspopup` on the trigger is not set (recorded in drift, with the SB-0009 reason).
+
+D5. `npm run check` fails O1, D1 and a G1 catalog entry (indexes and Command manifest). Action: `sketchbook propagate`, `npm run catalog:build`, and the Figma scripts it lists, before merge. Not a Dialog defect. Dialog's design realization is "Not realized yet" (contract.md Realizations, Figma), which D4 and D3 checks currently accept for a `draft` component.
+
+D6. Owed before beta, not a parity defect: manual VoiceOver (Safari) and NVDA (Chrome, Firefox) pass for the element-reference name and description (Q6, SB-0102); a11y-auditor live keyboard pass; contract status stays `draft` until then.
+
+No behavior divergence between contract and code was found. Every one of the 12 drift entries in `realizations.web.drift` corresponds to observed code, and the contract.md and contract.json Realizations agree.
+
+## Verdict
+
+Matches the contract. The implementation satisfies the props, events, anatomy, states, dimensions, typography, tokens, accessibility and form behavior it defines, with 12 recorded and deliberate drift entries. Open items are documentation or process only: SB-0102's stale "missing tokens" line (D1), one optional wording and one optional code improvement on the title-text fallback (D2, D4a), and the propagate/catalog rebuild before merge (D5). No code fix is required.

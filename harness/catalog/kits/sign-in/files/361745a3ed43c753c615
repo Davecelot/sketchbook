@@ -1,0 +1,444 @@
+{
+  "name": "Sign in",
+  "summary": "Sign-in and sign-up pages: a centered card with email, a password that can be revealed, a remember-me choice, single sign-on and a form-level error.",
+  "components": [
+    "sb-alert",
+    "sb-alert-description",
+    "sb-alert-title",
+    "sb-button",
+    "sb-card",
+    "sb-card-content",
+    "sb-card-description",
+    "sb-card-footer",
+    "sb-card-header",
+    "sb-card-title",
+    "sb-checkbox",
+    "sb-field",
+    "sb-field-description",
+    "sb-field-label",
+    "sb-field-separator",
+    "sb-input",
+    "sb-input-group",
+    "sb-input-group-addon",
+    "sb-input-group-button",
+    "sb-typography"
+  ],
+  "landmarks": [
+    "main",
+    "form (named by the h1)"
+  ],
+  "a11y": [
+    "The h1 sits inside the card title and names the form through aria-labelledby.",
+    "The password is a native input in an input group so the field can wire its visible label; the reveal button swaps its own name between \"Show password\" and \"Hide password\".",
+    "A failed sign-in is a destructive alert (role alert) placed before the first field, and the typed email is kept.",
+    "Enter submits from either field; while loading the submit button keeps focus and ignores clicks, and the form is aria-busy."
+  ],
+  "states": [
+    "default",
+    "with-error",
+    "loading",
+    "sign-up"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.muted",
+      "pad": "space.inset.surface",
+      "align": "center"
+    },
+    "parts": {
+      "remember": {
+        "row": [
+          {
+            "component": "checkbox",
+            "text": {
+              "Label text": "Keep me signed in"
+            }
+          },
+          {
+            "component": "button",
+            "props": {
+              "variant": "link"
+            },
+            "text": {
+              "Label text": "Forgot password?"
+            }
+          }
+        ],
+        "gap": "space.stack.sm",
+        "align": "between",
+        "width": "fill"
+      },
+      "sso": {
+        "stack": [
+          {
+            "component": "field/field-separator",
+            "text": {
+              "Label text": "or"
+            },
+            "width": "fill"
+          },
+          {
+            "component": "button",
+            "props": {
+              "variant": "tertiary"
+            },
+            "text": {
+              "Label text": "Continue with single sign-on"
+            }
+          }
+        ],
+        "gap": "space.stack.lg",
+        "width": "fill"
+      },
+      "new-here": {
+        "row": [
+          {
+            "text": "New here?",
+            "style": "font.size.body",
+            "color": "color.muted-foreground"
+          },
+          {
+            "component": "button",
+            "props": {
+              "variant": "link"
+            },
+            "text": {
+              "Label text": "Create an account"
+            }
+          }
+        ],
+        "gap": "space.stack.xs",
+        "align": "center",
+        "width": "fill"
+      }
+    },
+    "states": {
+      "default": [
+        {
+          "component": "card",
+          "props": {
+            "size": "medium"
+          },
+          "text": {
+            "title": "Sign in",
+            "description": "Use the email address you work with."
+          },
+          "slots": {
+            "Content": [
+              {
+                "stack": [
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Email"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Placeholder": false,
+                      "Required": true
+                    }
+                  },
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Password"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Placeholder": false
+                    }
+                  },
+                  {
+                    "use": "remember"
+                  },
+                  {
+                    "component": "button",
+                    "props": {
+                      "variant": "primary"
+                    },
+                    "text": {
+                      "Label text": "Sign in"
+                    }
+                  },
+                  {
+                    "use": "sso"
+                  }
+                ],
+                "gap": "space.stack.lg",
+                "width": "fill"
+              }
+            ],
+            "Footer": [
+              {
+                "use": "new-here"
+              }
+            ]
+          },
+          "width": {
+            "span": [
+              2,
+              5
+            ]
+          }
+        }
+      ],
+      "with-error": [
+        {
+          "component": "card",
+          "props": {
+            "size": "medium"
+          },
+          "text": {
+            "title": "Sign in",
+            "description": "Use the email address you work with."
+          },
+          "slots": {
+            "Content": [
+              {
+                "stack": [
+                  {
+                    "component": "alert",
+                    "props": {
+                      "feedback": "danger"
+                    },
+                    "text": {
+                      "title": "We could not sign you in",
+                      "description": "The email or password is not right. Check both and try again."
+                    },
+                    "width": "fill"
+                  },
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Email",
+                      "Value text": "ada@example.com"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Value": true,
+                      "Placeholder": false,
+                      "Required": true
+                    }
+                  },
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Password"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Placeholder": false
+                    }
+                  },
+                  {
+                    "use": "remember"
+                  },
+                  {
+                    "component": "button",
+                    "props": {
+                      "variant": "primary"
+                    },
+                    "text": {
+                      "Label text": "Sign in"
+                    }
+                  },
+                  {
+                    "use": "sso"
+                  }
+                ],
+                "gap": "space.stack.lg",
+                "width": "fill"
+              }
+            ],
+            "Footer": [
+              {
+                "use": "new-here"
+              }
+            ]
+          },
+          "width": {
+            "span": [
+              2,
+              5
+            ]
+          }
+        }
+      ],
+      "loading": [
+        {
+          "component": "card",
+          "props": {
+            "size": "medium"
+          },
+          "text": {
+            "title": "Sign in",
+            "description": "Use the email address you work with."
+          },
+          "slots": {
+            "Content": [
+              {
+                "stack": [
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Email",
+                      "Value text": "ada@example.com"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Value": true,
+                      "Placeholder": false,
+                      "Required": true
+                    }
+                  },
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Password"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Placeholder": false
+                    }
+                  },
+                  {
+                    "use": "remember"
+                  },
+                  {
+                    "component": "button",
+                    "props": {
+                      "variant": "primary",
+                      "state": "loading"
+                    },
+                    "text": {
+                      "Label text": "Sign in"
+                    }
+                  },
+                  {
+                    "use": "sso"
+                  }
+                ],
+                "gap": "space.stack.lg",
+                "width": "fill"
+              }
+            ],
+            "Footer": [
+              {
+                "use": "new-here"
+              }
+            ]
+          },
+          "width": {
+            "span": [
+              2,
+              5
+            ]
+          }
+        }
+      ],
+      "sign-up": [
+        {
+          "component": "card",
+          "props": {
+            "size": "medium"
+          },
+          "text": {
+            "title": "Create an account",
+            "description": "It takes a minute. You can invite your team later."
+          },
+          "slots": {
+            "Content": [
+              {
+                "stack": [
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Full name"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Placeholder": false,
+                      "Required": true
+                    }
+                  },
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Email"
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Placeholder": false,
+                      "Required": true
+                    }
+                  },
+                  {
+                    "component": "input",
+                    "text": {
+                      "Label text": "Password",
+                      "Description text": "Use at least 12 characters."
+                    },
+                    "width": "fill",
+                    "show": {
+                      "Placeholder": false,
+                      "Description": true
+                    }
+                  },
+                  {
+                    "component": "checkbox",
+                    "text": {
+                      "Label text": "I agree to the terms of service"
+                    },
+                    "show": {
+                      "Required": true
+                    }
+                  },
+                  {
+                    "component": "button",
+                    "props": {
+                      "variant": "primary"
+                    },
+                    "text": {
+                      "Label text": "Create account"
+                    }
+                  }
+                ],
+                "gap": "space.stack.lg",
+                "width": "fill"
+              }
+            ],
+            "Footer": [
+              {
+                "row": [
+                  {
+                    "text": "Already have an account?",
+                    "style": "font.size.body",
+                    "color": "color.muted-foreground"
+                  },
+                  {
+                    "component": "button",
+                    "props": {
+                      "variant": "link"
+                    },
+                    "text": {
+                      "Label text": "Sign in"
+                    }
+                  }
+                ],
+                "gap": "space.stack.xs",
+                "align": "center",
+                "width": "fill"
+              }
+            ]
+          },
+          "width": {
+            "span": [
+              2,
+              5
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

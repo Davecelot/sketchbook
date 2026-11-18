@@ -1,0 +1,32 @@
+@use 'a11y';
+
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sb-spinner-size);
+  height: var(--sb-spinner-size);
+}
+
+[part='icon'] {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  animation: sb-spin var(--sb-spinner-duration) var(--sb-spinner-easing) infinite;
+}
+
+// Essential state indicator: it keeps moving with reduced motion, at half speed (WCAG 2.2.2).
+@media (prefers-reduced-motion: reduce) {
+  [part='icon'] {
+    animation-duration: calc(var(--sb-spinner-duration) * 2);
+  }
+}
+
+@keyframes sb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[part='label'] {
+  @include a11y.visually-hidden;
+}

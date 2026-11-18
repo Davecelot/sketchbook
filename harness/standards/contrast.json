@@ -1,0 +1,53 @@
+{
+  "family": "contrast",
+  "$description": "Contrast targets enforced by check T6 per pair kind (text, large-text, ui). APCA is reported for information only.",
+  "default": "wcag-aa",
+  "presets": [
+    {
+      "id": "wcag-aa",
+      "label": "WCAG 2.2 AA",
+      "values": {
+        "text": 4.5,
+        "large-text": 3,
+        "ui": 3
+      },
+      "description": "The legal baseline in most places: 4.5:1 for text, 3:1 for large text and UI parts. The default.",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+      "verified": true,
+      "aliases": [
+        "WCAG21-AA"
+      ]
+    },
+    {
+      "id": "wcag-aaa",
+      "label": "WCAG 2.2 AAA",
+      "values": {
+        "text": 7,
+        "large-text": 4.5,
+        "ui": 3
+      },
+      "description": "Enhanced contrast for text; harder to meet with colorful brands.",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-enhanced.html",
+      "verified": true,
+      "aliases": [
+        "WCAG21-AAA"
+      ]
+    },
+    {
+      "id": "apca",
+      "label": "APCA (information)",
+      "values": {
+        "bodyPreferred": 90,
+        "bodyMin": 75,
+        "contentText": 60,
+        "largeHeavy": 45,
+        "placeholderDisabled": 30,
+        "nonTextMin": 15
+      },
+      "description": "Lightness contrast values a future WCAG may use. Shown next to WCAG results when contrast.apca is true; not enforced.",
+      "source": "https://git.apcacontrast.com/documentation/APCA_in_a_Nutshell.html",
+      "verified": true,
+      "implemented": false
+    }
+  ]
+}

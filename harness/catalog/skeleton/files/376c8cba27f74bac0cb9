@@ -1,0 +1,39 @@
+# Accessibility audit: Skeleton (2026-11-15)
+
+Scope: `spec/components/skeleton/contract.json`, `src/components/skeleton/*`, `playwright/tests/skeleton/*`. Standard: WCAG 2.2 AA. No APG pattern: a static, decorative placeholder hidden from assistive technology; the author announces loading (contract.md section 9).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.11 non-text contrast | Not applicable | Hidden, decorative, carries no information (contract section 5); fill computes to `rgb(245, 245, 245)` on `rgb(255, 255, 255)` by design; `npm run check` T6 passes |
+| P | 1.4.1 color alone | Pass | Conveys nothing by color; the author's loading signal is separate |
+| P | prefers-reduced-motion | Pass | `Skeleton.scss:18` includes `a11y.respect-reduced-motion` (`animation: none`); behavior spec 'does not animate with reduced motion' passes |
+| P | 2.2.2 pause, stop, hide | Pass | Infinite pulse is opacity only, no flashing; stops under reduced motion; removed when content arrives |
+| P | 2.3.1 three flashes | Pass | Pulse period is twice the loop duration, opacity only, well under 3 per second |
+| P | forced-colors | Pass (fixed) | Re-probe with `forced-colors: active`: `[part=block]` background computes to `rgb(96, 0, 0)` (GrayText) against Canvas `rgb(255, 255, 255)` on `default` and `card-placeholder`; `Skeleton.scss:21-23` has the rule |
+| O | 2.1.1 / 2.4.7 / 2.1.2 keyboard, focus, trap | Pass | Host `tabIndex` is -1 (probe), no focusable parts; behavior spec 'is not focusable' passes |
+| O | 2.5.8 target size | Not applicable | Not interactive |
+| U | 3.2.x predictable, 3.3.x errors, labels | Not applicable | No input, no name by design |
+| U | 4.1.3 status messages (loading announced) | Pass (author-owned) | Component is `aria-hidden`; contract section 9 tells the author to set `aria-busy="true"` on the container or send a status message. The `card-placeholder` story models `aria-busy="true"` on the container (probe: 1 `[aria-busy]`). The component itself never announces, by design |
+| R | 4.1.2 role, name, state | Pass | CDP `Accessibility.getFullAXTree`: `default` and `card-placeholder` expose only unnamed `generic` wrappers, no `sb-skeleton` content, no text |
+| R | Hidden from first render | Pass | `connectedCallback` sets `aria-hidden="true"` before render; behavior spec covers it |
+| R | ID references across shadow roots | Not applicable | No ID references; attribute set on host |
+| R | axe | Pass | Behavior spec: axe clean on `default` and `card-placeholder` |
+| R | Behavior spec and `npm run check` | Pass | 10/10 passed (includes new 'stays visible in forced colors'); all checks pass (A1 warn on spec/api.json is unrelated) |
+| R | Screen-reader evidence | Pass | AX tree above plus the `__screen-reader__` snapshots (check S1) |
+
+## Failures
+
+None open.
+
+### Fixed: block disappeared in forced-colors mode - was LOW
+Location: `src/components/skeleton/Skeleton.scss:21`
+Before: computed background `rgb(255, 255, 255)` (Canvas) in forced colors, so the placeholder was invisible.
+After: `@media (forced-colors: active) { background: GrayText; }` on `[part='block']`; probe shows `rgb(96, 0, 0)` on `default` and `card-placeholder`, distinct from Canvas; the behavior spec covers it; `npm run check` passes.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-15)
+
+The forced-colors finding is fixed and verified. Reduced motion, hidden-from-AT semantics, loading announcement ownership (`aria-busy` guidance and story), keyboard exclusion, axe, the behavior spec (10/10) and `npm run check` all pass. No open findings.

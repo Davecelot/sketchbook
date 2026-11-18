@@ -1,0 +1,14 @@
+- navigation "pagination"
+  - list
+    - listitem [level=1]
+      - link "Go to previous page"
+        - text "Previous"
+    - listitem [level=1]
+      - link "1"
+    - listitem [level=1]
+      - link "2" [current=page]
+    - listitem [level=1]
+      - link "3"
+    - listitem [level=1]
+      - link "Go to next page"
+        - text "Next"

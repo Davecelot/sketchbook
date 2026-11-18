@@ -1,0 +1,49 @@
+{
+  "$id": "figma-practices.schema.json",
+  "title": "Design-file practices",
+  "type": "object",
+  "required": ["version", "sources", "aspects"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "$description": { "type": "string" },
+    "version": { "type": "integer" },
+    "sources": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name", "url"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "url": { "anyOf": [{ "type": "null" }, { "type": "string" }] }
+        }
+      }
+    },
+    "aspects": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["question", "options", "adopted", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "question": { "type": "string", "minLength": 1 },
+          "options": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["summary", "seenIn"],
+              "additionalProperties": false,
+              "properties": {
+                "summary": { "type": "string", "minLength": 1 },
+                "seenIn": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          },
+          "adopted": { "type": "string" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

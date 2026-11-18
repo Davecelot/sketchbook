@@ -1,0 +1,14 @@
+# Parity audit: label (2026-11-08)
+
+Reference: spec/components/label/contract.{md,json}. Implementation: src/components/label/. Evidence: npm run check all pass (T1-T6, C1-C3, R1, G1); playwright tests/label pass (full group run 160 passed, 1 unrelated Storybook-navigation flake in empty); no literals in the SCSS (T4/T5 pass).
+
+| Aspect | Result | |
+| --- | --- | --- |
+| for/htmlFor, disabled, slot | Label.ts:21-23 | ✅ |
+| Control lookup (same tree scope; first control inside) | Label.ts:43-49 | ✅ |
+| Click forwarding rules | Label.ts:71-83 | ✅ |
+| aria-labelledby add/merge/cleanup | Label.ts:51-69 | ✅ |
+| Shadow limit documented (SB-0009) | contract section 9.4 | ✅ |
+| Typography/disabled tokens | Label.scss | ✅ |
+
+Verdict: matches contract.

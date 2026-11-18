@@ -1,0 +1,17 @@
+# Parity audit: field (2026-11-08)
+
+Reference: spec/components/field/contract.md and contract.json. Implementation: src/components/field/, playwright/tests/field/. Run: `SKETCHBOOK_PORT=6202 npx playwright test tests/field` passed (14 tests (20 per contract.md incl. axe variants)). `npm run check` (T4, T5, T6, C1-C3, R1, G1) passes; tsc and eslint clean.
+
+## Comparison
+| Aspect | Contract | Implementation | |
+| --- | --- | --- | --- |
+| Nine elements and parts | per contract | present | ✅ |
+| Wiring aria-labelledby/describedby/invalid on first native control | per contract | matches; re-wires on mutation | ✅ |
+| sb-field-error role=alert, hidden while empty | per contract | matches | ✅ |
+| Only the first native control is wired | 'Don't put two controls in one sb-field' | consistent | ✅ |
+
+## Differences and action plan
+None.
+
+## Verdict
+matches contract.

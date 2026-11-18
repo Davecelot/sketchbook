@@ -1,0 +1,58 @@
+{
+  "family": "zIndex",
+  "$description": "Stacking layers: values (z.N) and roles (semantic layer.* -> z.N).",
+  "default": "standard",
+  "presets": [
+    {
+      "id": "standard",
+      "label": "Steps of 10",
+      "values": {
+        "values": {
+          "0": 0,
+          "10": 10,
+          "20": 20,
+          "30": 30,
+          "40": 40,
+          "50": 50
+        },
+        "roles": {
+          "base": "0",
+          "dropdown": "10",
+          "sticky": "20",
+          "overlay": "30",
+          "modal": "40",
+          "toast": "50"
+        }
+      },
+      "description": "Six layers ten apart. The default.",
+      "source": "https://tailwindcss.com/docs/z-index",
+      "verified": false
+    },
+    {
+      "id": "named-layers",
+      "label": "Steps of 100",
+      "values": {
+        "values": {
+          "0": 0,
+          "100": 100,
+          "200": 200,
+          "300": 300,
+          "400": 400,
+          "500": 500,
+          "600": 600
+        },
+        "roles": {
+          "base": "0",
+          "sticky": "100",
+          "dropdown": "200",
+          "overlay": "300",
+          "modal": "400",
+          "toast": "500"
+        }
+      },
+      "description": "Wide gaps leave room for one-off layers; sticky headers sit below menus. Our own convention.",
+      "source": null,
+      "verified": false
+    }
+  ]
+}

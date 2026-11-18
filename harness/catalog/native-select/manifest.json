@@ -1,0 +1,97 @@
+{
+  "name": "native-select",
+  "component": "NativeSelect",
+  "displayName": "Native Select",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-native-select",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/native-select-2026-11-15.md",
+      "hash": "2113975ac7413cb45a61"
+    },
+    {
+      "path": "docs/parity-audits/native-select-2026-11-08.md",
+      "hash": "d6d4ee4692af5da60764"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/native-select-central.txt",
+      "hash": "d2f8e83f878359d164ec"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/native-select-focused.txt",
+      "hash": "c16f89dd4efac798101b"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--default.txt",
+      "hash": "13dbbc7bf43082986000"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--disabled.txt",
+      "hash": "f3ce547f443bdf09f4ba"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--groups.txt",
+      "hash": "77300579b27d8b8dbfb8"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--hidden-label.txt",
+      "hash": "cc71e265ac8c728163a0"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--required.txt",
+      "hash": "c4b2e491bc54d6525edd"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--selected.txt",
+      "hash": "efb122a6a12da738c520"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--sizes.txt",
+      "hash": "9974bd4a983ce6e468ec"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--small.txt",
+      "hash": "13dbbc7bf43082986000"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--with-description.txt",
+      "hash": "ed3efff65cc3a8fb38e5"
+    },
+    {
+      "path": "playwright/tests/native-select/__screen-reader__/stories/components-nativeselect--with-error.txt",
+      "hash": "fd1ad0d903b8ef4bacf7"
+    },
+    {
+      "path": "playwright/tests/native-select/native-select.behavior.spec.ts",
+      "hash": "c0626646c03aeb3ad93c"
+    },
+    {
+      "path": "spec/components/native-select/contract.json",
+      "hash": "ccc07dd1b217b5f634f0"
+    },
+    {
+      "path": "spec/components/native-select/contract.md",
+      "hash": "04dd3d3b7e52db816e7a"
+    },
+    {
+      "path": "src/components/native-select/NativeSelect.scss",
+      "hash": "0d1a9ad329393ddab564"
+    },
+    {
+      "path": "src/components/native-select/NativeSelect.stories.ts",
+      "hash": "744dbce3cb9ffb538c60"
+    },
+    {
+      "path": "src/components/native-select/NativeSelect.ts",
+      "hash": "1da077d928618138c4b8"
+    },
+    {
+      "path": "src/components/native-select/index.ts",
+      "hash": "dafc51f382ef061a8113"
+    }
+  ]
+}

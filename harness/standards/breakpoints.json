@@ -1,0 +1,36 @@
+{
+  "family": "breakpoints",
+  "$description": "Min-width breakpoints in px, emitted as breakpoint.*; the tailwind preset is the default because size.breakpoint.narrow (Sidebar) aliases breakpoint.md.",
+  "default": "tailwind",
+  "presets": [
+    {
+      "id": "tailwind",
+      "label": "Five breakpoints",
+      "values": {
+        "sm": 640,
+        "md": 768,
+        "lg": 1024,
+        "xl": 1280,
+        "2xl": 1536
+      },
+      "description": "Common device-agnostic steps from small tablets to wide desktops.",
+      "source": "https://tailwindcss.com/docs/responsive-design",
+      "verified": true
+    },
+    {
+      "id": "bootstrap",
+      "label": "Six breakpoints",
+      "values": {
+        "xs": 0,
+        "sm": 576,
+        "md": 768,
+        "lg": 992,
+        "xl": 1200,
+        "xxl": 1400
+      },
+      "description": "Starts at 0 and adds an extra wide step.",
+      "source": "https://getbootstrap.com/docs/5.3/layout/breakpoints/",
+      "verified": true
+    }
+  ]
+}

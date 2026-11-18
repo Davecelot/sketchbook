@@ -1,0 +1,481 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Table",
+  "tag": "sb-table",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "Rows and columns of data. Custom elements take ARIA table roles and CSS table display, so the markup stays flexible and the semantics stay those of a table.",
+  "dependsOn": [],
+  "props": {},
+  "anatomy": [
+    {
+      "name": "table",
+      "role": "container",
+      "parent": null,
+      "notes": "sb-table host: role=table, display: table, collapsed borders. No shadow content besides the slot."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": true,
+      "multiple": true,
+      "component": "sb-table-header, sb-table-body, sb-table-footer, sb-table-caption",
+      "notes": "Row groups, and an optional caption."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "table",
+    "accessibleNameSource": "A sb-table-caption child, else aria-label or aria-labelledby on sb-table.",
+    "targetSize": "Not interactive.",
+    "focusRingVisible": "Not focusable.",
+    "keyboard": {},
+    "aria": [
+      "sb-table: role=table; header, body and footer: role=rowgroup; row: role=row; head: role=columnheader; cell: role=cell; caption: role=caption",
+      "roles are set on the hosts before the first render; they resolve across shadow roots because the accessibility tree follows the flat tree",
+      "the caption names the table through ElementInternals ariaLabelledByElements (same tree scope as the table, so it resolves); where unsupported, the caption text is copied into aria-label; an aria-label or aria-labelledby set by the author wins",
+      "a selected row has aria-selected=true",
+      "an author role attribute is kept on sb-table and can override a head or cell role (for example rowheader); the component sets a role only where the author set none"
+    ],
+    "announcements": [],
+    "contrast": [
+      {
+        "fg": "table.cell.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "table.head.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "table.cell.fg",
+        "bg": "table.row.selected.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "table.caption.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "table.row.selected.border",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "4.1.2"
+    ]
+  },
+  "tokens": {
+    "table.font-family": "{font.family.body}",
+    "table.font-size": "{font.size.body}",
+    "table.line-height": "{font.line-height.control}",
+    "table.head.fg": "{color.foreground}",
+    "table.head.font-weight": "{font.weight.control}",
+    "table.head.height": "{size.control.lg}",
+    "table.head.padding-x": "{space.inset.sm}",
+    "table.cell.fg": "{color.foreground}",
+    "table.cell.padding": "{space.inset.sm}",
+    "table.border": "{color.border}",
+    "table.border-width": "{border-width.default}",
+    "table.row.hover.bg": "{color.muted}",
+    "table.row.selected.bg": "{color.muted}",
+    "table.footer.bg": "{color.muted}",
+    "table.footer.font-weight": "{font.weight.control}",
+    "table.caption.fg": "{color.muted-foreground}",
+    "table.caption.margin": "{space.inset.md}",
+    "table.transition-duration": "{motion.duration.fast}",
+    "table.transition-easing": "{motion.easing.standard}",
+    "table.row.selected.border": "{color.input}"
+  },
+  "elements": [
+    {
+      "tag": "sb-table-header",
+      "summary": "The header row group.",
+      "role": "rowgroup",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-table-row",
+          "notes": "Header rows."
+        }
+      },
+      "events": {}
+    },
+    {
+      "tag": "sb-table-body",
+      "summary": "The body row group; the last row has no bottom border.",
+      "role": "rowgroup",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-table-row",
+          "notes": "Data rows."
+        }
+      },
+      "events": {}
+    },
+    {
+      "tag": "sb-table-footer",
+      "summary": "The footer row group, filled and set in medium weight.",
+      "role": "rowgroup",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-table-row",
+          "notes": "Summary rows."
+        }
+      },
+      "events": {}
+    },
+    {
+      "tag": "sb-table-row",
+      "summary": "One row, with a bottom border and hover and selected fills.",
+      "role": "row",
+      "props": {
+        "selected": {
+          "type": "boolean",
+          "default": false,
+          "reflect": true,
+          "note": "Selected fill and aria-selected=true."
+        }
+      },
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "component": "sb-table-head, sb-table-cell",
+          "notes": "Heads and cells."
+        }
+      },
+      "events": {}
+    },
+    {
+      "tag": "sb-table-head",
+      "summary": "A column header cell.",
+      "role": "columnheader",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": true,
+          "notes": "Column title."
+        }
+      },
+      "events": {}
+    },
+    {
+      "tag": "sb-table-cell",
+      "summary": "A data cell.",
+      "role": "cell",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "Any inline content."
+        }
+      },
+      "events": {}
+    },
+    {
+      "tag": "sb-table-caption",
+      "summary": "The table's caption, drawn below it and used as its name.",
+      "role": "caption",
+      "props": {},
+      "anatomy": [],
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "notes": "Short description of the table."
+        }
+      },
+      "events": {}
+    }
+  ],
+  "aiHints": {
+    "category": "organism",
+    "keywords": [
+      "table",
+      "data table",
+      "rows",
+      "columns",
+      "grid of data"
+    ],
+    "useCases": [
+      {
+        "when": "Showing records with the same fields",
+        "use": "header, body and rows of heads and cells"
+      },
+      {
+        "when": "A summary line under the data",
+        "use": "sb-table-footer"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "A table used for page layout",
+        "why": "Screen readers announce a data table that is not one",
+        "alternative": "Use layout CSS"
+      },
+      {
+        "pattern": "A table with no caption or name",
+        "why": "Screen reader users cannot tell what it contains",
+        "alternative": "Add sb-table-caption or aria-label"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/table/Table.ts",
+        "src/components/table/TableHeader.ts",
+        "src/components/table/TableBody.ts",
+        "src/components/table/TableFooter.ts",
+        "src/components/table/TableRow.ts",
+        "src/components/table/TableHead.ts",
+        "src/components/table/TableCell.ts",
+        "src/components/table/TableCaption.ts",
+        "src/components/table/Table.scss",
+        "src/components/table/Table.styles.ts",
+        "src/components/table/Table.stories.ts",
+        "src/components/table/index.ts"
+      ],
+      "parts": [],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/table/table.behavior.spec.ts",
+      "coverage": [
+        "table, rowgroup, row, columnheader, cell roles",
+        "caption and aria-label name the table",
+        "CSS table display on every host, columns aligned",
+        "head height and cell padding from tokens",
+        "row borders, last body row, footer border and fill",
+        "row hover fill",
+        "selected row fill and aria-selected",
+        "caption below the table in the muted color",
+        "author role kept on sb-table; head role override (rowheader)",
+        "axe clean (three stories)"
+      ],
+      "drift": [
+        {
+          "aspect": "horizontal scroll",
+          "contract": "the table does not scroll; wrap wide tables in a scroll area",
+          "realization": "the visual reference wraps the table in an overflow container; a display: table host cannot be one"
+        },
+        {
+          "aspect": "hover and footer fill",
+          "contract": "muted at 50%, derived in CSS from the token",
+          "realization": "same as the reference; light muted is neutral-50 (SB-0004) so the fill is faint"
+        },
+        {
+          "aspect": "colspan",
+          "contract": "not available",
+          "realization": "custom elements have no colspan or rowspan; use empty cells"
+        },
+        {
+          "aspect": "selected row indicator",
+          "contract": "table.row.selected.border = color.input",
+          "realization": "the visual reference marks a selected row with a muted fill only (about 1.04:1); the row also gets a 3:1 input-colored outline at table.border-width (WCAG 1.4.11, 1.4.1)"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Table": 1
+        }
+      },
+      "coverage": [
+        "Table: 1 variant(s); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "table.row.hover.bg",
+          "contract": "Hover fill of a body row.",
+          "realization": "Rows take hover only in code; the set draws a rest row and a selected row."
+        },
+        {
+          "aspect": "table.row.selected.border",
+          "contract": "A selected row carries a 1px input-colored outline (WCAG 1.4.11).",
+          "realization": "The library Table sample has no selected row (rows are toggled by boolean properties, not a selection state), so the outline has nothing to draw on."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "How are table semantics kept with custom elements?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "ARIA roles on the hosts and CSS table display, 's table; the flat accessibility tree makes the roles resolve across shadow roots."
+    },
+    {
+      "id": "Q2",
+      "question": "How is the table named without ID references?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "role=caption on sb-table-caption plus ariaLabelledByElements on sb-table (both in the light DOM tree scope); aria-label copy as fallback."
+    },
+    {
+      "id": "Q3",
+      "question": "Does the table scroll horizontally?",
+      "status": "answered",
+      "answeredOn": "2026-11-08",
+      "answer": "No: a host with display: table cannot be a scroll container. Wrap wide tables in sb-scroll-area."
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-011",
+    "SB-0007",
+    "SB-0009"
+  ],
+  "$extensions": {
+    "design.figma": {
+      "options": [
+        {
+          "name": "Row 3",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "row-2-border",
+            "row-3"
+          ],
+          "reason": "The code takes any number of rows; the stories show up to six."
+        },
+        {
+          "name": "Row 4",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "row-3-border",
+            "row-4"
+          ],
+          "reason": "Row 4 of the sample."
+        },
+        {
+          "name": "Row 5",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "row-4-border",
+            "row-5"
+          ],
+          "reason": "Row 5 of the sample."
+        },
+        {
+          "name": "Row 6",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "row-5-border",
+            "row-6"
+          ],
+          "reason": "Row 6 of the sample."
+        },
+        {
+          "name": "Column 4",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "head-d",
+            "cell-d",
+            "cell-*-d",
+            "foot-d"
+          ],
+          "reason": "The code takes any number of columns; the stories show up to five."
+        },
+        {
+          "name": "Column 5",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "head-e",
+            "cell-e",
+            "cell-*-e",
+            "foot-e"
+          ],
+          "reason": "Column 5 of the sample."
+        },
+        {
+          "name": "Status text",
+          "kind": "boolean",
+          "default": true,
+          "shows": [
+            "cell-b-text",
+            "cell-*-b-text"
+          ],
+          "reason": "Status is plain text or a Badge in the stories; this is the text choice."
+        },
+        {
+          "name": "Status badge",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "badge-*"
+          ],
+          "reason": "Status is plain text or a Badge in the stories; this is the Badge choice."
+        },
+        {
+          "name": "Person",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "avatar-*-a",
+            "email-*-a"
+          ],
+          "reason": "The first cell can hold a person (avatar, name and email), as the data table story does."
+        },
+        {
+          "name": "Select",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "select-*"
+          ],
+          "reason": "The first cell can hold a selection checkbox, in the header too, as the data table story does."
+        },
+        {
+          "name": "Wide first column",
+          "kind": "boolean",
+          "default": false,
+          "shows": [
+            "head-a2",
+            "cell-a2",
+            "cell-*-a2",
+            "foot-a2"
+          ],
+          "reason": "Column widths come from the content in the code; the design file widens the first column with a spacer cell."
+        }
+      ]
+    }
+  }
+}

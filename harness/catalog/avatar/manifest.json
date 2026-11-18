@@ -1,0 +1,97 @@
+{
+  "name": "avatar",
+  "component": "Avatar",
+  "displayName": "Avatar",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-avatar",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/avatar-2026-11-15.md",
+      "hash": "7054042709566df6d007"
+    },
+    {
+      "path": "docs/parity-audits/avatar-2026-11-08.md",
+      "hash": "89469dcd24022d7663b5"
+    },
+    {
+      "path": "playwright/tests/avatar/__screen-reader__/stories/components-avatar--default.txt",
+      "hash": "bff4bf72e38de7673f8e"
+    },
+    {
+      "path": "playwright/tests/avatar/__screen-reader__/stories/components-avatar--fallback-only.txt",
+      "hash": "5715cc2214da4f2d82aa"
+    },
+    {
+      "path": "playwright/tests/avatar/__screen-reader__/stories/components-avatar--group-with-icon-count.txt",
+      "hash": "9d2ba42e187abe3a8145"
+    },
+    {
+      "path": "playwright/tests/avatar/__screen-reader__/stories/components-avatar--group.txt",
+      "hash": "a451ea354f9f77d8987d"
+    },
+    {
+      "path": "playwright/tests/avatar/__screen-reader__/stories/components-avatar--sizes.txt",
+      "hash": "0790f7bde37e48018f0c"
+    },
+    {
+      "path": "playwright/tests/avatar/__screen-reader__/stories/components-avatar--with-badge.txt",
+      "hash": "d3f78e882bc36f721115"
+    },
+    {
+      "path": "playwright/tests/avatar/avatar.behavior.spec.ts",
+      "hash": "5d1303dddb9208b8a106"
+    },
+    {
+      "path": "spec/components/avatar/contract.json",
+      "hash": "539b1f887a74e5bcf719"
+    },
+    {
+      "path": "spec/components/avatar/contract.md",
+      "hash": "e40b957b14019e761505"
+    },
+    {
+      "path": "src/components/avatar/Avatar.scss",
+      "hash": "014a11e7ae821825d703"
+    },
+    {
+      "path": "src/components/avatar/Avatar.stories.ts",
+      "hash": "a9379bafbdd4b5b5d695"
+    },
+    {
+      "path": "src/components/avatar/Avatar.ts",
+      "hash": "d7e47a33b128e0e03ab7"
+    },
+    {
+      "path": "src/components/avatar/AvatarBadge.ts",
+      "hash": "51b9201acb088b52f64e"
+    },
+    {
+      "path": "src/components/avatar/AvatarFallback.ts",
+      "hash": "31b79bb9dfa043d497be"
+    },
+    {
+      "path": "src/components/avatar/AvatarGroup.ts",
+      "hash": "7384dd119b51fe23c6b6"
+    },
+    {
+      "path": "src/components/avatar/AvatarGroupCount.ts",
+      "hash": "a0bb48cb59aeb92c3810"
+    },
+    {
+      "path": "src/components/avatar/AvatarImage.ts",
+      "hash": "9029ce733b07f6335348"
+    },
+    {
+      "path": "src/components/avatar/context.ts",
+      "hash": "65cc7536672c4026ea82"
+    },
+    {
+      "path": "src/components/avatar/index.ts",
+      "hash": "9f6b4305e38cec8b8e14"
+    }
+  ]
+}

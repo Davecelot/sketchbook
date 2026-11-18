@@ -1,0 +1,43 @@
+.settings {
+  display: grid;
+  gap: var(--sb-space-stack-xl);
+  max-inline-size: 80ch;
+  margin-inline: auto;
+  padding: var(--sb-space-inset-surface);
+}
+
+.settings__header {
+  display: grid;
+  gap: var(--sb-space-stack-xs);
+}
+
+.settings__header h1 {
+  margin: 0;
+  font-size: var(--sb-font-size-heading-3);
+  font-weight: var(--sb-font-weight-heading);
+  line-height: var(--sb-font-line-height-heading-3);
+}
+
+.settings__header p {
+  margin: 0;
+  color: var(--sb-color-muted-foreground);
+}
+
+.settings__tabs {
+  display: grid;
+  gap: var(--sb-space-stack-lg);
+}
+
+.settings sb-card-title h2 {
+  margin: 0;
+  font: inherit;
+}
+
+.settings__fields {
+  display: grid;
+  gap: var(--sb-space-stack-lg);
+}
+
+.settings sb-card-footer {
+  justify-content: flex-end;
+}

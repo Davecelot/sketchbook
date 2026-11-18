@@ -1,0 +1,20 @@
+- main
+  - progressbar "Step 2 of 3" value "2"
+  - heading "What do you work on?" [level=1]
+  - text "We use this to suggest a first project. You can change it later."
+  - form "What do you work on?"
+    - group "Your role"
+      - button "Designer" [pressed=true]
+      - button "Engineer" [pressed=false]
+      - button "Product manager" [pressed=false]
+    - group "What will you use it for?"
+      - Legend
+        - text "What will you use it for?"
+      - checkbox "Design reviews" [checked=false]
+      - paragraph [live=polite]
+      - checkbox "Handoff to engineering" [checked=false]
+      - paragraph [live=polite]
+      - checkbox "Documentation" [checked=false]
+      - paragraph [live=polite]
+    - link "Back"
+    - button "Continue"

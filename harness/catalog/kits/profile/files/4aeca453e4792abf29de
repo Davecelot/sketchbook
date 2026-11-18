@@ -1,0 +1,520 @@
+{
+  "name": "Profile",
+  "summary": "An account page: breadcrumb, the person with avatar and role, an editable public profile and a list of connected services.",
+  "components": [
+    "sb-avatar",
+    "sb-avatar-fallback",
+    "sb-avatar-image",
+    "sb-badge",
+    "sb-breadcrumb",
+    "sb-breadcrumb-item",
+    "sb-breadcrumb-link",
+    "sb-breadcrumb-list",
+    "sb-breadcrumb-page",
+    "sb-breadcrumb-separator",
+    "sb-button",
+    "sb-card",
+    "sb-card-content",
+    "sb-card-description",
+    "sb-card-footer",
+    "sb-card-header",
+    "sb-card-title",
+    "sb-input",
+    "sb-item",
+    "sb-item-actions",
+    "sb-item-content",
+    "sb-item-description",
+    "sb-item-group",
+    "sb-item-media",
+    "sb-item-separator",
+    "sb-item-title",
+    "sb-separator",
+    "sb-textarea"
+  ],
+  "landmarks": [
+    "navigation (Breadcrumb)",
+    "main",
+    "form (named by its h2)",
+    "region (Connected accounts)"
+  ],
+  "a11y": [
+    "The person's name is the h1; the avatar image carries the same name as its text alternative.",
+    "Repeated \"Disconnect\" buttons get a specific name (\"Disconnect Calendar\") that starts with the visible text.",
+    "Field errors come from the input itself: aria-invalid, a described error and a blocked submit."
+  ],
+  "states": [
+    "default",
+    "with-errors"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.background",
+      "pad": "space.inset.spacious",
+      "align": "center-x"
+    },
+    "states": {
+      "default": [
+        {
+          "stack": [
+            {
+              "component": "breadcrumb",
+              "text": {
+                "link": "Home",
+                "link-middle": "Account",
+                "page": "Profile"
+              },
+              "show": {
+                "Middle": true,
+                "Ellipsis": false
+              }
+            },
+            {
+              "row": [
+                {
+                  "row": [
+                    {
+                      "component": "avatar",
+                      "props": {
+                        "size": "large"
+                      },
+                      "text": {
+                        "initials": "AE"
+                      }
+                    },
+                    {
+                      "stack": [
+                        {
+                          "text": "Ada Example",
+                          "style": "font.size.heading-2",
+                          "color": "color.foreground"
+                        },
+                        {
+                          "text": "ada@example.com",
+                          "style": "font.size.body",
+                          "color": "color.muted-foreground"
+                        }
+                      ],
+                      "gap": "space.stack.xs",
+                      "width": "hug"
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "hug"
+                },
+                {
+                  "component": "badge",
+                  "props": {
+                    "variant": "secondary"
+                  },
+                  "text": {
+                    "Label text": "Admin"
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "between"
+            },
+            {
+              "component": "separator",
+              "width": "fill"
+            },
+            {
+              "component": "card",
+              "props": {
+                "size": "medium"
+              },
+              "text": {
+                "title": "Public profile",
+                "description": "Shown to people in your workspace."
+              },
+              "slots": {
+                "Content": [
+                  {
+                    "stack": [
+                      {
+                        "component": "input",
+                        "text": {
+                          "Label text": "Display name",
+                          "Value text": "Ada Example"
+                        },
+                        "show": {
+                          "Value": true,
+                          "Placeholder": false,
+                          "Required": true
+                        },
+                        "width": "fill"
+                      },
+                      {
+                        "component": "input",
+                        "text": {
+                          "Label text": "Job title",
+                          "Value text": "Platform engineer"
+                        },
+                        "show": {
+                          "Value": true,
+                          "Placeholder": false
+                        },
+                        "width": "fill"
+                      },
+                      {
+                        "component": "textarea",
+                        "text": {
+                          "Label text": "Bio",
+                          "Value text": "Builds the tools the rest of the team ships with.",
+                          "Description text": "A sentence or two. Links are not shown."
+                        },
+                        "show": {
+                          "Value": true,
+                          "Placeholder": false,
+                          "Description": true
+                        },
+                        "width": "fill"
+                      }
+                    ],
+                    "gap": "space.stack.lg",
+                    "width": "fill"
+                  }
+                ],
+                "Footer": [
+                  {
+                    "row": [
+                      {
+                        "component": "button",
+                        "props": {
+                          "variant": "primary"
+                        },
+                        "text": {
+                          "Label text": "Save profile"
+                        }
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill",
+                    "align": "end"
+                  }
+                ]
+              },
+              "width": "fill"
+            },
+            {
+              "component": "card",
+              "props": {
+                "size": "medium"
+              },
+              "text": {
+                "title": "Connected accounts",
+                "description": "Services that can read your workspace data."
+              },
+              "slots": {
+                "Content": [
+                  {
+                    "stack": [
+                      {
+                        "component": "item",
+                        "text": {
+                          "title": "Calendar",
+                          "description": "Shows your meetings next to tasks. Connected in March."
+                        },
+                        "icons": {
+                          "media/icon": "calendar"
+                        },
+                        "slots": {
+                          "Actions": [
+                            {
+                              "component": "button",
+                              "props": {
+                                "variant": "tertiary",
+                                "size": "small"
+                              },
+                              "text": {
+                                "Label text": "Disconnect"
+                              }
+                            }
+                          ]
+                        },
+                        "width": "fill"
+                      },
+                      {
+                        "component": "separator",
+                        "width": "fill"
+                      },
+                      {
+                        "component": "item",
+                        "text": {
+                          "title": "Storage",
+                          "description": "Attach files from your drive. Connected in May."
+                        },
+                        "icons": {
+                          "media/icon": "hard-drive"
+                        },
+                        "slots": {
+                          "Actions": [
+                            {
+                              "component": "button",
+                              "props": {
+                                "variant": "tertiary",
+                                "size": "small"
+                              },
+                              "text": {
+                                "Label text": "Disconnect"
+                              }
+                            }
+                          ]
+                        },
+                        "width": "fill"
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill"
+                  }
+                ],
+                "Footer": []
+              },
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": {
+            "span": [
+              13,
+              24
+            ]
+          }
+        }
+      ],
+      "with-errors": [
+        {
+          "stack": [
+            {
+              "component": "breadcrumb",
+              "text": {
+                "link": "Home",
+                "link-middle": "Account",
+                "page": "Profile"
+              },
+              "show": {
+                "Middle": true,
+                "Ellipsis": false
+              }
+            },
+            {
+              "row": [
+                {
+                  "row": [
+                    {
+                      "component": "avatar",
+                      "props": {
+                        "size": "large"
+                      },
+                      "text": {
+                        "initials": "AE"
+                      }
+                    },
+                    {
+                      "stack": [
+                        {
+                          "text": "Ada Example",
+                          "style": "font.size.heading-2",
+                          "color": "color.foreground"
+                        },
+                        {
+                          "text": "ada@example.com",
+                          "style": "font.size.body",
+                          "color": "color.muted-foreground"
+                        }
+                      ],
+                      "gap": "space.stack.xs",
+                      "width": "hug"
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "hug"
+                },
+                {
+                  "component": "badge",
+                  "props": {
+                    "variant": "secondary"
+                  },
+                  "text": {
+                    "Label text": "Admin"
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "between"
+            },
+            {
+              "component": "separator",
+              "width": "fill"
+            },
+            {
+              "component": "card",
+              "props": {
+                "size": "medium"
+              },
+              "text": {
+                "title": "Public profile",
+                "description": "Shown to people in your workspace."
+              },
+              "slots": {
+                "Content": [
+                  {
+                    "stack": [
+                      {
+                        "component": "input",
+                        "props": {
+                          "validation": "error"
+                        },
+                        "text": {
+                          "Label text": "Display name",
+                          "Error text": "Enter the name people see next to your comments."
+                        },
+                        "show": {
+                          "Required": true,
+                          "Placeholder": false
+                        },
+                        "width": "fill"
+                      },
+                      {
+                        "component": "input",
+                        "text": {
+                          "Label text": "Job title",
+                          "Value text": "Platform engineer"
+                        },
+                        "show": {
+                          "Value": true,
+                          "Placeholder": false
+                        },
+                        "width": "fill"
+                      },
+                      {
+                        "component": "textarea",
+                        "text": {
+                          "Label text": "Bio",
+                          "Value text": "Builds the tools the rest of the team ships with.",
+                          "Description text": "A sentence or two. Links are not shown."
+                        },
+                        "show": {
+                          "Value": true,
+                          "Placeholder": false,
+                          "Description": true
+                        },
+                        "width": "fill"
+                      }
+                    ],
+                    "gap": "space.stack.lg",
+                    "width": "fill"
+                  }
+                ],
+                "Footer": [
+                  {
+                    "row": [
+                      {
+                        "component": "button",
+                        "props": {
+                          "variant": "primary"
+                        },
+                        "text": {
+                          "Label text": "Save profile"
+                        }
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill",
+                    "align": "end"
+                  }
+                ]
+              },
+              "width": "fill"
+            },
+            {
+              "component": "card",
+              "props": {
+                "size": "medium"
+              },
+              "text": {
+                "title": "Connected accounts",
+                "description": "Services that can read your workspace data."
+              },
+              "slots": {
+                "Content": [
+                  {
+                    "stack": [
+                      {
+                        "component": "item",
+                        "text": {
+                          "title": "Calendar",
+                          "description": "Shows your meetings next to tasks. Connected in March."
+                        },
+                        "icons": {
+                          "media/icon": "calendar"
+                        },
+                        "slots": {
+                          "Actions": [
+                            {
+                              "component": "button",
+                              "props": {
+                                "variant": "tertiary",
+                                "size": "small"
+                              },
+                              "text": {
+                                "Label text": "Disconnect"
+                              }
+                            }
+                          ]
+                        },
+                        "width": "fill"
+                      },
+                      {
+                        "component": "separator",
+                        "width": "fill"
+                      },
+                      {
+                        "component": "item",
+                        "text": {
+                          "title": "Storage",
+                          "description": "Attach files from your drive. Connected in May."
+                        },
+                        "icons": {
+                          "media/icon": "hard-drive"
+                        },
+                        "slots": {
+                          "Actions": [
+                            {
+                              "component": "button",
+                              "props": {
+                                "variant": "tertiary",
+                                "size": "small"
+                              },
+                              "text": {
+                                "Label text": "Disconnect"
+                              }
+                            }
+                          ]
+                        },
+                        "width": "fill"
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill"
+                  }
+                ],
+                "Footer": []
+              },
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": {
+            "span": [
+              13,
+              24
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

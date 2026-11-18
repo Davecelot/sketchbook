@@ -1,0 +1,18 @@
+- paragraph
+  - text "First words come first: 1, 2, 3."
+- tablist "Sections" [orientation=horizontal]
+  - tab "One" [selected]
+  - tab "Two"
+  - tab "Three"
+- tabpanel "One"
+  - text "First panel."
+- navigation "pagination"
+  - list
+    - listitem [level=1]
+      - link "Go to previous page"
+        - text "Previous"
+    - listitem [level=1]
+      - link "1" [current=page]
+    - listitem [level=1]
+      - link "Go to next page"
+        - text "Next"

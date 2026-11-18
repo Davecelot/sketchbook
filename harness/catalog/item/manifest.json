@@ -1,0 +1,119 @@
+{
+  "name": "item",
+  "component": "Item",
+  "displayName": "Item",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-item",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/item-2026-11-15.md",
+      "hash": "a08b24c7c2fb10cad015"
+    },
+    {
+      "path": "docs/parity-audits/item-2026-11-08.md",
+      "hash": "09e2e736a8375f63fcf0"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--as-link.txt",
+      "hash": "c15f9be937068f7e1304"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--default.txt",
+      "hash": "bf28d448b752a46831a0"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--group.txt",
+      "hash": "b017a0cb71b5d5e73ab4"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--header-and-footer.txt",
+      "hash": "46382bf1b58c54e07592"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--media-variants.txt",
+      "hash": "6b6cd3a9537fdf1354ea"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--two-content-blocks.txt",
+      "hash": "7d2530628a9e032f8bd6"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--variants.txt",
+      "hash": "3e55d032c524ad0b1754"
+    },
+    {
+      "path": "playwright/tests/item/__screen-reader__/stories/components-item--with-actions.txt",
+      "hash": "cc7eec49d7f8f8c405b9"
+    },
+    {
+      "path": "playwright/tests/item/item.behavior.spec.ts",
+      "hash": "04bdde2b5e1615d12955"
+    },
+    {
+      "path": "spec/components/item/contract.json",
+      "hash": "4d77cb5e587c6a028b13"
+    },
+    {
+      "path": "spec/components/item/contract.md",
+      "hash": "491e8d8a0c271e52640e"
+    },
+    {
+      "path": "src/components/item/Item.scss",
+      "hash": "21166b7276e7422f4972"
+    },
+    {
+      "path": "src/components/item/Item.stories.ts",
+      "hash": "f5a8ad3f67b72a12fc48"
+    },
+    {
+      "path": "src/components/item/Item.ts",
+      "hash": "cb016b0cef50fdd305b1"
+    },
+    {
+      "path": "src/components/item/ItemActions.ts",
+      "hash": "a47cfe69078455a32fbe"
+    },
+    {
+      "path": "src/components/item/ItemContent.ts",
+      "hash": "6c7bf2dfbdd32fe8f83a"
+    },
+    {
+      "path": "src/components/item/ItemDescription.ts",
+      "hash": "bcafcd71b96bae09e7e5"
+    },
+    {
+      "path": "src/components/item/ItemFooter.ts",
+      "hash": "56ba8284f9cb60bb1053"
+    },
+    {
+      "path": "src/components/item/ItemGroup.ts",
+      "hash": "79290f32b79c661a51d9"
+    },
+    {
+      "path": "src/components/item/ItemHeader.ts",
+      "hash": "708ec3155d305b04654b"
+    },
+    {
+      "path": "src/components/item/ItemMedia.ts",
+      "hash": "35c23f28a6a9400e68c6"
+    },
+    {
+      "path": "src/components/item/ItemSeparator.ts",
+      "hash": "0dcc0cfc1e2a47e99544"
+    },
+    {
+      "path": "src/components/item/ItemTitle.ts",
+      "hash": "a710a25ff17451cbdd00"
+    },
+    {
+      "path": "src/components/item/index.ts",
+      "hash": "4f2a05a2ac90709e7ff7"
+    }
+  ]
+}

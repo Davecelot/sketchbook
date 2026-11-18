@@ -1,0 +1,55 @@
+{
+  "id": "settings",
+  "title": "Settings",
+  "summary": "A preferences page split into tabs, each a card-wrapped form with selects, radios, switches, a slider and a save bar.",
+  "path": "src/patterns/settings",
+  "components": [
+    "alert",
+    "button",
+    "button-group",
+    "card",
+    "field",
+    "native-select",
+    "radio-group",
+    "separator",
+    "slider",
+    "switch",
+    "tabs",
+    "textarea"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/settings/patterns-settings--default.txt",
+      "hash": "6d38306218413c650752"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/settings/patterns-settings--notifications.txt",
+      "hash": "ec7bce34a9f863882799"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/settings/patterns-settings--saved.txt",
+      "hash": "4344224a795d1beca0e8"
+    },
+    {
+      "path": "playwright/tests/patterns/settings.behavior.spec.ts",
+      "hash": "0383a2564061dcf126a5"
+    },
+    {
+      "path": "src/patterns/settings/README.md",
+      "hash": "d2ebbd6e94570b2c6434"
+    },
+    {
+      "path": "src/patterns/settings/Settings.stories.ts",
+      "hash": "1a5d639c6803e7d03acc"
+    },
+    {
+      "path": "src/patterns/settings/pattern.json",
+      "hash": "b4a7a4ccdc59465b8de5"
+    },
+    {
+      "path": "src/patterns/settings/settings.css",
+      "hash": "9c61262f2fcf7346afce"
+    }
+  ]
+}

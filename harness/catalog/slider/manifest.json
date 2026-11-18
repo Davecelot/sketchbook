@@ -1,0 +1,101 @@
+{
+  "name": "slider",
+  "component": "Slider",
+  "displayName": "Slider",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-slider",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/slider-2026-11-15.md",
+      "hash": "4cb5517efb58b1879afd"
+    },
+    {
+      "path": "docs/parity-audits/slider-2026-11-08.md",
+      "hash": "1f79672390fd6db74fee"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/slider-arrow-right.txt",
+      "hash": "659100cf11a1d05b2c89"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/slider-end.txt",
+      "hash": "ee1caf9ef1db1c4f926e"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/slider-focused.txt",
+      "hash": "d5508e45254809067beb"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--default.txt",
+      "hash": "42e0ad202b32731e7a02"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--disabled.txt",
+      "hash": "71e517cb9c92a75885f5"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--hidden-label.txt",
+      "hash": "7657bd9ab41538c35120"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--orientations.txt",
+      "hash": "ce3046c912906d11badf"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--range.txt",
+      "hash": "424492d24591aef531e6"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--steps.txt",
+      "hash": "f764bc666d741a7bf39f"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--vertical-range.txt",
+      "hash": "1ae10a01eb873280ce12"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--vertical.txt",
+      "hash": "a7488bb1ada74ac621e6"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--with-description.txt",
+      "hash": "81017d93f3ad7c324811"
+    },
+    {
+      "path": "playwright/tests/slider/__screen-reader__/stories/components-slider--with-error.txt",
+      "hash": "c9a088fbd66f42f4564d"
+    },
+    {
+      "path": "playwright/tests/slider/slider.behavior.spec.ts",
+      "hash": "b45d4e5cb309bcc465a5"
+    },
+    {
+      "path": "spec/components/slider/contract.json",
+      "hash": "25dc6781375bc2c2df6d"
+    },
+    {
+      "path": "spec/components/slider/contract.md",
+      "hash": "668e93dad3504e8ef610"
+    },
+    {
+      "path": "src/components/slider/Slider.scss",
+      "hash": "055538028b3345e43a11"
+    },
+    {
+      "path": "src/components/slider/Slider.stories.ts",
+      "hash": "393ec10fdb971be991de"
+    },
+    {
+      "path": "src/components/slider/Slider.ts",
+      "hash": "8b0655afa86f8d9dc2bc"
+    },
+    {
+      "path": "src/components/slider/index.ts",
+      "hash": "0cb5c203dad3b98de5e0"
+    }
+  ]
+}

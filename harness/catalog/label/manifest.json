@@ -1,0 +1,79 @@
+{
+  "name": "label",
+  "component": "Label",
+  "displayName": "Label",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-label",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "input"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/label-2026-11-15.md",
+      "hash": "211d54defefbe5e94796"
+    },
+    {
+      "path": "docs/parity-audits/label-2026-11-08.md",
+      "hash": "f422c1d852b88024b703"
+    },
+    {
+      "path": "playwright/tests/label/__screen-reader__/stories/components-label--default.txt",
+      "hash": "59f0a37653f1e78ed28b"
+    },
+    {
+      "path": "playwright/tests/label/__screen-reader__/stories/components-label--disabled.txt",
+      "hash": "eeafe176d4d778cc9380"
+    },
+    {
+      "path": "playwright/tests/label/__screen-reader__/stories/components-label--for-checkbox.txt",
+      "hash": "c54411858ebf34a8cb54"
+    },
+    {
+      "path": "playwright/tests/label/__screen-reader__/stories/components-label--for-input.txt",
+      "hash": "178c6bba6c9e90425d21"
+    },
+    {
+      "path": "playwright/tests/label/__screen-reader__/stories/components-label--link-inside.txt",
+      "hash": "c77857f888aab7f682af"
+    },
+    {
+      "path": "playwright/tests/label/__screen-reader__/stories/components-label--with-icon.txt",
+      "hash": "edf861c1fdb33efb3d2d"
+    },
+    {
+      "path": "playwright/tests/label/__screen-reader__/stories/components-label--wrapping.txt",
+      "hash": "905f249fb255abf67c32"
+    },
+    {
+      "path": "playwright/tests/label/label.behavior.spec.ts",
+      "hash": "18342988a5792fb0bcad"
+    },
+    {
+      "path": "spec/components/label/contract.json",
+      "hash": "977a534f8794467a47f2"
+    },
+    {
+      "path": "spec/components/label/contract.md",
+      "hash": "aab49456f22f22d12017"
+    },
+    {
+      "path": "src/components/label/Label.scss",
+      "hash": "5340c9b911a7a4a11c69"
+    },
+    {
+      "path": "src/components/label/Label.stories.ts",
+      "hash": "92ba7e766a8e1b5a3cf0"
+    },
+    {
+      "path": "src/components/label/Label.ts",
+      "hash": "6121a0a7157378c0fa2d"
+    },
+    {
+      "path": "src/components/label/index.ts",
+      "hash": "0d724d49f7d1d2ec7efc"
+    }
+  ]
+}

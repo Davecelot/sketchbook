@@ -1,0 +1,12 @@
+- text "Region"
+- combobox "Region" [expanded=false] value "Choose a region" desc "Sets the default for new entries."
+  - MenuListPopup
+    - option "Choose a region" [selected]
+    - option "North"
+    - option "South"
+    - option "East"
+    - option "West" [disabled]
+    - option "Central"
+- paragraph
+  - text "Sets the default for new entries."
+- paragraph [live=polite]

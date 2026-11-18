@@ -1,0 +1,163 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Skeleton",
+  "tag": "sb-skeleton",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A pulsing placeholder block that holds the space of content that is still loading.",
+  "dependsOn": [],
+  "props": {},
+  "anatomy": [
+    {
+      "name": "block",
+      "role": "container",
+      "parent": null,
+      "part": "block",
+      "notes": "The filled, pulsing shape; it fills the host, which the author sizes."
+    }
+  ],
+  "content": {},
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "none: hidden from assistive technology (aria-hidden)",
+    "accessibleNameSource": "None. The loading state is announced by the author on the container (aria-busy, or a visible or live status).",
+    "targetSize": "Not interactive.",
+    "keyboard": {},
+    "aria": [
+      "aria-hidden=\"true\" on the host, set before the first render",
+      "not focusable",
+      "the container of skeletons should carry aria-busy=\"true\" while loading, or the page should announce loading in a status region"
+    ],
+    "announcements": [],
+    "contrast": [],
+    "wcag": [
+      "1.4.3",
+      "2.2.2",
+      "2.3.3",
+      "4.1.3"
+    ]
+  },
+  "tokens": {
+    "skeleton.bg": "{color.accent}",
+    "skeleton.radius": "{radius.control}",
+    "skeleton.pulse-opacity": "{opacity.pulse}",
+    "skeleton.duration": "{motion.duration.loop}",
+    "skeleton.easing": "{motion.easing.standard}"
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/skeleton/Skeleton.ts",
+        "src/components/skeleton/Skeleton.scss",
+        "src/components/skeleton/Skeleton.styles.ts",
+        "src/components/skeleton/Skeleton.stories.ts",
+        "src/components/skeleton/index.ts"
+      ],
+      "parts": [
+        "block"
+      ],
+      "slots": [],
+      "spec": "playwright/tests/skeleton/skeleton.behavior.spec.ts",
+      "coverage": [
+        "aria-hidden from connection, out of the accessibility tree",
+        "sized by the author's CSS",
+        "fill and radius from tokens; radius overridable",
+        "pulse at twice the loop duration; off with reduced motion",
+        "not focusable; axe clean"
+      ],
+      "drift": [
+        {
+          "aspect": "reduced motion",
+          "contract": "pulse stops under prefers-reduced-motion",
+          "realization": "the visual reference keeps pulsing"
+        },
+        {
+          "aspect": "pulse easing",
+          "contract": "motion.easing.standard",
+          "realization": "the visual reference uses a slightly different curve (0.4, 0, 0.6, 1)"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Skeleton": 1
+        }
+      },
+      "coverage": [
+        "Skeleton: 1 variant(s); read back ok"
+      ],
+      "drift": [
+        {
+          "aspect": "skeleton.pulse-opacity",
+          "contract": "Lowest opacity of the pulse animation.",
+          "realization": "An animation keyframe: the design file draws the resting frame."
+        }
+      ]
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Pulse under prefers-reduced-motion?",
+      "recommendation": "Stop it: a placeholder conveys no essential state, so the block stays static (WCAG 2.3.3, 2.2.2). Unlike Spinner it is not the only signal.",
+      "status": "answered",
+      "answer": "Static block under reduced motion.",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Sizing API?",
+      "recommendation": "None: the author sizes the host with CSS (width, height, or a flex or grid cell), like a plain block; radius is themable through --sb-skeleton-radius.",
+      "status": "answered",
+      "answer": "No size props; sized by CSS.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "D-001",
+    "D-005",
+    "D-011",
+    "SB-0007",
+    "SB-0011"
+  ],
+  "aiHints": {
+    "category": "atom",
+    "keywords": [
+      "skeleton",
+      "placeholder",
+      "loading",
+      "shimmer",
+      "pulse"
+    ],
+    "useCases": [
+      {
+        "when": "The layout of loading content is known",
+        "use": "one sb-skeleton per text line, image or avatar, sized with CSS"
+      },
+      {
+        "when": "Round avatars",
+        "use": "set --sb-skeleton-radius to the pill radius token"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Skeleton as the only loading signal for assistive technology",
+        "why": "It is hidden from them",
+        "alternative": "Set aria-busy on the container or announce loading in a status"
+      },
+      {
+        "pattern": "Skeleton for a short, known-progress task",
+        "why": "Placeholders imply content is about to appear",
+        "alternative": "Progress or Spinner"
+      }
+    ]
+  }
+}

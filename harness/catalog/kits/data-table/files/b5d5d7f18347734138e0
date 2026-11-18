@@ -1,0 +1,607 @@
+{
+  "name": "Data table",
+  "summary": "A list page: title and main action, search with a slash shortcut, a status filter, a selectable table, pagination, and loading and empty states.",
+  "components": [
+    "sb-avatar",
+    "sb-avatar-fallback",
+    "sb-badge",
+    "sb-button",
+    "sb-checkbox",
+    "sb-empty",
+    "sb-empty-content",
+    "sb-empty-description",
+    "sb-empty-header",
+    "sb-empty-media",
+    "sb-empty-title",
+    "sb-input",
+    "sb-input-group",
+    "sb-input-group-addon",
+    "sb-kbd",
+    "sb-pagination",
+    "sb-pagination-content",
+    "sb-pagination-item",
+    "sb-pagination-link",
+    "sb-pagination-next",
+    "sb-pagination-previous",
+    "sb-scroll-area",
+    "sb-scroll-bar",
+    "sb-skeleton",
+    "sb-table",
+    "sb-table-body",
+    "sb-table-caption",
+    "sb-table-cell",
+    "sb-table-head",
+    "sb-table-header",
+    "sb-table-row",
+    "sb-toggle-group",
+    "sb-toggle-group-item"
+  ],
+  "landmarks": [
+    "main",
+    "search (named Customers)",
+    "navigation (Customer pages)"
+  ],
+  "a11y": [
+    "The table is named by its caption; checkboxes have hidden but specific labels (\"Select Ada Example\").",
+    "Press / anywhere outside a text field to focus the search; the hint shows the key with Kbd.",
+    "The status filter is a single-choice toggle group with one tab stop; it hides rows that do not match.",
+    "Loading keeps the table shape with skeletons and sets aria-busy; empty replaces the table and pagination with a headed empty state."
+  ],
+  "states": [
+    "default",
+    "loading",
+    "empty"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.background",
+      "pad": "space.inset.surface"
+    },
+    "states": {
+      "default": [
+        {
+          "stack": [
+            {
+              "row": [
+                {
+                  "stack": [
+                    {
+                      "text": "Customers",
+                      "style": "font.size.heading-3",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "text": "Everyone with access to your workspace.",
+                      "style": "font.size.caption",
+                      "color": "color.muted-foreground"
+                    }
+                  ],
+                  "gap": "space.stack.xs",
+                  "width": "hug"
+                },
+                {
+                  "component": "button",
+                  "props": {
+                    "variant": "primary"
+                  },
+                  "text": {
+                    "Label text": "Add customer"
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "between"
+            },
+            {
+              "row": [
+                {
+                  "stack": [
+                    {
+                      "component": "input-group",
+                      "text": {
+                        "input-text": "Search by name or email"
+                      }
+                    },
+                    {
+                      "row": [
+                        {
+                          "text": "Press",
+                          "style": "font.size.caption",
+                          "color": "color.muted-foreground"
+                        },
+                        {
+                          "component": "kbd",
+                          "text": {
+                            "label": "/"
+                          }
+                        },
+                        {
+                          "text": "to search",
+                          "style": "font.size.caption",
+                          "color": "color.muted-foreground"
+                        }
+                      ],
+                      "gap": "space.stack.sm",
+                      "width": "hug"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "hug"
+                },
+                {
+                  "component": "toggle-group",
+                  "props": {
+                    "variant": "tertiary"
+                  },
+                  "text": {
+                    "Toggle 1/label": "All",
+                    "Toggle 2/label": "Active",
+                    "Toggle 3/label": "Invited"
+                  }
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill",
+              "align": "between",
+              "wrap": true
+            },
+            {
+              "text": "Showing 6 of 6 customers",
+              "style": "font.size.caption",
+              "color": "color.muted-foreground"
+            },
+            {
+              "component": "table",
+              "text": {
+                "head-a-text": "Name",
+                "head-b-text": "Status",
+                "head-c-text": "Plan",
+                "head-d-text": "Last seen",
+                "caption-text": "Customers",
+                "cell-a-text": "Ada Example",
+                "email-1-a": "ada@example.com",
+                "avatar-1-a/initials": "AE",
+                "badge-1-b/Label text": "Active",
+                "badge-1-b/Variant": "Primary",
+                "cell-c-text": "Team",
+                "cell-d-text": "Today",
+                "cell-2-a-text": "Grace Sample",
+                "email-2-a": "grace@example.com",
+                "avatar-2-a/initials": "GS",
+                "badge-2-b/Label text": "Invited",
+                "badge-2-b/Variant": "Secondary",
+                "cell-2-c-text": "Team",
+                "cell-2-d-text": "Never",
+                "cell-3-a-text": "Linus Demo",
+                "email-3-a": "linus@example.com",
+                "avatar-3-a/initials": "LD",
+                "badge-3-b/Label text": "Active",
+                "badge-3-b/Variant": "Primary",
+                "cell-3-c-text": "Starter",
+                "cell-3-d-text": "Yesterday",
+                "cell-4-a-text": "Mary Placeholder",
+                "email-4-a": "mary@example.com",
+                "avatar-4-a/initials": "MP",
+                "badge-4-b/Label text": "Paused",
+                "badge-4-b/Variant": "Tertiary",
+                "cell-4-c-text": "Starter",
+                "cell-4-d-text": "3 weeks ago",
+                "cell-5-a-text": "Alan Testcase",
+                "email-5-a": "alan@example.com",
+                "avatar-5-a/initials": "AT",
+                "badge-5-b/Label text": "Invited",
+                "badge-5-b/Variant": "Secondary",
+                "cell-5-c-text": "Enterprise",
+                "cell-5-d-text": "Never",
+                "cell-6-a-text": "Edsger Mock",
+                "email-6-a": "edsger@example.com",
+                "avatar-6-a/initials": "EM",
+                "badge-6-b/Label text": "Active",
+                "badge-6-b/Variant": "Primary",
+                "cell-6-c-text": "Enterprise",
+                "cell-6-d-text": "2 days ago"
+              },
+              "show": {
+                "Wide first column": true,
+                "Column 4": true,
+                "Row 3": true,
+                "Row 4": true,
+                "Row 5": true,
+                "Row 6": true,
+                "Status text": false,
+                "Status badge": true,
+                "Person": true,
+                "Select": true
+              },
+              "hide": [
+                "footer",
+                "footer-border"
+              ],
+              "width": "fill",
+              "clear": [
+                "row-2"
+              ]
+            },
+            {
+              "row": [
+                {
+                  "component": "pagination"
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "center-x"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": "fill"
+        }
+      ],
+      "loading": [
+        {
+          "stack": [
+            {
+              "row": [
+                {
+                  "stack": [
+                    {
+                      "text": "Customers",
+                      "style": "font.size.heading-3",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "text": "Everyone with access to your workspace.",
+                      "style": "font.size.caption",
+                      "color": "color.muted-foreground"
+                    }
+                  ],
+                  "gap": "space.stack.xs",
+                  "width": "hug"
+                },
+                {
+                  "component": "button",
+                  "props": {
+                    "variant": "primary"
+                  },
+                  "text": {
+                    "Label text": "Add customer"
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "between"
+            },
+            {
+              "row": [
+                {
+                  "stack": [
+                    {
+                      "component": "input-group",
+                      "text": {
+                        "input-text": "Search by name or email"
+                      }
+                    },
+                    {
+                      "row": [
+                        {
+                          "text": "Press",
+                          "style": "font.size.caption",
+                          "color": "color.muted-foreground"
+                        },
+                        {
+                          "component": "kbd",
+                          "text": {
+                            "label": "/"
+                          }
+                        },
+                        {
+                          "text": "to search",
+                          "style": "font.size.caption",
+                          "color": "color.muted-foreground"
+                        }
+                      ],
+                      "gap": "space.stack.sm",
+                      "width": "hug"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "hug"
+                },
+                {
+                  "component": "toggle-group",
+                  "props": {
+                    "variant": "tertiary"
+                  },
+                  "text": {
+                    "Toggle 1/label": "All",
+                    "Toggle 2/label": "Active",
+                    "Toggle 3/label": "Invited"
+                  }
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill",
+              "align": "between",
+              "wrap": true
+            },
+            {
+              "stack": [
+                {
+                  "component": "table",
+                  "text": {
+                    "head-a-text": "Name",
+                    "head-b-text": "Status",
+                    "head-c-text": "Plan",
+                    "head-d-text": "Last seen"
+                  },
+                  "show": {
+                    "Column 4": true,
+                    "Status text": true,
+                    "Select": true
+                  },
+                  "hide": [
+                    "row-1",
+                    "row-1-border",
+                    "row-2",
+                    "row-2-border",
+                    "footer",
+                    "footer-border",
+                    "caption"
+                  ],
+                  "width": "fill"
+                },
+                {
+                  "row": [
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "fill"
+                },
+                {
+                  "row": [
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "fill"
+                },
+                {
+                  "row": [
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "fill"
+                },
+                {
+                  "row": [
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "fill"
+                },
+                {
+                  "row": [
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    },
+                    {
+                      "component": "skeleton",
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Customers",
+                      "style": "font.size.caption",
+                      "color": "color.muted-foreground"
+                    }
+                  ],
+                  "width": "fill",
+                  "align": "center-x"
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": "fill"
+        }
+      ],
+      "empty": [
+        {
+          "stack": [
+            {
+              "row": [
+                {
+                  "stack": [
+                    {
+                      "text": "Customers",
+                      "style": "font.size.heading-3",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "text": "Everyone with access to your workspace.",
+                      "style": "font.size.caption",
+                      "color": "color.muted-foreground"
+                    }
+                  ],
+                  "gap": "space.stack.xs",
+                  "width": "hug"
+                },
+                {
+                  "component": "button",
+                  "props": {
+                    "variant": "primary"
+                  },
+                  "text": {
+                    "Label text": "Add customer"
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "between"
+            },
+            {
+              "row": [
+                {
+                  "stack": [
+                    {
+                      "component": "input-group",
+                      "text": {
+                        "input-text": "Search by name or email"
+                      }
+                    },
+                    {
+                      "row": [
+                        {
+                          "text": "Press",
+                          "style": "font.size.caption",
+                          "color": "color.muted-foreground"
+                        },
+                        {
+                          "component": "kbd",
+                          "text": {
+                            "label": "/"
+                          }
+                        },
+                        {
+                          "text": "to search",
+                          "style": "font.size.caption",
+                          "color": "color.muted-foreground"
+                        }
+                      ],
+                      "gap": "space.stack.sm",
+                      "width": "hug"
+                    }
+                  ],
+                  "gap": "space.stack.md",
+                  "width": "hug"
+                },
+                {
+                  "component": "toggle-group",
+                  "props": {
+                    "variant": "tertiary"
+                  },
+                  "text": {
+                    "Toggle 1/label": "All",
+                    "Toggle 2/label": "Active",
+                    "Toggle 3/label": "Invited"
+                  }
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill",
+              "align": "between",
+              "wrap": true
+            },
+            {
+              "row": [
+                {
+                  "component": "empty",
+                  "text": {
+                    "title": "No customers yet",
+                    "description": "Customers you add or import show up here, with their plan and last visit."
+                  },
+                  "slots": {
+                    "Content": [
+                      {
+                        "component": "button",
+                        "props": {
+                          "variant": "tertiary"
+                        },
+                        "text": {
+                          "Label text": "Import customers"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "fill",
+              "align": "center-x"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": "fill"
+        }
+      ]
+    }
+  }
+}

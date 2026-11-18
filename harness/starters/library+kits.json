@@ -1,0 +1,9 @@
+{
+  "id": "library+kits",
+  "title": "Library and template kits",
+  "for": "Product teams that need screens fast: every component plus page templates.",
+  "foundations": null,
+  "components": "all",
+  "kits": "all",
+  "next": ["/foundations guided", "npm run storybook (Patterns)", "/kits"]
+}

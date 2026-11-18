@@ -1,0 +1,97 @@
+{
+  "name": "checkbox",
+  "component": "Checkbox",
+  "displayName": "Checkbox",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-checkbox",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/checkbox-2026-11-15.md",
+      "hash": "7d229530ecebdd879488"
+    },
+    {
+      "path": "docs/parity-audits/checkbox-2026-11-08.md",
+      "hash": "73a07a998134dacd7693"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/checkbox-checked.txt",
+      "hash": "6b5bfa718a15d2057b59"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/checkbox-focused.txt",
+      "hash": "544c5ff7f9890dad205e"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/checkbox-unchecked.txt",
+      "hash": "544c5ff7f9890dad205e"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--checked.txt",
+      "hash": "61cfac6c6dc653b57285"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--default.txt",
+      "hash": "0283c841689d3ff22707"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--disabled-checked.txt",
+      "hash": "094fcc1fb431fef1a872"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--disabled.txt",
+      "hash": "95c5c2505dd092c9f742"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--hidden-label.txt",
+      "hash": "8b37e9d23015ab5cfe0d"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--indeterminate.txt",
+      "hash": "d08b3c8bc03cafe6db78"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--required.txt",
+      "hash": "865113d4527ee380dd0e"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--with-description.txt",
+      "hash": "6cbd9776d028f943b331"
+    },
+    {
+      "path": "playwright/tests/checkbox/__screen-reader__/stories/components-checkbox--with-error.txt",
+      "hash": "0bf1d698bdc46c1d48d7"
+    },
+    {
+      "path": "playwright/tests/checkbox/checkbox.behavior.spec.ts",
+      "hash": "081ef8a0412aab604edd"
+    },
+    {
+      "path": "spec/components/checkbox/contract.json",
+      "hash": "46d2afe4c15499ae96e9"
+    },
+    {
+      "path": "spec/components/checkbox/contract.md",
+      "hash": "8a74f72a3a84af71476b"
+    },
+    {
+      "path": "src/components/checkbox/Checkbox.scss",
+      "hash": "032a72d3b72243fb1727"
+    },
+    {
+      "path": "src/components/checkbox/Checkbox.stories.ts",
+      "hash": "b86afb2a41ded28f69cb"
+    },
+    {
+      "path": "src/components/checkbox/Checkbox.ts",
+      "hash": "1c5b1af093b60c82b66f"
+    },
+    {
+      "path": "src/components/checkbox/index.ts",
+      "hash": "3c6f39c5e3fb569afef1"
+    }
+  ]
+}

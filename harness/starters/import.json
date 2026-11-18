@@ -1,0 +1,12 @@
+{
+  "id": "import",
+  "title": "Import tokens",
+  "for": "Teams with tokens already (DTCG / Tokens Studio, CSS variables): import them; the library and kits stay.",
+  "foundations": null,
+  "components": "all",
+  "kits": "all",
+  "next": [
+    "/import-tokens <file>",
+    "sketchbook tokens import <file>"
+  ]
+}

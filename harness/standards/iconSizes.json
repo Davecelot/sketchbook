@@ -1,0 +1,33 @@
+{
+  "family": "iconSizes",
+  "$description": "Icon sizes in px (sm, default, lg, xl), aliased by size.icon.* through brand-links.",
+  "default": "standard",
+  "presets": [
+    {
+      "id": "standard",
+      "label": "12 / 16 / 20 / 24",
+      "values": {
+        "sm": 12,
+        "default": 16,
+        "lg": 20,
+        "xl": 24
+      },
+      "description": "Small icons for compact text and controls. The default.",
+      "source": null,
+      "verified": false
+    },
+    {
+      "id": "carbon-like",
+      "label": "16 / 20 / 24 / 32",
+      "values": {
+        "sm": 16,
+        "default": 20,
+        "lg": 24,
+        "xl": 32
+      },
+      "description": "Starts at 16 px; pair with 14 to 16 px text. Interactive icons still need a larger hit area.",
+      "source": "https://carbondesignsystem.com/elements/icons/usage/",
+      "verified": true
+    }
+  ]
+}

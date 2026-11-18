@@ -1,0 +1,6 @@
+- button "ghost medium" [pressed=false]
+- button "ghost small" [pressed=false]
+- button "ghost large" [pressed=false]
+- button "tertiary medium" [pressed=false]
+- button "tertiary small" [pressed=false]
+- button "tertiary large" [pressed=false]

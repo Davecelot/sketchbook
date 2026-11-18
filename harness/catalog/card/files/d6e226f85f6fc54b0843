@@ -1,0 +1,280 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Card",
+  "tag": "sb-card",
+  "status": "stable",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A surface that groups related content and actions: header, title, description, action, content and footer (a family of Web Components).",
+  "dependsOn": [],
+  "props": {
+    "size": {
+      "type": "variant",
+      "values": [
+        "medium",
+        "small"
+      ],
+      "default": "medium",
+      "reflect": true,
+      "note": "medium: 24px padding and gap. small: 16px."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "notes": "The host is the card surface (border, radius, shadow); its parts are child elements in the default slot."
+    }
+  ],
+  "content": {
+    "default": {
+      "required": false,
+      "multiple": true,
+      "notes": "sb-card-header, sb-card-content and sb-card-footer, in reading order."
+    }
+  },
+  "events": {},
+  "states": {},
+  "accessibility": {
+    "role": "none (generic container)",
+    "accessibleNameSource": "None. Card has no role, so it is not a landmark or a named region; the title is a visual heading. For a heading in the document outline, put a real heading element inside sb-card-title.",
+    "keyboard": {},
+    "aria": [
+      "no roles or ARIA on any card element: content keeps its own semantics",
+      "sb-card-header sets data-has-action (presentation only)"
+    ],
+    "announcements": [],
+    "targetSize": "Card itself is not interactive; controls placed in it follow their own components.",
+    "contrast": [
+      {
+        "fg": "card.fg",
+        "bg": "card.bg",
+        "kind": "text"
+      },
+      {
+        "fg": "card.description.fg",
+        "bg": "card.bg",
+        "kind": "text"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.10"
+    ]
+  },
+  "tokens": {
+    "card.font-family": "{font.family.body}",
+    "card.bg": "{color.card}",
+    "card.fg": "{color.card-foreground}",
+    "card.border": "{color.border}",
+    "card.border-width": "{border-width.default}",
+    "card.radius": "{radius.large}",
+    "card.shadow": "{elevation.sm}",
+    "card.padding": "{space.inset.surface}",
+    "card.gap": "{space.inset.surface}",
+    "card.padding-sm": "{space.stack.loose}",
+    "card.gap-sm": "{space.stack.loose}",
+    "card.header-gap": "{space.stack.sm}",
+    "card.title.font-size": "{font.size.heading}",
+    "card.title.font-weight": "{font.weight.heading}",
+    "card.title.line-height": "{font.line-height.heading}",
+    "card.description.fg": "{color.muted-foreground}",
+    "card.description.font-size": "{font.size.body}",
+    "card.description.line-height": "{font.line-height.body}"
+  },
+  "realizations": {
+    "web": {
+      "status": "complete",
+      "files": [
+        "src/components/card/Card.ts",
+        "src/components/card/CardHeader.ts",
+        "src/components/card/CardTitle.ts",
+        "src/components/card/CardDescription.ts",
+        "src/components/card/CardAction.ts",
+        "src/components/card/CardContent.ts",
+        "src/components/card/CardFooter.ts",
+        "src/components/card/Card.scss",
+        "src/components/card/Card.styles.ts",
+        "src/components/card/Card.stories.ts",
+        "src/components/card/index.ts"
+      ],
+      "parts": [],
+      "slots": [
+        "default"
+      ],
+      "spec": "playwright/tests/card/card.behavior.spec.ts",
+      "coverage": [
+        "all seven elements registered",
+        "border, radius, padding, gap from tokens",
+        "size small tightens padding, gap and part inset; parts outside a card use the default inset",
+        "card colors in light and dark",
+        "title and description typography",
+        "data-has-action set and cleared with slotchange; action at the end spanning both rows",
+        "no roles or ARIA on any part",
+        "content in reading order",
+        "axe clean (default, with action, small, content only)"
+      ],
+      "drift": [
+        {
+          "aspect": "header and footer borders",
+          "contract": "not supported in v1",
+          "realization": "shadcn adds padding with [.border-b] and [.border-t] class hooks"
+        },
+        {
+          "aspect": "part inset",
+          "contract": "parts read the card's inset through the private custom property --_inset, falling back to card.padding",
+          "realization": "shadcn hard-codes px-6 on each part and relies on size variants reaching them through group selectors"
+        }
+      ]
+    },
+    "design": {
+      "status": "complete",
+      "properties": {
+        "sets": {
+          "Card": 2
+        }
+      },
+      "coverage": [
+        "Card: 2 variant(s), Size (Medium, Small); read back ok"
+      ],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "How does the header know it has an action, without sibling selectors across shadow roots?",
+      "recommendation": "sb-card-header listens to slotchange and sets data-has-action on itself; CSS keys off that attribute.",
+      "status": "answered",
+      "answer": "Host attribute from slotchange (data-has-action).",
+      "answeredOn": "2026-11-08"
+    },
+    {
+      "id": "Q2",
+      "question": "Optional header and footer borders?",
+      "recommendation": "Not in v1: no class hooks in Web Components; add boolean props when a use case appears.",
+      "status": "answered",
+      "answer": "Out of scope for v1.",
+      "answeredOn": "2026-11-08"
+    }
+  ],
+  "decisions": [
+    "SB-0007",
+    "SB-0011"
+  ],
+  "variantMatrix": {
+    "dimensions": {
+      "size": [
+        "medium",
+        "small"
+      ]
+    }
+  },
+  "elements": [
+    {
+      "tag": "sb-card-header",
+      "summary": "Groups title, description and an optional action. A sb-card-action child moves the action to the end of the header.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "sb-card-title, sb-card-description and an optional sb-card-action."
+        }
+      },
+      "notes": "Sets the data-has-action host attribute from slotchange; sibling selectors do not cross shadow roots."
+    },
+    {
+      "tag": "sb-card-title",
+      "summary": "The card's heading text.",
+      "content": {
+        "default": {
+          "required": true,
+          "multiple": false,
+          "notes": "Title text."
+        }
+      }
+    },
+    {
+      "tag": "sb-card-description",
+      "summary": "Supporting text under the title, in muted color.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "Description text."
+        }
+      }
+    },
+    {
+      "tag": "sb-card-action",
+      "summary": "An action (button, menu trigger) placed at the end of the header, spanning title and description.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": false,
+          "notes": "A control such as sb-button."
+        }
+      }
+    },
+    {
+      "tag": "sb-card-content",
+      "summary": "The card's main content, inset like the header.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "Any content."
+        }
+      }
+    },
+    {
+      "tag": "sb-card-footer",
+      "summary": "A row of actions or summary text at the bottom of the card.",
+      "content": {
+        "default": {
+          "required": false,
+          "multiple": true,
+          "notes": "Actions or text, laid out in a row."
+        }
+      }
+    }
+  ],
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "card",
+      "surface",
+      "panel",
+      "container",
+      "header",
+      "footer"
+    ],
+    "useCases": [
+      {
+        "when": "Group related content with an optional title and actions",
+        "use": "sb-card with sb-card-header, sb-card-content, sb-card-footer"
+      },
+      {
+        "when": "A dense list of cards or a sidebar panel",
+        "use": "size=small"
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Nesting cards inside cards",
+        "why": "Stacked borders and shadows flatten the hierarchy and waste space",
+        "alternative": "Separator or Item inside one card"
+      },
+      {
+        "pattern": "Using a card as the only way to group a whole page",
+        "why": "A page-wide card adds a border without grouping anything",
+        "alternative": "Plain layout"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+- group "Message actions"
+  - button "Save"
+  - button "More save options"
+    - image

@@ -1,0 +1,121 @@
+{
+  "name": "command",
+  "component": "Command",
+  "displayName": "Command",
+  "tier": 2,
+  "status": "stable",
+  "tag": "sb-command",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/command-2026-11-16.md",
+      "hash": "7b947271b77c5c2e6cbe"
+    },
+    {
+      "path": "docs/parity-audits/command-2026-11-12.md",
+      "hash": "b932ab68d82bce66de9c"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/command-arrow-down.txt",
+      "hash": "e2f22dbe376ac580dd4f"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/command-filtered.txt",
+      "hash": "d301eb28bc3eb9808c69"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--default.txt",
+      "hash": "38d604b586eb1cbe1097"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--disabled-item.txt",
+      "hash": "3a0c6f69905ab1130fdf"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--empty.txt",
+      "hash": "ff05f6bdc626c33bff6d"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--groups-and-shortcuts.txt",
+      "hash": "38d604b586eb1cbe1097"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--in-a-dialog.txt",
+      "hash": "7b73f21bcb5aeebb9d03"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--manual-filter.txt",
+      "hash": "7919eff639d8d4a7a256"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--rtl.txt",
+      "hash": "38d604b586eb1cbe1097"
+    },
+    {
+      "path": "playwright/tests/command/__screen-reader__/stories/components-command--scrollable.txt",
+      "hash": "64edd35c308b3381280b"
+    },
+    {
+      "path": "playwright/tests/command/command.behavior.spec.ts",
+      "hash": "456e5a0414963d6ad66c"
+    },
+    {
+      "path": "spec/components/command/contract.json",
+      "hash": "81ccfcb263444082e797"
+    },
+    {
+      "path": "spec/components/command/contract.md",
+      "hash": "7e6923a2a26e59263a69"
+    },
+    {
+      "path": "src/components/command/Command.scss",
+      "hash": "7f21e62085004b5eb6c9"
+    },
+    {
+      "path": "src/components/command/Command.stories.ts",
+      "hash": "0045480291f5bcda1ed0"
+    },
+    {
+      "path": "src/components/command/Command.ts",
+      "hash": "825c406546cdca148c9e"
+    },
+    {
+      "path": "src/components/command/CommandEmpty.ts",
+      "hash": "92c96df2ebb179f5316c"
+    },
+    {
+      "path": "src/components/command/CommandGroup.ts",
+      "hash": "78882bb1d7f63990f8f3"
+    },
+    {
+      "path": "src/components/command/CommandInput.ts",
+      "hash": "6c02d111b386d13fb42a"
+    },
+    {
+      "path": "src/components/command/CommandItem.ts",
+      "hash": "95ffd3cdb86f53120c3a"
+    },
+    {
+      "path": "src/components/command/CommandList.ts",
+      "hash": "a193dbe4cee5f63a29b7"
+    },
+    {
+      "path": "src/components/command/CommandSeparator.ts",
+      "hash": "1760a0a4a6d9b15611fb"
+    },
+    {
+      "path": "src/components/command/CommandShortcut.ts",
+      "hash": "388b9f83faadc3d8a362"
+    },
+    {
+      "path": "src/components/command/context.ts",
+      "hash": "732b73ef77332148d537"
+    },
+    {
+      "path": "src/components/command/index.ts",
+      "hash": "0921b5a7161362e4aa0b"
+    }
+  ]
+}

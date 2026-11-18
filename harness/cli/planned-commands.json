@@ -1,0 +1,20 @@
+{
+  "$description": "Commands the approved plan names that the CLI registry (harness/cli/commands/*.mts) may not have yet, so docs in .claude/ can mention them while another builder ships them (SB-0053). harness/cli/known.mts merges this with the registry into known-commands.json: a registry command wins over the entry with the same name, and its subcommands are the union of both. Delete an entry once the command lands.",
+  "starters": [
+    "blank",
+    "foundations",
+    "library",
+    "library+kits",
+    "pick",
+    "import",
+    "from-codebase"
+  ],
+  "commands": {
+    "sync": {
+      "subcommands": [
+        "components",
+        "all"
+      ]
+    }
+  }
+}

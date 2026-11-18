@@ -1,0 +1,59 @@
+# Accessibility audit: Table (2026-11-15)
+
+Scope: `spec/components/table/contract.json`, `src/components/table/*` (sb-table, -header, -body, -footer, -row, -head, -cell, -caption), `playwright/tests/table/*`. Standard: WCAG 2.2 AA and the WAI-ARIA `table` role family (static, non-focusable).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.11 non-text contrast, selected row | Pass (fixed) | Selected row has a 1px outline (`table.row.selected.border`): `rgb(115,115,115)` vs page `rgb(255,255,255)` = 4.74:1 light, vs `rgb(10,10,10)` = 4.18:1 dark; screenshots light and dark show it; spec 'the selected row has a 3:1 outline, not only a fill'. Before: fill only, 1.04:1 / 1.31:1 |
+| P | 1.4.11 hover fill | Not applicable | Hover is feedback only, selection is not conveyed by it; faint by design (light 50% of neutral-50, contract Known drift) |
+| P | 1.4.11 row dividers | Pass | Dividers are decoration, rows are identified by text and spacing; `border` `rgb(229,229,229)` on white is 1.26:1, not needed to identify rows |
+| P | 1.4.3 text contrast | Pass | foreground on page 19.8:1 light; caption `rgb(115,115,115)` on white 4.7:1; dark caption `rgb(161,161,161)` on `rgb(10,10,10)` 7.5:1; `npm run check` T6 passes |
+| P | 1.4.1 color alone | Pass (fixed) | The selected row has a visible outline in addition to the fill |
+| P | forced-colors | Pass (fixed) | Re-probe with `forced-colors: active`: selected row gets `outline: 3px solid Highlight` (`rgba(5,0,73,0.8)`, offset -3px), unselected rows none; screenshot shows the full outline inside the table edges. Borders pass: row `1px solid rgb(0,0,0)`, footer top `solid rgb(0,0,0)`, last body row 0. Before: selected background was Canvas, identical to unselected rows |
+| P | prefers-reduced-motion | Pass | `Table.scss:49-51` removes the row background transition |
+| P | 1.4.10 reflow | Pass (note) | Two-dimensional data table is exempt. At 320px the story (fixed `width:560px`) scrolls the page by 16px; a wrapper with `overflow:auto` scrolls at 200px. The component itself never overflows beyond its set width; contract delegates scrolling to `sb-scroll-area` |
+| O | 2.1.1 keyboard, scroll container | Pass (note) | Static component, host `tabIndex` -1, no focusable parts, no trap. A bare `overflow:auto` wrapper around an overflowing table received focus from Tab in Chromium (`w` focused, no `tabindex`), which is Chromium's keyboard-focusable scroller behavior; Safari does not do this. The contract and story do not state a `tabindex="0"`, `role="region"` and label for the wrapper, nor show an overflow example (see Low 2) |
+| O | 2.4.7 focus, 2.5.8 target size | Not applicable | Not interactive; no sortable headers in the contract |
+| U | 3.2.x, 3.3.x | Not applicable | No input or errors |
+| R | 4.1.2 roles | Pass | CDP `getFullAXTree` and `ariaSnapshot()` across the family: `table` > `caption`, 3 `rowgroup`, 6 `row`, 4 `columnheader`, `cell`s (incl. empty footer cells), all story variants |
+| R | 1.3.1 header association | Pass | `columnheader` role on `sb-table-head`; the AX tree exposes them in the header row. No `scope` attribute exists on custom elements; the role is the association. Row headers go through `role="rowheader"` (spec at `table.behavior.spec.ts:32`) |
+| R | Caption names table | Pass | AX name `Recent orders` via `ariaLabelledByElements` (supported in this Chromium); after changing caption text, the AX name updates to `Changed caption` live. `aria-label` story: name `Stock levels` |
+| R | Selected row state | Pass | `aria-selected="true"` on `ORD-1002` only; AX snapshot `row ... [selected]`; removed when `selected` is false |
+| R | Role override test | Pass | Spec `table.behavior.spec.ts:32` ("an author role on sb-table is kept; a head or cell role can be overridden") passes; `Table.ts:13-17` keeps an author role (`#managesRole`) |
+| R | contract.md "Parts: ." typo | Pass (fixed) | Realizations now read "Parts: none. Slots: default." |
+| R | Caption `aria-label` fallback refresh | Pass (fixed) | See Fixed |
+| R | axe | Pass | Behavior spec axe test clean |
+| R | Behavior spec and `npm run check` | Pass | 14/14 passed (`--workers=2`); `check` fails only on the known D1/D4 |
+| R | Screen-reader evidence | Pass | AX snapshots above plus `playwright/tests/table/__screen-reader__/` (check S1) |
+
+## Failures
+
+None open.
+
+### Fixed: selected row distinguishable only by a faint fill - was MEDIUM
+Location: `src/components/table/Table.scss:58-62`
+Before: light 1.04:1, dark 1.31:1 against the page, no other cue.
+After: `outline: var(--sb-table-border-width) solid var(--sb-table-row-selected-border)` inset by the same width; computed `1px solid rgb(115,115,115)`, 4.74:1 light and 4.18:1 dark; screenshots checked; spec passes.
+
+### Fixed: caption `aria-label` fallback written once - was LOW
+Location: `src/components/table/Table.ts` (shared `LabelledByController`)
+Before: with `ariaLabelledByElements` removed, `aria-label` stayed `Recent orders` after the caption became `Changed caption`.
+After: same probe gives `Changed caption`; spec deletes the property and changes the caption.
+
+### Fixed: no documented keyboard-reachable scroller - was LOW
+Location: `src/components/table/Table.stories.ts:58` (`WideInScrollArea`), contract Do / Don't
+Before: no story or guidance for wide tables.
+After: at 400px, Tab focuses `sb-scroll-area`, exposed as `region "Recent orders"`; ArrowRight moves scrollLeft 0 to 40; page has no horizontal scroll (400/400); spec covers it.
+
+### Fixed: selected row invisible in forced colors - was MEDIUM
+Location: `src/components/table/Table.scss:63-67`
+Before: `forced-colors: active` computed the selected background to `rgb(255,255,255)` (Canvas), the same as unselected rows.
+After: `outline: medium solid Highlight; outline-offset: -3px` on `:host(sb-table-row[selected])`; probe shows a 3px solid Highlight outline on the selected row only, the screenshot shows it fully inside the table edges, cell text stays `rgb(0,0,0)`; new spec passes, `tests/table` 11/11.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-16)
+
+All findings are fixed and re-verified in the browser in light, dark and forced colors; roles, names, `aria-selected`, axe and the behavior spec (14/14) pass. `check` fails only on the known D1/D4.

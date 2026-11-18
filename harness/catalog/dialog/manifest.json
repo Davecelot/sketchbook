@@ -1,0 +1,127 @@
+{
+  "name": "dialog",
+  "component": "Dialog",
+  "displayName": "Dialog",
+  "tier": 2,
+  "status": "stable",
+  "tag": "sb-dialog",
+  "prefix": "sb",
+  "dependsOn": [
+    "button"
+  ],
+  "uses": [
+    "button",
+    "command",
+    "input"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/dialog-2026-11-16.md",
+      "hash": "ea2b7035753857ef50b3"
+    },
+    {
+      "path": "docs/parity-audits/dialog-2026-11-12.md",
+      "hash": "c14b3ca0336a4dfd750c"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/dialog-closed.txt",
+      "hash": "6f633326e4a606394eb9"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/dialog-open.txt",
+      "hash": "308156c5a7b6cfd183c7"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--default.txt",
+      "hash": "0ba6cb9c741f4d6cc29f"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--form.txt",
+      "hash": "6d2764adad162ecaf567"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--long-content.txt",
+      "hash": "1607fa09941fa5b61b53"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--nested.txt",
+      "hash": "52461a94deafc1ddbb9e"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--no-close-button.txt",
+      "hash": "d1612776ba9473008a59"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--open.txt",
+      "hash": "b0df9c2c22c03da30f17"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--rtl.txt",
+      "hash": "14e66fa2f397d81a4b5a"
+    },
+    {
+      "path": "playwright/tests/dialog/__screen-reader__/stories/components-dialog--search-palette.txt",
+      "hash": "96b143a067ceb693bbc2"
+    },
+    {
+      "path": "playwright/tests/dialog/dialog.behavior.spec.ts",
+      "hash": "95a098053c36283f35ba"
+    },
+    {
+      "path": "spec/components/dialog/contract.json",
+      "hash": "15288bbad2fe7f0623e6"
+    },
+    {
+      "path": "spec/components/dialog/contract.md",
+      "hash": "f844b44e34e2bbd10ce8"
+    },
+    {
+      "path": "src/components/dialog/Dialog.scss",
+      "hash": "beb1ca0148c74df4adae"
+    },
+    {
+      "path": "src/components/dialog/Dialog.stories.ts",
+      "hash": "225b9e06f0defd4497a0"
+    },
+    {
+      "path": "src/components/dialog/Dialog.ts",
+      "hash": "73841e4e2d52a9ce1739"
+    },
+    {
+      "path": "src/components/dialog/DialogClose.ts",
+      "hash": "2eeaa795a0cfde395eb0"
+    },
+    {
+      "path": "src/components/dialog/DialogContent.ts",
+      "hash": "be32860a4c355d40cba1"
+    },
+    {
+      "path": "src/components/dialog/DialogDescription.ts",
+      "hash": "ae31f52c79fac0a4a415"
+    },
+    {
+      "path": "src/components/dialog/DialogFooter.ts",
+      "hash": "1ed1da7f60f54af79479"
+    },
+    {
+      "path": "src/components/dialog/DialogHeader.ts",
+      "hash": "033143a3f05a03f9f557"
+    },
+    {
+      "path": "src/components/dialog/DialogTitle.ts",
+      "hash": "3d71ca97986f4a6aa575"
+    },
+    {
+      "path": "src/components/dialog/DialogTrigger.ts",
+      "hash": "bb1d44dcb521ae95d625"
+    },
+    {
+      "path": "src/components/dialog/context.ts",
+      "hash": "a7247129c0b4c3f2809a"
+    },
+    {
+      "path": "src/components/dialog/index.ts",
+      "hash": "6595bcd27d3f2570d8fe"
+    }
+  ]
+}

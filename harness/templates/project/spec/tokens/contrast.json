@@ -1,0 +1,90 @@
+{
+  "$description": "System-level foreground/background pairs (shadcn theme variables) that must pass in every mode. Component pairs live in each contract's accessibility.contrast. kind: text = 4.5:1, large-text = 3:1, ui = 3:1 (WCAG 2.1 AA).",
+  "pairs": [
+    {
+      "fg": "color.foreground",
+      "bg": "color.background",
+      "kind": "text"
+    },
+    {
+      "fg": "color.card-foreground",
+      "bg": "color.card",
+      "kind": "text"
+    },
+    {
+      "fg": "color.popover-foreground",
+      "bg": "color.popover",
+      "kind": "text"
+    },
+    {
+      "fg": "color.primary-foreground",
+      "bg": "color.primary",
+      "kind": "text"
+    },
+    {
+      "fg": "color.secondary-foreground",
+      "bg": "color.secondary",
+      "kind": "text"
+    },
+    {
+      "fg": "color.muted-foreground",
+      "bg": "color.background",
+      "kind": "text"
+    },
+    {
+      "fg": "color.muted-foreground",
+      "bg": "color.muted",
+      "kind": "text"
+    },
+    {
+      "fg": "color.accent-foreground",
+      "bg": "color.accent",
+      "kind": "text"
+    },
+    {
+      "fg": "color.destructive-foreground",
+      "bg": "color.destructive",
+      "kind": "text"
+    },
+    {
+      "fg": "color.success-foreground",
+      "bg": "color.success",
+      "kind": "text"
+    },
+    {
+      "fg": "color.warning-foreground",
+      "bg": "color.warning",
+      "kind": "text"
+    },
+    {
+      "fg": "color.info-foreground",
+      "bg": "color.info",
+      "kind": "text"
+    },
+    {
+      "fg": "color.destructive",
+      "bg": "color.background",
+      "kind": "text"
+    },
+    {
+      "fg": "color.input",
+      "bg": "color.input-background",
+      "kind": "ui"
+    },
+    {
+      "fg": "color.input",
+      "bg": "color.background",
+      "kind": "ui"
+    },
+    {
+      "fg": "color.ring",
+      "bg": "color.background",
+      "kind": "ui"
+    },
+    {
+      "fg": "color.primary",
+      "bg": "color.background",
+      "kind": "text"
+    }
+  ]
+}

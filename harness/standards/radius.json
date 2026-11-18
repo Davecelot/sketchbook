@@ -1,0 +1,50 @@
+{
+  "family": "radius",
+  "$description": "Corner radius sets. From base r: xs = r-6, sm = r-4, md = r-2, lg = r, xl = r+4 (never below 0), plus none and full. roles map the semantic radius tokens to these steps.",
+  "default": "soft",
+  "presets": [
+    {
+      "id": "sharp",
+      "label": "Sharp",
+      "values": {
+        "base": 2
+      },
+      "description": "Nearly square corners for a technical, dense look.",
+      "source": null,
+      "verified": false
+    },
+    {
+      "id": "soft",
+      "label": "Soft",
+      "values": {
+        "base": 10
+      },
+      "description": "Gently rounded, 10 px on surfaces. The default.",
+      "source": "https://ui.shadcn.com/docs/theming",
+      "verified": true
+    },
+    {
+      "id": "round",
+      "label": "Round",
+      "values": {
+        "base": 16
+      },
+      "description": "Friendly, clearly rounded corners.",
+      "source": null,
+      "verified": false
+    },
+    {
+      "id": "pill-heavy",
+      "label": "Pill controls",
+      "values": {
+        "base": 10,
+        "roles": {
+          "control": "full"
+        }
+      },
+      "description": "Soft surfaces with fully rounded buttons and fields.",
+      "source": null,
+      "verified": false
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+# Accessibility audit: Slider (2026-11-15)
+
+Scope: `spec/components/slider/contract.json`, `src/components/slider/*`, `playwright/tests/slider/*`. Standard: WCAG 2.2 AA and the WAI-ARIA APG slider and multi-thumb slider patterns (native `input type=range` per thumb).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.11 thumb border and filled range vs page | Pass | Light: thumb border and range `rgb(135,79,27)` on white 6.64:1; dark: `rgb(202,148,105)` on `rgb(10,10,10)` 7.50:1 (`&globals=theme:dark`) |
+| P | 1.4.11 unfilled track vs page | Pass (fixed) | Track `color.input` `rgb(115,115,115)`: 4.74:1 on white, 4.18:1 on `rgb(10,10,10)` (dark). Fill vs track 1.40:1 light, 1.80:1 dark, but fill and thumb are 6.64:1 and 7.50:1 against the page and the thumb position carries the value; screenshots read clearly in both themes |
+| P | 1.4.11 invalid thumb border | Pass | `destructive` 4.77:1 light, 7.04:1 dark |
+| P | 2.4.11/1.4.11 focus ring | Pass | Ring 3px solid `ring`: 4.74:1 light, 7.66:1 dark against page; visible in screenshots, light and dark, valid and invalid |
+| P | 1.4.1 color alone | Pass | Value is the thumb position and the native value; error has text, not only red |
+| P | forced-colors | Pass (fixed) | Re-probe: track `GrayText` `rgb(96,0,0)`, range `Highlight` `rgba(5,0,73,0.8)` against Canvas white, distinct from each other; thumb ring still shows |
+| P | prefers-reduced-motion | Pass | `respect-reduced-motion` on both thumb transitions; computed transition duration `0s` with reduce |
+| P | Right-to-left layout | Pass (fixed) | Re-probe `dir=rtl`: single (40) fill starts at the right edge, 129.6 of 320 wide; range (10,40) fill 38.4 from the right, 91.2 wide, between the thumbs |
+| O | 2.1.1 keyboard (horizontal) | Pass | Real presses on Volume (40): ArrowRight 41, 42; ArrowLeft 41; ArrowUp 42; ArrowDown 41; PageUp 51; PageDown 41; End 100; Home 0 |
+| O | 2.1.1 keyboard (vertical) | Pass | ArrowUp increases 41, 42; ArrowDown 41; ArrowRight 42; ArrowLeft 41; PageUp 51; End 100; Home 0; range fill anchored at the bottom, 192px track |
+| O | 2.1.1 keyboard (RTL) | Pass | Native reversal: ArrowRight 40 to 39, ArrowLeft back to 41 |
+| O | 2.1.1 keyboard (range) | Pass | Tab moves thumb-0 then thumb-1 then out of the component; End on the minimum thumb clamps at 80 (the maximum); Home on the maximum thumb clamps at 80 |
+| O | 2.1.2 no keyboard trap | Pass | Tab leaves the range after the second thumb |
+| O | 2.5.7 dragging alternatives | Pass | Keys and track press, no drag required |
+| O | 2.5.8 target size | Pass | Input and press area 24x24 (24 high horizontal, 24 wide vertical); 16px thumb inside; multi-thumb pointer press is handled on the 24px control |
+| O | implicit submission | Pass | Behavior spec: Enter submits the form, not when disabled |
+| U | 3.3.1 / 3.3.3 errors | Pass | `error` is in a persistent `aria-live="polite"` region, set as `aria-describedby`, `aria-invalid=true`, `customError` validity anchored on the first thumb |
+| U | 3.3.2 labels | Pass | Visible label for the first thumb; `hide-label` keeps the name (AX tree: "Brightness") |
+| R | 4.1.2 role, name, value | Pass | CDP `getFullAXTree`: role `slider`, `valuemin` 0, `valuemax` 100, `value` and `valuetext` equal to the value, name "Volume" |
+| R | Range thumbs | Pass | Two sliders named "Budget minimum" (20) and "Budget maximum" (80) |
+| R | Orientation | Pass | `orientation=horizontal` and `vertical` in the AX tree |
+| R | Disabled | Pass | AX tree `disabled: true`, not focusable; spec: cannot be focused or changed |
+| R | Invalid and description | Pass | `invalid: true`, `describedby: error`, description "Choose a value below 80."; description story exposes "Applies to every channel." |
+| R | Forms (form-associated-controls rule) | Pass (re-probed: FormData right after `form.reset()` is 40, was 75, value synchronously `[40]`) | Spec: one entry per thumb, `form.reset()`, disabled not submitted, `<fieldset disabled>` and re-enable, `label for`, error invalidates the form |
+| R | ID references across shadow roots | Pass | `describedby` and `label for` are inside the component's shadow root |
+| R | axe | Pass | Behavior spec axe clean |
+| R | Behavior spec and `npm run check` | Pass with note | Spec 26/26 (RTL, forced-colors and track-color specs included). `npm run check`: only D1/D4 fail (Figma read-back pending, expected), no a11y-related check fails |
+| R | Screen-reader evidence | Pass | AX tree above plus the `__screen-reader__` snapshots (check S1) |
+
+## Failures
+
+### Fixed: unfilled track 1.09:1 light, 1.31:1 dark - was LOW
+Location: `src/components/slider/Slider.scss:55`, token `slider.track.bg`.
+Before: `rgb(245,245,245)` on white 1.09:1; `rgb(38,38,38)` on `rgb(10,10,10)` 1.31:1.
+After: maps to `color.input`, `rgb(115,115,115)`: 4.74:1 light, 4.18:1 dark; contract pair `slider.track.bg` vs `color.background` added (T6 passes); range and thumb still distinct (screenshots).
+
+### Fixed: track and range disappeared in forced-colors mode - was MEDIUM
+Location: `src/components/slider/Slider.scss:67` and `:91`.
+Before: both computed `rgb(255, 255, 255)` (Canvas); only thumb rings visible.
+After: track `GrayText` (`rgb(96, 0, 0)`), range `Highlight` (`rgba(5, 0, 73, 0.8)`), distinct from Canvas and each other; spec 'in forced colors the track and the filled range stay visible and distinct' passes.
+
+### Fixed: fill on the wrong side in RTL - was MEDIUM
+Location: `src/components/slider/Slider.scss:86` (`inset-inline-start`).
+Before: `dir=rtl`, Volume 40: fill from the left edge (`rangeLeft` 0) while the thumb sat 40% from the right.
+After: fill starts at the right edge (single) and tracks the thumbs (range 10,40); spec 'RTL fills from the inline start, on the right' passes.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-16)
+
+The two medium findings and the low are fixed and re-verified; semantics, keys, forms, contrast, target size, reduced motion, axe, the behavior spec (26/26) and `npm run check` pass. No open findings. Check D1/D4 failures are the pending Figma round, not accessibility.

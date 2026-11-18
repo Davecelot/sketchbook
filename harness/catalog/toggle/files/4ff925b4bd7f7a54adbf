@@ -1,0 +1,53 @@
+# Accessibility audit: Toggle (2026-11-15)
+
+Scope: `spec/components/toggle/contract.json`, `src/components/toggle/*`, `playwright/tests/toggle/*`. Standard: WCAG 2.2 AA and the WAI-ARIA APG toggle button pattern (native `<button aria-pressed>`). Re-verified after fixes in the working tree (uncommitted).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.3 text contrast, off/pressed/hover, light and dark | Pass | Probe: pressed fg/bg 16.44 light, 14.50 dark; hover fg/bg 4.54 light (default), 5.86 dark, 16.44 / 14.50 outline; `npm run check` T6 passes |
+| P | 1.4.11 pressed state against the page (3:1) | Pass (fixed) | Pressed 1px border `toggle.on.border` rgb(10,10,10) on white 19.80:1 (light), rgb(250,250,250) on rgb(10,10,10) 18.97:1 (dark), both variants; fill alone was 1.09 / 1.31 |
+| P | 1.4.1 pressed not by color alone | Pass (fixed) | Pressed adds a high-contrast border (shape cue) besides the fill; outline unpressed border is rgb(115,115,115) (4.74 light, 4.18 dark), so pressed differs in border weight/contrast and fill; screenshots light and dark |
+| P | 1.4.11 focus ring 3:1 | Pass (fixed) | Ring `0 0 0 3px` rgb(115,115,115) on white (light), rgb(161,161,161) on rgb(10,10,10) (dark), on default and outline |
+| P | forced-colors | Pass (fixed) | Pressed computes Highlight fill/border, HighlightText; unpressed stays Canvas with CanvasText border; screenshot shows solid highlight pills with readable text, both variants; focus is a 3px solid CanvasText outline on both variants |
+| P | prefers-reduced-motion | Pass | `respect-reduced-motion` mixin on the button |
+| O | 2.1.1 keyboard | Pass | Tab then Space: pressed true; Enter: pressed false |
+| O | 2.4.7 / 2.4.11 focus visible | Pass (fixed) | Outline variant now shows the ring after the transition (see Fixed) |
+| O | 2.1.2 no trap | Pass | Single native button |
+| O | 2.5.8 target size | Pass | Smallest size (sm) 32px high, min-width 32px |
+| O | Disabled | Pass | Native `disabled`, AX `button "Bold" [disabled]`, click swallowed, follows `<fieldset disabled>` |
+| U | 2.4.6 / 3.3.2 name | Pass | Text name "Bold"; icon-only story exposes `button "Toggle bold"` via forwarded aria-label; dev warning when nameless |
+| U | 3.2.x predictable | Pass | Label does not change with state |
+| R | 4.1.2 role, name, state | Pass | `ariaSnapshot`: unpressed `button "Bold"`, pressed `button "Bold" [pressed]` |
+| R | ID references across shadow roots | Pass | Only aria-label forwarded (SB-0009) |
+| R | axe | Pass | Behavior spec axe clean on every story |
+| R | Behavior spec | Pass | `tests/toggle` 21/21 (`--workers=2`), includes 'pressed has a 3:1 border on both variants' |
+| R | `npm run check` | Pass except D1/D4 | D1/D4 fail (Figma round pending); D4 also lists `toggle.on.border` and `toggle-group.on.border` as drawn by no set with no drift entry, which the Figma round or a drift entry must clear; T6 passes |
+| R | Screen-reader evidence | Pass | `__screen-reader__/toggle-on.txt`, `toggle-off.txt` (check S1) |
+
+## Failures
+
+### LOW: default-variant hover is faint
+Location: `Toggle.scss:50-53`. Hover fill vs page 1.04 light; text contrast passes (4.54). Hover is supplementary; consider a stronger fill.
+
+### Fixed: pressed state in normal colors was a barely visible fill - was MEDIUM
+Location: `src/components/toggle/Toggle.scss:77-79`.
+Before: pressed fill vs page 1.09:1 light, 1.31:1 dark, no border on the default variant.
+After: `border-color: var(--sb-toggle-on-border)` (foreground) on both variants. Probe: pressed border vs page 19.80:1 light, 18.97:1 dark (default and outline); unpressed default is transparent, unpressed outline is rgb(115,115,115), so pressed is distinguishable from an unpressed outline toggle by a heavier border and the fill. Screenshots light and dark checked.
+
+### Fixed: focus ring missing on the outline variant - was HIGH
+Location: `src/components/toggle/Toggle.scss:66-69`.
+Before: outline variant focused by keyboard (light and dark, after the transition) kept `box-shadow: rgba(0,0,0,.05) 0 1px 2px`, no ring, because `:host([variant='outline']) [part='button']` outranked the base `:focus-visible`.
+After: the ring is restated at the variant's specificity; probe shows `rgb(115,115,115) 0 0 0 3px` (light) and `rgb(161,161,161) 0 0 0 3px` (dark) on outline, same as default; forced colors 3px solid CanvasText outline.
+
+### Fixed: pressed state lost in forced colors - was HIGH (forced-colors part)
+Location: `src/components/toggle/Toggle.scss:81-88`.
+Before: pressed and unpressed computed identically under `forced-colors: active` (Canvas bg, CanvasText fg and border), both variants.
+After: pressed computes `rgba(5,0,73,.8)` Highlight bg and border with `rgb(255,255,255)` HighlightText (19.04:1); unpressed is Canvas/CanvasText; screenshot confirms. Behavior spec covers it (20/20).
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-16)
+
+Focus ring, forced-colors pressed state and the normal-colors pressed cue are fixed and verified (spec 21/21, axe clean, T6 passes). The remaining LOW (faint default hover, supplementary) does not block. Before moving to stable the Figma round must clear D1/D4, including the `toggle.on.border` drift/draw entries.

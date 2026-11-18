@@ -1,0 +1,93 @@
+{
+  "name": "accordion",
+  "component": "Accordion",
+  "displayName": "Accordion",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-accordion",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/accordion-2026-11-15.md",
+      "hash": "a025a789d6e548428b3b"
+    },
+    {
+      "path": "docs/parity-audits/accordion-2026-11-08.md",
+      "hash": "fe2916946450260c403a"
+    },
+    {
+      "path": "playwright/tests/accordion/__screen-reader__/accordion-first-open.txt",
+      "hash": "3386f68432b4c28277bb"
+    },
+    {
+      "path": "playwright/tests/accordion/__screen-reader__/accordion-second-open.txt",
+      "hash": "ec36cfafc8906915188a"
+    },
+    {
+      "path": "playwright/tests/accordion/__screen-reader__/stories/components-accordion--default.txt",
+      "hash": "592212fb5c728cb562af"
+    },
+    {
+      "path": "playwright/tests/accordion/__screen-reader__/stories/components-accordion--disabled-item.txt",
+      "hash": "7c3465ac910eaf16830a"
+    },
+    {
+      "path": "playwright/tests/accordion/__screen-reader__/stories/components-accordion--disabled.txt",
+      "hash": "5fab7a341aef28356da3"
+    },
+    {
+      "path": "playwright/tests/accordion/__screen-reader__/stories/components-accordion--multiple.txt",
+      "hash": "fe37ab65a9323b9b828b"
+    },
+    {
+      "path": "playwright/tests/accordion/__screen-reader__/stories/components-accordion--not-collapsible.txt",
+      "hash": "c27cf9f1ab09bec315aa"
+    },
+    {
+      "path": "playwright/tests/accordion/accordion.behavior.spec.ts",
+      "hash": "458f73bbdb2280a93792"
+    },
+    {
+      "path": "spec/components/accordion/contract.json",
+      "hash": "b5152e94f69d686f66d4"
+    },
+    {
+      "path": "spec/components/accordion/contract.md",
+      "hash": "af4fe412342068d19100"
+    },
+    {
+      "path": "src/components/accordion/Accordion.scss",
+      "hash": "a632d819d1fa6422ca28"
+    },
+    {
+      "path": "src/components/accordion/Accordion.stories.ts",
+      "hash": "76b5f3980a78fedb3311"
+    },
+    {
+      "path": "src/components/accordion/Accordion.ts",
+      "hash": "5bbb11e9f8095ed054ff"
+    },
+    {
+      "path": "src/components/accordion/AccordionContent.ts",
+      "hash": "4d7c5147b9926261b70a"
+    },
+    {
+      "path": "src/components/accordion/AccordionItem.ts",
+      "hash": "d404485af0224293b2d6"
+    },
+    {
+      "path": "src/components/accordion/AccordionTrigger.ts",
+      "hash": "736c8824f1022b4df6c8"
+    },
+    {
+      "path": "src/components/accordion/context.ts",
+      "hash": "76c16a81d99e363e956b"
+    },
+    {
+      "path": "src/components/accordion/index.ts",
+      "hash": "5ae431f76cae09a91d25"
+    }
+  ]
+}

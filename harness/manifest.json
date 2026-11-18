@@ -1,0 +1,52 @@
+{
+  "$description": "Who owns which files (SB-0048, SB-0099). sketchbook upgrade replaces harness-owned files and only reports team-owned and shared ones, which it never touches. Paths match top-down: team wins over harness, except exact harness paths (docs/cli.md and the schemas in spec/schemas, which a project keeps only as editor hints of the engine's). harness/** and scripts/** are the engine: a project runs them from node_modules. move-to-.claude/** is the Claude layer before Claude installs it into .claude/.",
+  "version": "0.3.0",
+  "harness": [
+    "harness/**",
+    ".claude/skills/**",
+    ".claude/agents/**",
+    ".claude/commands/**",
+    ".claude/rules/**",
+    ".claude/hooks/**",
+    "move-to-.claude/**",
+    ".githooks/**",
+    "scripts/**",
+    "docs/cli.md",
+    "spec/schemas/api.schema.json",
+    "spec/schemas/brand-config.schema.json",
+    "spec/schemas/contract.schema.json",
+    "spec/schemas/figma-practices.schema.json",
+    "spec/schemas/harness-config.schema.json",
+    "spec/schemas/registry.schema.json"
+  ],
+  "team": [
+    "spec/**",
+    "src/**",
+    "brands/**",
+    "brand.config.json",
+    "harness.config.json",
+    "playwright/tests/**",
+    "docs/**"
+  ],
+  "shared": [
+    "package.json",
+    "package-lock.json",
+    "tsconfig.json",
+    "tsconfig.stories.json",
+    "tsconfig.tools.json",
+    "tsup.config.ts",
+    "eslint.config.js",
+    "eslint-plugins.d.ts",
+    "prettier.config.ts",
+    ".storybook/**",
+    "playwright/*.ts",
+    "playwright/helpers/**",
+    "CLAUDE.md",
+    "README.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "optional": {
+    "forge": [".claude/skills/forge-me-a-skill/**"]
+  },
+  "ignore": ["node_modules/**", ".git/**", "dist/**", "storybook-static/**", "generated/**", "**/playwright-report/**", "**/test-results/**", ".claude/.hammock-state.json"]
+}

@@ -1,0 +1,106 @@
+.data-table {
+  display: grid;
+  /* One column that may shrink below its content's width, so a wide table scrolls in its scroll area
+     instead of widening the page (WCAG 1.4.10 Reflow). */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sb-space-stack-lg);
+  padding: var(--sb-space-inset-surface);
+}
+
+.data-table__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sb-space-stack-md);
+}
+
+.data-table__header h1 {
+  margin: 0;
+  font-size: var(--sb-font-size-heading-3);
+  font-weight: var(--sb-font-weight-heading);
+  line-height: var(--sb-font-line-height-heading-3);
+}
+
+.data-table__header p,
+.data-table__hint {
+  margin: 0;
+  color: var(--sb-color-muted-foreground);
+  font-size: var(--sb-font-size-caption);
+  line-height: var(--sb-font-line-height-caption);
+}
+
+.data-table__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sb-space-stack-md);
+}
+
+.data-table__search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sb-space-stack-md);
+}
+
+.data-table__search sb-input-group {
+  inline-size: min(100%, 40ch);
+}
+
+.data-table__scroll {
+  display: block;
+}
+
+.data-table__select {
+  inline-size: var(--sb-size-control-default);
+}
+
+.data-table__person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sb-space-stack-sm);
+}
+
+.data-table__name {
+  font-weight: var(--sb-font-weight-label);
+}
+
+.data-table__email {
+  color: var(--sb-color-muted-foreground);
+}
+
+.data-table__skeleton-box,
+.data-table__skeleton,
+.data-table__skeleton-wide {
+  display: block;
+  block-size: var(--sb-size-icon-default);
+}
+
+.data-table__skeleton-box {
+  inline-size: var(--sb-size-icon-default);
+}
+
+.data-table__skeleton {
+  inline-size: 60%;
+}
+
+.data-table__skeleton-wide {
+  inline-size: 80%;
+}
+
+.data-table__empty {
+  border: var(--sb-border-width-default) dashed var(--sb-color-border);
+  border-radius: var(--sb-radius-surface);
+}
+
+.data-table__empty sb-empty-title h2 {
+  margin: 0;
+  font: inherit;
+}
+
+/* Grid and flex children default to their min-content width; let them shrink so only the table scrolls. */
+.data-table > * {
+  min-inline-size: 0;
+}

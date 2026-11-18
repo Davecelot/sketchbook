@@ -1,0 +1,4 @@
+- text "No reports yet"
+- text "Reports you create will be listed here. Create the first one to begin."
+- button "Create report"
+- button "Import report"

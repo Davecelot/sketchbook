@@ -1,0 +1,30 @@
+# Parity audit: Spinner (2026-11-08)
+
+Reference: `spec/components/spinner/contract.{md,json}`. Implementation: `src/components/spinner/`. Evidence: `npm run check` all pass; `playwright tests/spinner` 7/7 pass; tokens in `generated/css/tokens.css` resolve as the contract says (size 16px, duration 1000ms, easing linear).
+
+| Aspect | Contract | Realization | |
+| --- | --- | --- | --- |
+| Props `label`, `decorative` + defaults | "Loading", false, decorative reflects | Spinner.ts:12-14 | ✅ |
+| Anatomy: part `icon`, Lucide loader, currentColor | yes | Spinner.ts:30-48 (paths match Lucide loader) | ✅ |
+| Slots / events | none | none | ➖ |
+| Role / name | host `role=status`, `aria-label` | set in `updated()` (Spinner.ts:17-27) | ⚠️ |
+| Decorative | no role, `aria-hidden` | Spinner.ts:18-21 | ✅ |
+| Announcement "when inserted" | polite on insert | role is added after first render, not at connect | ⚠️ |
+| Size 16px, inline-flex, no shrink, `--sb-spinner-size` | yes | Spinner.scss:1-6 | ✅ |
+| Color | currentColor | Spinner.scss:11 | ✅ |
+| Motion | spin; reduced motion keeps spinning at 2x duration | Spinner.scss:12-20 | ✅ |
+| Tokens (own only) | `--sb-spinner-*` | T4 pass | ✅ |
+| Typography | none | none | ➖ |
+| Drift list | size via token | accurate, complete | ✅ |
+| contract.md Realizations section | should reflect built state | Web "Not started", Coverage "None yet" (contract.md Realizations) vs json `complete` + 7 coverage items | ⚠️ |
+
+## Differences and action plan
+
+1. Role set post-render (code). A `role="status"` live region added after the element is already in the DOM is often not announced. Fix: set role/aria-label in `connectedCallback` (before first paint) or use host `static` defaults via `ElementInternals.role`/`ariaLabel` (internals), then keep `updated()` for changes. Add a test using an inserted spinner if possible. Alternatively relax the contract wording ("announced when inserted") if browser verification shows it is announced.
+2. contract.md Realizations stale (contract). Update Web to built, list parts, coverage and the `--sb-spinner-size` drift. Not a code fix.
+
+No `:host([hidden])` rule (minor; not in contract).
+
+Verdict: needs code fix (low severity: announcement timing) plus a contract.md refresh.
+
+Status (2026-11-15): already fixed (6dfe5c9: role and name set in willUpdate before the first render; contract.md Realizations complete).

@@ -1,0 +1,87 @@
+{
+  "name": "empty",
+  "component": "Empty",
+  "displayName": "Empty",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-empty",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/empty-2026-11-15.md",
+      "hash": "8bfb9f9a62a0adc52b29"
+    },
+    {
+      "path": "docs/parity-audits/empty-2026-11-08.md",
+      "hash": "94eb6f0ebcb67e5ff82e"
+    },
+    {
+      "path": "playwright/tests/empty/__screen-reader__/stories/components-empty--default-media.txt",
+      "hash": "a36428ac1e039fa1ac08"
+    },
+    {
+      "path": "playwright/tests/empty/__screen-reader__/stories/components-empty--default.txt",
+      "hash": "69428ce8fd6924fe5c93"
+    },
+    {
+      "path": "playwright/tests/empty/__screen-reader__/stories/components-empty--outline.txt",
+      "hash": "61ec4e1f6bf74d4ea2e1"
+    },
+    {
+      "path": "playwright/tests/empty/__screen-reader__/stories/components-empty--title-only.txt",
+      "hash": "b531aec20772267bb1f0"
+    },
+    {
+      "path": "playwright/tests/empty/empty.behavior.spec.ts",
+      "hash": "93bd9aa2a51cd2be900a"
+    },
+    {
+      "path": "spec/components/empty/contract.json",
+      "hash": "efeb91d03e24e277c4a1"
+    },
+    {
+      "path": "spec/components/empty/contract.md",
+      "hash": "584ac0d314cc5b04bd28"
+    },
+    {
+      "path": "src/components/empty/Empty.scss",
+      "hash": "cc3b7ef917a187686d23"
+    },
+    {
+      "path": "src/components/empty/Empty.stories.ts",
+      "hash": "f27a2ed4bc56de043dbd"
+    },
+    {
+      "path": "src/components/empty/Empty.ts",
+      "hash": "26c34047865703e941ae"
+    },
+    {
+      "path": "src/components/empty/EmptyContent.ts",
+      "hash": "6adc280f5247c6c59c04"
+    },
+    {
+      "path": "src/components/empty/EmptyDescription.ts",
+      "hash": "12d5b75e9a7e69f7ebf3"
+    },
+    {
+      "path": "src/components/empty/EmptyHeader.ts",
+      "hash": "b26b9b829d659c172afa"
+    },
+    {
+      "path": "src/components/empty/EmptyMedia.ts",
+      "hash": "bf9f7c6d54893538934d"
+    },
+    {
+      "path": "src/components/empty/EmptyTitle.ts",
+      "hash": "ad3c27417ff9f17d29c5"
+    },
+    {
+      "path": "src/components/empty/index.ts",
+      "hash": "97c8f20352efd114453f"
+    }
+  ]
+}

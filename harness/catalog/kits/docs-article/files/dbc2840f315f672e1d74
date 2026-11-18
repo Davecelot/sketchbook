@@ -1,0 +1,594 @@
+{
+  "name": "Docs article",
+  "summary": "A long-form documentation page: contents sidebar, breadcrumb, typography for prose, a diagram, a code sample, a callout, a collapsible, an FAQ and previous/next links.",
+  "components": [
+    "sb-accordion",
+    "sb-accordion-content",
+    "sb-accordion-item",
+    "sb-accordion-trigger",
+    "sb-alert",
+    "sb-alert-description",
+    "sb-alert-title",
+    "sb-aspect-ratio",
+    "sb-breadcrumb",
+    "sb-breadcrumb-item",
+    "sb-breadcrumb-link",
+    "sb-breadcrumb-list",
+    "sb-breadcrumb-page",
+    "sb-breadcrumb-separator",
+    "sb-collapsible",
+    "sb-collapsible-content",
+    "sb-collapsible-trigger",
+    "sb-direction",
+    "sb-kbd",
+    "sb-kbd-group",
+    "sb-pagination",
+    "sb-pagination-content",
+    "sb-pagination-item",
+    "sb-pagination-next",
+    "sb-pagination-previous",
+    "sb-scroll-area",
+    "sb-scroll-bar",
+    "sb-separator",
+    "sb-typography"
+  ],
+  "landmarks": [
+    "navigation (On this page)",
+    "main",
+    "navigation (Breadcrumb)",
+    "region per section",
+    "navigation (Article pages)"
+  ],
+  "a11y": [
+    "Prose headings come from Typography, which renders real h1 and h2 elements; FAQ triggers are level 3.",
+    "The code sample becomes a focusable, named region only when it overflows, so it can be scrolled with the keyboard.",
+    "The whole page mirrors under Direction (right to left), including the sidebar position and the pagination chevrons."
+  ],
+  "states": [
+    "default",
+    "right-to-left"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.background",
+      "pad": "space.inset.spacious",
+      "align": "center-x"
+    },
+    "states": {
+      "default": [
+        {
+          "row": [
+            {
+              "stack": [
+                {
+                  "text": "On this page",
+                  "style": "font.size.control",
+                  "color": "color.foreground"
+                },
+                {
+                  "text": "Install",
+                  "style": "font.size.body",
+                  "color": "color.primary"
+                },
+                {
+                  "text": "Build a first page",
+                  "style": "font.size.body",
+                  "color": "color.primary"
+                },
+                {
+                  "text": "Questions",
+                  "style": "font.size.body",
+                  "color": "color.primary"
+                }
+              ],
+              "gap": "space.stack.sm",
+              "width": "hug"
+            },
+            {
+              "stack": [
+                {
+                  "component": "breadcrumb",
+                  "text": {
+                    "link": "Docs",
+                    "link-middle": "Guides",
+                    "page": "Getting started"
+                  },
+                  "show": {
+                    "Middle": true,
+                    "Ellipsis": false
+                  }
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "h1"
+                  },
+                  "text": {
+                    "text-label": "Getting started"
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "lead"
+                  },
+                  "text": {
+                    "text-label": "Install the package, load the tokens and put your first component on a page."
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "aspect-ratio",
+                  "slots": {
+                    "Content": [
+                      {
+                        "stack": [],
+                        "fill": "color.muted",
+                        "radius": "radius.surface",
+                        "width": "fill",
+                        "height": "fill"
+                      }
+                    ]
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "h2"
+                  },
+                  "text": {
+                    "text-label": "Install"
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "p"
+                  },
+                  "text": {
+                    "text-label": "Add the package with your package manager. It brings the components and one stylesheet of tokens."
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "scroll-area",
+                  "slots": {
+                    "Content": [
+                      {
+                        "text": "npm install @your-scope/design-system && npx design-system init --prefix acme --with-tokens",
+                        "style": "font.size.control",
+                        "color": "color.foreground",
+                        "width": "fill"
+                      }
+                    ]
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "alert",
+                  "text": {
+                    "title": "Load the tokens once",
+                    "description": "Import the token stylesheet at the root of the app; every component reads from it."
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "collapsible",
+                  "text": {
+                    "trigger-label": "Show advanced options"
+                  }
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "h2"
+                  },
+                  "text": {
+                    "text-label": "Build a first page"
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "p"
+                  },
+                  "text": {
+                    "text-label": "Write the markup as plain HTML. Components are custom elements, so any framework can render them."
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "list"
+                  },
+                  "text": {
+                    "item-one": "Start from a kit that is close to what you need.",
+                    "item-two": "Replace the sample text and data.",
+                    "item-three": "Run the checks before you commit."
+                  },
+                  "width": "fill"
+                },
+                {
+                  "row": [
+                    {
+                      "text": "Press",
+                      "style": "font.size.body",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "component": "kbd/kbd-group",
+                      "text": {
+                        "key/label": "Ctrl",
+                        "key-other/label": "K"
+                      }
+                    },
+                    {
+                      "text": "in the docs to search them.",
+                      "style": "font.size.body",
+                      "color": "color.foreground"
+                    }
+                  ],
+                  "gap": "space.stack.sm",
+                  "width": "fill"
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "blockquote"
+                  },
+                  "text": {
+                    "text-label": "Small pages first: a sign-in form tells you more about the system than a style guide does."
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "typography",
+                  "props": {
+                    "kind": "h2"
+                  },
+                  "text": {
+                    "text-label": "Questions"
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "accordion",
+                  "text": {
+                    "label": "Does it work offline?"
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "accordion",
+                  "text": {
+                    "label": "Can I change the colors?"
+                  },
+                  "width": "fill"
+                },
+                {
+                  "component": "separator",
+                  "width": "fill"
+                },
+                {
+                  "row": [
+                    {
+                      "component": "pagination",
+                      "text": {
+                        "previous-label": "Introduction",
+                        "next-label": "Theming"
+                      },
+                      "hide": [
+                        "page-1",
+                        "page-2",
+                        "page-3",
+                        "ellipsis"
+                      ]
+                    }
+                  ],
+                  "gap": "space.stack.sm",
+                  "width": "fill",
+                  "align": "center-x"
+                }
+              ],
+              "gap": "space.stack.md",
+              "width": {
+                "span": [
+                  13,
+                  24
+                ]
+              }
+            }
+          ],
+          "gap": "space.inset.spacious",
+          "width": {
+            "span": [
+              10,
+              12
+            ]
+          },
+          "align": "top"
+        }
+      ],
+      "right-to-left": [
+        {
+          "component": "direction",
+          "slots": {
+            "Content": [
+              {
+                "row": [
+                  {
+                    "row": [
+                      {
+                        "stack": [
+                          {
+                            "text": "On this page",
+                            "style": "font.size.control",
+                            "color": "color.foreground"
+                          },
+                          {
+                            "text": "Install",
+                            "style": "font.size.body",
+                            "color": "color.primary"
+                          },
+                          {
+                            "text": "Build a first page",
+                            "style": "font.size.body",
+                            "color": "color.primary"
+                          },
+                          {
+                            "text": "Questions",
+                            "style": "font.size.body",
+                            "color": "color.primary"
+                          }
+                        ],
+                        "gap": "space.stack.sm",
+                        "width": "hug"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "component": "breadcrumb",
+                            "text": {
+                              "link": "Docs",
+                              "link-middle": "Guides",
+                              "page": "Getting started"
+                            },
+                            "show": {
+                              "Middle": true,
+                              "Ellipsis": false
+                            }
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "h1"
+                            },
+                            "text": {
+                              "text-label": "Getting started"
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "lead"
+                            },
+                            "text": {
+                              "text-label": "Install the package, load the tokens and put your first component on a page."
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "aspect-ratio",
+                            "slots": {
+                              "Content": [
+                                {
+                                  "stack": [],
+                                  "fill": "color.muted",
+                                  "radius": "radius.surface",
+                                  "width": "fill",
+                                  "height": "fill"
+                                }
+                              ]
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "h2"
+                            },
+                            "text": {
+                              "text-label": "Install"
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "p"
+                            },
+                            "text": {
+                              "text-label": "Add the package with your package manager. It brings the components and one stylesheet of tokens."
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "scroll-area",
+                            "slots": {
+                              "Content": [
+                                {
+                                  "text": "npm install @your-scope/design-system && npx design-system init --prefix acme --with-tokens",
+                                  "style": "font.size.control",
+                                  "color": "color.foreground",
+                                  "width": "fill"
+                                }
+                              ]
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "alert",
+                            "text": {
+                              "title": "Load the tokens once",
+                              "description": "Import the token stylesheet at the root of the app; every component reads from it."
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "collapsible",
+                            "text": {
+                              "trigger-label": "Show advanced options"
+                            }
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "h2"
+                            },
+                            "text": {
+                              "text-label": "Build a first page"
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "p"
+                            },
+                            "text": {
+                              "text-label": "Write the markup as plain HTML. Components are custom elements, so any framework can render them."
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "list"
+                            },
+                            "text": {
+                              "item-one": "Start from a kit that is close to what you need.",
+                              "item-two": "Replace the sample text and data.",
+                              "item-three": "Run the checks before you commit."
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "row": [
+                              {
+                                "text": "Press",
+                                "style": "font.size.body",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "component": "kbd/kbd-group",
+                                "text": {
+                                  "key/label": "Ctrl",
+                                  "key-other/label": "K"
+                                }
+                              },
+                              {
+                                "text": "in the docs to search them.",
+                                "style": "font.size.body",
+                                "color": "color.foreground"
+                              }
+                            ],
+                            "gap": "space.stack.sm",
+                            "width": "fill"
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "blockquote"
+                            },
+                            "text": {
+                              "text-label": "Small pages first: a sign-in form tells you more about the system than a style guide does."
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "typography",
+                            "props": {
+                              "kind": "h2"
+                            },
+                            "text": {
+                              "text-label": "Questions"
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "accordion",
+                            "text": {
+                              "label": "Does it work offline?"
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "accordion",
+                            "text": {
+                              "label": "Can I change the colors?"
+                            },
+                            "width": "fill"
+                          },
+                          {
+                            "component": "separator",
+                            "width": "fill"
+                          },
+                          {
+                            "row": [
+                              {
+                                "component": "pagination",
+                                "text": {
+                                  "previous-label": "Introduction",
+                                  "next-label": "Theming"
+                                },
+                                "hide": [
+                                  "page-1",
+                                  "page-2",
+                                  "page-3",
+                                  "ellipsis"
+                                ]
+                              }
+                            ],
+                            "gap": "space.stack.sm",
+                            "width": "fill",
+                            "align": "center-x"
+                          }
+                        ],
+                        "gap": "space.stack.md",
+                        "width": {
+                          "span": [
+                            13,
+                            24
+                          ]
+                        }
+                      }
+                    ],
+                    "gap": "space.inset.spacious",
+                    "width": {
+                      "span": [
+                        10,
+                        12
+                      ]
+                    },
+                    "align": "top"
+                  }
+                ],
+                "gap": "space.stack.sm",
+                "width": "fill",
+                "align": "center-x"
+              }
+            ]
+          },
+          "width": "fill",
+          "height": "hug"
+        }
+      ]
+    }
+  }
+}

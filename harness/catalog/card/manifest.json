@@ -1,0 +1,95 @@
+{
+  "name": "card",
+  "component": "Card",
+  "displayName": "Card",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-card",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/card-2026-11-15.md",
+      "hash": "9e14107badcfb8170367"
+    },
+    {
+      "path": "docs/parity-audits/card-2026-11-08.md",
+      "hash": "216f192af043ae2ff617"
+    },
+    {
+      "path": "playwright/tests/card/__screen-reader__/stories/components-card--content-only.txt",
+      "hash": "51aab65ffd59c813f578"
+    },
+    {
+      "path": "playwright/tests/card/__screen-reader__/stories/components-card--default.txt",
+      "hash": "5ef69696b5505bcb1141"
+    },
+    {
+      "path": "playwright/tests/card/__screen-reader__/stories/components-card--sizes.txt",
+      "hash": "18fbc68e099aee86c684"
+    },
+    {
+      "path": "playwright/tests/card/__screen-reader__/stories/components-card--small.txt",
+      "hash": "5ef69696b5505bcb1141"
+    },
+    {
+      "path": "playwright/tests/card/__screen-reader__/stories/components-card--with-action.txt",
+      "hash": "06ad3458251f83352e77"
+    },
+    {
+      "path": "playwright/tests/card/card.behavior.spec.ts",
+      "hash": "4aa88fa70afaceb9a9c7"
+    },
+    {
+      "path": "spec/components/card/contract.json",
+      "hash": "d6e226f85f6fc54b0843"
+    },
+    {
+      "path": "spec/components/card/contract.md",
+      "hash": "d1ac11b32e7096b3a30c"
+    },
+    {
+      "path": "src/components/card/Card.scss",
+      "hash": "6d671f1ec19ae75aa88c"
+    },
+    {
+      "path": "src/components/card/Card.stories.ts",
+      "hash": "f31279c9c4b076d443e4"
+    },
+    {
+      "path": "src/components/card/Card.ts",
+      "hash": "3a96ab06d75a85124b5c"
+    },
+    {
+      "path": "src/components/card/CardAction.ts",
+      "hash": "a2d5bf1b906370fca975"
+    },
+    {
+      "path": "src/components/card/CardContent.ts",
+      "hash": "54df6b8d56bd1617895c"
+    },
+    {
+      "path": "src/components/card/CardDescription.ts",
+      "hash": "3e54fb5eea171a3ceaad"
+    },
+    {
+      "path": "src/components/card/CardFooter.ts",
+      "hash": "96d54fab0818dfa63590"
+    },
+    {
+      "path": "src/components/card/CardHeader.ts",
+      "hash": "3017f6933cd6283eb287"
+    },
+    {
+      "path": "src/components/card/CardTitle.ts",
+      "hash": "34e2673bc64b4a8ff39b"
+    },
+    {
+      "path": "src/components/card/index.ts",
+      "hash": "58d44e64ec398d29b56f"
+    }
+  ]
+}

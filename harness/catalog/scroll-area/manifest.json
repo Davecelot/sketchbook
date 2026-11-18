@@ -1,0 +1,73 @@
+{
+  "name": "scroll-area",
+  "component": "ScrollArea",
+  "displayName": "Scroll Area",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-scroll-area",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/scroll-area-2026-11-15.md",
+      "hash": "4ca03842475a792cb0c1"
+    },
+    {
+      "path": "docs/parity-audits/scroll-area-2026-11-08.md",
+      "hash": "85a4352c5d2fceab3803"
+    },
+    {
+      "path": "playwright/tests/scroll-area/__screen-reader__/scroll-area-focused.txt",
+      "hash": "da73cf074c32dc1be5f1"
+    },
+    {
+      "path": "playwright/tests/scroll-area/__screen-reader__/stories/components-scroll-area--both-axes.txt",
+      "hash": "ebca80ece3c535585b1d"
+    },
+    {
+      "path": "playwright/tests/scroll-area/__screen-reader__/stories/components-scroll-area--default.txt",
+      "hash": "f6fc569d113d49be8d9b"
+    },
+    {
+      "path": "playwright/tests/scroll-area/__screen-reader__/stories/components-scroll-area--horizontal.txt",
+      "hash": "4a42e479847375dcc3f9"
+    },
+    {
+      "path": "playwright/tests/scroll-area/__screen-reader__/stories/components-scroll-area--nothing-to-scroll.txt",
+      "hash": "ade2527a8f6accd9b730"
+    },
+    {
+      "path": "playwright/tests/scroll-area/scroll-area.behavior.spec.ts",
+      "hash": "60bc5ea08ee21de46d13"
+    },
+    {
+      "path": "spec/components/scroll-area/contract.json",
+      "hash": "55e014a395adc19f6cef"
+    },
+    {
+      "path": "spec/components/scroll-area/contract.md",
+      "hash": "1e8f68bf069a5f387c34"
+    },
+    {
+      "path": "src/components/scroll-area/ScrollArea.scss",
+      "hash": "41b80c94f170ea511175"
+    },
+    {
+      "path": "src/components/scroll-area/ScrollArea.stories.ts",
+      "hash": "0609007de03faf1c3d0f"
+    },
+    {
+      "path": "src/components/scroll-area/ScrollArea.ts",
+      "hash": "b2e8b1702898b8ca3833"
+    },
+    {
+      "path": "src/components/scroll-area/ScrollBar.ts",
+      "hash": "1908a334d6f3a4dbf6c0"
+    },
+    {
+      "path": "src/components/scroll-area/index.ts",
+      "hash": "a3cd2f01d235d82495fb"
+    }
+  ]
+}

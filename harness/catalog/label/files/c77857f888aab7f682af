@@ -1,0 +1,3 @@
+- checkbox "I agree to the policy" [checked=false]
+- text "I agree to the"
+- link "policy"

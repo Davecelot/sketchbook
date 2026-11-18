@@ -1,0 +1,6 @@
+- dialog "تعديل الملف الشخصي" [focused, modal] desc "أجرِ التغييرات هنا ثم احفظها."
+  - heading "تعديل الملف الشخصي" [level=2]
+  - text "أجرِ التغييرات هنا ثم احفظها."
+  - button "إلغاء"
+  - button "حفظ"
+  - button "Close"

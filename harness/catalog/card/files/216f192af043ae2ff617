@@ -1,0 +1,12 @@
+# Parity audit: card (2026-11-08)
+
+Reference: spec/components/card/contract.{md,json}. Implementation: src/components/card/. Evidence: npm run check all pass (T1-T6, C1-C3, R1, G1); playwright tests/card pass (full group run 160 passed, 1 unrelated Storybook-navigation flake in empty); no literals in the SCSS (T4/T5 pass).
+
+| Aspect | Result | |
+| --- | --- | --- |
+| 7 elements, size default/sm | Card.ts and parts | ✅ |
+| Inset via --_inset, parts outside a card use default | Card.scss:17-26 | ✅ |
+| data-has-action from slotchange | CardHeader.ts:11-14 | ✅ |
+| No roles/ARIA | all parts | ✅ |
+
+Verdict: matches contract.

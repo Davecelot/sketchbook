@@ -1,0 +1,31 @@
+{
+  "family": "layoutGrid",
+  "$description": "Page layout grid: columns, gutter and outer margin in px.",
+  "default": "12-col",
+  "presets": [
+    {
+      "id": "12-col",
+      "label": "12 columns",
+      "values": {
+        "columns": 12,
+        "gutter": 24,
+        "margin": 24
+      },
+      "description": "Twelve columns divide into halves, thirds and quarters. The default.",
+      "source": "https://getbootstrap.com/docs/5.3/layout/grid/",
+      "verified": false
+    },
+    {
+      "id": "16-col",
+      "label": "16 columns",
+      "values": {
+        "columns": 16,
+        "gutter": 32,
+        "margin": 16
+      },
+      "description": "Sixteen columns for wide, data-dense layouts on an 8 px rhythm.",
+      "source": "https://carbondesignsystem.com/elements/2x-grid/overview/",
+      "verified": true
+    }
+  ]
+}

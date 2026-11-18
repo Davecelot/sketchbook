@@ -1,0 +1,35 @@
+{
+  "family": "letterSpacing",
+  "$description": "Letter spacing in em. tight and normal are aliased by the semantic layer.",
+  "default": "standard",
+  "presets": [
+    {
+      "id": "standard",
+      "label": "Four steps",
+      "values": {
+        "tight": "-0.025em",
+        "normal": "0em",
+        "wide": "0.025em",
+        "widest": "0.1em"
+      },
+      "description": "Slightly tighter headings, neutral body, slightly wider small caps, and the widest step for keyboard shortcuts (font.letter-spacing.key). The default.",
+      "source": "https://tailwindcss.com/docs/letter-spacing",
+      "verified": true
+    },
+    {
+      "id": "tailwind",
+      "label": "Six steps",
+      "values": {
+        "tighter": "-0.05em",
+        "tight": "-0.025em",
+        "normal": "0em",
+        "wide": "0.025em",
+        "wider": "0.05em",
+        "widest": "0.1em"
+      },
+      "description": "The three default steps plus tighter, wider and widest for display and label styles.",
+      "source": "https://tailwindcss.com/docs/letter-spacing",
+      "verified": true
+    }
+  ]
+}

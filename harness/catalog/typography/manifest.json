@@ -1,0 +1,73 @@
+{
+  "name": "typography",
+  "component": "Typography",
+  "displayName": "Typography",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-typography",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/typography-2026-11-15.md",
+      "hash": "4fb45c7c4e74d67c5bf5"
+    },
+    {
+      "path": "docs/parity-audits/typography-2026-11-08.md",
+      "hash": "b3b312ffd5ecb243853a"
+    },
+    {
+      "path": "playwright/tests/typography/__screen-reader__/stories/components-typography--article.txt",
+      "hash": "677a3d8e4ce6c2ac5f7f"
+    },
+    {
+      "path": "playwright/tests/typography/__screen-reader__/stories/components-typography--default.txt",
+      "hash": "0a4d3686784349f2a671"
+    },
+    {
+      "path": "playwright/tests/typography/__screen-reader__/stories/components-typography--inline-code.txt",
+      "hash": "71af48bf10a9799ce540"
+    },
+    {
+      "path": "playwright/tests/typography/__screen-reader__/stories/components-typography--lead.txt",
+      "hash": "6eb835a9f4bcf45c33f1"
+    },
+    {
+      "path": "playwright/tests/typography/__screen-reader__/stories/components-typography--muted.txt",
+      "hash": "4b963f90bb762c552cf8"
+    },
+    {
+      "path": "playwright/tests/typography/__screen-reader__/stories/components-typography--variants.txt",
+      "hash": "70c577bc4141d2234973"
+    },
+    {
+      "path": "playwright/tests/typography/typography.behavior.spec.ts",
+      "hash": "abe12ca3a7a166b0b4fb"
+    },
+    {
+      "path": "spec/components/typography/contract.json",
+      "hash": "ea5ccd6abd4866523ab5"
+    },
+    {
+      "path": "spec/components/typography/contract.md",
+      "hash": "2db24ae6bcb2f89eb7b6"
+    },
+    {
+      "path": "src/components/typography/Typography.scss",
+      "hash": "c47ff3172fe052fda28f"
+    },
+    {
+      "path": "src/components/typography/Typography.stories.ts",
+      "hash": "ebb2f1791031cad5c2fc"
+    },
+    {
+      "path": "src/components/typography/Typography.ts",
+      "hash": "7dbdb256dedc6d4e8c42"
+    },
+    {
+      "path": "src/components/typography/index.ts",
+      "hash": "1004765ed611a2862d32"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+- text "Temperature"
+- slider "Temperature minimum" [orientation=vertical, valuetext=25] value "25"
+- slider "Temperature maximum" [orientation=vertical, valuetext=75] value "75"
+- paragraph [live=polite]

@@ -1,0 +1,4 @@
+- text "Message"
+- textbox "Message" [invalid=true] value "Hi" desc "Write at least 20 characters."
+- paragraph [live=polite]
+  - text "Write at least 20 characters."

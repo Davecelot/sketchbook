@@ -1,0 +1,2099 @@
+{
+  "name": "Form states",
+  "summary": "A gallery of every form control in its default, disabled, invalid and read-only states, for checking tokens, focus rings and right to left in one place.",
+  "components": [
+    "sb-checkbox",
+    "sb-direction",
+    "sb-field",
+    "sb-field-description",
+    "sb-field-error",
+    "sb-field-label",
+    "sb-input",
+    "sb-input-group",
+    "sb-input-group-addon",
+    "sb-label",
+    "sb-native-select",
+    "sb-radio-group",
+    "sb-radio-group-item",
+    "sb-slider",
+    "sb-switch",
+    "sb-textarea",
+    "sb-toggle",
+    "sb-toggle-group",
+    "sb-toggle-group-item"
+  ],
+  "landmarks": [
+    "main",
+    "region per control"
+  ],
+  "a11y": [
+    "Each control is labelled with its state (\"Invalid input\"), so a screen reader pass doubles as a review.",
+    "Disabled controls leave the tab order; read-only ones stay in it.",
+    "Invalid controls set aria-invalid and are described by their error."
+  ],
+  "states": [
+    "default",
+    "right-to-left"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.background",
+      "pad": "space.inset.spacious",
+      "align": "center-x"
+    },
+    "states": {
+      "default": [
+        {
+          "stack": [
+            {
+              "stack": [
+                {
+                  "text": "Form states",
+                  "style": "font.size.heading-3",
+                  "color": "color.foreground"
+                },
+                {
+                  "text": "Every form control in its default, disabled, invalid and read-only states, side by side. Check focus rings by tabbing through.",
+                  "style": "font.size.body",
+                  "color": "color.muted-foreground"
+                }
+              ],
+              "gap": "space.stack.xs",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Input",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "input",
+                              "text": {
+                                "Label text": "Default input",
+                                "Placeholder text": "Type here"
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "input",
+                              "props": {
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "Label text": "Disabled input",
+                                "Value text": "Cannot change"
+                              },
+                              "show": {
+                                "Value": true,
+                                "Placeholder": false
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "input",
+                              "props": {
+                                "validation": "error"
+                              },
+                              "text": {
+                                "Label text": "Invalid input",
+                                "Value text": "not-an-email",
+                                "Error text": "Enter an address like name@example.com."
+                              },
+                              "show": {
+                                "Value": true,
+                                "Placeholder": false
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "input",
+                              "text": {
+                                "Label text": "Read-only input",
+                                "Value text": "Shown, not edited"
+                              },
+                              "show": {
+                                "Value": true,
+                                "Placeholder": false
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Input group",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "stack": [
+                                {
+                                  "text": "Default group",
+                                  "style": "font.size.control",
+                                  "color": "color.foreground"
+                                },
+                                {
+                                  "component": "input-group",
+                                  "text": {
+                                    "input-text": "handle"
+                                  },
+                                  "width": "fill"
+                                }
+                              ],
+                              "gap": "space.stack.sm",
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "stack": [
+                                {
+                                  "text": "Invalid group",
+                                  "style": "font.size.control",
+                                  "color": "color.foreground"
+                                },
+                                {
+                                  "component": "input-group",
+                                  "props": {
+                                    "validation": "error"
+                                  },
+                                  "text": {
+                                    "input-text": "no spaces allowed"
+                                  },
+                                  "width": "fill"
+                                },
+                                {
+                                  "text": "Use letters, numbers and dashes.",
+                                  "style": "font.size.caption",
+                                  "color": "color.destructive"
+                                }
+                              ],
+                              "gap": "space.stack.sm",
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Textarea",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "textarea",
+                              "text": {
+                                "Label text": "Default textarea"
+                              },
+                              "show": {
+                                "Placeholder": false
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "textarea",
+                              "props": {
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "Label text": "Disabled textarea",
+                                "Value text": "Cannot change"
+                              },
+                              "show": {
+                                "Value": true,
+                                "Placeholder": false
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "textarea",
+                              "props": {
+                                "validation": "error"
+                              },
+                              "text": {
+                                "Label text": "Invalid textarea",
+                                "Value text": "Too short",
+                                "Error text": "Write at least 20 characters."
+                              },
+                              "show": {
+                                "Value": true,
+                                "Placeholder": false
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Native select",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "native-select",
+                              "text": {
+                                "Label text": "Default select",
+                                "value": "Choose one"
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "native-select",
+                              "props": {
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "Label text": "Disabled select",
+                                "value": "Choose one"
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "native-select",
+                              "props": {
+                                "validation": "error"
+                              },
+                              "text": {
+                                "Label text": "Invalid select",
+                                "value": "Choose one",
+                                "Error text": "Choose an option."
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Checkbox",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "checkbox",
+                              "text": {
+                                "Label text": "Default checkbox"
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "checkbox",
+                              "props": {
+                                "selected": "true"
+                              },
+                              "text": {
+                                "Label text": "Checked checkbox"
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "checkbox",
+                              "props": {
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "Label text": "Disabled checkbox"
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "checkbox",
+                              "props": {
+                                "validation": "error"
+                              },
+                              "text": {
+                                "Label text": "Invalid checkbox",
+                                "Error text": "Accept to continue."
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Radio group",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "radio-group",
+                              "text": {
+                                "label[0]": "Option one",
+                                "label[1]": "Option two"
+                              },
+                              "hide": [
+                                "item[2]"
+                              ],
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "radio-group",
+                              "props": {
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "label[0]": "Locked one",
+                                "label[1]": "Locked two"
+                              },
+                              "hide": [
+                                "item[2]"
+                              ],
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Switch",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "switch",
+                              "text": {
+                                "Label text": "Default switch"
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "switch",
+                              "props": {
+                                "selected": "true"
+                              },
+                              "text": {
+                                "Label text": "Checked switch"
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "switch",
+                              "props": {
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "Label text": "Disabled switch"
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Slider",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "slider",
+                              "text": {
+                                "Label text": "Default slider"
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "slider",
+                              "props": {
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "Label text": "Disabled slider"
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Toggle",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "toggle",
+                              "props": {
+                                "variant": "tertiary"
+                              },
+                              "show": {
+                                "Label": false,
+                                "Left icon": true
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "toggle",
+                              "props": {
+                                "variant": "tertiary",
+                                "selected": "true"
+                              },
+                              "show": {
+                                "Label": false,
+                                "Left icon": true
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "toggle",
+                              "props": {
+                                "variant": "tertiary",
+                                "disabled": "true"
+                              },
+                              "show": {
+                                "Label": false,
+                                "Left icon": true
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Toggle group",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "toggle-group",
+                              "props": {
+                                "variant": "tertiary"
+                              },
+                              "text": {
+                                "Toggle 1/label": "Day",
+                                "Toggle 2/label": "Week"
+                              },
+                              "hide": [
+                                "Toggle 3"
+                              ]
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "toggle-group",
+                              "props": {
+                                "variant": "tertiary",
+                                "disabled": "true"
+                              },
+                              "text": {
+                                "Toggle 1/label": "Day",
+                                "Toggle 2/label": "Week"
+                              },
+                              "hide": [
+                                "Toggle 3"
+                              ]
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "stack": [],
+                  "rule": true,
+                  "width": "fill"
+                },
+                {
+                  "stack": [
+                    {
+                      "text": "Field and label",
+                      "style": "font.size.heading-4",
+                      "color": "color.foreground"
+                    },
+                    {
+                      "row": [
+                        {
+                          "stack": [
+                            {
+                              "component": "field",
+                              "text": {
+                                "label": "Native input in a field",
+                                "description": "Label, description and error wire themselves to the control."
+                              },
+                              "width": "fill"
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        },
+                        {
+                          "stack": [
+                            {
+                              "component": "label",
+                              "text": {
+                                "label-text": "Label element"
+                              }
+                            }
+                          ],
+                          "gap": "space.stack.lg",
+                          "width": {
+                            "span": [
+                              11,
+                              48
+                            ]
+                          }
+                        }
+                      ],
+                      "gap": "space.stack.lg",
+                      "width": "fill",
+                      "wrap": true
+                    }
+                  ],
+                  "gap": "space.stack.lg",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.xl",
+          "width": {
+            "span": [
+              11,
+              12
+            ]
+          }
+        }
+      ],
+      "right-to-left": [
+        {
+          "component": "direction",
+          "slots": {
+            "Content": [
+              {
+                "row": [
+                  {
+                    "stack": [
+                      {
+                        "stack": [
+                          {
+                            "text": "Form states",
+                            "style": "font.size.heading-3",
+                            "color": "color.foreground"
+                          },
+                          {
+                            "text": "Every form control in its default, disabled, invalid and read-only states, side by side. Check focus rings by tabbing through.",
+                            "style": "font.size.body",
+                            "color": "color.muted-foreground"
+                          }
+                        ],
+                        "gap": "space.stack.xs",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Input",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "input",
+                                        "text": {
+                                          "Label text": "Default input",
+                                          "Placeholder text": "Type here"
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "input",
+                                        "props": {
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Disabled input",
+                                          "Value text": "Cannot change"
+                                        },
+                                        "show": {
+                                          "Value": true,
+                                          "Placeholder": false
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "input",
+                                        "props": {
+                                          "validation": "error"
+                                        },
+                                        "text": {
+                                          "Label text": "Invalid input",
+                                          "Value text": "not-an-email",
+                                          "Error text": "Enter an address like name@example.com."
+                                        },
+                                        "show": {
+                                          "Value": true,
+                                          "Placeholder": false
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "input",
+                                        "text": {
+                                          "Label text": "Read-only input",
+                                          "Value text": "Shown, not edited"
+                                        },
+                                        "show": {
+                                          "Value": true,
+                                          "Placeholder": false
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Input group",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "stack": [
+                                          {
+                                            "text": "Default group",
+                                            "style": "font.size.control",
+                                            "color": "color.foreground"
+                                          },
+                                          {
+                                            "component": "input-group",
+                                            "text": {
+                                              "input-text": "handle"
+                                            },
+                                            "width": "fill"
+                                          }
+                                        ],
+                                        "gap": "space.stack.sm",
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "stack": [
+                                          {
+                                            "text": "Invalid group",
+                                            "style": "font.size.control",
+                                            "color": "color.foreground"
+                                          },
+                                          {
+                                            "component": "input-group",
+                                            "props": {
+                                              "validation": "error"
+                                            },
+                                            "text": {
+                                              "input-text": "no spaces allowed"
+                                            },
+                                            "width": "fill"
+                                          },
+                                          {
+                                            "text": "Use letters, numbers and dashes.",
+                                            "style": "font.size.caption",
+                                            "color": "color.destructive"
+                                          }
+                                        ],
+                                        "gap": "space.stack.sm",
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Textarea",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "textarea",
+                                        "text": {
+                                          "Label text": "Default textarea"
+                                        },
+                                        "show": {
+                                          "Placeholder": false
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "textarea",
+                                        "props": {
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Disabled textarea",
+                                          "Value text": "Cannot change"
+                                        },
+                                        "show": {
+                                          "Value": true,
+                                          "Placeholder": false
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "textarea",
+                                        "props": {
+                                          "validation": "error"
+                                        },
+                                        "text": {
+                                          "Label text": "Invalid textarea",
+                                          "Value text": "Too short",
+                                          "Error text": "Write at least 20 characters."
+                                        },
+                                        "show": {
+                                          "Value": true,
+                                          "Placeholder": false
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Native select",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "native-select",
+                                        "text": {
+                                          "Label text": "Default select",
+                                          "value": "Choose one"
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "native-select",
+                                        "props": {
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Disabled select",
+                                          "value": "Choose one"
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "native-select",
+                                        "props": {
+                                          "validation": "error"
+                                        },
+                                        "text": {
+                                          "Label text": "Invalid select",
+                                          "value": "Choose one",
+                                          "Error text": "Choose an option."
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Checkbox",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "checkbox",
+                                        "text": {
+                                          "Label text": "Default checkbox"
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "checkbox",
+                                        "props": {
+                                          "selected": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Checked checkbox"
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "checkbox",
+                                        "props": {
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Disabled checkbox"
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "checkbox",
+                                        "props": {
+                                          "validation": "error"
+                                        },
+                                        "text": {
+                                          "Label text": "Invalid checkbox",
+                                          "Error text": "Accept to continue."
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Radio group",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "radio-group",
+                                        "text": {
+                                          "label[0]": "Option one",
+                                          "label[1]": "Option two"
+                                        },
+                                        "hide": [
+                                          "item[2]"
+                                        ],
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "radio-group",
+                                        "props": {
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "label[0]": "Locked one",
+                                          "label[1]": "Locked two"
+                                        },
+                                        "hide": [
+                                          "item[2]"
+                                        ],
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Switch",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "switch",
+                                        "text": {
+                                          "Label text": "Default switch"
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "switch",
+                                        "props": {
+                                          "selected": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Checked switch"
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "switch",
+                                        "props": {
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Disabled switch"
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Slider",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "slider",
+                                        "text": {
+                                          "Label text": "Default slider"
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "slider",
+                                        "props": {
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "Label text": "Disabled slider"
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Toggle",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "toggle",
+                                        "props": {
+                                          "variant": "tertiary"
+                                        },
+                                        "show": {
+                                          "Label": false,
+                                          "Left icon": true
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "toggle",
+                                        "props": {
+                                          "variant": "tertiary",
+                                          "selected": "true"
+                                        },
+                                        "show": {
+                                          "Label": false,
+                                          "Left icon": true
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "toggle",
+                                        "props": {
+                                          "variant": "tertiary",
+                                          "disabled": "true"
+                                        },
+                                        "show": {
+                                          "Label": false,
+                                          "Left icon": true
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Toggle group",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "toggle-group",
+                                        "props": {
+                                          "variant": "tertiary"
+                                        },
+                                        "text": {
+                                          "Toggle 1/label": "Day",
+                                          "Toggle 2/label": "Week"
+                                        },
+                                        "hide": [
+                                          "Toggle 3"
+                                        ]
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "toggle-group",
+                                        "props": {
+                                          "variant": "tertiary",
+                                          "disabled": "true"
+                                        },
+                                        "text": {
+                                          "Toggle 1/label": "Day",
+                                          "Toggle 2/label": "Week"
+                                        },
+                                        "hide": [
+                                          "Toggle 3"
+                                        ]
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      },
+                      {
+                        "stack": [
+                          {
+                            "stack": [],
+                            "rule": true,
+                            "width": "fill"
+                          },
+                          {
+                            "stack": [
+                              {
+                                "text": "Field and label",
+                                "style": "font.size.heading-4",
+                                "color": "color.foreground"
+                              },
+                              {
+                                "row": [
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "field",
+                                        "text": {
+                                          "label": "Native input in a field",
+                                          "description": "Label, description and error wire themselves to the control."
+                                        },
+                                        "width": "fill"
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "stack": [
+                                      {
+                                        "component": "label",
+                                        "text": {
+                                          "label-text": "Label element"
+                                        }
+                                      }
+                                    ],
+                                    "gap": "space.stack.lg",
+                                    "width": {
+                                      "span": [
+                                        11,
+                                        48
+                                      ]
+                                    }
+                                  }
+                                ],
+                                "gap": "space.stack.lg",
+                                "width": "fill",
+                                "wrap": true
+                              }
+                            ],
+                            "gap": "space.stack.lg",
+                            "width": "fill"
+                          }
+                        ],
+                        "gap": "space.stack.lg",
+                        "width": "fill"
+                      }
+                    ],
+                    "gap": "space.stack.xl",
+                    "width": {
+                      "span": [
+                        11,
+                        12
+                      ]
+                    }
+                  }
+                ],
+                "gap": "space.stack.sm",
+                "width": "fill",
+                "align": "center-x"
+              }
+            ]
+          },
+          "width": "fill",
+          "height": "hug"
+        }
+      ]
+    }
+  }
+}

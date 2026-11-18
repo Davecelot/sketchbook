@@ -1,0 +1,52 @@
+{
+  "id": "dashboard",
+  "title": "Dashboard",
+  "summary": "An overview page: a top bar, a page title with an action, view tabs, stat cards, a goal, a chart, recent activity and recent orders.",
+  "path": "src/patterns/dashboard",
+  "components": [
+    "aspect-ratio",
+    "avatar",
+    "badge",
+    "button",
+    "card",
+    "item",
+    "progress",
+    "separator",
+    "skeleton",
+    "spinner",
+    "table",
+    "tabs",
+    "typography"
+  ],
+  "prefix": "sb",
+  "files": [
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/dashboard/patterns-dashboard--default.txt",
+      "hash": "ff7f571bbb2487b3ec23"
+    },
+    {
+      "path": "playwright/tests/patterns/__screen-reader__/dashboard/patterns-dashboard--loading.txt",
+      "hash": "9cf4417e1eb89438b975"
+    },
+    {
+      "path": "playwright/tests/patterns/dashboard.behavior.spec.ts",
+      "hash": "f84f0cf6a41afc21b64f"
+    },
+    {
+      "path": "src/patterns/dashboard/Dashboard.stories.ts",
+      "hash": "11a5797c4c9189b59fbe"
+    },
+    {
+      "path": "src/patterns/dashboard/README.md",
+      "hash": "864acc7ce20f541cf67c"
+    },
+    {
+      "path": "src/patterns/dashboard/dashboard.css",
+      "hash": "1aef0eaaad65d944a99f"
+    },
+    {
+      "path": "src/patterns/dashboard/pattern.json",
+      "hash": "63cde4f28d1c141c401d"
+    }
+  ]
+}

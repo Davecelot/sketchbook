@@ -1,0 +1,58 @@
+# Accessibility audit: Field (2026-11-15)
+
+Scope: `spec/components/field/contract.json`, `src/components/field/*` (field, label, description, error, title, content, group, set, separator), `playwright/tests/field/*`. Standard: WCAG 2.2 AA, HTML `fieldset`/`legend`, ARIA `alert`, SB-0009.
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.3 text contrast, light | Pass | Computed against `rgb(255,255,255)`: label and error `rgb(231,0,11)` 4.77:1; description `rgb(115,115,115)` 4.74:1; `npm run check` T6 passes |
+| P | 1.4.3 text contrast, dark (`&globals=theme:dark`) | Pass | Against `rgb(10,10,10)`: label and error `rgb(255,106,91)` 7.04:1; description `rgb(161,161,161)` 7.66:1; separator text `rgb(161,161,161)` on its `rgb(10,10,10)` backing |
+| P | 1.4.1 color alone | Pass | Invalid is also exposed as `aria-invalid=true` and an error message with text; label color is a reinforcement |
+| P | 1.4.11 separator line | Not applicable | Line is `aria-hidden`, decorative next to its text; no information carried |
+| P | forced-colors | Pass (fixed, 4cfde77) | Before: `[part=line]` computed to Canvas on a Canvas page in `with-separator` and `plain`. After: `Field.scss:105` sets `CanvasText`; new spec 'separator lines stay visible in forced colors' passes. Text, legend, error compute to `rgb(0,0,0)` |
+| P | prefers-reduced-motion | Not applicable | No transition or animation in `Field.scss` |
+| P | 1.4.10 reflow | Pass | 320px viewport on `horizontal`: `scrollWidth` 320, no horizontal scroll |
+| O | 2.1.1 / 2.1.2 keyboard, trap | Pass | No focusable part: every Field element has `tabIndex` -1; Tab only reaches the native controls; no trap |
+| O | 2.4.7 focus visible | Not applicable | Contract: elements are not focusable; controls draw their own ring |
+| O | 2.5.8 target size | Not applicable | Label click is a pointer convenience; the control keeps its own target |
+| O | Label click | Pass | Click on `sb-field-label` toggles a checkbox and focuses a text input; click on a disabled control does nothing (focus stays on body) |
+| U | 3.3.1 / 3.3.3 error identification | Pass | `invalid` + non-empty `sb-field-error`: input `aria-invalid=true`, description "We only use it to send receipts. Enter an address like name@example.com." The error is exposed as `alert` |
+| U | 3.3.2 labels or instructions | Pass | Label and description reach the control (see Robust) |
+| U | Error announcement | Pass | `[part=error]` has `role="alert"` in the AX tree; it is `display:none` while empty (`data-empty`), and text set dynamically makes it appear and joins `aria-describedby` (`sb-field-text-3 sb-field-text-4`) in the same tick |
+| R | fieldset / legend grouping | Pass | CDP AX tree on `field-set`: `group` named "Notifications", a `Legend` node, two checkboxes inside it. Removing `legend` removes the node (spec) |
+| R | Label to wrapped native control, across shadow roots | Pass | Label, description, error are light DOM siblings of the control, so `aria-labelledby`/`aria-describedby` resolve in one tree. AX: `default` textbox "Email" described "We only use it to send receipts."; `horizontal` checkbox "Email me product news" described "At most one message a month."; `choice-title` radio "Team plan" described "Shared projects and roles." (host-set `aria-labelledby` kept); `plain` and `with-separator` textboxes named "First", "Second", "Username", "Email" |
+| R | DS controls inside a field | Pass | `with-ds-controls`: `sb-input` textboxes named "Full name", "Email", described by their own description and error, `invalid=true` on the second; Field does not need to wire them (SB-0009) |
+| R | Orientation | Pass | Horizontal changes layout only; DOM and reading order are the same as vertical, so no semantic change is needed (spec: layout test) |
+| R | Disabled propagation | Pass | The control owns disabled: AX shows textbox `disabled=true` with its name and description intact. The label does not dim (contract: controls own other states) |
+| R | Separator exposure | Pass | Lines are `aria-hidden`; no `separator` role in the AX tree on `with-separator` and `plain`; text "or" remains readable |
+| R | Empty error hidden | Pass | `display:none` and `data-empty` while empty, so no empty alert is exposed |
+| R | axe | Pass | Behavior spec: axe clean on 7 stories (default, invalid, horizontal, field-set, with-separator, with-ds-controls, choice-title) |
+| R | Behavior spec and `npm run check` | Pass | Field spec 24/24 passed (`--workers=2`). `npm run check`: T1-T7, G1, S1, R1 pass; only D1 and D4 fail (Figma round pending, expected) |
+
+## Failures
+
+### Fixed: separator line disappeared in forced-colors mode - was MEDIUM
+Location: `src/components/field/Field.scss:105`
+Before: line computed to Canvas, invisible. After: `@media (forced-colors: active) { background: CanvasText; }`; spec 'separator lines stay visible in forced colors' passes (commit 4cfde77).
+
+### Fixed: the field overwrote author ARIA on the control - was LOW
+Location: `src/components/field/Field.ts`
+Before: author `aria-labelledby`/`aria-describedby` were replaced and `aria-describedby`/`aria-invalid` removed on the next wiring.
+After (browser probe, author `aria-labelledby`/`aria-describedby="author-hint"` and `aria-invalid="true"` on the input, then a DOM change): `aria-labelledby="author-hint sb-field-label-2"`, `aria-describedby="author-hint sb-field-text-3"`, `aria-invalid="true"` kept; AX name "Author hint Email", description "Author hint We only use it to send receipts.", `invalid=true`. Toggling `invalid` on and off leaves the author's `aria-invalid`; with no description in the field an author `aria-describedby="zz"` stays (`sb-field-label-2`, `zz`, `true`). Without author attributes: `invalid` on sets `aria-invalid=true`, off removes it. Spec 'keeps the author ARIA on the control and merges only its own ids' passes.
+
+### Fixed: a set's description was not part of the group's description - was LOW
+Location: `src/components/field/FieldSet.ts`
+Before: group announced as "Notifications" only.
+After: CDP AX tree on `field-set`: `group` name "Notifications", description "Choose what we send you."; `fieldset.ariaDescribedByElements` = that description.
+
+### Fixed: an empty legend gave a silent unnamed group - was LOW
+Location: `src/components/field/FieldSet.ts`
+Before: no signal.
+After: two `sb-field-set` elements without `legend` each log `warning: <sb-field-set> has no accessible name. Set legend.` in the console (once per element); the `field-set` story, which has a legend, logs nothing.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-16)
+
+No open findings. The MEDIUM (forced-colors line) and the three LOW items are fixed and re-probed in the browser; spec 24/24. Check D1/D4 fail only because the Figma round is pending.

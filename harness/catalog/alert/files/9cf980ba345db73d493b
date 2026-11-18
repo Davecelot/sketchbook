@@ -1,0 +1,41 @@
+# Accessibility audit: Alert (2026-11-15)
+
+Scope: `spec/components/alert/contract.json`, `src/components/alert/*` (sb-alert, sb-alert-title, sb-alert-description, sb-alert-action), `playwright/tests/alert/*`. Standard: WCAG 2.2 AA and the WAI-ARIA `alert` / `status` live-region roles (static, non-focusable).
+
+## Criteria
+
+| POUR | Criterion | Result | Evidence |
+| --- | --- | --- | --- |
+| P | 1.4.3 text contrast (fg, description, destructive on card bg) | Pass | `npm run check` T6 passes for the three contract pairs in every mode; probe light: destructive `rgb(231,0,11)` on white is about 4.8:1, description `rgb(115,115,115)` on white 4.7:1, fg `rgb(10,10,10)` |
+| P | 1.4.1 color alone | Pass | Destructive is conveyed by color plus the title and description text ("Upload failed"); the icon is decorative and no meaning relies on hue alone for the reader (role=alert exposes urgency to AT) |
+| P | 1.4.11 non-text contrast | Not applicable | The border is decoration; the message is in the text, which meets 4.5:1 |
+| P | forced-colors | Pass | Probe with `forced-colors: active`, light and dark: text `CanvasText`/white-on-black, border 1px system color, background Canvas, on default and destructive |
+| P | prefers-reduced-motion | Not applicable | No transitions or animation |
+| P | 1.3.1 info and relationships | Pass | Title and description are plain blocks inside the live region and read in order (AX tree: `StaticText` description then title in tree order dump, one live region); the contract says title is not a heading and tells authors to use a real heading when the outline needs it |
+| O | 2.1.1 / 2.4.7 / 2.1.2 keyboard, focus, trap | Not applicable | Static; host `tabIndex` is -1 (probe), no focusable parts of its own, no trap; an action control follows its own component |
+| O | 2.5.8 target size | Not applicable | Contract delegates to the action control (sb-button) |
+| U | 3.2.x predictable, 3.3.x errors | Not applicable | No input; no behavior on focus or input |
+| U | 4.1.3 status messages | Pass | Default maps to role=status (polite), destructive to role=alert (assertive); the contract documents that status needs the live region to exist before its content |
+| R | 4.1.2 role | Pass | CDP `Accessibility.getFullAXTree`: default story exposes `status` with `live=polite atomic=true`; destructive exposes `alert` with `live=assertive atomic=true` |
+| R | Role from first render, dynamic insertion | Pass | Probe: an empty `sb-alert` and one created with a title both have no role at append and receive it in the first update (before first render, `willUpdate`); behavior spec 'the live region exists before its content' and 'role set before first render' pass. Role follows `variant`; an authored role is never overwritten |
+| R | Icon text alternative | Pass | Decorative icon, story uses `aria-hidden="true"` and the contract tells authors to do so; the AX tree shows no icon node |
+| R | ID references across shadow roots | Not applicable | No ID references; role set on the host |
+| R | axe | Pass | Behavior spec: axe clean on all stories |
+| R | Behavior spec and `npm run check` | Pass | `tests/alert` 15/15 passed; all checks pass (A1 warn on spec/api.json is unrelated) |
+| R | Screen-reader evidence | Pass | AX tree above plus the `__screen-reader__` snapshots for all 7 stories (check S1 passes) |
+
+## Parity audit items (`docs/parity-audits/alert-2026-11-08.md`)
+
+The single open item (action without icon kept an empty gutter) is resolved: `Alert.scss:30-33` removes the column gap without an icon and the action brings its own spacing; `WithActionNoIcon` story and the spec 'an action without an icon leaves no empty icon column' pass.
+
+## Failures
+
+None open.
+
+Note (not a failure): a default-variant alert inserted into the page already containing content is not announced by most screen readers because a status region must exist before its content changes. The contract states this in `announcements` and gives the pattern (insert the empty `sb-alert`, then add the message). The component sets the role before first render, which is the most it can do.
+
+## Verdict
+Verdict: ready
+Approved-by: Davecelot (2026-11-15)
+
+Roles, live-region properties, icon handling, contrast in light, dark and forced colors, axe, the behavior spec (15/15) and `npm run check` all pass; the parity item is resolved. No open findings.

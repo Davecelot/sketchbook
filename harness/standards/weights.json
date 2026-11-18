@@ -1,0 +1,39 @@
+{
+  "family": "weights",
+  "$description": "Font weights. regular, medium, semibold and extrabold are aliased by the semantic layer; every font file must ship the weights you keep.",
+  "default": "standard",
+  "presets": [
+    {
+      "id": "standard",
+      "label": "Five weights",
+      "values": {
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700,
+        "extrabold": 800
+      },
+      "description": "Regular to extra bold. The default.",
+      "source": "https://tailwindcss.com/docs/font-weight",
+      "verified": true
+    },
+    {
+      "id": "full",
+      "label": "Nine weights",
+      "values": {
+        "thin": 100,
+        "extralight": 200,
+        "light": 300,
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700,
+        "extrabold": 800,
+        "black": 900
+      },
+      "description": "Every weight from thin to black, for variable fonts.",
+      "source": "https://tailwindcss.com/docs/font-weight",
+      "verified": true
+    }
+  ]
+}

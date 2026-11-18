@@ -1,0 +1,83 @@
+{
+  "core": {
+    "colors": {
+      "ocean": {
+        "100": { "value": "#E0F2F1", "type": "color" },
+        "300": { "value": "#80CBC4", "type": "color" },
+        "500": { "value": "#14857A", "type": "color" },
+        "700": { "value": "#0B5C55", "type": "color" },
+        "900": { "value": "#06332F", "type": "color" }
+      },
+      "gray": {
+        "50": { "value": "#F8FAFB", "type": "color" },
+        "100": { "value": "#EEF1F3", "type": "color" },
+        "300": { "value": "#C9D0D6", "type": "color" },
+        "500": { "value": "#6B7781", "type": "color" },
+        "700": { "value": "#3B444C", "type": "color" },
+        "900": { "value": "#161B20", "type": "color" }
+      },
+      "red": {
+        "300": { "value": "#F4A3A0", "type": "color" },
+        "500": { "value": "#D93A33", "type": "color" },
+        "700": { "value": "#A3221D", "type": "color" }
+      },
+      "white": { "value": "#FFFFFF", "type": "color" }
+    },
+    "spacing": {
+      "xs": { "value": "4", "type": "spacing" },
+      "sm": { "value": "8", "type": "spacing" },
+      "md": { "value": "16", "type": "spacing" },
+      "lg": { "value": "24", "type": "spacing" },
+      "xl": { "value": "32", "type": "spacing" },
+      "2xl": { "value": "48", "type": "spacing" }
+    },
+    "borderRadius": {
+      "sm": { "value": "4", "type": "borderRadius" },
+      "md": { "value": "8", "type": "borderRadius" },
+      "lg": { "value": "12", "type": "borderRadius" }
+    },
+    "fontFamilies": {
+      "body": { "value": "Source Sans 3", "type": "fontFamilies" },
+      "code": { "value": "Fira Code", "type": "fontFamilies" }
+    }
+  },
+  "light": {
+    "bg": {
+      "default": { "value": "{colors.white}", "type": "color" },
+      "subtle": { "value": "{colors.gray.50}", "type": "color" },
+      "surface": { "value": "{colors.white}", "type": "color" }
+    },
+    "fg": {
+      "default": { "value": "{colors.gray.900}", "type": "color" },
+      "muted": { "value": "{colors.gray.500}", "type": "color" }
+    },
+    "brand": { "value": "{colors.ocean.500}", "type": "color" },
+    "on-brand": { "value": "{colors.white}", "type": "color" },
+    "danger": { "value": "{colors.red.500}", "type": "color" },
+    "on-danger": { "value": "{colors.white}", "type": "color" },
+    "border": { "default": { "value": "{colors.gray.300}", "type": "color" } },
+    "focus": { "value": "{colors.ocean.500}", "type": "color" }
+  },
+  "dark": {
+    "bg": {
+      "default": { "value": "{colors.gray.900}", "type": "color" },
+      "subtle": { "value": "{colors.gray.700}", "type": "color" },
+      "surface": { "value": "{colors.gray.900}", "type": "color" }
+    },
+    "fg": {
+      "default": { "value": "{colors.gray.50}", "type": "color" },
+      "muted": { "value": "{colors.gray.300}", "type": "color" }
+    },
+    "brand": { "value": "{colors.ocean.300}", "type": "color" },
+    "on-brand": { "value": "{colors.gray.900}", "type": "color" },
+    "danger": { "value": "{colors.red.300}", "type": "color" },
+    "on-danger": { "value": "{colors.gray.900}", "type": "color" },
+    "border": { "default": { "value": "{colors.gray.700}", "type": "color" } },
+    "focus": { "value": "{colors.ocean.300}", "type": "color" }
+  },
+  "$themes": [
+    { "id": "light", "name": "Light", "selectedTokenSets": { "core": "source", "light": "enabled" } },
+    { "id": "dark", "name": "Dark", "selectedTokenSets": { "core": "source", "dark": "enabled" } }
+  ],
+  "$metadata": { "tokenSetOrder": ["core", "light", "dark"] }
+}

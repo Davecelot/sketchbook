@@ -1,0 +1,69 @@
+{
+  "name": "badge",
+  "component": "Badge",
+  "displayName": "Badge",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-badge",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [],
+  "files": [
+    {
+      "path": "docs/a11y-audits/badge-2026-11-15.md",
+      "hash": "2a11f46e7524cfc8099b"
+    },
+    {
+      "path": "docs/parity-audits/badge-2026-11-08.md",
+      "hash": "ddac5819e1ed88cb2e03"
+    },
+    {
+      "path": "playwright/tests/badge/__screen-reader__/stories/components-badge--as-link.txt",
+      "hash": "2d62b3998a30444f4ebe"
+    },
+    {
+      "path": "playwright/tests/badge/__screen-reader__/stories/components-badge--count.txt",
+      "hash": "8c4e02e4ba38e936bcc9"
+    },
+    {
+      "path": "playwright/tests/badge/__screen-reader__/stories/components-badge--default.txt",
+      "hash": "9a8a242933ea67a605c2"
+    },
+    {
+      "path": "playwright/tests/badge/__screen-reader__/stories/components-badge--variants.txt",
+      "hash": "67b07d31508de5e0bb09"
+    },
+    {
+      "path": "playwright/tests/badge/__screen-reader__/stories/components-badge--with-icon.txt",
+      "hash": "920ec5021787522eafbb"
+    },
+    {
+      "path": "playwright/tests/badge/badge.behavior.spec.ts",
+      "hash": "58f7c66681cbe255fe9f"
+    },
+    {
+      "path": "spec/components/badge/contract.json",
+      "hash": "0018ed707d23b776b3b9"
+    },
+    {
+      "path": "spec/components/badge/contract.md",
+      "hash": "ae17c9db8f67fddf17e4"
+    },
+    {
+      "path": "src/components/badge/Badge.scss",
+      "hash": "28005cb14bde099080db"
+    },
+    {
+      "path": "src/components/badge/Badge.stories.ts",
+      "hash": "b4fd13485d1010240f16"
+    },
+    {
+      "path": "src/components/badge/Badge.ts",
+      "hash": "cf52421cee4f018981d3"
+    },
+    {
+      "path": "src/components/badge/index.ts",
+      "hash": "36c7e1d9da83aff58801"
+    }
+  ]
+}

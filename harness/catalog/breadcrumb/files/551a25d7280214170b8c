@@ -1,0 +1,93 @@
+@use 'a11y';
+
+:host([hidden]) {
+  display: none;
+}
+
+:host(sb-breadcrumb) {
+  display: block;
+  font-family: var(--sb-breadcrumb-font-family);
+}
+
+:host(sb-breadcrumb-list) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sb-breadcrumb-gap);
+  color: var(--sb-breadcrumb-fg);
+  font-size: var(--sb-breadcrumb-font-size);
+  font-weight: var(--sb-breadcrumb-font-weight);
+  line-height: var(--sb-breadcrumb-line-height);
+  overflow-wrap: break-word;
+
+  @media (min-width: 40em) {
+    gap: var(--sb-breadcrumb-gap-wide);
+  }
+}
+
+:host(sb-breadcrumb-item) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sb-breadcrumb-gap);
+}
+
+:host(sb-breadcrumb-separator) {
+  display: inline-flex;
+  align-items: center;
+}
+
+// The default chevron points along the reading direction; slotted content is the author's to orient.
+:host(sb-breadcrumb-separator) svg:dir(rtl) {
+  transform: scaleX(-1);
+}
+
+:host(sb-breadcrumb-separator) ::slotted(svg),
+:host(sb-breadcrumb-separator) svg {
+  width: var(--sb-breadcrumb-separator-size);
+  height: var(--sb-breadcrumb-separator-size);
+}
+
+[part='link'] {
+  border-radius: var(--sb-breadcrumb-focus-ring-radius);
+  color: inherit;
+  text-decoration: none;
+  transition-property: color, box-shadow;
+  transition-duration: var(--sb-breadcrumb-transition-duration);
+  transition-timing-function: var(--sb-breadcrumb-transition-easing);
+  @include a11y.respect-reduced-motion;
+
+  &:hover {
+    color: var(--sb-breadcrumb-link-fg-hover);
+  }
+
+  &:focus-visible {
+    @include a11y.focus-ring(var(--sb-breadcrumb-focus-ring-color), var(--sb-breadcrumb-focus-ring-width));
+  }
+}
+
+[part='page'] {
+  color: var(--sb-breadcrumb-fg-current);
+}
+
+:host(sb-breadcrumb-ellipsis) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sb-breadcrumb-ellipsis-size);
+  height: var(--sb-breadcrumb-ellipsis-size);
+}
+
+[part='icon'] {
+  display: inline-flex;
+  width: var(--sb-breadcrumb-ellipsis-icon-size);
+  height: var(--sb-breadcrumb-ellipsis-icon-size);
+}
+
+[part='icon'] svg {
+  width: 100%;
+  height: 100%;
+}
+
+[part='label'] {
+  @include a11y.visually-hidden;
+}

@@ -1,0 +1,11 @@
+- list
+  - listitem [level=1]
+    - text "Quarterly plan"
+    - text "Edited yesterday."
+    - button "Open"
+  - listitem [level=1]
+    - text "Budget"
+    - text "Edited last week."
+    - button "Open"
+  - listitem [level=1]
+    - link "Notes"

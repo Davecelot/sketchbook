@@ -1,0 +1,6 @@
+- heading "First" [level=3]
+  - button "First" [expanded=false]
+- heading "Second (disabled)" [level=3]
+  - button "Second (disabled)" [disabled, expanded=false]
+- heading "Third" [level=2]
+  - button "Third" [expanded=false]

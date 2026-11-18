@@ -1,0 +1,55 @@
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { inputsHash, docsInputsHash, readRecord, writeRecord, hashFile, keepTime, RECORD } from '../../lib/propagation.mjs';
+import type { PropagationRecord } from '../../lib/propagation.mjs';
+import type { Command, OptionSpecs } from '../types.mjs';
+
+const HARNESS_CLI = fileURLToPath(new URL('../../../harness/cli.mjs', import.meta.url));
+const MAINTAINER_OUTPUTS = { storybook: 'storybook-static/index.html', docs: 'site-dist/index.html' };
+// Foundations, generated outputs and the engine build, in dependency order (npm scripts from package.json).
+const STEPS = ['tokens:generate', 'tokens', 'build'];
+const MAINTAINER_STEPS = ['build-storybook', 'docs:build'];
+
+const run = (root: string, args: string[], label: string): void => {
+  const [bin = '', ...rest] = args;
+  const r = spawnSync(bin, rest, { cwd: root, stdio: 'inherit', shell: false });
+  if (r.status !== 0) throw Object.assign(new Error(`${label} failed (exit ${r.status ?? 'signal'})`), { fix: `Fix the failure above, then run sketchbook propagate again.` });
+};
+
+const options = {
+  maintainer: { type: 'boolean', description: 'Also build Storybook and the docs site, and record them for check --maintainer' },
+} satisfies OptionSpecs;
+
+export default {
+  name: 'propagate',
+  group: 'project',
+  summary: 'Carry a Foundations or harness change to every output: rebuild the tokens and components, build the engine, sync the design file scripts (tokens and foundations), and record what the outputs were built from. --maintainer also builds Storybook and the docs site (maintainers only).',
+  args: [],
+  options,
+  examples: ['sketchbook propagate', 'sketchbook propagate --maintainer'],
+  mutates: true,
+  dryRun: false,
+  async run({ root, options, out }) {
+    const changed: string[] = [];
+    for (const s of STEPS) { out(`npm run ${s}`); run(root, ['npm', 'run', s], `npm run ${s}`); changed.push(`npm run ${s}`); }
+    for (const what of ['tokens', 'foundations']) {
+      out(`sync ${what}`);
+      run(root, ['node', HARNESS_CLI, 'sync', what], `sync ${what}`);
+      changed.push(`generated/design/figma (${what} scripts)`);
+    }
+    const previous = await readRecord(root);
+    const record: PropagationRecord = { inputsHash: await inputsHash(root), at: new Date().toISOString(), maintainer: previous?.maintainer ?? null };
+    if (options.maintainer) {
+      for (const s of MAINTAINER_STEPS) { out(`npm run ${s}`); run(root, ['npm', 'run', s], `npm run ${s}`); changed.push(`npm run ${s}`); }
+      const { storybook, docs } = MAINTAINER_OUTPUTS;
+      record.maintainer = { storybook: { file: storybook, hash: await hashFile(root, storybook) }, docs: { file: docs, hash: await hashFile(root, docs), inputs: await docsInputsHash(root) } };
+    }
+    await writeRecord(root, keepTime(previous, record));
+    changed.push(RECORD);
+    const figmaPending = 'Paste the Figma scripts listed under generated/design/figma (in order, one use_figma call each), then run sketchbook sync stamp tokens.';
+    return {
+      changed,
+      next: `Paste the Figma scripts listed by the sync steps above, then run sketchbook check${options.maintainer ? ' --maintainer' : ''}. ${figmaPending}`,
+    };
+  },
+} satisfies Command<typeof options>;

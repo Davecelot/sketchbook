@@ -1,0 +1,352 @@
+{
+  "name": "Onboarding",
+  "summary": "First-run screens: a setup step with progress and choices, an empty workspace with next steps, and a setting-up wait state.",
+  "components": [
+    "sb-button",
+    "sb-card",
+    "sb-card-content",
+    "sb-card-description",
+    "sb-card-header",
+    "sb-card-title",
+    "sb-checkbox",
+    "sb-empty",
+    "sb-empty-content",
+    "sb-empty-description",
+    "sb-empty-header",
+    "sb-empty-media",
+    "sb-empty-title",
+    "sb-field-group",
+    "sb-field-set",
+    "sb-item",
+    "sb-item-content",
+    "sb-item-description",
+    "sb-item-group",
+    "sb-item-media",
+    "sb-item-title",
+    "sb-progress",
+    "sb-skeleton",
+    "sb-spinner",
+    "sb-toggle-group",
+    "sb-toggle-group-item"
+  ],
+  "landmarks": [
+    "main",
+    "form (named by the h1)",
+    "region (Next steps)"
+  ],
+  "a11y": [
+    "Progress is named \"Step 2 of 3\" so the position in the flow is read, not only shown.",
+    "The role choice is a toggle group (one tab stop, arrows move, Space picks); interests are checkboxes in a field set.",
+    "Back is a link because it navigates; Continue submits the form.",
+    "The wait state has one status message (the spinner); skeletons are hidden from assistive technology."
+  ],
+  "states": [
+    "default",
+    "first-run",
+    "setting-up"
+  ],
+  "layout": {
+    "screen": {
+      "fill": "color.background",
+      "pad": "space.inset.spacious",
+      "align": "center-x"
+    },
+    "states": {
+      "default": [
+        {
+          "component": "card",
+          "props": {
+            "size": "medium"
+          },
+          "text": {
+            "title": "What do you work on?",
+            "description": "We use this to suggest a first project. You can change it later."
+          },
+          "slots": {
+            "Content": [
+              {
+                "stack": [
+                  {
+                    "component": "progress",
+                    "text": {
+                      "indicator": "66.67%"
+                    },
+                    "width": "fill"
+                  },
+                  {
+                    "component": "toggle-group",
+                    "props": {
+                      "variant": "tertiary",
+                      "spacing": "2"
+                    },
+                    "text": {
+                      "Toggle 1/label": "Designer",
+                      "Toggle 2/label": "Engineer",
+                      "Toggle 3/label": "Product manager"
+                    }
+                  },
+                  {
+                    "text": "What will you use it for?",
+                    "style": "font.size.control",
+                    "color": "color.foreground"
+                  },
+                  {
+                    "stack": [
+                      {
+                        "component": "checkbox",
+                        "text": {
+                          "Label text": "Design reviews"
+                        }
+                      },
+                      {
+                        "component": "checkbox",
+                        "text": {
+                          "Label text": "Handoff to engineering"
+                        }
+                      },
+                      {
+                        "component": "checkbox",
+                        "text": {
+                          "Label text": "Documentation"
+                        }
+                      }
+                    ],
+                    "gap": "space.stack.md",
+                    "width": "fill"
+                  },
+                  {
+                    "row": [
+                      {
+                        "component": "button",
+                        "props": {
+                          "variant": "ghost"
+                        },
+                        "text": {
+                          "Label text": "Back"
+                        }
+                      },
+                      {
+                        "component": "button",
+                        "props": {
+                          "variant": "primary"
+                        },
+                        "text": {
+                          "Label text": "Continue"
+                        }
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill",
+                    "align": "between"
+                  }
+                ],
+                "gap": "space.stack.lg",
+                "width": "fill"
+              }
+            ],
+            "Footer": []
+          },
+          "width": {
+            "span": [
+              11,
+              24
+            ]
+          }
+        }
+      ],
+      "first-run": [
+        {
+          "stack": [
+            {
+              "stack": [
+                {
+                  "text": "Welcome, Ada",
+                  "style": "font.size.heading-3",
+                  "color": "color.foreground"
+                },
+                {
+                  "text": "Your workspace is ready. Start with a project, or set up the rest first.",
+                  "style": "font.size.body",
+                  "color": "color.muted-foreground"
+                }
+              ],
+              "gap": "space.stack.xs",
+              "width": "fill"
+            },
+            {
+              "component": "card",
+              "props": {
+                "size": "medium"
+              },
+              "hide": [
+                "header"
+              ],
+              "slots": {
+                "Content": [
+                  {
+                    "row": [
+                      {
+                        "component": "empty",
+                        "text": {
+                          "title": "No projects yet",
+                          "description": "A project holds your files, comments and reviews in one place."
+                        },
+                        "slots": {
+                          "Content": [
+                            {
+                              "stack": [
+                                {
+                                  "component": "button",
+                                  "props": {
+                                    "variant": "primary"
+                                  },
+                                  "text": {
+                                    "Label text": "Create project"
+                                  }
+                                },
+                                {
+                                  "component": "button",
+                                  "props": {
+                                    "variant": "tertiary"
+                                  },
+                                  "text": {
+                                    "Label text": "Import files"
+                                  }
+                                }
+                              ],
+                              "gap": "space.stack.sm",
+                              "width": "hug",
+                              "align": "center-x"
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill",
+                    "align": "center-x"
+                  }
+                ],
+                "Footer": []
+              },
+              "width": "fill"
+            },
+            {
+              "stack": [
+                {
+                  "text": "Next steps",
+                  "style": "font.size.heading-4",
+                  "color": "color.foreground"
+                },
+                {
+                  "stack": [
+                    {
+                      "component": "item",
+                      "props": {
+                        "variant": "tertiary"
+                      },
+                      "text": {
+                        "title": "Invite your team",
+                        "description": "Reviews go faster with more eyes."
+                      },
+                      "slots": {
+                        "Actions": []
+                      },
+                      "width": "fill"
+                    },
+                    {
+                      "component": "item",
+                      "props": {
+                        "variant": "tertiary"
+                      },
+                      "text": {
+                        "title": "Connect a tool",
+                        "description": "Bring in files from where you keep them."
+                      },
+                      "slots": {
+                        "Actions": []
+                      },
+                      "width": "fill"
+                    }
+                  ],
+                  "gap": "space.stack.sm",
+                  "width": "fill"
+                }
+              ],
+              "gap": "space.stack.lg",
+              "width": "fill"
+            }
+          ],
+          "gap": "space.stack.lg",
+          "width": {
+            "span": [
+              7,
+              12
+            ]
+          }
+        }
+      ],
+      "setting-up": [
+        {
+          "component": "card",
+          "props": {
+            "size": "medium"
+          },
+          "text": {
+            "title": "Almost there",
+            "description": "This takes a few seconds. You can leave the page; we keep going."
+          },
+          "slots": {
+            "Content": [
+              {
+                "stack": [
+                  {
+                    "row": [
+                      {
+                        "component": "spinner"
+                      },
+                      {
+                        "text": "Setting up your workspace",
+                        "style": "font.size.body",
+                        "color": "color.muted-foreground"
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill"
+                  },
+                  {
+                    "stack": [
+                      {
+                        "component": "skeleton",
+                        "width": "fill"
+                      },
+                      {
+                        "component": "skeleton",
+                        "width": "fill"
+                      },
+                      {
+                        "component": "skeleton",
+                        "width": "fill"
+                      }
+                    ],
+                    "gap": "space.stack.sm",
+                    "width": "fill"
+                  }
+                ],
+                "gap": "space.stack.lg",
+                "width": "fill"
+              }
+            ],
+            "Footer": []
+          },
+          "width": {
+            "span": [
+              11,
+              24
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

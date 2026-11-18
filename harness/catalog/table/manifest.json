@@ -1,0 +1,95 @@
+{
+  "name": "table",
+  "component": "Table",
+  "displayName": "Table",
+  "tier": 1,
+  "status": "stable",
+  "tag": "sb-table",
+  "prefix": "sb",
+  "dependsOn": [],
+  "uses": [
+    "scroll-area"
+  ],
+  "files": [
+    {
+      "path": "docs/a11y-audits/table-2026-11-15.md",
+      "hash": "7793bcf9af64c209d082"
+    },
+    {
+      "path": "docs/parity-audits/table-2026-11-08.md",
+      "hash": "efc084da8f3e1ca4bb1e"
+    },
+    {
+      "path": "playwright/tests/table/__screen-reader__/stories/components-table--default.txt",
+      "hash": "4eb3d1edab7042aa14fe"
+    },
+    {
+      "path": "playwright/tests/table/__screen-reader__/stories/components-table--labelled-by-attribute.txt",
+      "hash": "0c9127bfdbcb6b684d41"
+    },
+    {
+      "path": "playwright/tests/table/__screen-reader__/stories/components-table--selected-row.txt",
+      "hash": "4eb3d1edab7042aa14fe"
+    },
+    {
+      "path": "playwright/tests/table/__screen-reader__/stories/components-table--wide-in-scroll-area.txt",
+      "hash": "ee2c6aa6812c21964fc3"
+    },
+    {
+      "path": "playwright/tests/table/table.behavior.spec.ts",
+      "hash": "847886ae5dea29b33a82"
+    },
+    {
+      "path": "spec/components/table/contract.json",
+      "hash": "11aa2b5da6eff1bc677e"
+    },
+    {
+      "path": "spec/components/table/contract.md",
+      "hash": "06a72c7ea0badb1cdb70"
+    },
+    {
+      "path": "src/components/table/Table.scss",
+      "hash": "a2c392393c5570977487"
+    },
+    {
+      "path": "src/components/table/Table.stories.ts",
+      "hash": "e066a67b247e4ff773ed"
+    },
+    {
+      "path": "src/components/table/Table.ts",
+      "hash": "cf536589682b899cbbc8"
+    },
+    {
+      "path": "src/components/table/TableBody.ts",
+      "hash": "4a4cf995bf282ff92770"
+    },
+    {
+      "path": "src/components/table/TableCaption.ts",
+      "hash": "c7052cd9cf1d37957359"
+    },
+    {
+      "path": "src/components/table/TableCell.ts",
+      "hash": "218ac7260a0b3b039f4a"
+    },
+    {
+      "path": "src/components/table/TableFooter.ts",
+      "hash": "e64bfc90653d920c40cf"
+    },
+    {
+      "path": "src/components/table/TableHead.ts",
+      "hash": "f63191bea2943e7e8646"
+    },
+    {
+      "path": "src/components/table/TableHeader.ts",
+      "hash": "9256f0a7cd82969c9563"
+    },
+    {
+      "path": "src/components/table/TableRow.ts",
+      "hash": "c3c72c2b5b63f99435d6"
+    },
+    {
+      "path": "src/components/table/index.ts",
+      "hash": "63d442facdfea1c86c66"
+    }
+  ]
+}

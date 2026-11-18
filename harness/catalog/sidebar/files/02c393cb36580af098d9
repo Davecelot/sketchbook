@@ -1,0 +1,23 @@
+- navigation "التوثيق"
+  - strong
+    - text "سكتشبوك"
+  - group "البداية"
+    - list
+      - listitem [level=1]
+        - link "مقدمة" [current=page]
+      - listitem [level=1]
+        - link "التثبيت"
+  - group "المكونات"
+    - list
+      - listitem [level=1]
+        - link "زر"
+      - listitem [level=1]
+        - link "بطاقة"
+  - text "الإصدار 0.1.0"
+- main
+  - sectionheader
+    - button "Toggle Sidebar" [expanded=true]
+    - heading "مقدمة" [level=1]
+  - paragraph
+    - text "مسودة أولى لنظام تصميم."
+  - link "Back to top"
