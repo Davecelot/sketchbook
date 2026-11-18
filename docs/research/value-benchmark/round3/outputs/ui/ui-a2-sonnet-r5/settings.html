@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notification settings</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box;
+         background: var(--sb-color-background); color: var(--sb-color-foreground);
+         font-family: ui-sans-serif, system-ui, sans-serif; }
+  main { width: 100%; max-width: 440px; display: grid; gap: 12px; justify-items: end; }
+  form, sb-card { width: 100%; }
+  .settings { display: grid; gap: 20px; }
+  #status { margin: 0; font-size: 14px; color: var(--sb-color-muted-foreground); }
+</style>
+</head>
+<body>
+<main>
+  <sb-button id="theme" variant="outline" size="sm" type="button">Switch theme</sb-button>
+  <form id="form">
+    <sb-card>
+      <sb-card-header>
+        <sb-card-title>Notification settings</sb-card-title>
+        <sb-card-description>Choose how and when we contact you.</sb-card-description>
+      </sb-card-header>
+      <sb-card-content>
+        <div class="settings">
+          <sb-switch name="email" label="Email" description="Receive updates about your account by email." checked></sb-switch>
+          <sb-switch name="push" label="Push" description="Get instant alerts on your devices."></sb-switch>
+          <sb-switch name="digest" label="Weekly digest" description="A summary of the week, sent every Monday."></sb-switch>
+        </div>
+      </sb-card-content>
+      <sb-card-footer>
+        <sb-button type="submit">Save</sb-button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </sb-card-footer>
+    </sb-card>
+  </form>
+</main>
+<script src="index.global.js"></script>
+<script>
+  var root = document.documentElement;
+  function isDark() {
+    return root.dataset.theme ? root.dataset.theme === 'dark'
+                              : matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  document.getElementById('theme').addEventListener('click', function () {
+    root.dataset.theme = isDark() ? 'light' : 'dark';
+  });
+  document.getElementById('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = new FormData(e.target);
+    var on = ['email', 'push', 'digest'].filter(function (k) { return d.has(k); });
+    document.getElementById('status').textContent =
+      'Saved. On: ' + (on.length ? on.join(', ') : 'none') + '.';
+  });
+</script>
+</body>
+</html>

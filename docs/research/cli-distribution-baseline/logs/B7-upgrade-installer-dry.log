@@ -1,0 +1,37 @@
+$ cd $SANDBOX/sbx/b-used
+$ node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run | grep -v '^  harness/\|^  .claude/skills/\|^  scripts/\|^  .claude/rules\|^  .claude/hooks\|^  .claude/commands/[a-z-]*.md$' | head -60
+----
+Harness unrecorded -> 0.2.0 (dry run: nothing written)
+Would add (harness-owned) (793):
+  .githooks/pre-commit
+  docs/cli.md
+Gone upstream, kept here (harness-owned; delete if unused) (1):
+Team-owned files that differ from upstream (not touched) (1):
+  src/index.ts
+Shared files that differ (not touched; merge by hand, e.g. package.json) (3):
+  CLAUDE.md
+  package.json
+  tsconfig.json
+Shared files only upstream (not copied) (19):
+  .storybook/main.js
+  .storybook/preview.js
+  README.md
+  THIRD_PARTY_NOTICES.md
+  eslint.config.js
+  package-lock.json
+  playwright/fixtures.ts
+  playwright/helpers/a11y.ts
+  playwright/helpers/events.ts
+  playwright/helpers/forms.ts
+  playwright/helpers/foundations.ts
+  playwright/helpers/patterns.ts
+  playwright/helpers/storybook.ts
+  playwright/helpers/styles.ts
+  playwright/helpers/tokens.ts
+  playwright/playwright.config.ts
+  prettier.config.js
+  tsconfig.stories.json
+  tsup.config.ts
+Protected (never written by an upgrade: the ownership manifest, team configs, package files, spec/src/brands/tests, agent settings) — review by hand (1):
+  .claude/settings.json
+---- exit 0

@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm run -s sketchbook -- kits add sign-in | tail -2
+----
+Kits added: sign-in.
+Checks: pass T2, pass T4, pass C1, pass C2, pass C3, pass P1, pass R1, pass G1, pass K1
+---- exit 0

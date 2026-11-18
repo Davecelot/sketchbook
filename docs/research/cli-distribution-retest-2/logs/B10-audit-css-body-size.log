@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/b-used/design-system
+$ npm run -s sketchbook -- audit-css ../src/styles/app.css | tail -2
+----
+generated/import/codebase.proposal.json from 1 file(s): 6 color cluster(s), 4 font size(s), spacing base 8px (83% fit), 3 radius value(s), 1 shadow(s).
+Proposed primary #1D4ED8, body 16px. Nothing is applied.
+---- exit 0

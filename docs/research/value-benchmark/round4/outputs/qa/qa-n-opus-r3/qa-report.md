@@ -1,0 +1,12 @@
+# QA report: out/settings.html
+
+- Line 28: `<sb-switch name="push">` has no `label`, which the Switch contract requires as its visible label and accessible name, so the switch has no name and triggers the empty-label warning. Fix: add `label="Push notifications"` (or similar).
+- Line 27: `tone="success"` is not a Switch prop (the contract lists only label, hide-label, description, error, size, name, value, checked, required, disabled), so it does nothing. Fix: remove `tone="success"`.
+- Line 29: `<sb-toggle>` is not a form field (Toggle contract Q1), so `name="digest"` is never submitted with the form. Fix: use `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">` (or `sb-checkbox`).
+- Line 29: `label` and `description` are not Toggle props, and the default slot is empty, so the toggle renders as an unnamed, empty button. Fix: replace it with an `sb-switch`/`sb-checkbox` as above. If it really must be a toggle, put the text in its slot.
+- Lines 27–31: these are switches inside a form that needs a Save (the hint even says "Changes apply after you save"). The Switch contract says "Don't use a switch for something that needs a Save to take effect; use Checkbox." Fix: use `sb-checkbox` for these settings, or apply each switch immediately and drop the Save button.
+- Line 12: `--sb-space-17` doesn't exist (the space scale is 0–6, 8, 10, 12, 16 plus semantic stacks), so `gap` is invalid and the fields have no spacing. Fix: use a semantic token such as `var(--sb-space-stack-md)` (or `--sb-space-field-gap`).
+- Line 13: `--sb-font-size-small` doesn't exist, so the font size falls back to inherited. Fix: use `var(--sb-font-size-sm)` (or `--sb-font-size-caption`).
+- Line 13: the hint uses the hard-coded color `#d33` instead of a token. It is also red, which reads as an error for what is neutral help text. Fix: use `color: var(--sb-color-muted-foreground)`.
+- Lines 15 and 34: the Save action is a hand-styled native `<button class="save">`, not the library's Button. It lacks the Button's hover and focus-visible ring, and its sizing tokens are hand-copied. Fix: use `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.
+- Line 23: `sb-card-title` has no heading inside it, so the page has no heading at all (the Card contract says to put a real heading inside the title when it belongs in the outline). Fix: `<sb-card-title><h1>Notification settings</h1></sb-card-title>`.

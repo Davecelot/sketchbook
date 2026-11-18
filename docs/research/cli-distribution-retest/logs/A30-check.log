@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx2/a-final3
+$ npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs
+----
+ok=true errors=0 warnings=1
+---- exit 0

@@ -1,0 +1,24 @@
+$ cd $REPO
+$ npm pack --ignore-scripts --pack-destination $SANDBOX/sbx 2>&1 | tail -20
+----
+npm notice
+npm notice 📦  sketchbook@0.1.0
+npm notice Tarball Contents
+npm notice 3.7kB README.md
+npm notice 2.5kB THIRD_PARTY_NOTICES.md
+npm notice 191B generated/css/fonts.css
+npm notice 60.0kB generated/css/tokens.css
+npm notice 865B harness/cli.mjs
+npm notice 3.4kB package.json
+npm notice Tarball Details
+npm notice name: sketchbook
+npm notice version: 0.1.0
+npm notice filename: sketchbook-0.1.0.tgz
+npm notice package size: 12.2 kB
+npm notice unpacked size: 70.6 kB
+npm notice shasum: 56f45a1f3c0944a94fcce04cedf7b34db56449fa
+npm notice integrity: sha512-pyMeRht2PjWIC[...]nfz1oKO0si2Hw==
+npm notice total files: 6
+npm notice
+sketchbook-0.1.0.tgz
+---- exit 0

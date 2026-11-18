@@ -1,0 +1,7 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ npx --no-install tsc --noEmit 2>&1 | head -3
+----
+Version 5.9.3
+tsc: The TypeScript Compiler - Version 5.9.3
+
+---- exit 1

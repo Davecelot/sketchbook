@@ -1,0 +1,11 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ ls .claude | tr '\n' ' '; echo; test -e move-to-.claude && echo 'move-to-.claude still here' || echo 'move-to-.claude removed'; node -e 'const s=require("./.claude/settings.json");console.log("hook events:",Object.keys(s.hooks).join(", "))'; npm run -s sketchbook -- check --only H1 | tail -2; npm run -s sketchbook -- doctor | grep -E 'Claude layer|Commit gate'
+----
+commands hooks rules settings.json skills 
+move-to-.claude removed
+hook events: SessionStart, UserPromptSubmit, SubagentStart, PreToolUse, PostToolUse, Stop
+
+All checks passed.
+Claude layer: installed
+Commit gate: active (npm run check runs before every commit)
+---- exit 0

@@ -1,0 +1,8 @@
+$ cd $REPO
+$ npm pack --ignore-scripts --pack-destination $SANDBOX/sbx2 2>&1 | grep -E 'total files|package size|unpacked size|filename'
+----
+npm notice filename: sketchbook-0.1.0.tgz
+npm notice package size: 2.2 MB
+npm notice unpacked size: 4.9 MB
+npm notice total files: 812
+---- exit 0

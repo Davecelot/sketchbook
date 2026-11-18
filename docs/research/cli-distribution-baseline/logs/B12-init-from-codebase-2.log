@@ -1,0 +1,14 @@
+$ cd $SANDBOX/sbx/b-used
+$ node harness/cli.mjs init --start from-codebase --from 'src/styles/*.css' 2>&1 | grep -v '^pass ' | tail -10
+----
+        custom property --ink does not use the prefix "sb"
+        fix: Use the prefix from harness.config.json ("sb"); to rebrand everything at once run: sketchbook prefix <new>.
+      src/styles/app.css:1  --muted
+        custom property --muted does not use the prefix "sb"
+        fix: Use the prefix from harness.config.json ("sb"); to rebrand everything at once run: sketchbook prefix <new>.
+      src/styles/app.css:1  --paper
+        custom property --paper does not use the prefix "sb"
+        fix: Use the prefix from harness.config.json ("sb"); to rebrand everything at once run: sketchbook prefix <new>.
+
+Checks failed.
+---- exit 1

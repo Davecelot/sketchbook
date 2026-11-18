@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx2/b-used
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.ok, j.errors[0].msg, "| fix:", j.errors[0].fix)})'
+----
+false This folder already has files (.claude, .gitignore, CLAUDE.md, docs, …) and is not a Sketchbook project, so init writes nothing here. | fix: sketchbook init --dir design-system --start library creates the design system in a new folder inside it (adopting an existing project comes later).
+---- exit 1

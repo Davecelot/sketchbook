@@ -1,0 +1,7 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node harness/cli.mjs status 2>&1 | tail -3
+----
+}
+
+Node.js v26.5.0
+---- exit 1

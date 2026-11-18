@@ -1,0 +1,433 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs list --json
+----
+{
+  "ok": true,
+  "command": "list",
+  "changed": [],
+  "warnings": [],
+  "errors": [],
+  "next": null,
+  "data": {
+    "components": [
+      {
+        "name": "accordion",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "alert",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "button"
+        ]
+      },
+      {
+        "name": "aspect-ratio",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "avatar",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "badge",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "breadcrumb",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "button",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "spinner"
+        ]
+      },
+      {
+        "name": "button-group",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "button"
+        ]
+      },
+      {
+        "name": "card",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "button"
+        ]
+      },
+      {
+        "name": "checkbox",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "collapsible",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "direction",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "pagination",
+          "tabs"
+        ]
+      },
+      {
+        "name": "empty",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "button"
+        ]
+      },
+      {
+        "name": "field",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "input"
+        ]
+      },
+      {
+        "name": "input",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "input-group",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "button",
+          "input",
+          "textarea"
+        ]
+      },
+      {
+        "name": "item",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "button"
+        ]
+      },
+      {
+        "name": "kbd",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "label",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "input"
+        ]
+      },
+      {
+        "name": "native-select",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "pagination",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "progress",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "radio-group",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "scroll-area",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "separator",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "skeleton",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "slider",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "spinner",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "switch",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "table",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "tabs",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "textarea",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "toggle",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      },
+      {
+        "name": "toggle-group",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": [
+          "toggle"
+        ]
+      },
+      {
+        "name": "typography",
+        "installed": false,
+        "catalog": true,
+        "status": "beta",
+        "requires": []
+      }
+    ],
+    "kits": [
+      {
+        "id": "sign-in",
+        "title": "Sign in",
+        "installed": false,
+        "components": [
+          "alert",
+          "button",
+          "card",
+          "checkbox",
+          "field",
+          "input",
+          "input-group",
+          "typography"
+        ]
+      },
+      {
+        "id": "settings",
+        "title": "Settings",
+        "installed": false,
+        "components": [
+          "alert",
+          "button",
+          "button-group",
+          "card",
+          "field",
+          "native-select",
+          "radio-group",
+          "separator",
+          "slider",
+          "switch",
+          "tabs",
+          "textarea"
+        ]
+      },
+      {
+        "id": "data-table",
+        "title": "Data table",
+        "installed": false,
+        "components": [
+          "avatar",
+          "badge",
+          "button",
+          "checkbox",
+          "empty",
+          "input",
+          "input-group",
+          "kbd",
+          "pagination",
+          "scroll-area",
+          "skeleton",
+          "table",
+          "toggle-group"
+        ]
+      },
+      {
+        "id": "dashboard",
+        "title": "Dashboard",
+        "installed": false,
+        "components": [
+          "aspect-ratio",
+          "avatar",
+          "badge",
+          "button",
+          "card",
+          "item",
+          "progress",
+          "separator",
+          "skeleton",
+          "spinner",
+          "table",
+          "tabs",
+          "typography"
+        ]
+      },
+      {
+        "id": "profile",
+        "title": "Profile",
+        "installed": false,
+        "components": [
+          "avatar",
+          "badge",
+          "breadcrumb",
+          "button",
+          "card",
+          "input",
+          "item",
+          "separator",
+          "textarea"
+        ]
+      },
+      {
+        "id": "docs-article",
+        "title": "Docs article",
+        "installed": false,
+        "components": [
+          "accordion",
+          "alert",
+          "aspect-ratio",
+          "breadcrumb",
+          "collapsible",
+          "direction",
+          "kbd",
+          "pagination",
+          "scroll-area",
+          "separator",
+          "typography"
+        ]
+      },
+      {
+        "id": "onboarding",
+        "title": "Onboarding",
+        "installed": false,
+        "components": [
+          "button",
+          "card",
+          "checkbox",
+          "empty",
+          "field",
+          "item",
+          "progress",
+          "skeleton",
+          "spinner",
+          "toggle-group"
+        ]
+      },
+      {
+        "id": "form-states",
+        "title": "Form states",
+        "installed": false,
+        "components": [
+          "checkbox",
+          "direction",
+          "field",
+          "input",
+          "input-group",
+          "label",
+          "native-select",
+          "radio-group",
+          "slider",
+          "switch",
+          "textarea",
+          "toggle",
+          "toggle-group"
+        ]
+      }
+    ]
+  }
+}
+---- exit 0

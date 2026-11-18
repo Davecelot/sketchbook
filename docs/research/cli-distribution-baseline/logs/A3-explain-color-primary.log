@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs explain color.primary
+----
+ENOENT: no such file or directory, open '$SANDBOX/sbx/a-empty-engine/harness.config.json'
+  fix: Run sketchbook help explain.
+---- exit 1

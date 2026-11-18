@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/a-claude
+$ mkdir -p .claude/commands && printf '%s\n' '{' '  "permissions": { "allow": ["Bash(npm run lint)"] },' '  "hooks": { "PreToolUse": [ { "matcher": "Bash", "hooks": [ { "type": "command", "command": "echo team-hook" } ] } ] }' '}' > .claude/settings.json && printf -- '---\ndescription: Deploy the app (team command)\n---\nRun the deploy.\n' > .claude/commands/deploy.md && find .claude -type f | sort
+----
+.claude/commands/deploy.md
+.claude/settings.json
+---- exit 0

@@ -1,0 +1,23 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs init
+----
+sketchbook init: choose a starting point and/or set the brand. Starters:
+  --start blank             Teams designing every component from zero.
+  --start foundations       Teams settling tokens before any component: foundations, their Storybook pages and Figma variables.
+  --start from-codebase     Teams with a product: audit its CSS and propose foundations from the values it repeats; the library and kits stay as they are.
+  --start import            Teams with tokens already (DTCG / Tokens Studio, CSS variables): import them; the library and kits stay.
+  --start library+kits      Product teams that need screens fast: every component plus page templates.
+  --start library           Teams that want a working library now and rebrand it later (default).
+  --start pick              Teams that need a subset: the chosen components (--components a,b) and what they depend on.
+Brand options (all optional; unset ones keep their value):
+  --name     Brand or system name
+  --primary  Primary color as #RRGGBB, or "neutral" for the shadcn default
+  --font     Font family name (falls back to the system stack)
+  --radius   sharp | soft | round | pill-heavy (sketchbook presets radius)
+  --density  compact | comfortable | spacious
+  --danger   Destructive color as #RRGGBB
+  --design   Design-file adapter: figma | none
+  --file     Figma file key (when design is figma)
+  --prefix   Element and CSS prefix, e.g. acme (acme-button, --acme-*); rewrites sources (see sketchbook prefix)
+Example: sketchbook init --start library --primary "#2563EB"
+---- exit 0

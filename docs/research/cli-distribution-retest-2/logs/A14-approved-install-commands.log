@@ -1,0 +1,9 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ echo 'Simulated approved step: the commands Claude listed in run 1 (logs-run1/A14).'; mkdir -p .claude && cp -R move-to-.claude/skills move-to-.claude/commands move-to-.claude/rules move-to-.claude/hooks move-to-.claude/settings.json .claude/ && npm run -s sketchbook -- check --only H1 | tail -2 && npm run -s sketchbook -- doctor | grep 'Claude layer' && rm -rf move-to-.claude && echo 'move-to-.claude removed'
+----
+Simulated approved step: the commands Claude listed in run 1 (logs-run1/A14).
+
+All checks passed.
+Claude layer: installed, move-to-.claude/ still here
+move-to-.claude removed
+---- exit 0

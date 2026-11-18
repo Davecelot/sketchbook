@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ SKETCHBOOK_PORT=6191 npm run test:component -- tests/button tests/foundations 2>&1 | grep -E 'passed|failed|flaky|Error' | tail -3
+----
+  100 passed (25.8s)
+---- exit 0

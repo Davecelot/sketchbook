@@ -1,0 +1,11 @@
+# QA report: out/settings.html
+
+- `<sb-switch name="push" …>` has no `label`, which the Switch contract requires as its visible label and accessible name, so the control has no name (WCAG 4.1.2). Fix: add `label="Push notifications"` (and `hide-label` only if it must be visually hidden).
+- `<sb-switch … tone="success">`: `tone` is not a Switch prop (only label, hide-label, description, error, size, name, value, checked, required, disabled), so it is ignored. Fix: remove `tone="success"`.
+- `<sb-toggle name="digest" label="Weekly digest" description="…">`: Toggle has no `name`, `label` or `description` props and is not a form field, so the label never renders, the button has no name, and nothing is submitted. Fix: replace it with `<sb-checkbox name="digest" label="Weekly digest" description="A summary every Monday">`.
+- The switches sit in a form that waits for Save ("Changes apply after you save"), but the Switch contract says "Don't use a switch for something that needs a Save to take effect; use Checkbox". Fix: use `sb-checkbox` for email/push/digest, or apply each switch right away and remove the Save button and hint.
+- `.fields { gap: var(--sb-space-17) }`: `--sb-space-17` is not a token (the space scale stops at 16), so the gap falls back to 0. Fix: use an existing token such as `var(--sb-space-field-gap)` or `var(--sb-space-6)`.
+- `.hint { font-size: var(--sb-font-size-small) }`: `--sb-font-size-small` is not a token. Fix: use `var(--sb-font-size-sm)` (or `--sb-font-size-caption`).
+- `.hint { color: #d33 }` hardcodes a color outside the tokens, and it uses error red for neutral help text. Fix: use `color: var(--sb-color-muted-foreground)`.
+- The Save action is a hand-styled native `<button class="save">` with copied primary, radius and padding tokens, not the design system's Button, so it has no focus ring, hover, disabled or loading states and no control height. Fix: replace it with `<sb-button type="submit">Save</sb-button>` and delete the `.save` CSS.
+- `<sb-card-title>Notification settings</sb-card-title>` holds plain text, so the page has no heading at all (the Card contract says to put a real heading inside the title). Fix: use `<sb-card-title><h1>Notification settings</h1></sb-card-title>`.

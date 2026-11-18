@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz --dry-run --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log("ok",j.ok,"errors",j.errors.length,"warnings",j.warnings.length,"changed",j.changed.length);for(const w of j.warnings)console.log(" warning:",w.msg||w);if(j.next)console.log(" next:",j.next)})'; echo "entries in folder: $(ls -A | wc -l | tr -d ' ')"
+----
+ok true errors 0 warnings 0 changed 619
+entries in folder: 0
+---- exit 0

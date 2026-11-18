@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Notification settings</title>
+  <link rel="stylesheet" href="tokens.css">
+  <script src="sketchbook.js" defer></script>
+  <style>
+    body {
+      margin: 0;
+      background: var(--sb-color-background);
+      color: var(--sb-color-foreground);
+      font-family: var(--sb-font-family-body);
+    }
+
+    .settings {
+      display: grid;
+      gap: var(--sb-space-stack-xl);
+      max-inline-size: 40rem;
+      margin-inline: auto;
+      padding: var(--sb-space-inset-surface);
+    }
+
+    .settings sb-card-title h1 {
+      margin: 0;
+      font: inherit;
+    }
+
+    .settings__fields {
+      display: grid;
+      gap: var(--sb-space-stack-lg);
+    }
+
+    .settings sb-card-footer {
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <main class="settings">
+    <sb-alert id="saved" hidden>
+      <sb-alert-title></sb-alert-title>
+    </sb-alert>
+
+    <form id="notifications" aria-labelledby="notifications-title">
+      <sb-card>
+        <sb-card-header>
+          <sb-card-title><h1 id="notifications-title">Notification settings</h1></sb-card-title>
+          <sb-card-description>Choose how we keep you informed. Changes apply after you save.</sb-card-description>
+        </sb-card-header>
+        <sb-card-content class="settings__fields">
+          <sb-switch name="email" label="Email" description="Account activity and replies, sent to your inbox." checked></sb-switch>
+          <sb-switch name="push" label="Push" description="Instant alerts on devices where you are signed in."></sb-switch>
+          <sb-switch name="digest" label="Weekly digest" description="A short recap of the week, every Monday."></sb-switch>
+        </sb-card-content>
+        <sb-card-footer>
+          <sb-button type="submit">Save</sb-button>
+        </sb-card-footer>
+      </sb-card>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('notifications');
+    const saved = document.getElementById('saved');
+    const savedTitle = saved.querySelector('sb-alert-title');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const on = [...new FormData(form).keys()];
+      const labels = { email: 'Email', push: 'Push', digest: 'Weekly digest' };
+      saved.hidden = false;
+      savedTitle.textContent = '';
+      // The status region must be rendered before its text changes, or screen readers skip the announcement.
+      requestAnimationFrame(() => {
+        savedTitle.textContent = on.length
+          ? `Saved. On: ${on.map((name) => labels[name]).join(', ')}.`
+          : 'Saved. All notifications are off.';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs init --start library --json > out.json; c=$?; node -e 'const j=require("./out.json");console.log(JSON.stringify(j.errors))'; rm out.json; exit $c
+----
+[{"file":null,"msg":"Cannot read properties of undefined (reading '0')","fix":"Run sketchbook help init."}]
+---- exit 1

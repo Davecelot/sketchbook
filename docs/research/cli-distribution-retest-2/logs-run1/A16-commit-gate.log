@@ -1,0 +1,10 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ bash $SANDBOX/scripts/commit-gate.sh $SANDBOX/sbx3/a-empty
+----
+core.hooksPath=.githooks
+hint: The '.githooks/pre-commit' hook was ignored because it's not set as executable.
+hint: You can disable this warning with `git config set advice.ignoredHook false`.
+initial commit: allowed (3fc8416)
+broken commit: ALLOWED (gate not working)
+M  spec/components/badge/contract.json
+---- exit 0

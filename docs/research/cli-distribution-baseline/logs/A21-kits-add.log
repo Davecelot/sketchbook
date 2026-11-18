@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node harness/cli.mjs kits add sign-in | tail -3
+----
+Kits added: sign-in.
+Checks: pass T2, pass T4, pass C1, pass C2, pass C3, pass P1, pass R1, pass G1, pass K1
+---- exit 0

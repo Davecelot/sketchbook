@@ -1,0 +1,22 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz 2>&1 | grep -vE '^(npm warn|added|  [0-9]+ packages|Downloading|\|)' | tail -40
+----
+Installing dependencies (npm install, then Chromium for the behavior tests)…
+
+git: core.hooksPath = .githooks (npm run check runs before every commit).
+
+Sketchbook installed in $SANDBOX/sbx3/a-empty. What it installed (docs/harness.md has the full list):
+  Skills (staged in move-to-.claude/, not active yet) (19): a11y-checker, a11y-checker/a11y-auditor, component-builder, component-builder/parity-auditor, contract-author, contract-author/drafter, contract-author/extractor, contract-author/validator, design-figma, forge-me-a-skill, foundations, foundations/foundations-critic, foundations/token-mapper, hammock, kits, onboarding, playwright-worker, review-rangers, web-components-best-practices
+  Slash commands (staged in move-to-.claude/, not active yet) (11): /add, /check, /explain, /foundations, /import-tokens, /init, /kits, /roast-foundations, /start, /swap, /sync
+  Rules (staged in move-to-.claude/, not active yet) (9): always-hammock, comment-minimalism, contract-first, figma-fidelity, form-associated-controls, planning-gate, spec-is-source, test-first, tokens-through-the-harness
+  Hooks (staged in move-to-.claude/, not active yet) (8): SessionStart: .claude/skills/hammock/hooks/hammock-activate.js, UserPromptSubmit: .claude/skills/hammock/hooks/hammock-mode-tracker.js, SubagentStart: .claude/skills/hammock/hooks/hammock-subagent.js, PreToolUse (Edit|Write|MultiEdit): .claude/skills/hammock/hooks/hammock-gate.js, PreToolUse (Edit|Write|MultiEdit): .claude/hooks/guard-generated.mjs, PreToolUse (Edit|Write|MultiEdit): .claude/hooks/guard-decisions.mjs, PostToolUse (Edit|Write|MultiEdit): .claude/skills/hammock/hooks/hammock-audit-runner.js, Stop: .claude/skills/hammock/hooks/hammock-stop-gate.js
+  Checks (22): T1, T2, T3, T4, T5, T6, T7, F1, C1, C2, C3, A1, P1, R1, G1, D1, D3, D4, W1, X1, K1, H1
+  CLI commands (23): init, status, doctor, upgrade, generate, prefix, swap, add, remove, list, kits, tokens, presets, brand, icons, api, audit-css, sync, docs, check, selftest, explain, help
+  Project setup (6): sketchbook (devDependency file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz), .githooks/pre-commit, .storybook, playwright, brand.config.json, move-to-.claude/INSTALL.md
+  Outside the project (2): Node.js 20 or newer, Chromium for Playwright
+
+One step left, with Claude: the Claude layer (skills, commands, rules, hooks) is staged in move-to-.claude/.
+  Open Claude Code in this folder and ask: "Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md)".
+  Claude Code asks you to approve writing into .claude/: approve it, that is the install.
+Next: open Claude Code in this folder and ask: "Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md)"; /foundations guided (color, typography, radius, density); npm run storybook
+---- exit 0

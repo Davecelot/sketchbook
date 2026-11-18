@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ $SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+----
+ok: false errors: [{"file":null,"msg":"Can't find stylesheet to import.\n  ╷\n1 │ @use 'a11y';\n  │ ^^^^^^^^^^^\n  ╵\n  src/components/accordion/Accordion.scss 1:1  root stylesheet","fix":"Run sketchbook help init."}]
+---- exit 0

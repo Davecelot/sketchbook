@@ -1,0 +1,25 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs tokens presets
+----
+borderWidth    border                   standard*
+breakpoints    breakpoints              tailwind, bootstrap
+contrast       contrast                 wcag-aa*, wcag-aaa, apca
+density        density                  compact, comfortable*, spacious
+elevation      elevation                tailwind*, flat, layered-5
+iconSizes      icons                    standard*, carbon-like
+layoutGrid     grid                     12-col*, 16-col
+letterSpacing  typography.letterSpacing standard*, tailwind
+lineHeight     typography.lineHeights   standard*, relaxed
+motion         motion                   tailwind-like*, material-like, carbon-productive, carbon-expressive, minimal
+neutrals       color.neutral            neutral*, slate, gray, zinc, stone
+opacity        opacity                  standard*
+radius         radius                   sharp, soft*, round, pill-heavy
+rampMethods    color.ramp               oklch*, tailwind-11, radix-12, m3-tonal, contrast-targeted
+semanticRoles  -                        primary, destructive, success, warning, info
+spacing        spacing                  grid-4*, grid-2, grid-8, grid-10, grid-5
+typeScale      typography.scale         tailwind*, minor-second, major-second, minor-third, major-third, perfect-fourth, augmented-fourth, perfect-fifth, golden
+weights        typography.weights       standard*, full
+zIndex         z                        standard*, named-layers
+
+* = default. sketchbook presets <family> shows values and sources.
+---- exit 0

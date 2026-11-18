@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ $SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+----
+ok: false errors: [{"file":"spec/components/accordion/contract.json","msg":"cites a decision that does not exist","fix":"Fix the id, or record the decision.","token":"SB-0007"},{"file":"spec/components/accordion/contract.json","msg":"cites a decision that does not exist","fix":"Fix the id, or record the decision.","token":"SB-0009"},{"file":"spec/components/alert/contract.json","msg":"cites a decision that does not
+---- exit 0

@@ -1,0 +1,8 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node harness/cli.mjs tokens preset spacing grid-8 --dry-run | tail -4
+----
+pass  G1  Generated files match a fresh rebuild
+
+All checks passed.
+(dry run: nothing written; 4 file(s) would change)
+---- exit 0

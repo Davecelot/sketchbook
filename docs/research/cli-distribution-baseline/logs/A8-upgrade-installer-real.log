@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs upgrade --from $REPO | tail -4
+----
+ENOENT: no such file or directory, open '$SANDBOX/sbx/a-empty-engine/harness.config.json'
+  fix: Run sketchbook help upgrade.
+---- exit 1

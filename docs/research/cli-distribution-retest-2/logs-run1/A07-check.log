@@ -1,0 +1,8 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs; npm run -s sketchbook -- check | grep -A2 '^pass  H1'
+----
+ok=true errors=0 warnings=2
+pass  H1  Claude layer: every skill, brief and command loads, skills follow the standard, and only real CLI commands are named
+      warn: move-to-.claude  the Claude layer is staged, not installed: its skills, rules and hooks are not active yet
+
+---- exit 0

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Notification settings</title>
+  <link rel="stylesheet" href="../generated/css/tokens.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root { color-scheme: light; }
+    :root[data-theme="dark"] { color-scheme: dark; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) { color-scheme: dark; }
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: start center;
+      padding: var(--sb-space-12) var(--sb-space-4);
+      background: var(--sb-color-background);
+      color: var(--sb-color-foreground);
+      font-family: var(--sb-font-family-body);
+      font-size: var(--sb-font-size-body);
+      line-height: var(--sb-font-line-height-body);
+    }
+
+    .page { width: 100%; max-width: 32rem; display: grid; gap: var(--sb-space-4); }
+
+    .theme-picker {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: var(--sb-space-2);
+      font-size: var(--sb-font-size-sm);
+      color: var(--sb-color-muted-foreground);
+    }
+
+    select {
+      height: var(--sb-size-control-sm);
+      padding: 0 var(--sb-space-2);
+      border: var(--sb-border-width-default) solid var(--sb-color-input);
+      border-radius: var(--sb-radius-control);
+      background: var(--sb-color-input-background);
+      color: var(--sb-color-foreground);
+      font: inherit;
+    }
+
+    .card {
+      border: var(--sb-border-width-default) solid var(--sb-color-border);
+      border-radius: var(--sb-radius-surface);
+      background: var(--sb-color-card);
+      color: var(--sb-color-card-foreground);
+      box-shadow: var(--sb-elevation-sm);
+    }
+
+    .card-header { padding: var(--sb-space-6) var(--sb-space-6) 0; }
+    .card-title {
+      margin: 0;
+      font-size: var(--sb-font-size-heading-4);
+      font-weight: var(--sb-font-weight-heading);
+      line-height: var(--sb-font-line-height-heading-4);
+      letter-spacing: var(--sb-font-letter-spacing-heading);
+    }
+    .card-description {
+      margin: var(--sb-space-1-5) 0 0;
+      font-size: var(--sb-font-size-sm);
+      color: var(--sb-color-muted-foreground);
+    }
+
+    fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+    legend {
+      position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+      overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+    }
+
+    .card-content { padding: var(--sb-space-6); }
+    .settings { list-style: none; margin: 0; padding: 0; }
+    .settings li + li {
+      border-top: var(--sb-border-width-default) solid var(--sb-color-border);
+    }
+
+    .setting {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--sb-space-4);
+      align-items: center;
+      padding-block: var(--sb-space-4);
+    }
+    .settings li:first-child .setting { padding-top: 0; }
+    .settings li:last-child .setting { padding-bottom: 0; }
+
+    .setting label {
+      font-size: var(--sb-font-size-sm);
+      font-weight: var(--sb-font-weight-label);
+      line-height: var(--sb-font-line-height-label);
+      cursor: pointer;
+    }
+    .setting p {
+      grid-column: 1;
+      margin: var(--sb-space-1) 0 0;
+      font-size: var(--sb-font-size-sm);
+      color: var(--sb-color-muted-foreground);
+    }
+
+    .switch {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      position: relative;
+      display: inline-flex;
+    }
+    .switch input {
+      appearance: none;
+      margin: 0;
+      width: var(--sb-size-switch-width);
+      height: var(--sb-size-switch-height);
+      border: var(--sb-border-width-default) solid transparent;
+      border-radius: var(--sb-radius-full);
+      background: var(--sb-color-input);
+      box-shadow: var(--sb-elevation-xs);
+      cursor: pointer;
+      transition: background-color var(--sb-motion-duration-fast) var(--sb-motion-easing-standard),
+                  box-shadow var(--sb-motion-duration-fast) var(--sb-motion-easing-standard);
+    }
+    .switch input:checked { background: var(--sb-color-primary); }
+    .switch input:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 var(--sb-focus-ring-offset) var(--sb-color-background),
+                  0 0 0 calc(var(--sb-focus-ring-offset) + var(--sb-focus-ring-width)) var(--sb-color-ring);
+    }
+    .switch .thumb {
+      --_thumb: calc(var(--sb-size-switch-height) - 2 * var(--sb-space-switch-inset) - 2 * var(--sb-border-width-default));
+      position: absolute;
+      top: calc(var(--sb-space-switch-inset) + var(--sb-border-width-default));
+      left: calc(var(--sb-space-switch-inset) + var(--sb-border-width-default));
+      width: var(--_thumb);
+      height: var(--_thumb);
+      border-radius: var(--sb-radius-full);
+      background: var(--sb-color-background);
+      pointer-events: none;
+      transition: transform var(--sb-motion-duration-fast) var(--sb-motion-easing-standard);
+    }
+    .switch input:checked + .thumb {
+      transform: translateX(calc(var(--sb-size-switch-width) - var(--_thumb) - 2 * var(--sb-space-switch-inset) - 2 * var(--sb-border-width-default)));
+      background: var(--sb-color-primary-foreground);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--sb-space-3);
+      padding: 0 var(--sb-space-6) var(--sb-space-6);
+    }
+    .status { margin: 0; font-size: var(--sb-font-size-sm); color: var(--sb-color-muted-foreground); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--sb-size-control-default);
+      padding: 0 var(--sb-space-control-padding-x-default);
+      border: 0;
+      border-radius: var(--sb-radius-control);
+      background: var(--sb-color-primary);
+      color: var(--sb-color-primary-foreground);
+      font: inherit;
+      font-size: var(--sb-font-size-control);
+      font-weight: var(--sb-font-weight-control);
+      box-shadow: var(--sb-elevation-xs);
+      cursor: pointer;
+      transition: background-color var(--sb-motion-duration-fast) var(--sb-motion-easing-standard);
+    }
+    .button:hover { background: color-mix(in oklab, var(--sb-color-primary) 90%, transparent); }
+    .button:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 var(--sb-focus-ring-offset) var(--sb-color-background),
+                  0 0 0 calc(var(--sb-focus-ring-offset) + var(--sb-focus-ring-width)) var(--sb-color-ring);
+    }
+    select:focus-visible {
+      outline: none;
+      border-color: var(--sb-color-ring);
+      box-shadow: 0 0 0 var(--sb-focus-ring-width) var(--sb-color-ring);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .switch input, .switch .thumb, .button { transition: none; }
+    }
+    @media (forced-colors: active) {
+      .switch input { border-color: CanvasText; }
+      .switch input:checked { background: Highlight; }
+      .switch .thumb { background: CanvasText; forced-color-adjust: none; }
+      .switch input:focus-visible, .button:focus-visible, select:focus-visible {
+        outline: var(--sb-focus-ring-width) solid CanvasText;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="theme-picker">
+      <label for="theme">Theme</label>
+      <select id="theme">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    <form class="card" id="notifications" aria-labelledby="notifications-title">
+      <div class="card-header">
+        <h1 class="card-title" id="notifications-title">Notification settings</h1>
+        <p class="card-description">Choose how we keep you up to date.</p>
+      </div>
+
+      <div class="card-content">
+        <fieldset>
+          <legend>Notification channels</legend>
+          <ul class="settings">
+            <li>
+              <div class="setting">
+                <label for="email">Email</label>
+                <p id="email-desc">Get account activity and updates in your inbox.</p>
+                <span class="switch">
+                  <input type="checkbox" role="switch" id="email" name="email" aria-describedby="email-desc" checked>
+                  <span class="thumb" aria-hidden="true"></span>
+                </span>
+              </div>
+            </li>
+            <li>
+              <div class="setting">
+                <label for="push">Push</label>
+                <p id="push-desc">Receive instant alerts on your devices.</p>
+                <span class="switch">
+                  <input type="checkbox" role="switch" id="push" name="push" aria-describedby="push-desc">
+                  <span class="thumb" aria-hidden="true"></span>
+                </span>
+              </div>
+            </li>
+            <li>
+              <div class="setting">
+                <label for="digest">Weekly digest</label>
+                <p id="digest-desc">A summary of the week's highlights, every Monday.</p>
+                <span class="switch">
+                  <input type="checkbox" role="switch" id="digest" name="digest" aria-describedby="digest-desc">
+                  <span class="thumb" aria-hidden="true"></span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </fieldset>
+      </div>
+
+      <div class="card-footer">
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <button class="button" type="submit">Save</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const themeSelect = document.getElementById('theme');
+    themeSelect.addEventListener('change', () => {
+      if (themeSelect.value === 'system') root.removeAttribute('data-theme');
+      else root.setAttribute('data-theme', themeSelect.value);
+    });
+
+    const form = document.getElementById('notifications');
+    const status = document.getElementById('status');
+    form.addEventListener('change', () => { status.textContent = ''; });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const on = ['email', 'push', 'digest']
+        .filter((name) => data.has(name))
+        .map((name) => form.elements[name].labels[0].textContent);
+      status.textContent = on.length ? `Saved. On: ${on.join(', ')}.` : 'Saved. All notifications off.';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Switch",
+  "tag": "sb-switch",
+  "status": "draft",
+  "version": "0.1.0",
+  "platforms": ["web", "design"],
+  "summary": "A toggle for an on/off setting, with its label, description and error laid out beside it, taking part in forms.",
+  "dependsOn": [],
+  "props": {
+    "label": {
+      "type": "text",
+      "required": true,
+      "default": null,
+      "note": "Visible label next to the track and accessible name. Required: shadow DOM keeps an external <label for> from reaching the inner input."
+    },
+    "hideLabel": {
+      "type": "boolean",
+      "attribute": "hide-label",
+      "default": false,
+      "note": "Visually hides the label; it stays the accessible name. Use only when other visible text names the switch."
+    },
+    "description": { "type": "text", "default": "", "note": "Help text under the label." },
+    "error": { "type": "text", "default": "", "note": "Error message. Setting it marks the field invalid." },
+    "size": {
+      "type": "variant",
+      "values": ["default", "sm"],
+      "default": "default",
+      "reflect": true,
+      "note": "Track 32x20px (default) or 24x16px (sm)."
+    },
+    "name": { "type": "text", "default": "", "note": "Form field name." },
+    "value": {
+      "type": "text",
+      "default": "on",
+      "reflect": true,
+      "note": "Submitted with the form while checked."
+    },
+    "checked": {
+      "type": "boolean",
+      "default": false,
+      "note": "Current state. Not reflected: the attribute is the default restored by form reset."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Native required: must be on to submit. Adds an aria-hidden asterisk after the label."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Native disabled; dimmed; not submitted."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "field",
+      "role": "container",
+      "parent": null,
+      "part": "field",
+      "notes": "Grid: track in the first column, label, description and error in the second."
+    },
+    {
+      "name": "control",
+      "role": "container",
+      "parent": "field",
+      "part": "control",
+      "notes": "Track wrapper; draws the track and positions the thumb over the native input."
+    },
+    {
+      "name": "input",
+      "role": "control",
+      "parent": "control",
+      "part": "input",
+      "notes": "Native <input type=\"checkbox\" role=\"switch\">; receives focus, Space and validation. Covers the track."
+    },
+    {
+      "name": "thumb",
+      "role": "other",
+      "parent": "control",
+      "part": "thumb",
+      "notes": "Circle that slides to the end when checked; decorative."
+    },
+    {
+      "name": "label",
+      "role": "text",
+      "parent": "field",
+      "part": "label",
+      "controlledBy": "label",
+      "notes": "Native <label for> in the same shadow root."
+    },
+    {
+      "name": "required-indicator",
+      "role": "text",
+      "parent": "label",
+      "part": "required-indicator",
+      "optional": true,
+      "controlledBy": "required",
+      "notes": "Asterisk, aria-hidden."
+    },
+    {
+      "name": "description",
+      "role": "text",
+      "parent": "field",
+      "part": "description",
+      "optional": true,
+      "controlledBy": "description"
+    },
+    {
+      "name": "error",
+      "role": "text",
+      "parent": "field",
+      "part": "error",
+      "optional": true,
+      "controlledBy": "error",
+      "notes": "Persistent polite live region; text appears when invalid."
+    }
+  ],
+  "variantMatrix": {
+    "dimensions": { "size": ["default", "sm"] }
+  },
+  "content": {},
+  "events": {
+    "input": {
+      "bubbles": true,
+      "composed": true,
+      "native": true,
+      "detail": null,
+      "note": "Each toggle. Native and composed, so it crosses the shadow boundary."
+    },
+    "change": {
+      "bubbles": true,
+      "composed": true,
+      "native": false,
+      "detail": null,
+      "note": "Toggle committed. Re-dispatched from the host because native change is not composed (NativeControl). Not fired when checked is set from code."
+    }
+  },
+  "states": {
+    "hover": { "trigger": "pointer over an enabled switch", "tokens": [] },
+    "focus-visible": {
+      "trigger": "keyboard focus on the track",
+      "tokens": ["switch.focus-ring.color", "switch.focus-ring.width"],
+      "note": "3px solid ring around the track (a translucent ring would fall under 3:1)."
+    },
+    "checked": {
+      "trigger": "checked",
+      "tokens": ["switch.checked.bg", "switch.thumb.checked-bg"],
+      "note": "Track fills with primary; thumb moves to the end (mirrored in rtl)."
+    },
+    "invalid": {
+      "trigger": "error set, or required and off after blur or a submit attempt",
+      "tokens": ["switch.border-invalid", "switch.error.fg"]
+    },
+    "disabled": {
+      "trigger": "disabled attribute or a disabled fieldset ancestor",
+      "tokens": ["switch.disabled-opacity"]
+    }
+  },
+  "accessibility": {
+    "role": "switch",
+    "native": "input type=checkbox role=switch",
+    "accessibleNameSource": "The label prop, through a native <label for> in the same shadow root.",
+    "formAssociation": {
+      "value": true,
+      "note": "FormAssociated + NativeControl: setFormValue(value) only while checked; validity mirrored from the inner input (required -> valueMissing, error -> customError); formResetCallback restores the checked attribute default; formStateRestore restores checked; a disabled fieldset ancestor disables it and it is not submitted; <label for> on the host activates it."
+    },
+    "targetSize": "Track is 32x20px (default) or 24x16px (sm); the label is part of the clickable row. sm relies on the gap to the label for the WCAG 2.5.8 spacing exception.",
+    "focusRingVisible": "On keyboard focus of the input; 3px ring in switch.focus-ring.color.",
+    "missingNameWarning": "Dev-only console warning, once, when label is empty.",
+    "keyboard": {
+      "Tab": "move focus to and from the switch",
+      "Space": "toggles checked (native)",
+      "Enter": "submits the form (implicit submission; the control has no form owner in its shadow root, SB-0009)"
+    },
+    "aria": [
+      "role=\"switch\" on the native checkbox input exposes the on/off state through checked",
+      "aria-describedby -> description and error ids (same root)",
+      "aria-invalid=\"true\" when invalid",
+      "required: native required; the asterisk is aria-hidden",
+      "error: sets a customError validity, so the form blocks submission"
+    ],
+    "announcements": ["error text is announced once when it appears (persistent aria-live=polite region)"],
+    "contrast": [
+      { "fg": "switch.label.fg", "bg": "color.background", "kind": "text" },
+      { "fg": "switch.description.fg", "bg": "color.background", "kind": "text" },
+      { "fg": "switch.error.fg", "bg": "color.background", "kind": "text" },
+      { "fg": "switch.border", "bg": "color.background", "kind": "ui" },
+      { "fg": "switch.border-invalid", "bg": "color.background", "kind": "ui" },
+      { "fg": "switch.checked.bg", "bg": "color.background", "kind": "ui" },
+      { "fg": "switch.thumb.checked-bg", "bg": "switch.checked.bg", "kind": "ui" },
+      { "fg": "switch.focus-ring.color", "bg": "color.background", "kind": "ui" }
+    ],
+    "wcag": ["1.3.1", "1.4.1", "1.4.3", "1.4.11", "2.1.1", "2.4.7", "2.5.8", "3.3.1", "4.1.2", "4.1.3"]
+  },
+  "tokens": {
+    "switch.font-family": "{font.family.body}",
+    "switch.width.default": "{size.switch.width}",
+    "switch.height.default": "{size.switch.height}",
+    "switch.width.sm": "{size.switch.width-sm}",
+    "switch.height.sm": "{size.switch.height-sm}",
+    "switch.thumb.size.default": "{size.icon.default}",
+    "switch.thumb.size.sm": "{size.icon.sm}",
+    "switch.radius": "{radius.pill}",
+    "switch.border-width": "{border-width.default}",
+    "switch.bg": "{color.input-background}",
+    "switch.border": "{color.input}",
+    "switch.border-invalid": "{color.destructive}",
+    "switch.checked.bg": "{color.primary}",
+    "switch.thumb.bg": "{color.foreground}",
+    "switch.thumb.checked-bg": "{color.primary-foreground}",
+    "switch.shadow": "{elevation.xs}",
+    "switch.gap": "{space.field.gap}",
+    "switch.content-gap": "{space.control.gap.sm}",
+    "switch.label.fg": "{color.foreground}",
+    "switch.label.font-size": "{font.size.control}",
+    "switch.label.font-weight": "{font.weight.label}",
+    "switch.label.line-height": "{font.line-height.control}",
+    "switch.description.fg": "{color.muted-foreground}",
+    "switch.description.font-size": "{font.size.body}",
+    "switch.description.line-height": "{font.line-height.body}",
+    "switch.error.fg": "{color.destructive}",
+    "switch.focus-ring.color": "{color.ring}",
+    "switch.focus-ring.width": "{focus.ring.width}",
+    "switch.disabled-opacity": "{opacity.disabled}",
+    "switch.transition-duration": "{motion.duration.fast}",
+    "switch.transition-easing": "{motion.easing.standard}"
+  },
+  "aiHints": {
+    "category": "molecule",
+    "keywords": ["switch", "toggle", "on/off", "setting", "preference", "form"],
+    "useCases": [
+      { "when": "A setting that is on or off and takes effect right away", "use": "sb-switch" },
+      { "when": "The setting needs a consequence explained", "use": "description" },
+      { "when": "A compact list of settings", "use": "size=\"sm\"" },
+      { "when": "The setting must be on before the form submits", "use": "required with a label that states it" }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "A switch for a choice that is only recorded when the form is submitted",
+        "why": "A switch reads as immediate; a recorded choice is a checkbox",
+        "alternative": "Checkbox"
+      },
+      {
+        "pattern": "Choosing one option from several",
+        "why": "A switch is a single on/off value",
+        "alternative": "Radio Group"
+      },
+      {
+        "pattern": "Vague labels like \"Option\"",
+        "why": "The label is the only name for the switch",
+        "alternative": "A label that states the setting"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "not-started",
+      "files": [],
+      "spec": "playwright/tests/switch/switch.behavior.spec.ts",
+      "coverage": [],
+      "drift": []
+    },
+    "design": { "status": "not-started", "coverage": [], "drift": [] }
+  },
+  "openQuestions": [
+    {
+      "id": "Q0",
+      "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+      "status": "answered",
+      "answer": "Yes: APG switch pattern, label row beside the track.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q1",
+      "question": "Native <input type=\"checkbox\" role=\"switch\"> or a custom element with role=\"switch\"?",
+      "status": "answered",
+      "answer": "Native checkbox with role=\"switch\": Space, focus, validity and form semantics come free, same base as Checkbox (FormAssociated + NativeControl).",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q2",
+      "question": "Is checked reflected to an attribute?",
+      "status": "answered",
+      "answer": "No, like Checkbox: the attribute is the default that form reset restores.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q3",
+      "question": "Is label required?",
+      "status": "answered",
+      "answer": "Yes, like Checkbox and Input. hide-label keeps it as the accessible name.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q4",
+      "question": "Which sizes?",
+      "status": "answered",
+      "answer": "default (32x20) and sm (24x16), from the existing size.switch.* semantic tokens; the thumb takes size.icon.default and size.icon.sm.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q5",
+      "question": "How does the off track meet 3:1 (WCAG 1.4.11)?",
+      "status": "answered",
+      "answer": "Border in color.input (3:1, as Checkbox) and a solid 3px focus ring; to be listed as drift from the visual reference once built.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q6",
+      "question": "Does the contract need new semantic tokens?",
+      "status": "answered",
+      "answer": "No. size.switch.* already exist; everything else aliases existing semantic tokens.",
+      "answeredOn": "2026-11-12"
+    }
+  ],
+  "decisions": ["SB-0007", "SB-0009", "SB-0101"]
+}

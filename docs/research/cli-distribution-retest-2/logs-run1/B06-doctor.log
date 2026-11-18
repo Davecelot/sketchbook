@@ -1,0 +1,14 @@
+$ cd $SANDBOX/sbx3/b-used/design-system
+$ npm run -s sketchbook -- doctor
+----
+Starter: from-codebase
+Harness: 0.3.0 (files here: 0.3.0)
+Components: 35 installed, 0 more in the catalog, 0 customized, 0 team-made
+Kits: 8 installed, 0 available
+Brands: single brand
+Overrides: 0
+Design: none
+Checks: all pass, 2 warning(s)
+Claude layer: staged in move-to-.claude/ (not active yet: ask Claude Code to install it, move-to-.claude/INSTALL.md)
+Commit gate: inactive (git config core.hooksPath .githooks at the repository root, or call npm run check from your own hook)
+---- exit 0

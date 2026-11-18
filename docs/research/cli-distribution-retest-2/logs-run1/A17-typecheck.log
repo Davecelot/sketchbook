@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm run typecheck 2>&1 | tail -2
+----
+> tsc --noEmit && tsc --noEmit -p tsconfig.stories.json
+
+---- exit 0

@@ -1,0 +1,12 @@
+# QA report: out/settings.html
+
+- Line 28: `<sb-switch name="push">` has no `label`, which the Switch contract requires as its accessible name (an external `<label>` can't reach the inner input through the shadow DOM), so the switch has no name. Fix: add `label="Push notifications"`.
+- Line 27: `tone="success"` on `sb-switch` is not in the Switch contract (its props are label, hide-label, description, error, name, value, checked, required, disabled, size), so the attribute does nothing. Fix: remove `tone="success"`.
+- Line 29: `sb-toggle` is used for "Weekly digest", a setting saved with the form, but the Toggle contract says to use Switch or Checkbox for that. Toggle is also not a form field, so `name` is never submitted. Fix: change it to `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">`.
+- Line 29: `label` and `description` are not Toggle props (Toggle takes its name from its default slot), so this empty `sb-toggle` renders a button with no accessible name and no visible text. Fix: switch to `sb-switch` as above, or put the text in the slot (`<sb-toggle>Weekly digest</sb-toggle>`).
+- Line 34: the Save action is a native `<button class="save">` with hand-written styles (lines 14–15), not the design-system button. The card contract says footer buttons should be `sb-button`. Fix: replace it with `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.
+- Line 12: `var(--sb-space-17)` is not a defined token (the spacing scale stops at 16 and has no 17), so the gap is invalid and becomes 0. Fix: use an existing token such as `var(--sb-space-field-gap)` or `var(--sb-space-4)`.
+- Line 13: `var(--sb-font-size-small)` is not a defined token, so the hint falls back to the inherited size. Fix: use `var(--sb-font-size-sm)` (or `var(--sb-font-size-caption)`).
+- Line 13: the hint color is hard-coded as `#d33` instead of a token, so it ignores light and dark modes and its contrast is unchecked. Fix: use `var(--sb-color-muted-foreground)`.
+- Lines 13 and 31: the hint "Changes apply after you save." is ordinary help text but is shown in an error-like red, which wrongly suggests a problem. Fix: style it with `--sb-color-muted-foreground` (or put it in `sb-card-description`) and keep danger colors for real errors.
+- Line 23: `sb-card-title` has no real heading inside, and the page has no other heading, so it has no document outline (the Card contract says to put a real heading in the title in this case). Fix: change it to `<sb-card-title><h1>Notification settings</h1></sb-card-title>`.

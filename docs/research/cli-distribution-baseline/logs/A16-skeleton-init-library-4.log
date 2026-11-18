@@ -1,0 +1,9 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ $SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+----
+added: spec/tokens/contrast.json
+added: spec/schemas/brand-config.schema.json
+added: spec/schemas/contract.schema.json
+added: spec/schemas/registry.schema.json
+ok: false errors: [{"file":"spec/decisions/DECISIONS.md","msg":"missing decision log","fix":"Create spec/decisions/DECISIONS.md."}]
+---- exit 0

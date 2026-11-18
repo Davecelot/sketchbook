@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notification settings</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    background: var(--sb-color-background);
+    color: var(--sb-color-foreground);
+    font-family: var(--sb-font-family-body);
+  }
+  form { width: min(100%, 24rem); }
+  sb-card-content { display: grid; gap: 1.25rem; }
+  #status { margin: 0; min-height: 1.25em; font-size: 0.875rem; }
+</style>
+</head>
+<body>
+<form id="settings">
+  <sb-card>
+    <sb-card-header>
+      <sb-card-title>Notification settings</sb-card-title>
+      <sb-card-description>Choose how you want to hear from us.</sb-card-description>
+    </sb-card-header>
+    <sb-card-content>
+      <sb-switch name="email" label="Email" description="Receive updates and alerts in your inbox." checked></sb-switch>
+      <sb-switch name="push" label="Push" description="Get instant alerts on your devices."></sb-switch>
+      <sb-switch name="digest" label="Weekly digest" description="A summary of your activity every Monday."></sb-switch>
+      <p id="status" role="status"></p>
+    </sb-card-content>
+    <sb-card-footer>
+      <sb-button type="submit">Save</sb-button>
+    </sb-card-footer>
+  </sb-card>
+</form>
+<script src="sketchbook.js"></script>
+<script>
+  var form = document.getElementById('settings');
+  var statusEl = document.getElementById('status');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = new FormData(form);
+    var on = ['email', 'push', 'digest'].filter(function (k) { return data.has(k); });
+    statusEl.textContent = 'Saved. Enabled: ' + (on.length ? on.join(', ') : 'none') + '.';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Notification settings</title>
+    <!-- Design-system tokens (light + dark) and the prebuilt component bundle (classic script, works from file://). -->
+    <link rel="stylesheet" href="vendor/tokens.css" />
+    <script src="vendor/sketchbook.js"></script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        box-sizing: border-box;
+        display: grid;
+        place-items: start center;
+        padding: var(--sb-space-12) var(--sb-space-4);
+        background: var(--sb-color-background);
+        color: var(--sb-color-foreground);
+        font-family: var(--sb-font-family-body);
+        font-size: var(--sb-font-size-body);
+      }
+      main {
+        width: 100%;
+        max-width: 28rem;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sb-space-4);
+      }
+      .toolbar {
+        display: flex;
+        justify-content: flex-end;
+      }
+      /* Real heading for the document outline, styled by sb-card-title. */
+      sb-card-title h1 {
+        margin: 0;
+        font: inherit;
+      }
+      sb-card-footer {
+        display: flex;
+        align-items: center;
+        gap: var(--sb-space-3);
+      }
+      #status {
+        margin: 0;
+        font-size: var(--sb-font-size-sm);
+        color: var(--sb-color-muted-foreground);
+      }
+      /* Hide undefined elements briefly to avoid a flash of unstyled content. */
+      :not(:defined) {
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="toolbar">
+        <sb-button id="theme-toggle" variant="ghost" size="sm">Use dark theme</sb-button>
+      </div>
+
+      <form id="settings-form" aria-labelledby="settings-title">
+        <sb-card>
+          <sb-card-header>
+            <sb-card-title><h1 id="settings-title">Notification settings</h1></sb-card-title>
+            <sb-card-description>Choose how we keep you informed. Changes apply after you save.</sb-card-description>
+          </sb-card-header>
+
+          <sb-card-content>
+            <sb-field-group>
+              <sb-checkbox
+                name="email"
+                label="Email"
+                description="Account activity and important updates sent to your inbox."
+                checked
+              ></sb-checkbox>
+              <sb-checkbox
+                name="push"
+                label="Push"
+                description="Instant alerts on devices where you're signed in."
+              ></sb-checkbox>
+              <sb-checkbox
+                name="digest"
+                label="Weekly digest"
+                description="A summary of the week's highlights, every Monday."
+              ></sb-checkbox>
+            </sb-field-group>
+          </sb-card-content>
+
+          <sb-card-footer>
+            <sb-button type="submit">Save changes</sb-button>
+            <p id="status" role="status" aria-live="polite"></p>
+          </sb-card-footer>
+        </sb-card>
+      </form>
+    </main>
+
+    <script>
+      (function () {
+        // Theme: follows the OS by default (tokens.css handles prefers-color-scheme);
+        // the toggle pins an explicit data-theme on <html>.
+        var root = document.documentElement;
+        var toggle = document.getElementById('theme-toggle');
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function currentTheme() {
+          return root.getAttribute('data-theme') || (media.matches ? 'dark' : 'light');
+        }
+        function syncToggle() {
+          toggle.textContent = currentTheme() === 'dark' ? 'Use light theme' : 'Use dark theme';
+        }
+        toggle.addEventListener('click', function () {
+          root.setAttribute('data-theme', currentTheme() === 'dark' ? 'light' : 'dark');
+          syncToggle();
+        });
+        media.addEventListener('change', syncToggle);
+        syncToggle();
+
+        // Save: no backend here, so report what would be saved.
+        var form = document.getElementById('settings-form');
+        var status = document.getElementById('status');
+        var labels = { email: 'Email', push: 'Push', digest: 'Weekly digest' };
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          var data = new FormData(form);
+          var on = Object.keys(labels).filter(function (k) { return data.has(k); })
+            .map(function (k) { return labels[k]; });
+          status.textContent = 'Saved. ' + (on.length ? 'On: ' + on.join(', ') + '.' : 'All notifications off.');
+        });
+        form.addEventListener('change', function () { status.textContent = ''; });
+      })();
+    </script>
+  </body>
+</html>

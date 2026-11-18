@@ -1,0 +1,18 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs check --json
+----
+{
+  "ok": false,
+  "command": "check",
+  "changed": [],
+  "warnings": [],
+  "errors": [
+    {
+      "file": null,
+      "msg": "Unexpected end of JSON input",
+      "fix": "Run sketchbook help check."
+    }
+  ],
+  "next": null
+}
+---- exit 1

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Notification settings</title>
+  <link rel="stylesheet" href="tokens.css">
+  <!-- Classic IIFE bundle: module scripts are blocked on file:// -->
+  <script src="sketchbook.js"></script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: var(--sb-space-6, 24px);
+      box-sizing: border-box;
+      background: var(--sb-color-background);
+      color: var(--sb-color-foreground);
+      font-family: var(--sb-font-family-sans);
+    }
+    form { width: 100%; max-width: 28rem; }
+    sb-card-content { display: grid; gap: var(--sb-space-6, 24px); }
+    sb-card-footer { justify-content: space-between; gap: var(--sb-space-4, 16px); }
+    #status { font-size: var(--sb-font-size-sm); color: var(--sb-color-muted-foreground); }
+  </style>
+</head>
+<body>
+  <form id="settings" aria-labelledby="settings-title">
+    <sb-card>
+      <sb-card-header>
+        <sb-card-title id="settings-title">Notification settings</sb-card-title>
+        <sb-card-description>Choose how we keep you informed.</sb-card-description>
+      </sb-card-header>
+      <sb-card-content>
+        <sb-checkbox name="email" label="Email" description="Get account activity and replies in your inbox." checked></sb-checkbox>
+        <sb-checkbox name="push" label="Push" description="Get alerts on this device as they happen."></sb-checkbox>
+        <sb-checkbox name="digest" label="Weekly digest" description="A summary of the week, every Monday."></sb-checkbox>
+      </sb-card-content>
+      <sb-card-footer>
+        <span id="status" role="status"></span>
+        <sb-button type="submit">Save</sb-button>
+      </sb-card-footer>
+    </sb-card>
+  </form>
+  <script>
+    const form = document.getElementById('settings');
+    const status = document.getElementById('status');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const on = [...new FormData(form).keys()];
+      status.textContent = 'Saved. ' + (on.length ? on.length + ' on.' : 'All off.');
+    });
+    form.addEventListener('change', () => { status.textContent = ''; });
+  </script>
+</body>
+</html>

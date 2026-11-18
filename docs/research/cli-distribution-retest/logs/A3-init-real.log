@@ -1,0 +1,20 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init 2>&1 | grep -vE '^(npm warn|added|  [0-9]+ packages|Downloading|\|)' | tail -30
+----
+Installing dependencies (npm install, then Chromium for the behavior tests)…
+
+Chrome for Testing 158.0.8127.18 (playwright chromium v1254) downloaded to ~/Library/Caches/ms-playwright/chromium-1254
+Chrome Headless Shell 158.0.8127.18 (playwright chromium-headless-shell v1254) downloaded to ~/Library/Caches/ms-playwright/chromium_headless_shell-1254
+git: core.hooksPath = .githooks (npm run check runs before every commit).
+
+Sketchbook installed in $SANDBOX/sbx2/a-empty. What it installed (docs/harness.md has the full list):
+  Skills (19): a11y-checker, a11y-checker/a11y-auditor, component-builder, component-builder/parity-auditor, contract-author, contract-author/drafter, contract-author/extractor, contract-author/validator, design-figma, forge-me-a-skill, foundations, foundations/foundations-critic, foundations/token-mapper, hammock, kits, onboarding, playwright-worker, review-rangers, web-components-best-practices
+  Slash commands (11): /add, /check, /explain, /foundations, /import-tokens, /init, /kits, /roast-foundations, /start, /swap, /sync
+  Rules (9): always-hammock, comment-minimalism, contract-first, figma-fidelity, form-associated-controls, planning-gate, spec-is-source, test-first, tokens-through-the-harness
+  Hooks (8): SessionStart: .claude/skills/hammock/hooks/hammock-activate.js, UserPromptSubmit: .claude/skills/hammock/hooks/hammock-mode-tracker.js, SubagentStart: .claude/skills/hammock/hooks/hammock-subagent.js, PreToolUse (Edit|Write|MultiEdit): .claude/skills/hammock/hooks/hammock-gate.js, PreToolUse (Edit|Write|MultiEdit): .claude/hooks/guard-generated.mjs, PreToolUse (Edit|Write|MultiEdit): .claude/hooks/guard-decisions.mjs, PostToolUse (Edit|Write|MultiEdit): .claude/skills/hammock/hooks/hammock-audit-runner.js, Stop: .claude/skills/hammock/hooks/hammock-stop-gate.js
+  Checks (22): T1, T2, T3, T4, T5, T6, T7, F1, C1, C2, C3, A1, P1, R1, G1, D1, D3, D4, W1, X1, K1, H1
+  CLI commands (21): init, status, doctor, upgrade, prefix, swap, add, remove, list, kits, tokens, presets, brand, icons, api, audit-css, sync, docs, check, explain, help
+  Project setup (5): .githooks/pre-commit, .storybook, playwright, harness/manifest.json, brand.config.json
+  Outside the project (2): Node.js 20 or newer, Chromium for Playwright
+Next: cd .; open Claude Code in this folder (its skills, rules and hooks live in .claude/); /foundations guided (color, typography, radius, density); npm run storybook
+---- exit 0

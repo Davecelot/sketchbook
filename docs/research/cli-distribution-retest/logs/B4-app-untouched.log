@@ -1,0 +1,26 @@
+$ cd $SANDBOX/sbx2/b-used
+$ $SANDBOX/scripts/st.sh $SANDBOX/sbx2/b-used; $SANDBOX/scripts/df.sh $SANDBOX/sbx2/b-used
+----
+tracked files changed:
+untracked (new) files by top-level path:
+   100 design-system/.claude
+     1 design-system/.githooks
+     1 design-system/.gitignore
+     2 design-system/.storybook
+     1 design-system/CLAUDE.md
+     1 design-system/brand.config.json
+    39 design-system/docs
+     1 design-system/eslint.config.js
+     5 design-system/generated
+   702 design-system/harness
+     1 design-system/harness.config.json
+     1 design-system/package.json
+    58 design-system/playwright
+     1 design-system/prettier.config.js
+     4 design-system/scripts
+   131 design-system/spec
+   310 design-system/src
+     1 design-system/tsconfig.json
+     1 design-system/tsconfig.stories.json
+     1 design-system/tsup.config.ts
+---- exit 0

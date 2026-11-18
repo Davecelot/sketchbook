@@ -1,0 +1,11 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ rm .githooks/pre-commit .claude/rules/test-first.md playwright/helpers/a11y.ts; npm run -s sketchbook -- init | head -8; for f in .githooks/pre-commit .claude/rules/test-first.md playwright/helpers/a11y.ts; do test -f $f && echo "back: $f"; done
+----
+rm: .claude/rules/test-first.md: No such file or directory
+Restored 2 missing file(s):
+  .githooks/pre-commit
+  playwright/helpers/a11y.ts
+To change the starting point or the brand: sketchbook init --start <starter> and/or --primary, --font, … (sketchbook help init).
+back: .githooks/pre-commit
+back: playwright/helpers/a11y.ts
+---- exit 0

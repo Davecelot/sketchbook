@@ -1,0 +1,10 @@
+$ cd $SANDBOX/sbx/c-clone
+$ node harness/cli.mjs init --start blank --yes --detach-catalog 2>&1 | grep -v '^pass ' | tail -6
+----
+        fix: Use a component folder name from spec/components.
+      spec/design-docs.json
+        batch F names direction, which is not in spec/components
+        fix: Use a component folder name from spec/components.
+
+Checks failed.
+---- exit 1

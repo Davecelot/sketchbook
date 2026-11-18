@@ -1,0 +1,7 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs help --json|head -3
+----
+{
+  "ok": true,
+  "command": "help",
+---- exit 0

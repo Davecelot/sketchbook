@@ -1,0 +1,9 @@
+$ cd $SANDBOX/sbx/c-clone
+$ node harness/cli.mjs init --start blank --dry-run | head -5
+----
+Starter blank (Blank): Teams designing every component from zero.
+  components: install none; remove accordion, alert, aspect-ratio, avatar, badge, breadcrumb, button, button-group, card, checkbox, collapsible, direction, empty, field, input, input-group, item, kbd, label, native-select, pagination, progress, radio-group, scroll-area, separator, skeleton, slider, spinner, switch, table, tabs, textarea, toggle, toggle-group, typography
+  kits: install none; remove sign-in, settings, data-table, dashboard, profile, docs-article, onboarding, form-states
+  Removing needs --yes.
+  catalog.source stays true: this repo is the catalog's source, so G1 keeps harness/catalog equal to its components. Pass --detach-catalog to make the components the team's own (--yes does not).
+---- exit 0

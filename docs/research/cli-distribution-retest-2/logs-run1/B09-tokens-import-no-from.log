@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx3/b-used/design-system
+$ npm run -s sketchbook -- tokens import ../src/styles/app.css | tail -8
+----
+5 token(s) parsed (css); 5 mapping(s) (4 confident), 1 unmapped.
+  + ink -> color.foreground (0.92) role words match (foreground)
+  + muted -> color.muted (0.92) role words match (muted)
+  + brand -> color.primary (0.92) role words match (primary)
+  ? brand-dark -> color.primary-foreground (0.52) role words overlap (primary vs primary + foreground)
+  + brand -> foundation:color.primary (0.8) the imported primary color (light) becomes the brand color; the ramp is generated around it
+  - paper (color): unmapped
+Wrote generated/import/app.proposal.json. Nothing else changed.
+---- exit 0

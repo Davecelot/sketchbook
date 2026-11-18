@@ -1,0 +1,7 @@
+- `<sb-switch name="push" ...>` has no `label`, which is required (it is the visible label and accessible name), so the switch has no accessible name; fix: add `label="Push notifications"`.
+- `<sb-switch ... tone="success">` uses `tone`, which `sb-switch` does not define (props: label, hide-label, description, error, name, value, checked, required, disabled, size); fix: remove `tone="success"`.
+- `<sb-toggle name="digest" label=... description=...>` uses `name`, `label` and `description`, which `sb-toggle` does not support (only variant, size, pressed, disabled, plus slotted text), so no label renders; fix: use `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">` to match the other rows.
+- `.fields { gap: var(--sb-space-17) }` references a spacing token that does not exist (the scale stops at `--sb-space-16`), so the gap is dropped; fix: use an existing token such as `var(--sb-space-4)`.
+- `.hint { font-size: var(--sb-font-size-small) }` references a token that does not exist (available: `--sb-font-size-sm`, `--sb-font-size-caption`); fix: use `var(--sb-font-size-sm)`.
+- `.hint { color: #d33 }` is a hard-coded color that bypasses the tokens, and red wrongly signals an error for a neutral hint; fix: use `var(--sb-color-muted-foreground)`.
+- The Save control is a raw `<button class="save">` with hand-rolled padding, radius and colors and no hover, disabled or `:focus-visible` styles, so keyboard focus is not visible; fix: use `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.

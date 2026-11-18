@@ -1,0 +1,18 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs add button --dry-run --json
+----
+{
+  "ok": false,
+  "command": "add",
+  "changed": [],
+  "warnings": [],
+  "errors": [
+    {
+      "file": null,
+      "msg": "Cannot read properties of undefined (reading '0')",
+      "fix": "Run sketchbook help add."
+    }
+  ],
+  "next": null
+}
+---- exit 1

@@ -1,0 +1,10 @@
+# QA report: out/settings.html
+
+- `<sb-switch name="push">` has no `label`, which the Switch contract requires (it is the accessible name, and an outside `<label for>` can't reach it through the shadow DOM), so the control has no name. Fix: add `label="Push notifications"`.
+- `tone="success"` on `<sb-switch name="email">` is not a Switch prop (the props are label, hide-label, description, error, name, value, checked, required, disabled, size). Fix: remove the `tone` attribute.
+- `<sb-toggle name="digest" label=… description=…>` misuses Toggle: the contract says it is for immediate effects and not for a value saved with a form. It is not a form field, and it has no `name`, `label` or `description` props, so the setting is not submitted and the toggle has no accessible name (empty slot). Fix: replace it with `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">`.
+- `.fields { gap: var(--sb-space-17) }` uses a token that does not exist (the spacing scale is 0–6, 8, 10, 12, 16), so the gap falls back to 0. Fix: use an existing step such as `var(--sb-space-4)`.
+- `.hint { font-size: var(--sb-font-size-small) }` uses a token that does not exist, so the font size is not applied. Fix: use `var(--sb-font-size-sm)`.
+- `.hint { color: #d33 }` is a hard-coded hex value instead of a token, it reads as an error color for plain help text, and it won't follow theme or brand changes. Fix: use `color: var(--sb-color-muted-foreground)`.
+- The Save action is a hand-styled native `<button class="save">`, with custom padding, radius and colors, instead of the system Button, and it has no system focus ring or states. Fix: replace it with `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.
+- `<sb-card-title>Notification settings</sb-card-title>` holds plain text, so the page has no heading (the Card contract says the title is only a visual heading). Fix: put a real heading inside it: `<sb-card-title><h1>Notification settings</h1></sb-card-title>`.

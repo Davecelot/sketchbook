@@ -1,0 +1,11 @@
+- Line 12: `var(--sb-space-17)` is not a token (generated scale stops at `--sb-space-16`), so the gap silently drops to 0; use an existing step such as `var(--sb-space-4)`.
+- Line 13: `var(--sb-font-size-small)` does not exist in `tokens.css`; use `var(--sb-font-size-sm)` or `--sb-font-size-caption`.
+- Line 13: hardcoded `#d33` bypasses the tokens, is not theme/dark-mode aware, and the text is not an error anyway; use `var(--sb-color-muted-foreground)` (or `--sb-color-destructive` only for a real error).
+- Line 28: `<sb-switch name="push">` has no `label`, which is required in the contract and is the accessible name, so the switch is unnamed (axe failure); add `label="Push"`.
+- Line 27: `tone="success"` is not a prop of `sb-switch` (contract has label, hide-label, description, error, name, value, checked, required, disabled, size); remove it.
+- Line 29: `sb-toggle` has no `name`, `label` or `description` props and is not a form field (submits nothing), so the "Weekly digest" text is not rendered or named and the setting is never saved; use an `<sb-switch name="digest" label="Weekly digest" description="…">` like the others.
+- Lines 15, 34: the Save button is a hand-styled native `<button class="save">` with its own padding/radius/colors, and has no hover/focus-visible/disabled states; use `<sb-button type="submit">Save</sb-button>` and delete the `.save` CSS.
+- Line 31: the hint is a loose `<p class="hint">` with local styling; use the card's `sb-card-description` (or an `sb-alert`) instead of custom CSS.
+- Lines 7–8: stylesheet and script point to `node_modules/sketchbook/generated/css/tokens.css` and `dist/sketchbook.js`, which don't match this project (tokens at `generated/css/tokens.css`, entry `dist/index.js`, no `dist` built), so the page would render unstyled with undefined elements; point them to the project's own build outputs.
+- Line 20: `<form>` has no `action`/`method`, so Save reloads the page and discards the settings; add an `action` or a submit handler.
+- Line 21: the card has no accessible grouping or heading for the form (`sb-card-title` is not a heading element); add `role="group"` with `aria-labelledby`, or render the title as a real heading.

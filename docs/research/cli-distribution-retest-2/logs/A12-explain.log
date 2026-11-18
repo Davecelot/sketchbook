@@ -1,0 +1,8 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm run -s sketchbook -- explain color.primary | head -4
+----
+Token color.primary  (CSS --sb-color-primary)
+Layer: semantic
+  dark: color.primary -> color.neutral.200 = "#E5E5E5"
+  light: color.primary -> color.neutral.900 = "#171717"
+---- exit 0

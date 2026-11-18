@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/b-used
+$ npm install --no-audit --no-fund $SANDBOX/sbx/sketchbook-0.1.0.tgz >/dev/null 2>&1; npx sketchbook status 2>&1 | grep -m1 ERR_; rm -rf node_modules package-lock.json; exit 1
+----
+    throw new ERR_MODULE_NOT_FOUND(
+---- exit 1

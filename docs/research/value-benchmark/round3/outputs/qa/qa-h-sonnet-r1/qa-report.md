@@ -1,0 +1,11 @@
+# QA report: out/settings.html
+
+- Line 12: `var(--sb-space-17)` is not a token (generated scale stops at `--sb-space-16`, with no 17), so `gap` is invalid and the fields collapse together; use an existing step such as `var(--sb-space-4)`.
+- Line 13: `.hint` uses the literal `#d33` instead of a semantic token, so it ignores theme and dark mode and may fail contrast; use `var(--sb-color-danger)` (or a muted foreground token), and don't use a red error color for neutral help text.
+- Line 13: `var(--sb-font-size-small)` does not exist (tokens are `--sb-font-size-sm` and `--sb-font-size-caption`), so the font size falls back to inherited; use `var(--sb-font-size-sm)`.
+- Line 28: `<sb-switch name="push">` has no `label`, which the Switch contract marks required (it is the accessible name), so the control has no accessible name and the component warns; add `label="Push notifications"`.
+- Line 27: `tone="success"` is not a Switch prop (contract props are label, hide-label, description, error, name, value, checked, required, disabled, size), so it does nothing; remove it.
+- Line 29: `<sb-toggle>` has no `name`, `label` or `description` props (it has only variant, size, pressed, disabled) and is a pressed-state button, so the "Weekly digest" text is never rendered or used as a name and the control has no accessible name; use `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">` for a form setting, or give the toggle slotted text and `aria-label`.
+- Line 29: `name="digest"` on `sb-toggle` will not be submitted with the form as written (and `pressed` is the state attribute, not `checked`), so the digest preference is lost on save; switch to `sb-switch`, which is form-associated.
+- Line 34: the Save action is a raw `<button class="save">` with custom CSS (line 15) rather than `<sb-button type="submit">`, so it bypasses the button's tokens, focus-visible ring, sizes and states; replace it with `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.
+- Line 15: `.save` has no `:focus-visible` style, hover or disabled state and sets `border: 0`, so keyboard focus is not visible (WCAG 2.4.7); using `sb-button` removes the problem.

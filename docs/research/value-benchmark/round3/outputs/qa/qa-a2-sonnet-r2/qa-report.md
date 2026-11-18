@@ -1,0 +1,8 @@
+- `<sb-switch name="push" description="Alerts on your phone">` has no `label` (required; it is the accessible name), so the switch is unnamed. Fix: add `label="Push"` (or similar).
+- `<sb-toggle name="digest" label="Weekly digest" description="…">` uses `label`, `description` and `name`, which `sb-toggle` doesn't have (its props are `variant`, `size`, `pressed`, `disabled`), so it renders as an unlabelled pressed button. Fix: use `<sb-switch name="digest" label="Weekly digest" …>` for a setting saved with the form, or put the text in the toggle's default slot.
+- `tone="success"` on the first `sb-switch` isn't a Switch prop (props are label, hide-label, description, error, size, name, value, checked, required, disabled). Fix: remove it.
+- `.fields { gap: var(--sb-space-17) }` uses a token that doesn't exist (the scale ends at `--sb-space-16`), so the gap is invalid and the switches get no spacing. Fix: use `var(--sb-space-4)` or `var(--sb-space-stack-md)`.
+- `.hint { font-size: var(--sb-font-size-small) }` uses a nonexistent token. Fix: use `var(--sb-font-size-sm)`.
+- `.hint { color: #d33 }` is a hard-coded hex colour, not a token, and the red implies an error on neutral help text. Fix: use `var(--sb-color-muted-foreground)`.
+- The hint "Changes apply after you save" and the Save button conflict with the Switch contract ("Don't use a switch for something that needs a Save to take effect; use Checkbox"). Fix: use `sb-checkbox` for these settings, or drop Save and apply changes immediately.
+- The Save `<button class="save">` is a hand-styled native button, not the system's `sb-button`, and it has no focus-visible ring, hover or disabled styling. Fix: replace it with `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.

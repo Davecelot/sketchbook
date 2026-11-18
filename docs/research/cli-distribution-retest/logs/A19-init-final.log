@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx2/a-final
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --json > ../a-final-init.json 2>/dev/null; node $SANDBOX/scripts/errs.mjs < ../a-final-init.json
+----
+ok=true errors=0 warnings=1
+---- exit 0

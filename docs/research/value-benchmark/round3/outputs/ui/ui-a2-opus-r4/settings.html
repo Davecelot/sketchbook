@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Notification settings</title>
+    <!-- Design system: tokens (light + dark) and the prebuilt element bundle, both local files. -->
+    <link rel="stylesheet" href="tokens.css" />
+    <script src="sketchbook.js" defer></script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: var(--sb-space-6);
+        box-sizing: border-box;
+        background: var(--sb-color-background);
+        color: var(--sb-color-foreground);
+        font-family: var(--sb-font-family-body);
+      }
+      .page {
+        width: 100%;
+        max-width: 28rem;
+        display: grid;
+        gap: var(--sb-space-4);
+      }
+      .toolbar {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .settings {
+        display: grid;
+        gap: var(--sb-space-6);
+      }
+      sb-card-footer {
+        display: flex;
+        align-items: center;
+        gap: var(--sb-space-4);
+      }
+      .status {
+        margin: 0;
+        color: var(--sb-color-muted-foreground);
+        font-size: var(--sb-font-size-body);
+      }
+      /* Hide undefined elements until the bundle registers them, to avoid a flash of raw markup. */
+      :not(:defined) {
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="toolbar">
+        <sb-button id="theme-toggle" variant="outline" size="sm" aria-pressed="false">Dark theme</sb-button>
+      </div>
+
+      <form id="notification-form" aria-labelledby="settings-title">
+        <sb-card>
+          <sb-card-header>
+            <sb-card-title id="settings-title" role="heading" aria-level="1">Notification settings</sb-card-title>
+            <sb-card-description>Choose how you want to hear from us.</sb-card-description>
+          </sb-card-header>
+          <sb-card-content>
+            <div class="settings">
+              <sb-switch
+                name="email"
+                label="Email"
+                description="Receive account activity and updates by email."
+                checked
+              ></sb-switch>
+              <sb-switch
+                name="push"
+                label="Push"
+                description="Get real-time alerts on your devices."
+              ></sb-switch>
+              <sb-switch
+                name="weekly-digest"
+                label="Weekly digest"
+                description="A summary of the week's highlights, every Monday."
+              ></sb-switch>
+            </div>
+          </sb-card-content>
+          <sb-card-footer>
+            <sb-button type="submit">Save</sb-button>
+            <p id="status" class="status" role="status" aria-live="polite"></p>
+          </sb-card-footer>
+        </sb-card>
+      </form>
+    </main>
+
+    <script>
+      // Theme: follows the OS preference until the user picks one with the toggle.
+      (function () {
+        var root = document.documentElement;
+        var toggle = document.getElementById('theme-toggle');
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+        function isDark() {
+          var t = root.getAttribute('data-theme');
+          return t ? t === 'dark' : media.matches;
+        }
+        function sync() {
+          var dark = isDark();
+          toggle.setAttribute('aria-pressed', String(dark));
+        }
+        toggle.addEventListener('click', function () {
+          root.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+          sync();
+        });
+        media.addEventListener('change', sync);
+        sync();
+      })();
+
+      // Save: read the form values (switches are form-associated) and confirm.
+      (function () {
+        var form = document.getElementById('notification-form');
+        var status = document.getElementById('status');
+        var labels = { email: 'Email', push: 'Push', 'weekly-digest': 'Weekly digest' };
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          var data = new FormData(form);
+          var on = Object.keys(labels).filter(function (k) { return data.has(k); }).map(function (k) { return labels[k]; });
+          status.textContent = 'Saved. ' + (on.length ? 'On: ' + on.join(', ') + '.' : 'All notifications off.');
+        });
+        form.addEventListener('change', function () { status.textContent = ''; });
+      })();
+    </script>
+  </body>
+</html>

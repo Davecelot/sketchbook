@@ -1,0 +1,367 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Switch",
+  "tag": "sb-switch",
+  "status": "draft",
+  "version": "0.1.0",
+  "platforms": ["web", "design"],
+  "summary": "A toggle for an on/off setting that takes effect immediately. It is a form control: it submits a value while on, resets with its form, is disabled by a disabled fieldset and validates required. It shows a label, an optional description and an optional error message, in two sizes.",
+  "dependsOn": [],
+  "props": {
+    "checked": {
+      "type": "boolean",
+      "default": false,
+      "attribute": "checked",
+      "reflect": true,
+      "note": "Whether the switch is on. Alias of the registered selected (the native name). The initial value is the default state and the one a form reset returns to."
+    },
+    "name": {
+      "type": "text",
+      "default": "",
+      "attribute": "name",
+      "reflect": true,
+      "note": "The name the value is submitted under. Nothing is submitted without it."
+    },
+    "value": {
+      "type": "text",
+      "default": "on",
+      "attribute": "value",
+      "reflect": true,
+      "note": "The value submitted while the switch is on, as a checkbox does. Nothing is submitted while it is off."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "attribute": "disabled",
+      "reflect": true,
+      "note": "Unavailable: cannot be focused or toggled, and is not submitted. A disabled fieldset ancestor has the same effect without changing this property."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "attribute": "required",
+      "reflect": true,
+      "note": "The switch must be on for the form to be valid. While off, the form reports a missing value."
+    },
+    "label": {
+      "type": "text",
+      "default": "",
+      "attribute": "label",
+      "reflect": true,
+      "note": "The visible text and the accessible name. A switch without a label warns, because a label for pointing at the host does not name the control."
+    },
+    "description": {
+      "type": "text",
+      "default": "",
+      "attribute": "description",
+      "reflect": true,
+      "note": "A hint under the label, read with the control as its description."
+    },
+    "errorMessage": {
+      "type": "text",
+      "default": "",
+      "attribute": "error-message",
+      "reflect": true,
+      "note": "Why the value is not accepted. Shown, and read with the control, only while validation is error."
+    },
+    "validation": {
+      "type": "variant",
+      "values": ["none", "error"],
+      "default": "none",
+      "attribute": "validation",
+      "reflect": true,
+      "note": "Whether the value is accepted. error shows the error look and marks the control invalid for assistive technology. Set by the author; required validity alone does not set it."
+    },
+    "size": {
+      "type": "variant",
+      "values": ["small", "medium"],
+      "default": "medium",
+      "attribute": "size",
+      "reflect": true,
+      "note": "The size step of the track and thumb. The label text keeps its size."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "role": "container",
+      "parent": null,
+      "part": "root",
+      "notes": "The row holding the control and its text block."
+    },
+    {
+      "name": "control",
+      "role": "control",
+      "parent": "root",
+      "part": "control",
+      "notes": "The operable on/off element: the focus target and the one that carries the switch role."
+    },
+    {
+      "name": "track",
+      "role": "other",
+      "parent": "control",
+      "part": "track",
+      "notes": "The pill that shows on or off through its fill."
+    },
+    {
+      "name": "thumb",
+      "role": "other",
+      "parent": "track",
+      "part": "thumb",
+      "notes": "The circle that sits at the start when off and at the end when on."
+    },
+    {
+      "name": "text",
+      "role": "container",
+      "parent": "root",
+      "part": "text",
+      "optional": true,
+      "notes": "Stacks the label, description and error message beside the control. Absent when none of them is given."
+    },
+    {
+      "name": "label",
+      "role": "text",
+      "parent": "text",
+      "part": "label",
+      "optional": true,
+      "controlledBy": "label",
+      "notes": "The visible label and the accessible name."
+    },
+    {
+      "name": "description",
+      "role": "text",
+      "parent": "text",
+      "part": "description",
+      "optional": true,
+      "controlledBy": "description",
+      "notes": "The hint under the label."
+    },
+    {
+      "name": "error",
+      "role": "text",
+      "parent": "text",
+      "part": "error",
+      "optional": true,
+      "controlledBy": "errorMessage",
+      "notes": "The error text under the description. Shown only while validation is error and a message is given."
+    }
+  ],
+  "variantMatrix": {
+    "dimensions": {
+      "size": ["small", "medium"],
+      "checked": ["off", "on"],
+      "validation": ["none", "error"]
+    },
+    "excludedCombinations": []
+  },
+  "content": {
+    "label": {
+      "required": true,
+      "notes": "Given through the label prop, not a slot, so the accessible name and the label text cannot diverge."
+    }
+  },
+  "events": {
+    "change": {
+      "bubbles": true,
+      "composed": true,
+      "cancelable": false,
+      "native": false,
+      "detail": null,
+      "note": "Fired after the user toggles the switch, with the new value already on checked and in the form data. Not fired for a change of the checked property or a form reset."
+    }
+  },
+  "states": {
+    "focus-visible": {
+      "trigger": "The control has focus reached by keyboard.",
+      "tokens": ["switch.focus.ring-color", "switch.focus.ring-width", "switch.focus.ring-offset"],
+      "note": "The ring surrounds the track."
+    },
+    "checked": {
+      "trigger": "checked is true.",
+      "tokens": ["switch.track.background-checked", "switch.thumb.background-checked"]
+    },
+    "disabled": {
+      "trigger": "disabled is true, or a disabled fieldset contains the switch.",
+      "tokens": ["switch.root.disabled-opacity"]
+    },
+    "invalid": {
+      "trigger": "validation is error.",
+      "tokens": ["switch.track.border-invalid", "switch.error.color"],
+      "borderColor": "switch.track.border-invalid"
+    }
+  },
+  "accessibility": {
+    "role": "switch",
+    "native": "A native checkbox input with role switch, so the browser gives the checked state, Space activation and the required constraint.",
+    "accessibleNameSource": "The label prop. A label pointing at the host with for activates the control but does not name it.",
+    "formAssociation": {
+      "value": true,
+      "note": "Form-associated. Submits value under name only while on. form.reset() returns it to its initial checked state. A disabled fieldset disables it and re-enabling restores it, without touching the author's disabled. required makes an off switch report a missing value, and the native control gives the message and takes focus on reportValidity(). A label pointing at the host with for toggles it."
+    },
+    "targetSize": "At least 24 by 24 CSS pixels for the operable area in both sizes (WCAG 2.5.8). The text block is part of the click target.",
+    "focusRingVisible": "A ring drawn outside the track for keyboard focus, at least 3:1 against the surrounding background.",
+    "missingNameWarning": "Logs one console warning when no label is given.",
+    "keyboard": {
+      "Tab": "Moves focus to the switch, and away from it. A disabled switch is skipped.",
+      "Shift+Tab": "Moves focus to the previous focusable element.",
+      "Space": "Toggles the switch between on and off.",
+      "Enter": "Does not toggle. Submits the form the switch belongs to, as a native checkbox does."
+    },
+    "aria": [
+      "role=switch with its on state exposed as checked, from the native control.",
+      "aria-describedby points at the description text, and at the error text while it is shown.",
+      "aria-invalid=true while validation is error.",
+      "No aria-required: the switch role does not support it, so required is the native attribute and is not announced as a role property.",
+      "The track and thumb are decorative and hidden from assistive technology."
+    ],
+    "announcements": [
+      "Label, role switch, on or off.",
+      "The description is read after the name; the error message is read with it while shown.",
+      "Toggling announces the new on or off state."
+    ],
+    "contrast": [
+      { "fg": "color.foreground", "bg": "color.background", "kind": "text" },
+      { "fg": "color.muted-foreground", "bg": "color.background", "kind": "text" },
+      { "fg": "color.destructive", "bg": "color.background", "kind": "text" },
+      { "fg": "color.input", "bg": "color.background", "kind": "ui" },
+      { "fg": "color.primary", "bg": "color.background", "kind": "ui" },
+      { "fg": "color.background", "bg": "color.input", "kind": "ui" },
+      { "fg": "color.primary-foreground", "bg": "color.primary", "kind": "ui" },
+      { "fg": "color.ring", "bg": "color.background", "kind": "ui" }
+    ],
+    "wcag": ["1.4.3", "1.4.11", "2.1.1", "2.4.7", "2.5.8", "3.3.1", "3.3.2", "4.1.2"]
+  },
+  "tokens": {
+    "switch.track.width": "{size.switch.width}",
+    "switch.track.height": "{size.switch.height}",
+    "switch.track.width-small": "{size.switch.width-sm}",
+    "switch.track.height-small": "{size.switch.height-sm}",
+    "switch.track.radius": "{radius.pill}",
+    "switch.track.inset": "{space.inset.track}",
+    "switch.track.background": "{color.input}",
+    "switch.track.background-checked": "{color.primary}",
+    "switch.track.border-width": "{border-width.default}",
+    "switch.track.border-invalid": "{color.destructive}",
+    "switch.thumb.background": "{color.background}",
+    "switch.thumb.background-checked": "{color.primary-foreground}",
+    "switch.focus.ring-color": "{color.ring}",
+    "switch.focus.ring-width": "{focus.ring.width}",
+    "switch.focus.ring-offset": "{focus.ring.offset}",
+    "switch.root.gap": "{space.control.gap.default}",
+    "switch.root.disabled-opacity": "{opacity.disabled}",
+    "switch.root.transition-duration": "{motion.duration.fast}",
+    "switch.root.transition-easing": "{motion.easing.standard}",
+    "switch.text.gap": "{space.stack.2xs}",
+    "switch.label.color": "{color.foreground}",
+    "switch.label.font-family": "{font.family.body}",
+    "switch.label.font-size": "{font.size.body}",
+    "switch.label.font-weight": "{font.weight.label}",
+    "switch.label.line-height": "{font.line-height.body}",
+    "switch.description.color": "{color.muted-foreground}",
+    "switch.description.font-size": "{font.size.caption}",
+    "switch.error.color": "{color.destructive}",
+    "switch.error.font-size": "{font.size.caption}"
+  },
+  "aiHints": {
+    "category": "atom",
+    "keywords": ["switch", "toggle", "on off", "setting", "boolean", "preference", "form control"],
+    "useCases": [
+      {
+        "when": "A setting turns on or off and the change applies as soon as it is toggled (notifications, dark mode, airplane mode).",
+        "use": "Switch, with a label naming the setting."
+      },
+      {
+        "when": "The setting needs context, such as what turning it on does.",
+        "use": "Switch with description."
+      },
+      {
+        "when": "A switch must be on to continue (accept a mode, enable a prerequisite) and the form checks it.",
+        "use": "Switch with required, and validation error with errorMessage once the author finds it unaccepted."
+      },
+      {
+        "when": "Switches sit in a dense settings list or a toolbar.",
+        "use": "Switch with size small."
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "A switch for a choice that is submitted with a form button, such as agreeing to terms.",
+        "why": "A switch signals an immediate effect; a choice confirmed later reads as a checkbox, and a screen reader user expects the effect of a switch at once.",
+        "alternative": "Checkbox."
+      },
+      {
+        "pattern": "A switch with no label, relying on surrounding text.",
+        "why": "The surrounding text does not name the control, so a screen reader announces an unnamed switch.",
+        "alternative": "Always pass label; use it as the name of the setting."
+      },
+      {
+        "pattern": "Choosing one of several mutually exclusive options with a row of switches.",
+        "why": "Switches are independent on/off settings and do not exclude each other.",
+        "alternative": "Radio group, or Toggle Group for a segmented choice."
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "not-started",
+      "files": [],
+      "spec": "playwright/tests/switch/switch.behavior.spec.ts",
+      "coverage": [],
+      "drift": []
+    },
+    "design": {
+      "status": "not-started",
+      "coverage": [],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q1",
+      "question": "Should required validity alone (an off required switch after a submit attempt or reportValidity()) show the error look and the browser message, or only validation=error set by the author?",
+      "recommendation": "Only validation=error set by the author. Keeps one source for the error look across all controls and avoids a second message that can disagree with errorMessage; the native message is still exposed through validationMessage and reportValidity().",
+      "status": "answered",
+      "answer": "Recommended answer chosen: the error look and errorMessage follow validation only. Revisit when a shared field-level validation pattern exists.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q2",
+      "question": "Does Enter toggle the switch?",
+      "recommendation": "No. The APG makes Enter optional for a switch; a native checkbox submits the form on Enter, and a form-associated control behaves like input.",
+      "status": "answered",
+      "answer": "Recommended answer chosen: Space toggles, Enter submits the form.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q3",
+      "question": "Is the on state's prop spelled selected (the registered name) or checked?",
+      "recommendation": "checked, which the API vocabulary already registers as an alias of selected. It is the native name and the one form-associated controls and FormData documentation use.",
+      "status": "answered",
+      "answer": "Recommended answer chosen: checked.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q4",
+      "question": "Does the switch offer hideLabel, a read-only mode, an indeterminate state or a label position (start or end)?",
+      "recommendation": "No. None was requested; a switch has no mixed state, and the label sits after the control. Add one when a use case appears.",
+      "status": "answered",
+      "answer": "Recommended answer chosen: not included.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q5",
+      "question": "Do hover and pressed looks (a hover fill, a widening thumb while pressed) belong to the first version?",
+      "recommendation": "No. Neither was requested and the pointer keeps the rest look. Add them with their tokens when the design asks.",
+      "status": "answered",
+      "answer": "Recommended answer chosen: not included.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q6",
+      "question": "A manual screen-reader pass (VoiceOver and NVDA) is needed to confirm the description and error are read with the switch.",
+      "recommendation": "Run it before the status moves from beta to stable; the axe checks in the behavior spec cannot confirm announcements.",
+      "status": "open"
+    }
+  ],
+  "decisions": ["SB-0101"]
+}

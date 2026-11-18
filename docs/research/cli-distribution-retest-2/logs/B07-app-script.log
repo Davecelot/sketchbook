@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/b-used
+$ npm run -s design-system:check 2>&1 | tail -2
+----
+
+All checks passed.
+---- exit 0

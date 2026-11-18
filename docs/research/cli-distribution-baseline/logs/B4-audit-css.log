@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/b-used
+$ node $REPO/harness/cli.mjs audit-css 'src/**/*.css'
+----
+generated/import/codebase.proposal.json from 1 file(s): 6 color cluster(s), 4 font size(s), spacing base 8px (83% fit), 3 radius value(s), 1 shadow(s).
+Proposed primary #1D4ED8, body 12px. Nothing is applied.
+---- exit 0

@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run --json > out.json; c=$?; node -e 'const j=require("./out.json");console.log(JSON.stringify(j.errors))'; rm out.json; exit $c
+----
+[{"file":null,"msg":"This project has no harness/manifest.json, so upgrade cannot tell which files are yours.","fix":"Review $REPO's harness/manifest.json, copy it to harness/manifest.json, then run the upgrade again."}]
+---- exit 1

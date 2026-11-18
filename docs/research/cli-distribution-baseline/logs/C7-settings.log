@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/c-clone
+$ test -f .claude/settings.json && echo 'settings.json present: hooks active' 
+----
+settings.json present: hooks active
+---- exit 0

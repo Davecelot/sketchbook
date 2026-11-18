@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx/c-clone
+$ node harness/cli.mjs doctor
+----
+Starter: blank
+Harness: unrecorded (files here: 0.2.0)
+Components: 0 installed, 35 more in the catalog, 0 customized, 0 team-made
+Kits: 0 installed, 8 available
+Brands: single brand
+Overrides: 0
+Design: figma, tokens changed since last sync, 0 stale component(s)
+Checks: failing D3, 1 warning(s)
+---- exit 0

@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node harness/cli.mjs check | tail -8
+----
+pass  D1  Design file is in step with the spec (offline stamp)
+pass  D3  Design docs: the shell file is complete, its readable view names only real tokens, the doc width is set
+pass  D4  A complete design realization is read back clean, and every token the styles use is drawn or recorded as drift
+pass  W1  White-label: no brand names, visual reference named only where allowed
+pass  X1  Decision records are complete and referenced decisions exist
+pass  K1  Patterns use only the system: its elements and semantic tokens
+
+All checks passed.
+---- exit 0

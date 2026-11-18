@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx2/b-used/design-system
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook check --json | node $SANDBOX/scripts/errs.mjs
+----
+ok=true errors=0 warnings=1
+---- exit 0

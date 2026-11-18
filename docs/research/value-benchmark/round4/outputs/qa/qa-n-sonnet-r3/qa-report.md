@@ -1,0 +1,12 @@
+# QA report: out/settings.html
+
+- Line 28: `<sb-switch name="push">` has no `label`, which the switch contract requires (it is the accessible name, and `<label for>` can't reach the inner input). Fix: add `label="Push notifications"`, or `hide-label` plus a label only if other visible text names it.
+- Line 27: `tone="success"` is not a prop in the switch contract (props: label, hide-label, description, error, name, value, checked, required, disabled, size), so it is ignored. Fix: remove `tone`, or add it to the switch contract first.
+- Line 29: `<sb-toggle>` has no `name`, `label` or `description` props (only variant, size, pressed, disabled). Those attributes do nothing, and the toggle is not form-associated, so "digest" is never submitted. Fix: use `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">`, or give the toggle visible text and `pressed`, and don't expect FormData.
+- Line 29: even if kept, `sb-toggle` is a pressable button that needs its own text or an `aria-label` for a name. Fix: use the switch above, which keeps the name and description wired up.
+- Line 12: `var(--sb-space-17)` is not in `generated/css/tokens.css`. The `gap` is invalid and drops to 0, so the fields collapse together. Fix: use an existing step such as `var(--sb-space-4)`.
+- Line 13: `var(--sb-font-size-small)` is not defined in `tokens.css`, so the hint falls back to the inherited size. Fix: use a font-size token that exists in `tokens.css`.
+- Line 13: the hint colour is the hardcoded literal `#d33`, which skips the tokens and breaks dark mode and contrast checks. It is also styled as an error while the text is neutral information. Fix: use `var(--sb-color-muted-foreground)`, or `var(--sb-color-destructive)` only for a real error.
+- Lines 15 and 34: the Save button is a hand-styled native `<button class="save">` instead of `sb-button`. It has no focus-visible ring, hover, disabled or size states and duplicates the button's styling. Fix: replace it with `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.
+- Line 31: the "Changes apply after you save." hint is a loose `<p>` inside `sb-card-content`, not tied to the controls. Fix: use `sb-card-description` for it, or `sb-alert`/field help text from the `field` component.
+- Lines 27-29: the three controls are plain `div.fields` children with no grouping. Fix: wrap them in a `<fieldset>` with a `<legend>`, or in `sb-field` entries, so assistive tech announces them as one "Notification settings" group.

@@ -1,0 +1,9 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ ls .claude; test -f .claude/settings.json && echo settings-present || echo 'NO .claude/settings.json: hooks (hammock, guard-generated, guard-decisions) inactive'
+----
+commands
+hooks
+rules
+skills
+NO .claude/settings.json: hooks (hammock, guard-generated, guard-decisions) inactive
+---- exit 0

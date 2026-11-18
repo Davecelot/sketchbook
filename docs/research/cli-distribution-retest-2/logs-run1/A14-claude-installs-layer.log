@@ -1,0 +1,19 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ claude -p 'Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md).' --permission-mode acceptEdits --allowedTools 'Read' 'Write' 'Edit' 'Glob' 'Grep' 'Bash(npm run:*)' 'Bash(cp:*)' 'Bash(mkdir:*)' 'Bash(ls:*)' 'Bash(rm:*)' 'Bash(diff:*)' 'Bash(cat:*)' 'Bash(find:*)' 2>&1 | tail -40
+----
+I can't copy the files: the shell commands that create `.claude/` and copy into it were blocked, because they need approval and this session is non-interactive. The Claude layer is not installed.
+
+I read `INSTALL.md` and checked that `.claude/` doesn't exist, so the copy can't overwrite anything. I haven't run the `check` or `doctor` commands, and `move-to-.claude/` is still in place.
+
+You can approve those commands or run them yourself from the project folder:
+
+```
+mkdir -p .claude
+cp -R move-to-.claude/skills move-to-.claude/commands move-to-.claude/rules move-to-.claude/hooks move-to-.claude/settings.json .claude/
+npm run sketchbook -- check --only H1
+npm run sketchbook -- doctor
+rm -rf move-to-.claude   # only once H1 passes and doctor reports the layer installed
+```
+
+Alternatively, re-run this in a session where file-copy commands are allowed, and I'll do the install and the checks. After it's installed, restart Claude Code in this folder so the hooks and rules load.
+---- exit 0

@@ -1,0 +1,10 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ bash $SANDBOX/scripts/commit-gate.sh $SANDBOX/sbx3/a-empty
+----
+core.hooksPath=.githooks
+initial commit: allowed (873dd1d)
+broken commit: blocked
+FAIL  T4  Component CSS uses its own component tokens, and every one of them  (34)
+FAIL  T7  Interface tokens, brand links and CSS variables used outside components all resolve  (19)
+FAIL  C1  Contracts are valid and match the registry  (11)
+---- exit 0

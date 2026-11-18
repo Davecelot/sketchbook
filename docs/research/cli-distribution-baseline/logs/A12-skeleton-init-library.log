@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ $SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+----
+ok: false errors: [{"file":null,"msg":"\nReference Errors:\nSome token references (718) could not be found.\nUse log.verbosity \"verbose\" or use CLI option --verbose for more details.\nRefer to: https://styledictionary.com/reference/logging/\n","fix":"Run sketchbook help init."}]
+---- exit 0

@@ -1,0 +1,11 @@
+$ cd $SANDBOX/sbx/b-used
+$ node harness/cli.mjs init --start from-codebase --from 'src/styles/*.css' 2>&1 | grep -v '^pass ' | tail -12
+----
+Can't find stylesheet to import.
+  ╷
+1 │ @use 'a11y';
+  │ ^^^^^^^^^^^
+  ╵
+  src/components/accordion/Accordion.scss 1:1  root stylesheet
+  fix: Run sketchbook help init.
+---- exit 1

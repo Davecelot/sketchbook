@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm run -s sketchbook -- generate | tail -1
+----
+Rebuilt: generated/css/tokens.css, generated/css/fonts.css, generated/tokens/component.tokens.json, src/components/*/*.styles.ts, src/index.ts, spec/tokens/interface.json.
+---- exit 0

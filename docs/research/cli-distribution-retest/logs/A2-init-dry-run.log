@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --dry-run --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log("ok",j.ok,"files",j.changed.length,"checks exit",j.data.checks.exitCode,"starter",j.data.starter.id,j.data.starter.components.length,"components")})'; ls -A | wc -l
+----
+ok true files 1321 checks exit 0 starter library 35 components
+       0
+---- exit 0

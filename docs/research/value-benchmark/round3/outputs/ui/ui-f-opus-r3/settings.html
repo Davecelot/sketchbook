@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Notification settings</title>
+    <!-- Design-system tokens (light + dark) and the no-bundler component bundle, copied from
+         generated/css/tokens.css and dist/sketchbook.js. Classic script so it loads from file://. -->
+    <link rel="stylesheet" href="./tokens.css" />
+    <script src="./sketchbook.js"></script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: start center;
+        padding: var(--sb-space-12) var(--sb-space-4);
+        box-sizing: border-box;
+        background: var(--sb-color-background);
+        color: var(--sb-color-foreground);
+        font-family: var(--sb-font-family-body);
+      }
+      form {
+        width: 100%;
+        max-width: 28rem;
+      }
+      sb-card-footer {
+        justify-content: flex-end;
+        gap: var(--sb-space-3);
+      }
+      #status {
+        margin: 0;
+        margin-inline-end: auto;
+        font-size: var(--sb-font-size-sm);
+        color: var(--sb-color-muted-foreground);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <form id="notification-settings" aria-labelledby="settings-title">
+        <sb-card>
+          <sb-card-header>
+            <sb-card-title id="settings-title" role="heading" aria-level="1">Notification settings</sb-card-title>
+            <sb-card-description>Choose how we keep you informed.</sb-card-description>
+          </sb-card-header>
+          <sb-card-content>
+            <sb-field-group>
+              <sb-checkbox
+                name="email"
+                label="Email"
+                description="Get account activity and updates in your inbox."
+                checked
+              ></sb-checkbox>
+              <sb-checkbox
+                name="push"
+                label="Push"
+                description="Receive instant alerts on your devices."
+              ></sb-checkbox>
+              <sb-checkbox
+                name="digest"
+                label="Weekly digest"
+                description="A summary of the week, sent every Monday."
+              ></sb-checkbox>
+            </sb-field-group>
+          </sb-card-content>
+          <sb-card-footer>
+            <p id="status" role="status" aria-live="polite"></p>
+            <sb-button type="submit">Save</sb-button>
+          </sb-card-footer>
+        </sb-card>
+      </form>
+    </main>
+    <script>
+      const form = document.getElementById('notification-settings');
+      const status = document.getElementById('status');
+      form.addEventListener('change', () => (status.textContent = ''));
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const on = ['email', 'push', 'digest'].filter((key) => data.has(key));
+        // Replace with a real request; the payload is { email, push, digest } booleans.
+        console.log('Saved notification settings', Object.fromEntries(['email', 'push', 'digest'].map((k) => [k, data.has(k)])));
+        status.textContent = on.length ? 'Settings saved.' : 'Settings saved. All notifications are off.';
+      });
+    </script>
+  </body>
+</html>

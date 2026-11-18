@@ -1,0 +1,9 @@
+$ cd $SANDBOX/sbx3/a-claude
+$ npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz --start blank 2>&1 | grep -E 'One step left|Open Claude Code|approve|Sketchbook installed' 
+----
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+Sketchbook installed in $SANDBOX/sbx3/a-claude. What it installed (docs/harness.md has the full list):
+One step left, with Claude: the Claude layer (skills, commands, rules, hooks) is staged in move-to-.claude/.
+  Open Claude Code in this folder and ask: "Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md)".
+  Claude Code asks you to approve writing into .claude/: approve it, that is the install.
+---- exit 0

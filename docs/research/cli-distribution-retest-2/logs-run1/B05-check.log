@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx3/b-used/design-system
+$ npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs
+----
+ok=true errors=0 warnings=2
+---- exit 0

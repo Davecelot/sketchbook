@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx2/b-used/design-system
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook doctor
+----
+Starter: from-codebase
+Harness: 0.2.0 (files here: 0.2.0)
+Components: 35 installed, 0 more in the catalog, 0 customized, 0 team-made
+Kits: 8 installed, 0 available
+Brands: single brand
+Overrides: 0
+Design: none
+Checks: all pass, 1 warning(s)
+---- exit 0

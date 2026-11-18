@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx2/a-final2
+$ npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail|skipped)|^✖' | head -8
+----
+✖ A1 rejects a practice that adopts a missing option or cites an unknown source (339.144792ms)
+✖ the package ships the engine, the project template and the Claude layer (553.645167ms)
+ℹ tests 196
+ℹ pass 162
+ℹ fail 2
+ℹ skipped 32
+✖ failing tests:
+✖ A1 rejects a practice that adopts a missing option or cites an unknown source (339.144792ms)
+---- exit 1

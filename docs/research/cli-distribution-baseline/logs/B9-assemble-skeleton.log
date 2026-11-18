@@ -1,0 +1,16 @@
+$ cd $SANDBOX/sbx/b-used
+$ $SANDBOX/scripts/assemble.sh $SANDBOX/sbx/b-used $REPO
+----
+copied: harness.config.json
+copied: brand.config.json
+copied: spec/registry.json
+copied: spec/tokens/contrast.json
+copied: spec/schemas
+copied: spec/decisions/DECISIONS.md
+copied: src/styles
+copied: src/mixins
+copied: src/controllers
+copied: src/stories
+copied: semantic + brand-links templates
+foundation: 11 files; primary: neutral (shadcn default); overrides kept: 0; semantic defaults written: none (already owned)
+---- exit 0

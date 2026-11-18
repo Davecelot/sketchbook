@@ -1,0 +1,6 @@
+$ cd $REPO
+$ npm pack --ignore-scripts --pack-destination $SANDBOX/sbx2 2>&1 | grep -E 'total files|package size'
+----
+npm notice package size: 2.2 MB
+npm notice total files: 814
+---- exit 0

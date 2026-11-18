@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notification settings</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --text: #1a1d23;
+    --muted: #5b6270;
+    --border: #d9dce3;
+    --accent: #2f5bea;
+    --accent-text: #ffffff;
+    --track-off: #6b7280;
+    --thumb: #ffffff;
+    --focus: #2f5bea;
+    --ok-bg: #e6f4ea;
+    --ok-text: #14532d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101216;
+      --surface: #1a1d24;
+      --text: #eceef2;
+      --muted: #a1a8b5;
+      --border: #333844;
+      --accent: #6f8fff;
+      --accent-text: #0b0f1a;
+      --track-off: #8a91a0;
+      --thumb: #ffffff;
+      --focus: #9db3ff;
+      --ok-bg: #14301f;
+      --ok-text: #b7e8c6;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .card {
+    width: 100%;
+    max-width: 28rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  h1 { margin: 0 0 .25rem; font-size: 1.25rem; }
+  .lead { margin: 0 0 1rem; color: var(--muted); font-size: .9rem; }
+  fieldset { border: 0; margin: 0; padding: 0; }
+  .row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .9rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .row label { cursor: pointer; flex: 1; }
+  .name { display: block; font-weight: 600; }
+  .desc { display: block; color: var(--muted); font-size: .875rem; }
+
+  /* Switch: a real checkbox, so Space toggles and form state works natively */
+  .switch { position: relative; flex: none; width: 44px; height: 24px; margin-top: 2px; }
+  .switch input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    margin: 0; opacity: 0; cursor: pointer; z-index: 1;
+  }
+  .track {
+    position: absolute; inset: 0; border-radius: 999px;
+    background: var(--track-off); transition: background .15s;
+  }
+  .track::after {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--thumb); transition: transform .15s;
+    box-shadow: 0 1px 2px rgba(0,0,0,.35);
+  }
+  input:checked + .track { background: var(--accent); }
+  input:checked + .track::after { transform: translateX(20px); }
+  input:focus-visible + .track { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .actions {
+    display: flex; align-items: center; gap: .75rem;
+    margin-top: .5rem; padding-top: 1rem; border-top: 1px solid var(--border);
+  }
+  button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    background: var(--accent); color: var(--accent-text);
+    border: 0; border-radius: 8px; padding: .55rem 1.1rem;
+  }
+  button:hover { filter: brightness(1.08); }
+  button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .status { font-size: .875rem; padding: .25rem .6rem; border-radius: 6px; }
+  .status:empty { display: none; }
+  .status { background: var(--ok-bg); color: var(--ok-text); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track, .track::after { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <main>
+    <form class="card" id="settings-form" aria-labelledby="title">
+      <h1 id="title">Notification settings</h1>
+      <p class="lead">Choose how you want to hear from us.</p>
+
+      <fieldset>
+        <legend class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Notification channels</legend>
+
+        <div class="row">
+          <label for="email">
+            <span class="name">Email</span>
+            <span class="desc" id="email-desc">Get important updates and alerts in your inbox.</span>
+          </label>
+          <span class="switch">
+            <input type="checkbox" role="switch" id="email" name="email" checked aria-describedby="email-desc">
+            <span class="track" aria-hidden="true"></span>
+          </span>
+        </div>
+
+        <div class="row">
+          <label for="push">
+            <span class="name">Push</span>
+            <span class="desc" id="push-desc">Receive instant notifications on your devices.</span>
+          </label>
+          <span class="switch">
+            <input type="checkbox" role="switch" id="push" name="push" aria-describedby="push-desc">
+            <span class="track" aria-hidden="true"></span>
+          </span>
+        </div>
+
+        <div class="row">
+          <label for="digest">
+            <span class="name">Weekly digest</span>
+            <span class="desc" id="digest-desc">A summary of your week, sent every Monday.</span>
+          </label>
+          <span class="switch">
+            <input type="checkbox" role="switch" id="digest" name="digest" aria-describedby="digest-desc">
+            <span class="track" aria-hidden="true"></span>
+          </span>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit">Save</button>
+        <span class="status" id="status" role="status"></span>
+      </div>
+    </form>
+  </main>
+
+<script>
+  const form = document.getElementById('settings-form');
+  const status = document.getElementById('status');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); // no backend when opened from disk
+    status.textContent = 'Settings saved';
+  });
+  // Clear stale confirmation once the user changes something
+  form.addEventListener('change', () => { status.textContent = ''; });
+</script>
+</body>
+</html>

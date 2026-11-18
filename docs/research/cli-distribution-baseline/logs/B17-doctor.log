@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx/b-used
+$ node harness/cli.mjs doctor
+----
+Starter: from-codebase
+Harness: unrecorded (files here: 0.2.0); this repo is the catalog source
+Components: 35 installed, 0 more in the catalog, 0 customized, 0 team-made
+Kits: 8 installed, 0 available
+Brands: single brand
+Overrides: 0
+Design: figma, tokens never synced, 0 stale component(s)
+Checks: failing P1
+---- exit 0

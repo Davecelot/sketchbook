@@ -1,0 +1,12 @@
+# QA report: out/settings.html
+
+- `out/settings.html:28` `<sb-switch name="push">` has no `label`, so the switch has no accessible name (`aria-label` and `<label for>` don't name it either). Fix: add `label="Push notifications"`.
+- `out/settings.html:27` `tone="success"` is not a Switch attribute. `Switch.ts` and the contract define no `tone`, so it is silently ignored. Fix: remove it, or add a `tone` prop to the Switch contract first.
+- `out/settings.html:29` `<sb-toggle>` has no `name`, `label` or `description` props. It exposes `variant`, `size`, `pressed` and `disabled`, and it isn't form-associated. The attributes are ignored, "Weekly digest" never renders, and nothing is submitted. Fix: use `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">`, or put the text in the toggle's slot and add a Toggle label, `aria-label` and `pressed`.
+- `out/settings.html:12` `var(--sb-space-17)` is not a token (the scale stops at `space-16`), so `gap` is invalid and the fields collapse. Fix: use a semantic token such as `var(--sb-space-stack-md)`.
+- `out/settings.html:13` `font-size: var(--sb-font-size-small)` is not a token, so the hint falls back to the inherited size. Fix: use `var(--sb-font-size-sm)` or `--sb-font-size-caption`.
+- `out/settings.html:13` the hardcoded `#d33` colour bypasses the tokens and is not theme-aware. Dark mode isn't covered, and contrast isn't tracked in `contrast.json`. The hint is informational, not an error. Fix: use `var(--sb-color-muted-foreground)`.
+- `out/settings.html:34`, `15` the Save button is a raw `<button class="save">` restyled by hand. It duplicates the `sb-button` component, with no variants or focus ring, and its hover and disabled states are missing. Fix: use `<sb-button type="submit">Save</sb-button>` and delete the `.save` CSS.
+- `out/settings.html:26`, `10` the layout uses hand-rolled `.fields` and `.hint` CSS where the design system has `sb-field`. Fix: wrap the controls in `sb-field`, or move the hint into the controls' `description`.
+- `out/settings.html:31` the hint "Changes apply after you save." is a bare `<p>` after the fields. Fix: use `sb-card-description` (or `sb-card-footer` text) to match the Card anatomy.
+- `out/settings.html:7-8` the page loads `../node_modules/sketchbook/...` paths. `generated/css/tokens.css` and `dist/sketchbook.js` exist there, but the page doesn't load `generated/css/fonts.css`, so `--sb-font-family-body` can't resolve its brand font. Fix: add the `fonts.css` link.

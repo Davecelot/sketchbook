@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notification settings</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  html { color-scheme: light; }
+  html[data-theme="dark"] { color-scheme: dark; }
+  @media (prefers-color-scheme: dark) { html:not([data-theme]) { color-scheme: dark; } }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center; padding: var(--sb-space-6);
+    box-sizing: border-box; background: var(--sb-color-background); color: var(--sb-color-foreground);
+    font-family: var(--sb-font-family-sans); font-size: var(--sb-font-size-sm);
+  }
+  main { width: 100%; max-width: 28rem; display: grid; gap: var(--sb-space-4); justify-items: end; }
+  sb-card { width: 100%; }
+  form { display: contents; }
+  .options { display: grid; gap: var(--sb-space-4); }
+  #status { margin: 0; color: var(--sb-color-muted-foreground); min-height: 1.5em; width: 100%; }
+</style>
+</head>
+<body>
+<main>
+  <sb-button id="theme" variant="outline" size="sm" type="button">Theme: system</sb-button>
+  <sb-card>
+    <form id="settings" aria-labelledby="title">
+      <sb-card-header>
+        <sb-card-title id="title">Notification settings</sb-card-title>
+        <sb-card-description>Choose how you want to hear from us.</sb-card-description>
+      </sb-card-header>
+      <sb-card-content>
+        <div class="options">
+          <sb-checkbox name="email" label="Email" description="Receive updates and alerts in your inbox." checked></sb-checkbox>
+          <sb-checkbox name="push" label="Push" description="Get notifications on your devices as they happen."></sb-checkbox>
+          <sb-checkbox name="digest" label="Weekly digest" description="A summary of the week, sent every Monday."></sb-checkbox>
+        </div>
+      </sb-card-content>
+      <sb-card-footer>
+        <sb-button type="submit">Save</sb-button>
+      </sb-card-footer>
+    </form>
+  </sb-card>
+  <p id="status" role="status"></p>
+</main>
+<script src="sketchbook.js"></script>
+<script>
+  var root = document.documentElement, btn = document.getElementById('theme');
+  var modes = ['system', 'light', 'dark'], i = 0;
+  btn.addEventListener('click', function () {
+    i = (i + 1) % modes.length;
+    if (modes[i] === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', modes[i]);
+    btn.textContent = 'Theme: ' + modes[i];
+  });
+  document.getElementById('settings').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = new FormData(e.target);
+    var on = ['email', 'push', 'digest'].filter(function (k) { return d.has(k); });
+    document.getElementById('status').textContent = 'Saved. Enabled: ' + (on.join(', ') || 'none') + '.';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+$ cd $SANDBOX/sbx3/b-used
+$ npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --adopt --start from-codebase --from 'src/styles/*.css' --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz 2>&1 | grep -vE '^(npm warn|added|  [0-9]+ packages|Downloading|\|)|^  (Skills|Slash|Rules|Hooks|Checks|CLI|Project|Outside)' | tail -24
+----
+Installing dependencies (npm install, then Chromium for the behavior tests)…
+
+CSS audit of 1 file(s) -> generated/import/codebase.proposal.json: 6 color cluster(s), 4 font size(s), spacing base 8px.
+App package.json: added the script "design-system:check" (npm run design-system:check runs the design system's checks).
+
+Sketchbook installed in $SANDBOX/sbx3/b-used/design-system. What it installed (docs/harness.md has the full list):
+warning: The pre-commit gate is not active: this folder is inside another repository ($SANDBOX/sbx3/b-used), whose hooks were left alone.
+  fix: Add "npm --prefix design-system run check" to that repository's pre-commit hook, or run npm run check here before committing.
+
+One step left, with Claude: the Claude layer (skills, commands, rules, hooks) is staged in move-to-.claude/.
+  Open Claude Code in design-system and ask: "Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md)".
+  Claude Code asks you to approve writing into .claude/: approve it, that is the install.
+Next: cd design-system; open Claude Code in design-system and ask: "Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md)"; /foundations import (on the proposal); sketchbook audit-css <path|glob>; /foundations import (on generated/import/codebase.proposal.json)
+---- exit 0

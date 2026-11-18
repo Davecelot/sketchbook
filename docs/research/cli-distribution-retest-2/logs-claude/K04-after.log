@@ -1,0 +1,49 @@
+$ cd $SANDBOX/sbx3/a-claude
+$ echo 'files in .claude:'; find .claude -type f | sed 's#/[^/]*$##' | sort | uniq -c; test -e move-to-.claude && echo 'move-to-.claude still here' || echo 'move-to-.claude removed'; node -e 'const s=require("./.claude/settings.json");console.log("team permission kept:",JSON.stringify(s.permissions));for(const [e,g] of Object.entries(s.hooks))console.log(e+":",g.flatMap(x=>x.hooks.map(h=>h.command.replace(/.*\//,""))).join(", "))'; test -f .claude/commands/deploy.md && echo 'team command kept: deploy.md'; npm run -s sketchbook -- check --only H1 | tail -2; npm run -s sketchbook -- doctor | grep -E 'Claude layer|Commit gate'
+----
+files in .claude:
+   1 .claude
+  12 .claude/commands
+   2 .claude/hooks
+   9 .claude/rules
+   1 .claude/skills/a11y-checker
+   1 .claude/skills/a11y-checker/agents
+   2 .claude/skills/a11y-checker/references
+   1 .claude/skills/component-builder
+   1 .claude/skills/component-builder/agents
+   1 .claude/skills/contract-author
+   3 .claude/skills/contract-author/agents
+   1 .claude/skills/design-figma
+   1 .claude/skills/design-figma/references
+  14 .claude/skills/design-figma/references/screenshots
+   7 .claude/skills/design-figma/references/screenshots/detail
+   1 .claude/skills/forge-me-a-skill
+   1 .claude/skills/forge-me-a-skill/assets
+   1 .claude/skills/foundations
+   2 .claude/skills/foundations/agents
+  14 .claude/skills/foundations/references
+   1 .claude/skills/hammock
+   2 .claude/skills/hammock/assets
+   9 .claude/skills/hammock/hooks
+   1 .claude/skills/hammock/scripts
+   1 .claude/skills/kits
+   1 .claude/skills/onboarding
+   1 .claude/skills/playwright-worker
+   1 .claude/skills/review-rangers
+   3 .claude/skills/review-rangers/assets
+   1 .claude/skills/web-components-best-practices
+   4 .claude/skills/web-components-best-practices/references
+move-to-.claude removed
+team permission kept: {"allow":["Bash(npm run lint)"]}
+PreToolUse: echo team-hook, hammock-gate.js", guard-generated.mjs", guard-decisions.mjs"
+SessionStart: hammock-activate.js"
+UserPromptSubmit: hammock-mode-tracker.js"
+SubagentStart: hammock-subagent.js"
+PostToolUse: hammock-audit-runner.js"
+Stop: hammock-stop-gate.js"
+team command kept: deploy.md
+
+All checks passed.
+Claude layer: installed
+Commit gate: active (npm run check runs before every commit)
+---- exit 0

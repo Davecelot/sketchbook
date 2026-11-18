@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Notification settings</title>
+  <!-- Sketchbook design tokens (copied from generated/css/tokens.css). Light/dark via data-theme or the system setting. -->
+  <link rel="stylesheet" href="assets/tokens.css" />
+  <!-- Sketchbook browser bundle (copied from dist/sketchbook.js): registers every sb-* element. Classic script, so it loads from file://. -->
+  <script src="assets/sketchbook.js"></script>
+  <style>
+    html { color-scheme: light dark; }
+    html[data-theme="light"] { color-scheme: light; }
+    html[data-theme="dark"] { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--sb-color-background);
+      color: var(--sb-color-foreground);
+      font-family: var(--sb-font-family-body);
+    }
+    .page {
+      box-sizing: border-box;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: var(--sb-space-10, 40px) var(--sb-space-4, 16px);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sb-space-4, 16px);
+    }
+    .toolbar { display: flex; justify-content: flex-end; }
+    h1 { margin: 0; font: inherit; }
+    .status {
+      margin: 0;
+      flex: 1;
+      align-self: center;
+      font-size: 14px;
+      color: var(--sb-color-muted-foreground);
+    }
+    sb-card-footer { gap: var(--sb-space-3, 12px); }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="toolbar">
+      <sb-button id="theme-toggle" variant="outline" size="sm">Theme: system</sb-button>
+    </div>
+
+    <form id="notification-settings" aria-labelledby="settings-title" novalidate>
+      <sb-card>
+        <sb-card-header>
+          <sb-card-title><h1 id="settings-title">Notification settings</h1></sb-card-title>
+          <sb-card-description>Choose how we keep you informed.</sb-card-description>
+        </sb-card-header>
+
+        <sb-card-content>
+          <sb-field-group>
+            <sb-switch
+              name="email"
+              label="Email"
+              description="Receive account activity and updates by email."
+              checked
+            ></sb-switch>
+            <sb-field-separator></sb-field-separator>
+            <sb-switch
+              name="push"
+              label="Push"
+              description="Get instant alerts on your devices."
+            ></sb-switch>
+            <sb-field-separator></sb-field-separator>
+            <sb-switch
+              name="weekly-digest"
+              label="Weekly digest"
+              description="A summary of the week's highlights every Monday."
+            ></sb-switch>
+          </sb-field-group>
+        </sb-card-content>
+
+        <sb-card-footer>
+          <p class="status" id="save-status" role="status" aria-live="polite"></p>
+          <sb-button type="submit">Save</sb-button>
+        </sb-card-footer>
+      </sb-card>
+    </form>
+  </main>
+
+  <script>
+    // Save: read the form-associated switches through FormData (a switch submits only while on).
+    const form = document.getElementById('notification-settings');
+    const status = document.getElementById('save-status');
+    const labels = { email: 'Email', push: 'Push', 'weekly-digest': 'Weekly digest' };
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const on = Object.keys(labels).filter((key) => data.has(key)).map((key) => labels[key]);
+      status.textContent = 'Saved. ' + (on.length ? 'On: ' + on.join(', ') + '.' : 'All notifications off.');
+    });
+    form.addEventListener('change', () => { status.textContent = ''; });
+
+    // Theme: system -> light -> dark. tokens.css follows prefers-color-scheme until data-theme is set.
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const order = ['system', 'light', 'dark'];
+    let theme = 'system';
+    toggle.addEventListener('click', () => {
+      theme = order[(order.indexOf(theme) + 1) % order.length];
+      if (theme === 'system') root.removeAttribute('data-theme');
+      else root.setAttribute('data-theme', theme);
+      toggle.textContent = 'Theme: ' + theme;
+    });
+  </script>
+</body>
+</html>

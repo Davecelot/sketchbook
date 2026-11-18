@@ -1,0 +1,7 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm run -s sketchbook -- tokens preset spacing grid-8 --dry-run | tail -3
+----
+
+All checks passed.
+(dry run: nothing written; 4 file(s) would change)
+---- exit 0

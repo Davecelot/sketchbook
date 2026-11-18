@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx3
+$ $SANDBOX/scripts/cl.sh $REPO $SANDBOX/sbx3/c-clone
+----
+cloned 7f17007, 1813 tracked files
+---- exit 0

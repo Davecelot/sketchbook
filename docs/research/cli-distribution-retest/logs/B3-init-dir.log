@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx2/b-used
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --dir design-system --start from-codebase --from 'src/styles/*.css' --no-install 2>&1 | grep -vE '^  (Skills|Slash|Rules|Hooks|Checks|CLI|Project|Outside)' | tail -14
+----
+CSS audit of 1 file(s) -> generated/import/codebase.proposal.json: 6 color cluster(s), 4 font size(s), spacing base 8px.
+
+Sketchbook installed in $SANDBOX/sbx2/b-used/design-system. What it installed (docs/harness.md has the full list):
+warning: The pre-commit gate is not active: this folder is inside another repository ($SANDBOX/sbx2/b-used), whose hooks were left alone.
+  fix: Run npm run check here before committing, or call it from that repository's own pre-commit hook.
+warning: Dependencies not installed (--no-install).
+  fix: cd $SANDBOX/sbx2/b-used/design-system && npm install && npx playwright install chromium
+Next: cd design-system; open Claude Code in this folder (its skills, rules and hooks live in .claude/); /foundations import (on the proposal); sketchbook audit-css <path|glob>; /foundations import (on generated/import/codebase.proposal.json)
+---- exit 0

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Notification settings</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <script src="sketchbook.js" defer></script>
+    <style>
+      body {
+        margin: 0;
+        min-block-size: 100vh;
+        background: var(--sb-color-background);
+        color: var(--sb-color-foreground);
+        font-family: var(--sb-font-family-sans);
+      }
+
+      main {
+        max-inline-size: 32rem;
+        margin-inline: auto;
+        padding: var(--sb-space-inset-surface);
+      }
+
+      sb-card-title h1 {
+        margin: 0;
+        font: inherit;
+      }
+
+      .fields {
+        display: grid;
+        gap: var(--sb-space-stack-lg);
+      }
+
+      sb-card-footer {
+        justify-content: flex-end;
+        gap: var(--sb-space-stack-md);
+      }
+
+      .status {
+        margin: 0;
+        color: var(--sb-color-muted-foreground);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <form id="notification-settings" aria-labelledby="settings-title">
+        <sb-card>
+          <sb-card-header>
+            <sb-card-title><h1 id="settings-title">Notification settings</h1></sb-card-title>
+            <sb-card-description>Choose how we keep you informed.</sb-card-description>
+          </sb-card-header>
+          <sb-card-content class="fields">
+            <sb-switch name="email" label="Email" description="Account activity and replies, sent to your inbox." checked></sb-switch>
+            <sb-switch name="push" label="Push" description="Instant alerts on your devices."></sb-switch>
+            <sb-switch name="digest" label="Weekly digest" description="A short recap every Monday."></sb-switch>
+          </sb-card-content>
+          <sb-card-footer>
+            <p class="status" role="status" id="status"></p>
+            <sb-button type="submit">Save</sb-button>
+          </sb-card-footer>
+        </sb-card>
+      </form>
+    </main>
+    <script>
+      const form = document.getElementById('notification-settings');
+      const status = document.getElementById('status');
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const on = [...new FormData(form).keys()];
+        status.textContent = `Saved. ${on.length} of 3 notifications on.`;
+      });
+      form.addEventListener('change', () => {
+        status.textContent = '';
+      });
+    </script>
+  </body>
+</html>

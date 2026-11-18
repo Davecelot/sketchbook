@@ -1,0 +1,39 @@
+id	exit	command
+00-pack	0	npm pack --ignore-scripts --pack-destination $SANDBOX/sbx3 2>&1 | grep -E 'total files|package size'
+A01-status-outside	1	npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook status
+A02-init-dry-run	0	npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz --dry-run --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log("ok",j.ok,"errors",j.errors.length,"warnings",j.warnings.length,"changed",j.changed.length);for(const w of j.warnings)console.log(" warning:",w.msg||w);if(j.next)console.log(" next:",j.next)})'; echo "entries in folder: $(ls -A | wc -l | tr -d ' ')"
+A03-init	0	npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz 2>&1 | grep -vE '^(npm warn|added|  [0-9]+ packages|Downloading|\|)' | tail -40
+A04-layout	0	ls -A | tr '\n' ' '; echo; for d in harness scripts .claude; do test -e $d && echo "$d PRESENT" || echo "no $d/"; done; readlink node_modules/.bin/sketchbook; ls -l .githooks/pre-commit | cut -c1-10; node -e 'const p=require("./package.json");console.log("devDependency:",JSON.stringify(p.devDependencies.sketchbook),"imports:",JSON.stringify(p.imports),"check script:",p.scripts.check)'
+A05-status	0	npm run -s sketchbook -- status
+A06-doctor	0	npm run -s sketchbook -- doctor
+A07-check	0	npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs; npm run -s sketchbook -- check | grep -A2 '^pass  H1'
+A08-remove-badge	0	npm run -s sketchbook -- remove badge | tail -2
+A09-add-badge	0	npm run -s sketchbook -- add badge | tail -2
+A10-kits-add	0	npm run -s sketchbook -- kits add sign-in | tail -2
+A11-tokens-preset	0	npm run -s sketchbook -- tokens preset spacing grid-8 --dry-run | tail -2
+A12-explain	0	npm run -s sketchbook -- explain color.primary | head -4
+A13-generate	0	npm run -s sketchbook -- generate | tail -1
+A14-approved-install-commands	0	echo 'Simulated approved step: the commands Claude listed in run 1 (logs-run1/A14).'; mkdir -p .claude && cp -R move-to-.claude/skills move-to-.claude/commands move-to-.claude/rules move-to-.claude/hooks move-to-.claude/settings.json .claude/ && npm run -s sketchbook -- check --only H1 | tail -2 && npm run -s sketchbook -- doctor | grep 'Claude layer' && rm -rf move-to-.claude && echo 'move-to-.claude removed'
+A15-after-install	0	ls .claude | tr '\n' ' '; echo; test -e move-to-.claude && echo 'move-to-.claude still here' || echo 'move-to-.claude removed'; node -e 'const s=require("./.claude/settings.json");console.log("hook events:",Object.keys(s.hooks).join(", "))'; npm run -s sketchbook -- check --only H1 | tail -2; npm run -s sketchbook -- doctor | grep -E 'Claude layer|Commit gate'
+A16-commit-gate	0	bash $SANDBOX/scripts/commit-gate.sh $SANDBOX/sbx3/a-empty
+A17-typecheck	0	npm run typecheck 2>&1 | tail -2
+A18-test-component	0	SKETCHBOOK_PORT=6191 npm run test:component -- tests/button tests/foundations 2>&1 | grep -E 'passed|failed|flaky|Error' | tail -3
+A19-test-harness-selftest	0	npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail|skipped)|^✖' | head -8
+A20-repair	0	rm .githooks/pre-commit .claude/rules/test-first.md playwright/helpers/a11y.ts; npm run -s sketchbook -- init | head -8; for f in .githooks/pre-commit .claude/rules/test-first.md playwright/helpers/a11y.ts; do test -f $f && echo "back: $f"; done
+A21-upgrade	0	npm run -s sketchbook -- upgrade --dry-run
+A22-atomic-failure	0	npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz --start pick --components not-a-thing --no-install 2>&1 | tail -2; echo "entries in folder: $(ls -A | wc -l | tr -d ' ')"; echo "stages left beside it: $(ls -A .. | grep -c '^.sketchbook-init-')"
+B01-init-at-root	1	npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.ok, j.errors[0].msg);console.log("fix:", j.errors[0].fix)})'
+B02-root-untouched	0	$SANDBOX/scripts/st.sh $SANDBOX/sbx3/b-used
+B03-adopt	0	npm exec --yes --package=$SANDBOX/sbx3/sketchbook-0.1.0.tgz -- sketchbook init --adopt --start from-codebase --from 'src/styles/*.css' --engine file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz 2>&1 | grep -vE '^(npm warn|added|  [0-9]+ packages|Downloading|\|)|^  (Skills|Slash|Rules|Hooks|Checks|CLI|Project|Outside)' | tail -24
+B04-app-changes	0	$SANDBOX/scripts/st.sh $SANDBOX/sbx3/b-used | head -6; git -C $SANDBOX/sbx3/b-used --no-pager diff -- package.json
+B05-check	0	npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs
+B06-doctor	0	npm run -s sketchbook -- doctor
+B07-app-script	0	npm run -s design-system:check 2>&1 | tail -2
+B08-app-hooks-untouched	0	$SANDBOX/scripts/hk.sh $SANDBOX/sbx3/b-used
+B09-tokens-import-no-from	0	npm run -s sketchbook -- tokens import ../src/styles/app.css | tail -8
+B10-audit-css-body-size	0	npm run -s sketchbook -- audit-css ../src/styles/app.css | tail -2
+C01-clone	0	$SANDBOX/scripts/cl.sh $REPO $SANDBOX/sbx3/c-clone
+C02-init-blank	0	node harness/cli.mjs init --start blank --yes --detach-catalog --json | node $SANDBOX/scripts/errs.mjs
+C03-check	0	node harness/cli.mjs check --json | node $SANDBOX/scripts/errs.mjs
+C04-add-button	0	node harness/cli.mjs add button | tail -2
+C05-repair-in-clone	0	node harness/cli.mjs init | head -2

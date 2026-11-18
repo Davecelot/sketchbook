@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notification settings</title>
+<link rel="stylesheet" href="../generated/css/tokens.css">
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box;
+    background: var(--sb-color-background); color: var(--sb-color-foreground);
+    font-family: ui-sans-serif, system-ui, sans-serif; }
+  main { width: 100%; max-width: 28rem; }
+  form { margin: 0; }
+  .fields { display: grid; gap: 20px; }
+  .theme { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  #status { margin: 0; font-size: 14px; color: var(--sb-color-muted-foreground); flex: 1; }
+  sb-card-footer { align-items: center; gap: 12px; }
+  h1 { margin: 0; font-size: inherit; font-weight: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <div class="theme"><sb-button variant="outline" id="theme" type="button">Switch to dark theme</sb-button></div>
+  <form id="settings">
+    <sb-card>
+      <sb-card-header>
+        <sb-card-title><h1>Notification settings</h1></sb-card-title>
+        <sb-card-description>Choose how you want to hear from us.</sb-card-description>
+      </sb-card-header>
+      <sb-card-content>
+        <div class="fields">
+          <sb-switch name="email" label="Email" description="Account activity and important updates, sent to your inbox." checked></sb-switch>
+          <sb-switch name="push" label="Push" description="Instant alerts on your phone or browser."></sb-switch>
+          <sb-switch name="digest" label="Weekly digest" description="A summary of the week, every Monday morning."></sb-switch>
+        </div>
+      </sb-card-content>
+      <sb-card-footer>
+        <p id="status" role="status"></p>
+        <sb-button type="submit">Save</sb-button>
+      </sb-card-footer>
+    </sb-card>
+  </form>
+</main>
+<script src="../dist/sketchbook.js"></script>
+<script>
+  var root = document.documentElement, btn = document.getElementById('theme');
+  var mq = matchMedia('(prefers-color-scheme: dark)');
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    btn.textContent = t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+  }
+  setTheme(mq.matches ? 'dark' : 'light');
+  btn.addEventListener('click', function () {
+    setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+  document.getElementById('settings').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = new FormData(e.target);
+    var on = ['email', 'push', 'digest'].filter(function (k) { return d.has(k); });
+    document.getElementById('status').textContent = 'Saved. On: ' + (on.length ? on.join(', ') : 'none');
+  });
+</script>
+</body>
+</html>

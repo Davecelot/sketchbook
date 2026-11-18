@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Notification settings</title>
+  <!-- Design-system tokens and elements (copied from generated/css/tokens.css and dist/sketchbook.js). -->
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: var(--sb-space-6, 24px);
+      box-sizing: border-box;
+      background: var(--sb-color-background);
+      color: var(--sb-color-foreground);
+      font-family: var(--sb-font-family-body, system-ui, sans-serif);
+    }
+    main { width: 100%; max-width: 420px; }
+    sb-card { width: 100%; }
+    .settings { display: grid; gap: 24px; }
+    .status { min-height: 1.5em; margin: 0; font-size: 14px; color: var(--sb-color-muted-foreground); }
+    .theme { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="theme">
+      <sb-button id="theme" variant="ghost" size="sm" aria-pressed="false">Dark theme</sb-button>
+    </div>
+    <form id="form" aria-labelledby="title">
+      <sb-card>
+        <sb-card-header>
+          <sb-card-title id="title">Notification settings</sb-card-title>
+          <sb-card-description>Choose how you want to hear from us.</sb-card-description>
+        </sb-card-header>
+        <sb-card-content>
+          <div class="settings">
+            <sb-switch name="email" label="Email" description="Receive account activity and updates by email." checked></sb-switch>
+            <sb-switch name="push" label="Push" description="Get instant alerts on your phone or browser."></sb-switch>
+            <sb-switch name="digest" label="Weekly digest" description="A summary of the week, sent every Monday."></sb-switch>
+          </div>
+        </sb-card-content>
+        <sb-card-footer>
+          <sb-button type="submit">Save</sb-button>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+        </sb-card-footer>
+      </sb-card>
+    </form>
+  </main>
+
+  <script src="sketchbook.js"></script>
+  <script>
+    // Theme: follows the OS until the toggle is used.
+    var root = document.documentElement;
+    var btn = document.getElementById('theme');
+    var mq = matchMedia('(prefers-color-scheme: dark)');
+    function paint(dark) {
+      btn.textContent = dark ? 'Light theme' : 'Dark theme';
+      btn.setAttribute('aria-pressed', String(dark));
+    }
+    paint(mq.matches);
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark' && !(root.getAttribute('data-theme') === null && mq.matches)
+        ? true : false;
+      root.setAttribute('data-theme', dark ? 'dark' : 'light');
+      paint(dark);
+    });
+
+    // Save: no backend, so report what would be sent.
+    document.getElementById('form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = new FormData(e.target);
+      var on = ['email', 'push', 'digest'].filter(function (k) { return data.has(k); });
+      document.getElementById('status').textContent =
+        'Saved. On: ' + (on.length ? on.join(', ') : 'nothing') + '.';
+    });
+  </script>
+</body>
+</html>

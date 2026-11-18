@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node harness/generators/foundation.mjs
+----
+foundation: 11 files; primary: neutral (shadcn default); overrides kept: 0; semantic defaults written: none (already owned)
+---- exit 0

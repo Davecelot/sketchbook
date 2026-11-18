@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail|skipped)|^✖' | head -8
+----
+✖ I1 the installed summary lists every skill, command, rule, hook, check and CLI command, by area (49.555291ms)
+✖ sideEffects covers every registration, the barrel and the token CSS (4.148333ms)
+✖ S31 upgrade: harness-owned needs both manifests, settings are never written, a git URL needs --yes and shows its commit (935.959083ms)
+✖ S34 the reference project is built from harness-owned files only (262.152208ms)
+✖ S35 after init --start blank --yes --detach-catalog the harness tests still pass (1152.15025ms)
+✖ S35 after init --start library --yes --detach-catalog the harness tests still pass (1466.48925ms)
+ℹ tests 207
+ℹ pass 167
+---- exit 1

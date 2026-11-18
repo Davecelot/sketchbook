@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail)|^✖' | head -8
+----
+✖ A1 rejects a practice that adopts a missing option or cites an unknown source (278.496209ms)
+✖ FG32 pattern runtime: joined groups re-round their outer corners, mirrored under Direction, percentages and rules are drawn (7.515958ms)
+✖ FG33 pattern layouts: a component with a ratio is drawn at that width-to-height ratio once its width is known (0.996708ms)
+✖ FG34 pattern layouts: an axis the library has is never named twice in a variant, and the expected texts leave out percentages and variant values (1.213708ms)
+✖ FG35 pattern scripts: the runtime is pasted once, kept in the file as hidden text, checked, and removed; each part carries only its data (31.881ms)
+✖ FG36 table rows and pattern tables: only the selected sample row has the selected fill, and a layout can clear it inside an instance (8.214666ms)
+✖ sideEffects covers every registration, the barrel and the token CSS (74.11775ms)
+ℹ tests 196
+---- exit 1

@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ npm run -s sketchbook -- upgrade --dry-run
+----
+Harness 0.3.0 -> 0.3.0 (the installed engine; dry run: nothing written)
+The harness-owned files here already match the installed engine.
+---- exit 0

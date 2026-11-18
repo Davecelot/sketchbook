@@ -1,0 +1,459 @@
+{
+  "$schema": "../../schemas/contract.schema.json",
+  "component": "Switch",
+  "tag": "sb-switch",
+  "status": "draft",
+  "version": "0.1.0",
+  "platforms": [
+    "web",
+    "design"
+  ],
+  "summary": "A toggle for an on/off setting with its label, description and error beside it, taking part in forms.",
+  "dependsOn": [],
+  "props": {
+    "label": {
+      "type": "text",
+      "required": true,
+      "default": null,
+      "note": "Visible label next to the track and accessible name. Required: shadow DOM keeps an external <label for> from naming the inner input."
+    },
+    "description": {
+      "type": "text",
+      "default": "",
+      "note": "Help text under the label."
+    },
+    "error": {
+      "type": "text",
+      "default": "",
+      "note": "Error message. Setting it marks the field invalid and blocks form submission."
+    },
+    "size": {
+      "type": "variant",
+      "values": [
+        "default",
+        "sm"
+      ],
+      "default": "default",
+      "reflect": true,
+      "note": "Track and thumb size: default (16px thumb) or sm (12px thumb)."
+    },
+    "name": {
+      "type": "text",
+      "default": "",
+      "note": "Form field name."
+    },
+    "value": {
+      "type": "text",
+      "default": "on",
+      "reflect": true,
+      "note": "Submitted with the form while on."
+    },
+    "checked": {
+      "type": "boolean",
+      "default": false,
+      "note": "Current state (on). Not reflected: the attribute is the default restored by form reset."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Native required: must be on to submit. Adds an aria-hidden asterisk after the label."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "reflect": true,
+      "note": "Native disabled; dimmed; not submitted. Also applied by a disabled <fieldset> ancestor without changing the attribute."
+    }
+  },
+  "anatomy": [
+    {
+      "name": "field",
+      "role": "container",
+      "parent": null,
+      "part": "field",
+      "notes": "Grid: track in the first column, label, description and error in the second."
+    },
+    {
+      "name": "control",
+      "role": "container",
+      "parent": "field",
+      "part": "control",
+      "notes": "Track wrapper; positions the thumb over the native input."
+    },
+    {
+      "name": "input",
+      "role": "control",
+      "parent": "control",
+      "part": "input",
+      "notes": "Native <input type=\"checkbox\" role=\"switch\">, drawn as the track; receives focus, Space and validation."
+    },
+    {
+      "name": "thumb",
+      "role": "other",
+      "parent": "control",
+      "part": "thumb",
+      "notes": "The moving circle; aria-hidden, follows the checked state of the input."
+    },
+    {
+      "name": "label",
+      "role": "text",
+      "parent": "field",
+      "part": "label",
+      "controlledBy": "label",
+      "notes": "Native <label for> in the same shadow root."
+    },
+    {
+      "name": "required-indicator",
+      "role": "text",
+      "parent": "label",
+      "part": "required-indicator",
+      "optional": true,
+      "controlledBy": "required",
+      "notes": "Asterisk, aria-hidden."
+    },
+    {
+      "name": "description",
+      "role": "text",
+      "parent": "field",
+      "part": "description",
+      "optional": true,
+      "controlledBy": "description"
+    },
+    {
+      "name": "error",
+      "role": "text",
+      "parent": "field",
+      "part": "error",
+      "optional": true,
+      "controlledBy": "error",
+      "notes": "Persistent polite live region; text appears when invalid."
+    }
+  ],
+  "content": {},
+  "events": {
+    "input": {
+      "bubbles": true,
+      "composed": true,
+      "native": true,
+      "detail": null,
+      "note": "Each toggle. Native and composed, so it crosses the shadow boundary."
+    },
+    "change": {
+      "bubbles": true,
+      "composed": true,
+      "native": false,
+      "detail": null,
+      "note": "Toggle committed. Re-dispatched from the host because native change is not composed (NativeControl). Fires before the next render; FormData already holds the new value."
+    }
+  },
+  "states": {
+    "hover": {
+      "trigger": "pointer over an enabled switch",
+      "tokens": []
+    },
+    "focus-visible": {
+      "trigger": "keyboard focus on the track",
+      "tokens": [
+        "switch.focus-ring.color",
+        "switch.focus-ring.width"
+      ],
+      "borderColor": "switch.focus-ring.color",
+      "note": "3px solid ring and border in ring color (a translucent ring would fall under 3:1)."
+    },
+    "checked": {
+      "trigger": "checked",
+      "tokens": [
+        "switch.checked.bg",
+        "switch.checked.border",
+        "switch.checked.thumb-bg"
+      ],
+      "note": "Track filled with primary; the thumb moves to the end edge (mirrored in rtl)."
+    },
+    "invalid": {
+      "trigger": "error set, or required and off after blur or a submit attempt",
+      "tokens": [
+        "switch.border-invalid",
+        "switch.error.fg"
+      ]
+    },
+    "disabled": {
+      "trigger": "disabled attribute or a disabled fieldset ancestor",
+      "tokens": [
+        "switch.disabled-opacity"
+      ]
+    }
+  },
+  "accessibility": {
+    "role": "switch",
+    "native": "input type=checkbox with role=switch",
+    "accessibleNameSource": "The label prop, through a native <label for> in the same shadow root.",
+    "formAssociation": {
+      "value": true,
+      "note": "FormAssociated + NativeControl. formValue(): value only while checked, else null. formReset(): restore the checked attribute default. formStateRestore(state): restore checked from saved state. validationAnchor(): the inner input (required -> valueMissing). The inner input gets isDisabled, so a disabled fieldset disables it without overwriting the author's disabled attribute; the dimmed host is styled with :host(:disabled). A <label for> click on the host is forwarded to the input. syncFormState() runs in the input handler so a change listener reads the new FormData."
+    },
+    "targetSize": "The default track is 18px tall, below 24px; the label next to it is part of the clickable row and the 12px gap satisfies the WCAG 2.5.8 spacing exception.",
+    "focusRingVisible": "On keyboard focus of the input; 3px ring in switch.focus-ring.color.",
+    "missingNameWarning": "Dev-only console warning, once, when label is empty.",
+    "keyboard": {
+      "Tab": "move focus to and from the switch",
+      "Space": "toggles checked (native)",
+      "Enter": "submits the form (implicit submission; the control has no form owner in its shadow root, SB-0009)"
+    },
+    "aria": [
+      "role=\"switch\" with aria-checked from the native checked state",
+      "aria-describedby -> description and error ids (same root)",
+      "aria-invalid=\"true\" when invalid",
+      "required: native required; the asterisk is aria-hidden",
+      "disabled: native disabled on the input",
+      "error: sets a customError validity, so the form blocks submission (SB-0009)"
+    ],
+    "announcements": [
+      "error text is announced once when it appears (persistent aria-live=polite region)",
+      "state change is announced by the switch role (on / off); no extra live region"
+    ],
+    "contrast": [
+      {
+        "fg": "switch.label.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "switch.description.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "switch.error.fg",
+        "bg": "color.background",
+        "kind": "text"
+      },
+      {
+        "fg": "switch.border",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "switch.thumb-bg",
+        "bg": "switch.bg",
+        "kind": "ui"
+      },
+      {
+        "fg": "switch.border-invalid",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "switch.checked.thumb-bg",
+        "bg": "switch.checked.bg",
+        "kind": "ui"
+      },
+      {
+        "fg": "switch.checked.bg",
+        "bg": "color.background",
+        "kind": "ui"
+      },
+      {
+        "fg": "switch.focus-ring.color",
+        "bg": "color.background",
+        "kind": "ui"
+      }
+    ],
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "2.5.8",
+      "3.3.1",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "tokens": {
+    "switch.font-family": "{font.family.body}",
+    "switch.thumb-size": "{size.icon.default}",
+    "switch.sm.thumb-size": "{size.icon.sm}",
+    "switch.inset": "{border-width.default}",
+    "switch.border-width": "{border-width.default}",
+    "switch.radius": "{radius.pill}",
+    "switch.bg": "{color.input-background}",
+    "switch.border": "{color.input}",
+    "switch.thumb-bg": "{color.input}",
+    "switch.border-invalid": "{color.destructive}",
+    "switch.checked.bg": "{color.primary}",
+    "switch.checked.border": "{color.primary}",
+    "switch.checked.thumb-bg": "{color.primary-foreground}",
+    "switch.shadow": "{elevation.xs}",
+    "switch.gap": "{space.field.gap}",
+    "switch.content-gap": "{space.control.gap.sm}",
+    "switch.label.fg": "{color.foreground}",
+    "switch.label.font-size": "{font.size.control}",
+    "switch.label.font-weight": "{font.weight.label}",
+    "switch.label.line-height": "{font.line-height.control}",
+    "switch.description.fg": "{color.muted-foreground}",
+    "switch.description.font-size": "{font.size.body}",
+    "switch.description.line-height": "{font.line-height.body}",
+    "switch.error.fg": "{color.destructive}",
+    "switch.focus-ring.color": "{color.ring}",
+    "switch.focus-ring.width": "{focus.ring.width}",
+    "switch.disabled-opacity": "{opacity.disabled}",
+    "switch.transition-duration": "{motion.duration.fast}",
+    "switch.transition-easing": "{motion.easing.standard}"
+  },
+  "aiHints": {
+    "category": "molecule",
+    "keywords": [
+      "switch",
+      "toggle",
+      "on-off",
+      "setting",
+      "preference",
+      "form"
+    ],
+    "useCases": [
+      {
+        "when": "A setting that is on or off and takes effect at once or on save",
+        "use": "sb-switch"
+      },
+      {
+        "when": "The setting needs its consequence explained",
+        "use": "description"
+      },
+      {
+        "when": "The setting must be on before the form can be submitted",
+        "use": "required with a label that states what is turned on"
+      },
+      {
+        "when": "A compact switch in a dense settings list",
+        "use": "size=\"sm\""
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "A switch for one of several options, or for an agreement submitted with a form",
+        "why": "A switch is an on/off setting; choices recorded with a form read as checkboxes",
+        "alternative": "Checkbox"
+      },
+      {
+        "pattern": "Choosing exactly one option from several",
+        "why": "A switch holds one on/off value",
+        "alternative": "Radio Group"
+      },
+      {
+        "pattern": "A press-and-hold or pressed-look action button",
+        "why": "A switch keeps a state and is named by its label, not by a verb",
+        "alternative": "Toggle"
+      }
+    ]
+  },
+  "realizations": {
+    "web": {
+      "status": "not-started",
+      "files": [],
+      "parts": [
+        "field",
+        "control",
+        "input",
+        "thumb",
+        "label",
+        "required-indicator",
+        "description",
+        "error"
+      ],
+      "slots": [],
+      "spec": "playwright/tests/switch/switch.behavior.spec.ts",
+      "coverage": [],
+      "drift": [
+        {
+          "aspect": "API shape",
+          "contract": "label, description and error are props of Switch",
+          "realization": "shadcn composes Field parts around Switch; shadow DOM requires them inside"
+        },
+        {
+          "aspect": "border and thumb color",
+          "contract": "track border and off thumb use color.input (3:1)",
+          "realization": "shadcn's off track is bg-input, a fill below 3:1 (WCAG 1.4.11)"
+        },
+        {
+          "aspect": "focus ring",
+          "contract": "3px solid ring color",
+          "realization": "shadcn uses ring/50, below 3:1 (WCAG 1.4.11)"
+        },
+        {
+          "aspect": "checked state",
+          "contract": "checked property",
+          "realization": "not reflected: the attribute is the default restored by form reset"
+        }
+      ]
+    },
+    "design": {
+      "status": "not-started",
+      "coverage": [],
+      "drift": []
+    }
+  },
+  "openQuestions": [
+    {
+      "id": "Q0",
+      "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+      "status": "answered",
+      "answer": "Yes: APG switch pattern, label row beside the track, form behavior as the Checkbox.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q1",
+      "question": "Native <input type=checkbox switch> or role=\"switch\" on a checkbox input?",
+      "status": "answered",
+      "answer": "role=\"switch\" on <input type=\"checkbox\">: it works in every supported browser, while the switch attribute is not yet universal. Revisit when it is.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q2",
+      "question": "Is label required, and is there a hide-label prop?",
+      "status": "answered",
+      "answer": "label is required, like Checkbox. No hide-label for now: nothing asked for it (YAGNI); add it with a use case.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q3",
+      "question": "Which sizes, and how are they named?",
+      "status": "answered",
+      "answer": "Two: default and sm, the registered size aliases (default = medium, sm = small). Both change only the track and thumb; label and description type do not change. Thumb 16px / 12px from size.icon.default and size.icon.sm; the track is derived from the thumb and switch.inset (height = thumb + 2 x inset, width = 2 x thumb + 2 x inset), so no new semantic token is needed.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q4",
+      "question": "Is checked reflected to an attribute?",
+      "status": "answered",
+      "answer": "No. The attribute is the default that form reset restores (like native defaultChecked); checked is a property, and the attribute is read at start. Same as Checkbox.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q5",
+      "question": "What does a switch submit, and what does required mean?",
+      "status": "answered",
+      "answer": "value (default \"on\") only while on; nothing while off. required means the switch must be on (native valueMissing), as for a checkbox.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q6",
+      "question": "Does error block submission, and does Enter submit?",
+      "status": "answered",
+      "answer": "Yes to both, per SB-0009: error sets a customError validity, and Enter calls form.requestSubmit() because the inner input has no form owner.",
+      "answeredOn": "2026-11-12"
+    },
+    {
+      "id": "Q7",
+      "question": "Is there a label-position prop (label before the track)?",
+      "status": "answered",
+      "answer": "No. The label is after the track in the writing direction (mirrored in rtl). Not requested; add it with a use case.",
+      "answeredOn": "2026-11-12"
+    }
+  ],
+  "decisions": [
+    "SB-0101"
+  ]
+}

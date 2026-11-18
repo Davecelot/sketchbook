@@ -1,0 +1,8 @@
+$ cd $SANDBOX/sbx2/a-final3
+$ npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail|skipped)|^✖' | head -8
+----
+ℹ tests 196
+ℹ pass 162
+ℹ fail 0
+ℹ skipped 34
+---- exit 0

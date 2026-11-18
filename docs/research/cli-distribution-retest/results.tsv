@@ -1,0 +1,52 @@
+id	exit	command
+00-pack	0	npm pack --ignore-scripts --pack-destination $SANDBOX/sbx2 2>&1 | grep -E 'total files|package size|unpacked size|filename'
+A1-status-outside	1	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook status
+A2-init-dry-run	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --dry-run --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log("ok",j.ok,"files",j.changed.length,"checks exit",j.data.checks.exitCode,"starter",j.data.starter.id,j.data.starter.components.length,"components")})'; ls -A | wc -l
+A3-init-real	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init 2>&1 | grep -vE '^(npm warn|added|  [0-9]+ packages|Downloading|\|)' | tail -30
+A4-status	0	npm run -s sketchbook -- status
+A5-doctor	0	npm run -s sketchbook -- doctor
+A6-check	0	npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs
+A7-remove-badge	0	npm run -s sketchbook -- remove badge | tail -2
+A8-add-badge	0	npm run -s sketchbook -- add badge | tail -2
+A9-kits-add	0	npm run -s sketchbook -- kits add sign-in | tail -2
+A10-tokens-preset	0	npm run -s sketchbook -- tokens preset spacing grid-8 --dry-run | tail -3
+A11-explain	0	npm run -s sketchbook -- explain color.primary | head -4
+A12-setup-files	0	ls docs/harness.md .claude/settings.json CLAUDE.md; ls -a | grep -c '^.gi.ignore$'; head -8 docs/harness.md; node -e 'const c=require("./harness.config.json");console.log(JSON.stringify(c.adapters.design),c.catalog.source,c.starter,c.harnessVersion)'
+A13-commit-gate	0	bash $SANDBOX/scripts/commit-gate.sh $SANDBOX/sbx2/a-empty
+A14-typecheck	0	npm run typecheck 2>&1 | tail -4
+A15-test-component-button	0	SKETCHBOOK_PORT=6187 npm run test:component -- tests/button 2>&1 | grep -E 'passed|failed|flaky|Error' | tail -5
+A16-test-harness	1	npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail)|^✖' | head -8
+A17-atomic-failure	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --start pick --components not-a-thing --no-install 2>&1 | tail -2; echo "entries in folder: $(ls -A | wc -l | tr -d ' ')"; echo "stages left beside it: $(ls -A .. | grep -c '^.sketchbook-init-')"
+A18-repack	0	npm pack --ignore-scripts --pack-destination $SANDBOX/sbx2 2>&1 | grep -E 'total files|package size'
+A19-init-final	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --json > ../a-final-init.json 2>/dev/null; node $SANDBOX/scripts/errs.mjs < ../a-final-init.json
+A20-check-final	1	npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs
+A21-typecheck-final	1	npm run typecheck 2>&1 | tail -2
+A22-repack	0	npm pack --ignore-scripts --pack-destination $SANDBOX/sbx2 2>&1 | grep -E 'total files|package size'
+A23-init-with-lockfile	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --json > ../a-final2-init.json 2>/dev/null; node $SANDBOX/scripts/errs.mjs < ../a-final2-init.json; node -e 'const j=require("../a-final2-init.json");console.log(JSON.stringify(j.warnings))'
+A24-check	0	npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs
+A25-typecheck	0	npm run typecheck 2>&1 | tail -2
+A26-test-component-button	0	SKETCHBOOK_PORT=6188 npm run test:component -- tests/button 2>&1 | grep -E 'passed|failed|flaky' | tail -3
+A27-test-harness	1	npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail|skipped)|^✖' | head -8
+A28-repack	0	npm pack --ignore-scripts --pack-destination $SANDBOX/sbx2 2>&1 | grep -E 'total files|package size'
+A29-init-final	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --json > ../a-final3-init.json 2>/dev/null; node $SANDBOX/scripts/errs.mjs < ../a-final3-init.json; node -e 'const j=require("../a-final3-init.json");console.log(JSON.stringify(j.warnings))'
+A30-check	0	npm run -s sketchbook -- check --json | node $SANDBOX/scripts/errs.mjs
+A31-typecheck	0	npm run typecheck 2>&1 | tail -2
+A32-test-component-button	0	SKETCHBOOK_PORT=6189 npm run test:component -- tests/button 2>&1 | grep -E 'passed|failed|flaky' | tail -3
+A33-test-harness	0	npm run test:harness 2>&1 | grep -E '^ℹ (tests|pass|fail|skipped)|^✖' | head -8
+B1-init-at-root	1	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.ok, j.errors[0].msg, "| fix:", j.errors[0].fix)})'
+B2-root-untouched	0	$SANDBOX/scripts/st.sh $SANDBOX/sbx2/b-used
+B3-init-dir	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook init --dir design-system --start from-codebase --from 'src/styles/*.css' --no-install 2>&1 | grep -vE '^  (Skills|Slash|Rules|Hooks|Checks|CLI|Project|Outside)' | tail -14
+B4-app-untouched	0	$SANDBOX/scripts/st.sh $SANDBOX/sbx2/b-used; $SANDBOX/scripts/df.sh $SANDBOX/sbx2/b-used
+B5-check-in-subfolder	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook check --json | node $SANDBOX/scripts/errs.mjs
+B6-doctor	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook doctor
+B7-app-hooks-untouched	0	$SANDBOX/scripts/hk.sh $SANDBOX/sbx2/b-used
+B8-tokens-import-app-css	0	npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook tokens import ../src/styles/app.css --from css 2>&1 | tail -8
+B9-design-neutral	0	node -e 'const c=require("./harness.config.json");console.log("design",JSON.stringify(c.adapters.design),"catalog.source",c.catalog.source,"starter",c.starter,"harnessVersion",c.harnessVersion)'
+C1-clone	0	$SANDBOX/scripts/cl.sh $REPO $SANDBOX/sbx2/c-clone
+C2-init-blank	1	node harness/cli.mjs init --start blank --yes --detach-catalog --json | node $SANDBOX/scripts/errs.mjs
+C3-check	1	node harness/cli.mjs check --json | node $SANDBOX/scripts/errs.mjs
+C4-add-button	0	node harness/cli.mjs add button | tail -2
+C5-reclone	0	$SANDBOX/scripts/cl.sh $REPO $SANDBOX/sbx2/c-clone
+C6-init-blank	0	node harness/cli.mjs init --start blank --yes --detach-catalog --json | node $SANDBOX/scripts/errs.mjs
+C7-check	0	node harness/cli.mjs check --json | node $SANDBOX/scripts/errs.mjs
+C8-add-button	0	node harness/cli.mjs add button | tail -2

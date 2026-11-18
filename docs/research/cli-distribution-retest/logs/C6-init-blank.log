@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx2/c-clone
+$ node harness/cli.mjs init --start blank --yes --detach-catalog --json | node $SANDBOX/scripts/errs.mjs
+----
+ok=true errors=0 warnings=2
+---- exit 0

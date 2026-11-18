@@ -1,0 +1,90 @@
+{
+  "spacing": [
+    {"id":"tailwind-4px","label":"Tailwind 4px unit","values":{"unitPx":4,"note":"utilities multiply 0.25rem"},"description":"One base variable; steps are multiples.","source":"https://tailwindcss.com/docs/theme","verified":true},
+    {"id":"carbon-13","label":"Carbon spacing 01-13","values":[2,4,8,12,16,24,32,40,48,64,80,96,160],"description":"Multiples of 2, 4 and 8.","source":"https://carbondesignsystem.com/elements/spacing/overview/","verified":true},
+    {"id":"bootstrap-6","label":"Bootstrap levels 0-5","values":[0,4,8,16,24,48],"description":"From $spacer 1rem times 0, .25, .5, 1, 1.5, 3.","source":"https://getbootstrap.com/docs/5.3/utilities/spacing/","verified":true},
+    {"id":"govuk-5px-static","label":"GOV.UK static 0-9","values":[0,5,10,15,20,25,30,40,50,60],"description":"5px base; a responsive variant shrinks units 4-9 below 640px.","source":"https://design-system.service.gov.uk/styles/spacing/","verified":true}
+  ],
+  "typeScale": [
+    {"id":"modular-1.125","label":"Major second","values":{"ratio":1.125},"description":"Named ratio.","source":"https://www.modularscale.com/","verified":true},
+    {"id":"modular-1.2","label":"Minor third","values":{"ratio":1.2},"description":"Named ratio.","source":"https://www.modularscale.com/","verified":true},
+    {"id":"modular-1.25","label":"Major third","values":{"ratio":1.25},"description":"Named ratio.","source":"https://www.modularscale.com/","verified":true},
+    {"id":"modular-1.333","label":"Perfect fourth","values":{"ratio":1.333},"description":"Named ratio.","source":"https://www.modularscale.com/","verified":true},
+    {"id":"modular-1.5","label":"Perfect fifth","values":{"ratio":1.5},"description":"Named ratio.","source":"https://www.modularscale.com/","verified":true},
+    {"id":"tailwind-sizes","label":"Tailwind text sizes","values":{"xs":12,"sm":14,"base":16,"lg":18,"xl":20,"2xl":24,"3xl":30,"4xl":36,"5xl":48,"6xl":60,"7xl":72,"8xl":96,"9xl":128},"description":"Hand-picked, px from rem.","source":"https://tailwindcss.com/docs/font-size","verified":true},
+    {"id":"m3-roles","label":"Material 3 roles (size only)","values":{"displayLarge":57,"displayMedium":45,"displaySmall":36,"headlineLarge":32,"headlineMedium":28,"headlineSmall":24,"titleLarge":22,"titleMedium":16,"titleSmall":14,"bodyLarge":16,"bodyMedium":14,"bodySmall":12,"labelLarge":14,"labelMedium":12,"labelSmall":11},"description":"Sizes from Android docs (sp); line height and tracking not verified.","source":"https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Typography.md","verified":true},
+    {"id":"govuk-steps","label":"GOV.UK steps (large screens size/line)","values":{"80":[80,80],"48":[48,50],"36":[36,40],"27":[27,30],"24":[24,30],"19":[19,25],"16":[16,20]},"description":"Small-screen sizes are smaller for the larger steps.","source":"https://design-system.service.gov.uk/styles/type-scale/","verified":true},
+    {"id":"utopia-fluid","label":"Utopia fluid example","values":{"minViewport":360,"minBase":18,"minRatio":1.2,"maxViewport":1240,"maxBase":20,"maxRatio":1.25},"description":"Example inputs shown on the site.","source":"https://utopia.fyi/","verified":true}
+  ],
+  "lineHeight": [
+    {"id":"tailwind-paired","label":"Tailwind paired with size","values":{"xs":16,"sm":20,"base":24,"lg":28,"xl":28,"2xl":32,"3xl":36,"4xl":40,"5xl+":"1"},"description":"px equivalents of rem on the docs page; unitless 1 for 5xl and above.","source":"https://tailwindcss.com/docs/font-size","verified":true},
+    {"id":"tailwind-named","label":"Tailwind named leading","values":{"none":1,"tight":1.25,"snug":1.375,"normal":1.5,"relaxed":1.625,"loose":2},"description":"Only leading-none confirmed on the page.","source":"https://tailwindcss.com/docs/line-height","verified":false},
+    {"id":"carbon-examples","label":"Carbon examples","values":{"body-compact-01":[14,18],"body-02":[16,24],"heading-03":[20,28],"heading-07":[54,64],"code-01":[12,16]},"description":"Size/line height pairs; letter spacing in the letterSpacing entry.","source":"https://carbondesignsystem.com/elements/typography/type-sets/","verified":true}
+  ],
+  "letterSpacing": [
+    {"id":"tailwind-tracking","label":"Tailwind tracking","values":{"tighter":"-0.05em","tight":"-0.025em","normal":"0em","wide":"0.025em","wider":"0.05em","widest":"0.1em"},"description":"em values.","source":"https://tailwindcss.com/docs/letter-spacing","verified":true}
+  ],
+  "weights": [
+    {"id":"tailwind-9","label":"Nine weights","values":[100,200,300,400,500,600,700,800,900],"description":"thin to black.","source":"https://tailwindcss.com/docs/font-weight","verified":true},
+    {"id":"carbon-3","label":"Carbon three weights","values":[300,400,600],"description":"Light, regular, semi-bold.","source":"https://carbondesignsystem.com/elements/typography/type-sets/","verified":true}
+  ],
+  "rampMethods": [
+    {"id":"tailwind-11","label":"Tailwind 11 steps in OKLCH","values":{"steps":[50,100,200,300,400,500,600,700,800,900,950],"exampleBlue500":"oklch(62.3% 0.214 259.815)"},"description":"22 families, OKLCH values.","source":"https://tailwindcss.com/docs/colors","verified":true},
+    {"id":"radix-12","label":"Radix 12 steps","values":{"1":"app background","2":"subtle background","3":"component background","4":"hover background","5":"pressed/selected background","6":"subtle border","7":"interactive border","8":"strong border/focus ring","9":"solid background","10":"solid hover","11":"low-contrast text","12":"high-contrast text"},"description":"Each step has a defined job; separate dark scales.","source":"https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale","verified":true},
+    {"id":"m3-tonal","label":"Material 3 tonal palette","values":{"accentTones":[10,20,30,40,80,90],"neutralTones":[4,6,10,12,17,20,24,87,90,92,94,95,96,98],"neutralVariantTones":[30,50,60,80,90]},"description":"Tone means lightness; roles map to tones.","source":"https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Color.md","verified":true},
+    {"id":"contrast-targeted","label":"Contrast-targeted (Leonardo style)","values":{"input":"target contrast ratios or lightness"},"description":"Swatches generated from target contrast.","source":"https://leonardocolor.io/","verified":true},
+    {"id":"oklch-perceptual","label":"OKLCH perceptual","values":{"channels":["l","c","h","alpha"]},"description":"Fixed lightness steps and chroma per hue; keep sRGB fallback.","source":"https://oklch.com/","verified":true}
+  ],
+  "neutrals": [
+    {"id":"tailwind-neutral-families","label":"Tailwind neutral families","values":["slate","gray","zinc","neutral","stone","taupe","mauve","mist","olive"],"description":"Cool to warm tinted greys.","source":"https://tailwindcss.com/docs/colors","verified":true}
+  ],
+  "semanticRoles": [
+    {"id":"m3-roles","label":"Material 3 roles","values":["primary","secondary","tertiary","error","outline","outline-variant","background","surface","surface-variant","inverse-surface","surface-container-lowest","surface-container-low","surface-container","surface-container-high","surface-container-highest"],"description":"Each accent has on-, container, on-container.","source":"https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Color.md","verified":true},
+    {"id":"sketchbook-minimum","label":"Sketchbook minimum set (proposal)","values":["neutral","brand","success","warning","danger","info","surface","text","border","focus"],"description":"Synthesis; Atlassian uses success/danger style modifiers, Polaris tone uses critical/success/info.","source":"https://atlassian.design/foundations/design-tokens/","verified":false}
+  ],
+  "contrast": [
+    {"id":"wcag-aa","label":"WCAG 2.2 AA","values":{"normalText":4.5,"largeText":3,"nonText":3},"description":"Large = 18pt or 14pt bold.","source":"https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html","verified":true},
+    {"id":"wcag-aaa","label":"WCAG 2.2 AAA","values":{"normalText":7,"largeText":4.5},"description":"Enhanced contrast.","source":"https://www.w3.org/WAI/WCAG22/Understanding/contrast-enhanced.html","verified":true},
+    {"id":"apca-bronze","label":"APCA Lc targets","values":{"bodyPreferred":90,"bodyMin":75,"contentText":60,"largeHeavy":45,"placeholderDisabled":30,"nonTextMin":15},"description":"Candidate for WCAG 3, not part of WCAG 2.2.","source":"https://git.apcacontrast.com/documentation/APCA_in_a_Nutshell.html","verified":true}
+  ],
+  "radius": [
+    {"id":"tailwind","label":"Tailwind radius","values":{"xs":2,"sm":4,"md":6,"lg":8,"xl":12,"2xl":16,"3xl":24,"4xl":32,"full":9999},"description":"full is calc(infinity*1px); 9999 is a stand-in.","source":"https://tailwindcss.com/docs/border-radius","verified":true},
+    {"id":"m3","label":"Material 3 corners","values":{"none":0,"extraSmall":4,"small":8,"medium":12,"large":16,"largeIncreased":20,"extraLarge":28,"extraLargeIncreased":32,"extraExtraLarge":48,"full":"50%"},"description":"Android dp.","source":"https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Shape.md","verified":true}
+  ],
+  "elevation": [
+    {"id":"tailwind-shadows","label":"Tailwind shadows","values":{"2xs":"0 1px rgb(0 0 0 / 0.05)","xs":"0 1px 2px 0 rgb(0 0 0 / 0.05)","sm":"0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)","md":"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)","lg":"0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)","xl":"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)","2xl":"0 25px 50px -12px rgb(0 0 0 / 0.25)"},"description":"Read from comments on the docs page.","source":"https://tailwindcss.com/docs/box-shadow","verified":true},
+    {"id":"m3-levels","label":"Material 3 levels 0-5","values":null,"description":"dp values not retrieved.","source":"https://m3.material.io/styles/elevation/overview","verified":false}
+  ],
+  "motion": [
+    {"id":"carbon-durations","label":"Carbon durations","values":{"fast01":70,"fast02":110,"moderate01":150,"moderate02":240,"slow01":400,"slow02":700},"description":"ms.","source":"https://carbondesignsystem.com/elements/motion/overview/","verified":true},
+    {"id":"carbon-productive-easing","label":"Carbon productive easing","values":{"standard":[0.2,0,0.38,0.9],"entrance":[0,0,0.38,0.9],"exit":[0.2,0,1,0.9]},"description":"cubic-bezier.","source":"https://carbondesignsystem.com/elements/motion/overview/","verified":true},
+    {"id":"carbon-expressive-easing","label":"Carbon expressive easing","values":{"standard":[0.4,0.14,0.3,1],"entrance":[0,0,0.3,1],"exit":[0.4,0.14,1,1]},"description":"cubic-bezier.","source":"https://carbondesignsystem.com/elements/motion/overview/","verified":true},
+    {"id":"m3-easing","label":"Material 3 easing","values":{"standard":[0.2,0,0,1],"standardDecelerate":[0,0,0,1],"standardAccelerate":[0.3,0,1,1],"emphasizedDecelerate":[0.05,0.7,0.1,1],"emphasizedAccelerate":[0.3,0,0.8,0.15],"linear":[0,0,1,1],"emphasized":"path, not a cubic-bezier"},"description":"From Android docs.","source":"https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Motion.md","verified":true},
+    {"id":"m3-durations","label":"Material 3 durations","values":[50,100,150,200,250,300,350,400,450,500,550,600,700,800,900,1000],"description":"short1-4, medium1-4, long1-4, extra-long1-4.","source":"https://raw.githubusercontent.com/material-components/material-components-android/master/docs/theming/Motion.md","verified":true},
+    {"id":"reduced-motion","label":"Reduced motion rule","values":{"mediaQuery":"prefers-reduced-motion: reduce","guidance":"replace large movement with fades or remove; keep state feedback"},"description":"Baseline widely available.","source":"https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion","verified":true}
+  ],
+  "density": [
+    {"id":"primer-modifiers","label":"Primer density names","values":["condensed","normal","spacious"],"description":"Names only; no pixel values.","source":"https://primer.style/product/primitives/token-names/","verified":true},
+    {"id":"carbon-type-density","label":"Carbon productive vs expressive","values":{"productiveBase":14,"expressiveBase":16},"description":"Type-set density split.","source":"https://carbondesignsystem.com/elements/typography/type-sets/","verified":true}
+  ],
+  "layoutGrid": [
+    {"id":"carbon-2x","label":"Carbon 2x grid","values":{"small":{"width":320,"columns":4,"margin":0},"medium":{"width":672,"columns":8,"margin":16},"large":{"width":1056,"columns":16,"margin":16},"xlarge":{"width":1312,"columns":16,"margin":16},"max":{"width":1584,"columns":16,"margin":24},"padding":16},"description":"8px mini unit; gutter total 32 with gutters.","source":"https://carbondesignsystem.com/elements/2x-grid/overview/","verified":true}
+  ],
+  "breakpoints": [
+    {"id":"tailwind","label":"Tailwind","values":{"sm":640,"md":768,"lg":1024,"xl":1280,"2xl":1536},"description":"min-width.","source":"https://tailwindcss.com/docs/responsive-design","verified":true},
+    {"id":"bootstrap","label":"Bootstrap 5.3","values":{"xs":0,"sm":576,"md":768,"lg":992,"xl":1200,"xxl":1400},"description":"min-width.","source":"https://getbootstrap.com/docs/5.3/layout/breakpoints/","verified":true}
+  ],
+  "iconSizes": [
+    {"id":"carbon","label":"Carbon icon sizes","values":[16,20,24,32],"description":"16 default; interactive hit area 44px or more.","source":"https://carbondesignsystem.com/elements/icons/usage/","verified":true}
+  ],
+  "zIndex": [
+    {"id":"tailwind-examples","label":"Tailwind z utilities (examples seen)","values":[0,10,20,30,40,50],"description":"Full default table not on page.","source":"https://tailwindcss.com/docs/z-index","verified":false},
+    {"id":"named-layers","label":"Named layers (proposal)","values":{"base":0,"sticky":100,"dropdown":200,"overlay":300,"modal":400,"toast":500,"tooltip":600},"description":"Sketchbook proposal, not copied from any system.","source":"none","verified":false}
+  ],
+  "opacity": [
+    {"id":"atlassian-states","label":"Atlassian state opacities","values":["opacity.disabled","opacity.loading"],"description":"Token names only, values not read.","source":"https://atlassian.design/foundations/design-tokens/","verified":false}
+  ],
+  "borderWidth": [
+    {"id":"atlassian","label":"Atlassian border widths","values":{"default":1,"selected":2,"focused":2},"description":"Focus and selection stack.","source":"https://atlassian.design/components/tokens/all-tokens","verified":true}
+  ]
+}

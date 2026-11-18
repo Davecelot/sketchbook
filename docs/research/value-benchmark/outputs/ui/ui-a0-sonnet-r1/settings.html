@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notification settings</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --text: #1a1d23;
+    --muted: #5b6270;
+    --border: #d9dce3;
+    --accent: #2f5bea;
+    --accent-text: #ffffff;
+    --track-off: #6b7280;
+    --focus: #1d3fb8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --surface: #181b21;
+      --text: #eceef2;
+      --muted: #a0a7b4;
+      --border: #333844;
+      --accent: #6d8cff;
+      --accent-text: #0b1020;
+      --track-off: #7b8392;
+      --focus: #a9bcff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .card {
+    width: 100%;
+    max-width: 30rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  h1 { margin: 0 0 .25rem; font-size: 1.25rem; }
+  .lead { margin: 0 0 1rem; color: var(--muted); font-size: .9rem; }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .9rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .row label { cursor: pointer; flex: 1; }
+  .name { display: block; font-weight: 600; }
+  .desc { display: block; color: var(--muted); font-size: .875rem; }
+
+  /* Switch: native checkbox, styled */
+  .switch {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: none;
+    position: relative;
+    width: 2.75rem;
+    height: 1.5rem;
+    margin: .125rem 0 0;
+    border-radius: 999px;
+    background: var(--track-off);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    top: .1875rem;
+    left: .1875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform .15s;
+  }
+  .switch:checked { background: var(--accent); }
+  .switch:checked::after { transform: translateX(1.25rem); }
+  .switch:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  @media (forced-colors: active) {
+    .switch { border: 1px solid ButtonText; }
+    .switch:checked { background: Highlight; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .switch, .switch::after { transition: none; }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  button {
+    font: inherit;
+    font-weight: 600;
+    padding: .55rem 1.25rem;
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+  }
+  button:hover { filter: brightness(1.08); }
+  button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  #status { color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+  <main>
+    <form class="card" id="settings" aria-labelledby="title">
+      <h1 id="title">Notification settings</h1>
+      <p class="lead">Choose how you want to hear from us.</p>
+
+      <fieldset>
+        <legend class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Notification channels</legend>
+
+        <div class="row">
+          <label for="email">
+            <span class="name">Email</span>
+            <span class="desc" id="email-d">Receive updates and alerts in your inbox.</span>
+          </label>
+          <input class="switch" type="checkbox" role="switch" id="email" name="email" aria-describedby="email-d" checked>
+        </div>
+
+        <div class="row">
+          <label for="push">
+            <span class="name">Push</span>
+            <span class="desc" id="push-d">Get instant notifications on your devices.</span>
+          </label>
+          <input class="switch" type="checkbox" role="switch" id="push" name="push" aria-describedby="push-d">
+        </div>
+
+        <div class="row">
+          <label for="digest">
+            <span class="name">Weekly digest</span>
+            <span class="desc" id="digest-d">A summary of the week's activity, every Monday.</span>
+          </label>
+          <input class="switch" type="checkbox" role="switch" id="digest" name="digest" aria-describedby="digest-d">
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit">Save</button>
+        <span id="status" role="status" aria-live="polite"></span>
+      </div>
+    </form>
+  </main>
+
+<script>
+  document.getElementById('settings').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var s = {};
+    ['email', 'push', 'digest'].forEach(function (id) { s[id] = document.getElementById(id).checked; });
+    document.getElementById('status').textContent = 'Settings saved.';
+    console.log('Saved settings', s);
+  });
+  document.getElementById('settings').addEventListener('change', function () {
+    document.getElementById('status').textContent = '';
+  });
+</script>
+</body>
+</html>

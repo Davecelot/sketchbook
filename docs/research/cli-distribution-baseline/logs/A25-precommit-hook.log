@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ $SANDBOX/scripts/hk.sh $SANDBOX/sbx/a-empty-engine
+----
+core.hooksPath unset: .githooks/pre-commit never runs (only npm install's prepare script sets it)
+---- exit 0

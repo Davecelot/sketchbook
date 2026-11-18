@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm run -s sketchbook -- doctor
+----
+Starter: library
+Harness: 0.2.0 (files here: 0.2.0)
+Components: 35 installed, 0 more in the catalog, 0 customized, 0 team-made
+Kits: 0 installed, 8 available
+Brands: single brand
+Overrides: 0
+Design: none
+Checks: all pass, 1 warning(s)
+---- exit 0

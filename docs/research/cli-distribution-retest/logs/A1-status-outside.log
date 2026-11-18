@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm exec --yes --package=$SANDBOX/sbx2/sketchbook-0.1.0.tgz -- sketchbook status
+----
+Not a Sketchbook project (no harness.config.json in $SANDBOX/sbx2/a-empty).
+  fix: sketchbook init (in an empty folder, or --dir <new folder>) creates one; or cd into your design-system folder.
+---- exit 1

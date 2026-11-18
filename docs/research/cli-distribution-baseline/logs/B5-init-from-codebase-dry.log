@@ -1,0 +1,7 @@
+$ cd $SANDBOX/sbx/b-used
+$ node $REPO/harness/cli.mjs init --start from-codebase --from 'src/**/*.css' --dry-run 2>&1 | head -12
+----
+Starter from-codebase (From a codebase): Teams with a product: audit its CSS and propose foundations from the values it repeats; the library and kits stay as they are.
+  components: install accordion, spinner, button, alert, aspect-ratio, avatar, badge, breadcrumb, button-group, card, checkbox, collapsible, pagination, tabs, direction, empty, input, field, textarea, input-group, item, kbd, label, native-select, progress, radio-group, scroll-area, separator, skeleton, slider, switch, table, toggle, toggle-group, typography; remove none
+  kits: install sign-in, settings, data-table, dashboard, profile, docs-article, onboarding, form-states; remove none
+---- exit 0

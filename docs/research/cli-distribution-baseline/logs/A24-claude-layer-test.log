@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node --test harness/test/claude-layer.test.mjs 2>&1 | grep -E 'ℹ (pass|fail)'
+----
+ℹ pass 6
+ℹ fail 0
+---- exit 0

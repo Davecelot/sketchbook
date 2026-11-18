@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Notification settings</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <script src="sketchbook.js"></script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: var(--sb-space-6);
+        box-sizing: border-box;
+        background: var(--sb-color-background);
+        color: var(--sb-color-foreground);
+        font-family: var(--sb-font-family-sans);
+      }
+      .page {
+        width: 100%;
+        max-width: 440px;
+        display: grid;
+        gap: var(--sb-space-4);
+      }
+      .theme {
+        justify-self: end;
+      }
+      .settings {
+        display: grid;
+        gap: var(--sb-space-6);
+      }
+      .status {
+        margin: 0;
+        font-size: var(--sb-font-size-sm);
+        color: var(--sb-color-muted-foreground);
+      }
+      sb-card-footer {
+        gap: var(--sb-space-3);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <sb-button class="theme" variant="outline" size="sm" id="theme-toggle">Switch to dark theme</sb-button>
+
+      <form id="notifications" aria-labelledby="notifications-title">
+        <sb-card>
+          <sb-card-header>
+            <sb-card-title id="notifications-title" role="heading" aria-level="1">Notification settings</sb-card-title>
+            <sb-card-description>Choose how we keep you in the loop.</sb-card-description>
+          </sb-card-header>
+          <sb-card-content class="settings">
+            <sb-switch
+              name="email"
+              checked
+              label="Email"
+              description="Account activity and replies, sent to your inbox."
+            ></sb-switch>
+            <sb-switch
+              name="push"
+              label="Push"
+              description="Instant alerts on devices where you're signed in."
+            ></sb-switch>
+            <sb-switch
+              name="weekly-digest"
+              label="Weekly digest"
+              description="A Monday summary of what happened last week."
+            ></sb-switch>
+          </sb-card-content>
+          <sb-card-footer>
+            <sb-button type="submit">Save</sb-button>
+            <p class="status" id="status" role="status"></p>
+          </sb-card-footer>
+        </sb-card>
+      </form>
+    </main>
+
+    <script>
+      const root = document.documentElement;
+      const toggle = document.getElementById('theme-toggle');
+      const isDark = () =>
+        root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      const syncToggle = () => (toggle.textContent = isDark() ? 'Switch to light theme' : 'Switch to dark theme');
+      toggle.addEventListener('click', () => {
+        root.dataset.theme = isDark() ? 'light' : 'dark';
+        syncToggle();
+      });
+      syncToggle();
+
+      const form = document.getElementById('notifications');
+      const status = document.getElementById('status');
+      form.addEventListener('submit', (event) => {
+        // Opened from disk there is no server to post to; show what would be saved.
+        event.preventDefault();
+        const on = [...new FormData(form).keys()];
+        status.textContent = `Saved. On: ${on.length ? on.join(', ') : 'none'}.`;
+      });
+      form.addEventListener('change', () => (status.textContent = ''));
+    </script>
+  </body>
+</html>

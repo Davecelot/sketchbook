@@ -1,0 +1,1 @@
+Build one page, `out/settings.html`, that opens directly from disk with no build step: a "Notification settings" card with three on/off settings (Email, Push, Weekly digest), each with a short description, Email on by default, inside a form with a Save button. It must work in light and dark themes and by keyboard. If the project has a design system, use it.

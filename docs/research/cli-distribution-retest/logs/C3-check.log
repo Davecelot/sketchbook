@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx2/c-clone
+$ node harness/cli.mjs check --json | node $SANDBOX/scripts/errs.mjs
+----
+ok=false errors=35 warnings=1
+  35x D3 spec/design-docs.json
+---- exit 1

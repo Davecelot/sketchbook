@@ -1,0 +1,10 @@
+# QA report: out/settings.html
+
+- Line 28: `<sb-switch name="push">` has no `label`, which the Switch contract requires as its accessible name, so the switch has no name for screen readers and its own warning about an empty label fires. Fix: add `label="Push notifications"`.
+- Line 27: `tone="success"` is not a Switch prop (the contract lists only label, hideLabel, description, error, name, value, checked, required, disabled and size), so it does nothing. Fix: remove `tone="success"`.
+- Line 29: `<sb-toggle>` is used as a form setting, but Toggle is an action button that is not form-associated (`formAssociation.value: false`), so "digest" is never submitted. It also has no `name`, `label` or `description` props and is named by its slot text, so it has no accessible name. Fix: replace it with `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday"></sb-switch>`.
+- Line 12: `gap: var(--sb-space-17)` uses a token that doesn't exist (the space scale goes 12, 16, …), so the gap falls back to 0. Fix: use an existing token, e.g. `var(--sb-space-stack-md)` or `var(--sb-space-4)`.
+- Line 13: `font-size: var(--sb-font-size-small)` uses a token that doesn't exist (`small` is a radius name), so the font size is not applied. Fix: use `var(--sb-font-size-sm)`.
+- Line 13: `color: #d33` is a raw literal instead of a token, and red marks this neutral help text as an error (this text may also fail contrast). Fix: use `color: var(--sb-color-muted-foreground)`.
+- Line 31: the help text is a hand-styled `<p class="hint">`, while Card has a `sb-card-description` part for this text. Fix: move it into `<sb-card-header>` as `<sb-card-description>Changes apply after you save.</sb-card-description>` and drop the `.hint` rule.
+- Lines 15 and 34: the Save action is a native `<button class="save">` styled by hand with tokens, which bypasses the Button component (variants, focus ring, sizes, disabled state). Fix: use `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.

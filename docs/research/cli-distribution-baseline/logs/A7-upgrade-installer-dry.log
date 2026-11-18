@@ -1,0 +1,11 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run | grep -v '^    \|^  [a-z.]' | head -40
+----
+Harness unrecorded -> 0.2.0 (dry run: nothing written)
+Would add (harness-owned) (793):
+Shared files only upstream (not copied) (22):
+  CLAUDE.md
+  README.md
+  THIRD_PARTY_NOTICES.md
+Protected (never written by an upgrade: the ownership manifest, team configs, package files, spec/src/brands/tests, agent settings) — review by hand (1):
+---- exit 0

@@ -1,0 +1,13 @@
+# QA report: out/settings.html
+
+- Line 7–8 load the engine package's own tokens and bundle (`../node_modules/sketchbook/generated/css/tokens.css`, `../node_modules/sketchbook/dist/sketchbook.js`), not this design system's brand build (`ui-a3`). Fix: link `../generated/css/tokens.css` and the project bundle (`./bundle` → `dist/sketchbook.js`, after `npm run build`).
+- Line 12 `gap: var(--sb-space-17)` uses a token that doesn't exist (the scale stops at `--sb-space-16`), so the gap falls back to 0. Fix: use a semantic stack token such as `var(--sb-space-stack-lg)`.
+- Line 13 `font-size: var(--sb-font-size-small)` uses a token that doesn't exist, so the text keeps the inherited size. Fix: use `var(--sb-font-size-sm)` (or `--sb-font-size-caption`).
+- Line 13 `color: #d33` is a literal color, and it colors a neutral hint red as if it were an error. Fix: use `var(--sb-color-muted-foreground)`.
+- Lines 10 and 15 use foundation spacing tokens (`--sb-space-6`, `--sb-space-2`, `--sb-space-4`) where pages may use only semantic tokens. Fix: use semantic tokens (`--sb-space-inset-surface`, `--sb-space-control-padding-x-default`, etc.).
+- Lines 15 and 34 use a hand-styled native `<button class="save">` instead of the library button. Fix: `<sb-button type="submit">Save</sb-button>` and delete the `.save` CSS.
+- Line 27 `tone="success"` is not an `sb-switch` prop (the contract has only `size`, `label`, `description`, `error`, `name`, `value`, `checked`, `required`, `disabled`, `hide-label`), so it does nothing. Fix: remove `tone="success"`.
+- Line 28 `sb-switch name="push"` has no `label`. `label` is required and is the switch's accessible name, so screen readers announce an unnamed switch and the component logs a missing-name warning. Fix: add `label="Push notifications"`.
+- Line 29 uses `sb-toggle` for a form setting. Toggle isn't a form field (`formAssociation: false`): `name` is never submitted, and `label`/`description` aren't Toggle props. It has no slot text, so it has no accessible name either. Fix: use `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">`.
+- Line 23 `sb-card-title` is a visual heading only (Card has no role), so the page has no heading in its document outline. Fix: put a real heading inside it, `<sb-card-title><h1>Notification settings</h1></sb-card-title>`.
+- Line 31 puts a description of the card in a loose `<p class="hint">` inside the content area instead of using the card's description part. Fix: move the text to `<sb-card-description>Changes apply after you save.</sb-card-description>` in `sb-card-header` and drop the `.hint` rule.

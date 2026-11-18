@@ -1,0 +1,11 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ ls -A | tr '\n' ' '; echo; for d in harness scripts .claude; do test -e $d && echo "$d PRESENT" || echo "no $d/"; done; readlink node_modules/.bin/sketchbook; ls -l .githooks/pre-commit | cut -c1-10; node -e 'const p=require("./package.json");console.log("devDependency:",JSON.stringify(p.devDependencies.sketchbook),"imports:",JSON.stringify(p.imports),"check script:",p.scripts.check)'
+----
+.git .githooks .gitignore .storybook CLAUDE.md THIRD_PARTY_NOTICES.md brand.config.json docs eslint.config.js generated harness.config.json move-to-.claude node_modules package-lock.json package.json playwright prettier.config.js spec src tsconfig.json tsconfig.stories.json tsup.config.ts 
+no harness/
+no scripts/
+no .claude/
+../sketchbook/harness/cli.mjs
+-rwxr-xr-x
+devDependency: "file:$SANDBOX/sbx3/sketchbook-0.1.0.tgz" imports: {"#harness/*":"sketchbook/harness/*"} check script: sketchbook check
+---- exit 0

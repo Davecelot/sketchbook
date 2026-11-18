@@ -1,0 +1,13 @@
+# QA report: out/settings.html
+
+- Line 28: `<sb-switch name="push">` has no `label`, which the Switch contract requires as its visible label and accessible name. As written, the switch has no accessible name. Fix: add `label="Push notifications"`.
+- Line 27: `tone="success"` on `sb-switch` is not a Switch prop (the contract has label, hide-label, description, error, size, name, value, checked, required and disabled), so it does nothing. Fix: remove `tone="success"`.
+- Line 29: `sb-toggle` is used as a form setting with `name`, `label` and `description`. Toggle is not a form field (contract Q1), has none of those props, and is for immediate effects only. It renders with no text, so it has no accessible name, and it submits nothing. Fix: replace it with `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">` (or `sb-checkbox`, see the next finding).
+- Lines 27–31: the switches wait for Save ("Changes apply after you save."). The Switch contract says not to use a switch for something that needs a Save to take effect; use Checkbox. Fix: use `sb-checkbox` for these fields, or drop the Save step and apply each switch immediately.
+- Line 34: the Save action is a hand-styled native `<button class="save">` instead of the library's Button. It does not get the design system's sizes, hover state or focus ring. Fix: use `<sb-button type="submit">Save</sb-button>` and remove the `.save` CSS.
+- Line 13: `.hint` uses a hard-coded color `#d33`, which bypasses the tokens and does not adapt to dark mode. Fix: use `color: var(--sb-color-muted-foreground)`.
+- Line 31: an informational hint is colored red, which is the error/destructive color, so it reads as an error. Fix: use muted text, or render it as `sb-card-description` in the header.
+- Line 12: `var(--sb-space-17)` does not exist. The space scale stops at 16, with no 17, so `gap` falls back to 0 and the fields have no spacing between them. Fix: use `var(--sb-space-6)` (or `--sb-space-stack-md`).
+- Line 13: `var(--sb-font-size-small)` does not exist, so the font size is ignored. Fix: use `var(--sb-font-size-sm)`.
+- Line 23: `sb-card-title` contains plain text, not a heading. The Card contract says to put a real heading in the title when the card belongs in the document outline, and here it is the page's only title. Fix: use `<sb-card-title><h1>Notification settings</h1></sb-card-title>`.
+- Lines 7–8: the page loads tokens and components from `node_modules/sketchbook` (the engine's default build). It should load this design system's own build (`ui-a3`: `generated/css/tokens.css` and its `dist/`), so the brand and custom components here are not what is shown. Fix: link `../generated/css/tokens.css` and load this package's built bundle.

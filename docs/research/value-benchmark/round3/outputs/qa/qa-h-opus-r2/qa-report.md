@@ -1,0 +1,13 @@
+# QA report: out/settings.html
+
+- Line 28: `<sb-switch name="push">` has no `label`. The Switch contract marks `label` as required (it is the accessible name), so this switch has no accessible name and logs the empty-label warning. Fix: add `label="Push notifications"`.
+- Line 27: `tone="success"` is not a Switch prop. The contract's props are label, hideLabel, description, error, name, value, checked, required, disabled and size, so the attribute does nothing. Fix: remove `tone="success"`.
+- Line 29: `<sb-toggle>` is a pressed/unpressed toggle button. It has no `name`, `label` or `description` props and is not form-associated, so "Weekly digest" is never submitted and its label and description never render. Fix: use `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday"></sb-switch>`.
+- Line 34: a raw `<button class="save">` with hand-written styles (lines 15) is used instead of the library's Button. Fix: replace it with `<sb-button type="submit" label="Save"></sb-button>` and delete the `.save` rule.
+- Line 13: `.hint` uses the hard-coded color `#d33`, which is not a token, is error-red for a neutral hint, and is not checked for contrast. Fix: use `color: var(--sb-color-muted-foreground)`.
+- Line 13: `var(--sb-font-size-small)` does not exist in `generated/css/tokens.css`, so the hint falls back to the inherited size. Fix: use `var(--sb-font-size-caption)` (or `--sb-font-size-sm`).
+- Line 12: `var(--sb-space-17)` does not exist (the scale stops at `--sb-space-16`), so `gap` is invalid and the fields have no spacing between them. Fix: use a semantic stack token, e.g. `gap: var(--sb-space-stack-md)`.
+- Lines 10 and 15: page styles use raw foundation steps (`--sb-space-6`, `--sb-space-2`, `--sb-space-4`) instead of semantic spacing tokens. Fix: use semantic tokens such as `--sb-space-inset-surface` for body padding and `--sb-space-control-padding-*` for the button (this goes away if `sb-button` is used).
+- Line 14: `.actions { justify-content: flex-end }` sits in a wrapper `div` inside `sb-card-footer`, so the footer's own layout is bypassed. Fix: put the button directly in `<sb-card-footer>` and drop the `.actions` wrapper.
+- Line 7: the stylesheet loads `tokens.css` but not `fonts.css`, which sits next to it, so `--sb-font-family-body` falls back to a system font. Fix: add `<link rel="stylesheet" href="../node_modules/sketchbook/generated/css/fonts.css">`.
+- Line 23: the card has a title but no `<sb-card-description>`, and the "Changes apply after you save." note is a loose `<p>` in the content. Fix: move that text into `<sb-card-description>` inside `<sb-card-header>`.

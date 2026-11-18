@@ -1,0 +1,14 @@
+$ cd $SANDBOX/sbx3/a-claude
+$ claude -p 'Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md).' --allowedTools 'Read' 'Glob' 'Grep' 'Write(.claude/**)' 'Edit(.claude/**)' 'Bash(mkdir -p .claude:*)' 'Bash(cp:*)' 'Bash(ls:*)' 'Bash(diff:*)' 'Bash(find:*)' 'Bash(npm run sketchbook:*)' 'Bash(rm -rf move-to-.claude)' 2>&1 | tail -60
+----
+Ignoring 1 permissions.allow entry from .claude/settings.json: this workspace has not been trusted. Run Claude Code interactively here once and accept the trust dialog, or set projects["$SANDBOX/sbx3/a-claude"].hasTrustDialogAccepted: true in ~/.claude.json.
+Permission allow rule (--allowed-tools): Write(.claude/**) is not matched by file permission checks — only Edit(path) rules are. Use Edit(.claude/**) instead (Edit rules cover all file-editing tools).
+The Claude layer is installed in `.claude/`. The `H1` check passes with no warnings, `doctor` reports "Claude layer: installed", and I deleted `move-to-.claude/`.
+
+- **Copied:** the `skills/`, `commands/`, `rules/` and `hooks/` folders went in without overwriting anything. Nothing clashed, and your team's `deploy.md` command is untouched.
+- **Settings merged:** I added the Sketchbook hooks to your existing `.claude/settings.json`. Your `Bash(npm run lint)` permission and the `echo team-hook` hook are still there. The added hooks:
+  - hammock: `SessionStart`, `UserPromptSubmit`, `SubagentStart`, `PreToolUse`, `PostToolUse` and `Stop`.
+  - `guard-generated.mjs` and `guard-decisions.mjs`, both on `PreToolUse` for `Edit`, `Write` and `MultiEdit`.
+
+**Restart Claude Code in this folder** so the hooks and rules load. Hooks only load from the folder a session starts in.
+---- exit 0

@@ -1,0 +1,7 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ SKETCHBOOK_PORT=6191 npm run test:component -- tests/button tests/foundations 2>&1 | grep -E 'passed|failed|flaky|Error' | tail -3
+----
+Error: Invalid "imports" target "./node_modules/sketchbook/harness/*" defined for '#harness/*' in the package config $SANDBOX/sbx3/a-empty/package.json imported from $SANDBOX/sbx3/a-empty/playwright/helpers/foundations.ts
+Error: Invalid "imports" target "./node_modules/sketchbook/harness/*" defined for '#harness/*' in the package config $SANDBOX/sbx3/a-empty/package.json imported from $SANDBOX/sbx3/a-empty/playwright/helpers/foundations.ts
+Error: Invalid "imports" target "./node_modules/sketchbook/harness/*" defined for '#harness/*' in the package config $SANDBOX/sbx3/a-empty/package.json imported from $SANDBOX/sbx3/a-empty/playwright/helpers/foundations.ts
+---- exit 1

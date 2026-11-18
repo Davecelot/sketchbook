@@ -1,0 +1,9 @@
+$ cd $SANDBOX/sbx2/a-empty
+$ npm run -s sketchbook -- status
+----
+Prefix: sb
+Brand: default (primary neutral, font ui-sans-serif, modes light, dark, spacing 4px, radius 10px, contrast wcag-aa)
+Components: 35 (35 beta)
+Overrides: 0
+Design: none
+---- exit 0

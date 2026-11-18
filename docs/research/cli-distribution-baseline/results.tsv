@@ -1,0 +1,67 @@
+id	exit	command
+00-pack	0	npm pack --ignore-scripts --pack-destination $SANDBOX/sbx 2>&1 | tail -20
+A1-npx-help	1	npm init -y >/dev/null && npm install --no-audit --no-fund $SANDBOX/sbx/sketchbook-0.1.0.tgz 2>&1 | tail -3 && npx sketchbook help
+A2-npx-init	1	npx sketchbook init --start library --dry-run --json
+A3-add-button-dry-run-json	1	node $REPO/harness/cli.mjs add button --dry-run --json
+A3-check-json	1	node $REPO/harness/cli.mjs check --json
+A3-doctor-json	1	node $REPO/harness/cli.mjs doctor --json
+A3-explain-color-primary	1	node $REPO/harness/cli.mjs explain color.primary
+A3-help-json-head	0	node $REPO/harness/cli.mjs help --json|head -3
+A3-init	0	node $REPO/harness/cli.mjs init
+A3-init-start-blank-json	1	node $REPO/harness/cli.mjs init --start blank --json
+A3-init-start-library-dry-run-jso	0	node $REPO/harness/cli.mjs init --start library --dry-run --json
+A3-list-json	0	node $REPO/harness/cli.mjs list --json
+A3-presets	0	node $REPO/harness/cli.mjs presets
+A3-status-json	1	node $REPO/harness/cli.mjs status --json
+A3-tokens-presets	0	node $REPO/harness/cli.mjs tokens presets
+A4-init-library-real	1	node $REPO/harness/cli.mjs init --start library --json > out.json; c=$?; node -e 'const j=require("./out.json");console.log(JSON.stringify(j.errors))'; rm out.json; exit $c
+A5-upgrade-as-installer-dry	1	node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run --json > out.json; c=$?; node -e 'const j=require("./out.json");console.log(JSON.stringify(j.errors))'; rm out.json; exit $c
+A6-check-human	1	node $REPO/harness/cli.mjs check 2>&1 | grep -m3 -i 'error\|enoent'
+A7-upgrade-installer-dry	0	node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run | grep -v '^    \|^  [a-z.]' | head -40
+A8-upgrade-installer-real	1	node $REPO/harness/cli.mjs upgrade --from $REPO | tail -4
+A9-init-after-upgrade	1	node harness/cli.mjs init --start library --json > out.json; c=$?; node -e 'const j=require("./out.json");console.log(JSON.stringify(j.errors))'; rm out.json; exit $c
+A10-status-after-upgrade	1	node harness/cli.mjs status 2>&1 | tail -3
+A11-skeleton-status	0	$SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO status
+A12-skeleton-init-library	0	$SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+A13-skeleton-init-library-2	0	$SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+A14-tokens-generate	0	node harness/generators/foundation.mjs
+A15-skeleton-init-library-3	0	$SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+A16-skeleton-init-library-4	0	$SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+A17-skeleton-init-library-5	0	$SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+A18-skeleton-init-library-6	0	$SANDBOX/scripts/skeleton.sh $SANDBOX/sbx/a-empty-engine $REPO init --start library --detach-catalog
+A19-doctor	0	node harness/cli.mjs doctor
+A20-check	0	node harness/cli.mjs check | tail -8
+A21-kits-add	0	node harness/cli.mjs kits add sign-in | tail -3
+A22-tokens-preset	0	node harness/cli.mjs tokens preset spacing grid-8 --dry-run | tail -4
+A23-claude-settings	0	ls .claude; test -f .claude/settings.json && echo settings-present || echo 'NO .claude/settings.json: hooks (hammock, guard-generated, guard-decisions) inactive'
+A24-claude-layer-test	0	node --test harness/test/claude-layer.test.mjs 2>&1 | grep -E 'ℹ (pass|fail)'
+A25-precommit-hook	0	$SANDBOX/scripts/hk.sh $SANDBOX/sbx/a-empty-engine
+A26-typecheck	1	npx --no-install tsc --noEmit 2>&1 | head -3
+A27-shared-config	1	ls -d playwright .storybook package.json tsconfig.json CLAUDE.md 2>&1
+A28-playwright-helpers	1	grep -rhoE "from '[.]{1,2}/[^']*helpers[^']*'" playwright/tests | sort -u | head -3; ls playwright/helpers
+B1-npx-tarball	1	npm install --no-audit --no-fund $SANDBOX/sbx/sketchbook-0.1.0.tgz >/dev/null 2>&1; npx sketchbook status 2>&1 | grep -m1 ERR_; rm -rf node_modules package-lock.json; exit 1
+B2-status	1	node $REPO/harness/cli.mjs status 2>&1 | head -2
+B3-audit-css-dry	0	node $REPO/harness/cli.mjs audit-css 'src/**/*.css' --dry-run
+B4-audit-css	0	node $REPO/harness/cli.mjs audit-css 'src/**/*.css'
+B5-init-from-codebase-dry	0	node $REPO/harness/cli.mjs init --start from-codebase --from 'src/**/*.css' --dry-run 2>&1 | head -12
+B6-upgrade-no-manifest	1	node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run 2>&1 | head -3
+B7-upgrade-installer-dry	0	node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run | grep -v '^  harness/\|^  .claude/skills/\|^  scripts/\|^  .claude/rules\|^  .claude/hooks\|^  .claude/commands/[a-z-]*.md$' | head -60
+B8-upgrade-installer-real	1	node $REPO/harness/cli.mjs upgrade --from $REPO 2>&1 | tail -2
+B9-assemble-skeleton	0	$SANDBOX/scripts/assemble.sh $SANDBOX/sbx/b-used $REPO
+B10-init-from-codebase	1	node harness/cli.mjs init --start from-codebase --from 'src/styles/*.css' 2>&1 | grep -v '^pass ' | tail -12
+B11-what-changed	0	$SANDBOX/scripts/st.sh $SANDBOX/sbx/b-used
+B12-init-from-codebase-2	1	node harness/cli.mjs init --start from-codebase --from 'src/styles/*.css' 2>&1 | grep -v '^pass ' | tail -10
+B13-what-changed-2	0	$SANDBOX/scripts/st.sh $SANDBOX/sbx/b-used | head -12
+B14-index-overwritten	0	$SANDBOX/scripts/df.sh $SANDBOX/sbx/b-used
+B15-check-summary	1	node harness/cli.mjs check --json | node $SANDBOX/scripts/errs.mjs
+B16-tokens-import-css	0	node harness/cli.mjs tokens import src/styles/app.css --from css 2>&1 | tail -14
+B17-doctor	0	node harness/cli.mjs doctor
+B18-precommit-hook	0	$SANDBOX/scripts/hk.sh $SANDBOX/sbx/b-used
+C1-clone	0	$SANDBOX/scripts/cl.sh $REPO $SANDBOX/sbx/c-clone
+C2-init-blank-dry	0	node harness/cli.mjs init --start blank --dry-run | head -5
+C3-init-blank	1	node harness/cli.mjs init --start blank --yes --detach-catalog 2>&1 | grep -v '^pass ' | tail -6
+C4-doctor	0	node harness/cli.mjs doctor
+C5-add-button	0	node harness/cli.mjs add button | tail -3
+C6-precommit-hook	0	$SANDBOX/scripts/hk.sh $SANDBOX/sbx/c-clone
+C7-settings	0	test -f .claude/settings.json && echo 'settings.json present: hooks active' 
+C8-check-summary	1	node harness/cli.mjs check --json | node $SANDBOX/scripts/errs.mjs

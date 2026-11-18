@@ -1,0 +1,11 @@
+# QA report: out/settings.html
+
+- Line 27: `sb-switch` has `tone="success"`, but Switch has no `tone` prop (only label, hide-label, description, error, size, name, value, checked, required, disabled), so the attribute does nothing. Fix: remove `tone="success"`.
+- Line 28: the `push` `sb-switch` has no `label`, which the contract requires as the visible label and accessible name, so the switch has no name. Fix: add `label="Push notifications"` (or add `hide-label` if it must be hidden visually).
+- Line 29: `sb-toggle` is a pressable button that is not a form field. It has no `name`, `label` or `description` props, takes its label from slot text, and uses `pressed` instead of `checked`. As written, it renders an empty, unnamed button and submits nothing. Fix: replace it with `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">`.
+- Lines 27–34: the Switch and Toggle contracts both say "Don't use it for a value that waits for a Save button", but these settings are saved with a Save button ("Changes apply after you save"). Fix: use `sb-checkbox` for settings that are saved with the form, or keep the switches, have them apply at once, and remove the Save button and hint.
+- Line 34: the Save action is a native `<button class="save">` with custom styling, not the design-system button. Fix: use `<sb-button type="submit">Save</sb-button>` and delete the `.save` rule.
+- Line 12: `--sb-space-17` is not a token (the spacing scale stops at 0–6, 8, 10, 12, 16), so `gap` is invalid and falls back to 0, leaving the fields with no space between them. Fix: use an existing step such as `var(--sb-space-6)` or `var(--sb-space-field-gap)`.
+- Line 13: the hint uses a hard-coded hex color `#d33` instead of a token, and red/error styling for neutral help text. Fix: use `color: var(--sb-color-muted-foreground)` (or `var(--sb-color-destructive)` only for real errors).
+- Line 13: `--sb-font-size-small` is not a token, so the font-size declaration is invalid. Fix: use `var(--sb-font-size-sm)`.
+- Line 23: `sb-card-title` holds plain text, so the page has no heading in the document outline (the Card contract says to put a real heading inside the title). Fix: `<sb-card-title><h1>Notification settings</h1></sb-card-title>` (or h2, depending on where the card sits in the page).

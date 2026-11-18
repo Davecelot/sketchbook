@@ -1,0 +1,20 @@
+$ cd $SANDBOX/sbx/b-used
+$ $SANDBOX/scripts/df.sh $SANDBOX/sbx/b-used
+----
+ src/index.ts | 37 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
+diff --git a/src/index.ts b/src/index.ts
+index e657810..8150e81 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1 +1,36 @@
+-export { App } from './app';
++// GENERATED from src/components/ by scripts/build-barrel.mjs. Do not edit.
++export * from './components/accordion/index.js';
++export * from './components/alert/index.js';
++export * from './components/aspect-ratio/index.js';
++export * from './components/avatar/index.js';
++export * from './components/badge/index.js';
++export * from './components/breadcrumb/index.js';
++export * from './components/button/index.js';
+---- exit 0

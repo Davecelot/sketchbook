@@ -1,0 +1,14 @@
+{
+  "$description": "Report lines with the expected evidence verdict. A line is evidenced when it cites a project file or a fact checked against the project (a contract, a token scale, a component's props), not a general opinion. score-qa.mjs refuses to score if its EVIDENCE pattern disagrees with any line here.",
+  "lines": [
+    { "evidenced": true, "text": "- `.fields { gap: var(--sb-space-17) }` points to a token that does not exist (the scale skips from `--sb-space-16`), so the gap falls back to 0." },
+    { "evidenced": true, "text": "- `<sb-switch … tone=\"success\">` uses a `tone` attribute that the Switch contract does not define (props: label, hide-label, description, error, name, value, checked, required, disabled, size)." },
+    { "evidenced": true, "text": "- `<sb-toggle>` is used as a form field with `name`, `label` and `description`. Toggle only has `variant`, `size`, `pressed` and `disabled`." },
+    { "evidenced": true, "text": "- `--sb-font-size-small` is not a valid token; tokens.css defines `--sb-font-size-sm`." },
+    { "evidenced": true, "text": "- The space scale stops at `space-16`, so `--sb-space-17` resolves to nothing." },
+    { "evidenced": true, "text": "- `Switch.ts` declares no `tone` property, so the attribute is ignored." },
+    { "evidenced": false, "text": "- `.hint` uses an error-red color for neutral help text, so it looks like an error. Fix: use a muted color." },
+    { "evidenced": false, "text": "- The raw `<button>` looks inconsistent with the rest of the page. Fix: use the design system button." },
+    { "evidenced": false, "text": "- `--sb-space-17` is likely not a real token. Fix: use a smaller spacing value." }
+  ]
+}

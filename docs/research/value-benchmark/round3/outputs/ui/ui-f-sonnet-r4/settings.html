@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Notification settings</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    html { background: var(--sb-color-background); color: var(--sb-color-foreground); }
+    body {
+      margin: 0; min-height: 100vh; box-sizing: border-box; padding: 24px 16px;
+      display: flex; justify-content: center; align-items: flex-start;
+      font-family: var(--sb-font-family-sans, system-ui, sans-serif);
+    }
+    main { width: 100%; max-width: 440px; }
+    sb-card { width: 100%; }
+    .settings { display: flex; flex-direction: column; gap: 20px; }
+    h1 { margin: 0; font: inherit; }
+    .status { margin: 0 0 0 12px; font-size: 14px; color: var(--sb-color-muted-foreground); }
+  </style>
+  <script src="sketchbook.js"></script>
+</head>
+<body>
+  <main>
+    <form id="settings" aria-labelledby="title">
+      <sb-card>
+        <sb-card-header>
+          <sb-card-title><h1 id="title">Notification settings</h1></sb-card-title>
+          <sb-card-description>Choose how you want to hear from us.</sb-card-description>
+        </sb-card-header>
+        <sb-card-content>
+          <div class="settings">
+            <sb-switch name="email" label="Email" description="Get important account updates in your inbox." checked></sb-switch>
+            <sb-switch name="push" label="Push" description="Receive alerts on your phone or browser as they happen."></sb-switch>
+            <sb-switch name="digest" label="Weekly digest" description="A summary of the week's activity, every Monday."></sb-switch>
+          </div>
+        </sb-card-content>
+        <sb-card-footer>
+          <sb-button type="submit">Save</sb-button>
+          <p class="status" id="status" role="status"></p>
+        </sb-card-footer>
+      </sb-card>
+    </form>
+  </main>
+  <script>
+    document.getElementById('settings').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = new FormData(e.target);
+      var on = ['email', 'push', 'digest'].filter(function (k) { return data.has(k); });
+      document.getElementById('status').textContent =
+        'Saved. Enabled: ' + (on.length ? on.join(', ') : 'none') + '.';
+    });
+  </script>
+</body>
+</html>

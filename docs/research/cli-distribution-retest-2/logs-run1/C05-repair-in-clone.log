@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/c-clone
+$ node harness/cli.mjs init | head -2
+----
+Nothing missing: every harness-owned and setup file is here.
+git: core.hooksPath = .githooks (npm run check runs before every commit).
+---- exit 0

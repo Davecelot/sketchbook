@@ -1,0 +1,16 @@
+$ cd $SANDBOX/sbx/b-used
+$ $SANDBOX/scripts/st.sh $SANDBOX/sbx/b-used | head -12
+----
+tracked files changed:
+   M src/index.ts
+untracked (new) files by top-level path:
+    11 .claude/commands
+     2 .claude/hooks
+     9 .claude/rules
+    77 .claude/skills
+     1 .githooks/pre-commit
+     1 brand.config.json
+     1 docs/cli.md
+    35 docs/parity-audits
+     2 generated/css
+---- exit 0

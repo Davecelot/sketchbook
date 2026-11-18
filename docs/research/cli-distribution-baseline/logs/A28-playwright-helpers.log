@@ -1,0 +1,8 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ grep -rhoE "from '[.]{1,2}/[^']*helpers[^']*'" playwright/tests | sort -u | head -3; ls playwright/helpers
+----
+from '../../helpers/a11y'
+from '../../helpers/events'
+from '../../helpers/forms'
+ls: playwright/helpers: No such file or directory
+---- exit 1

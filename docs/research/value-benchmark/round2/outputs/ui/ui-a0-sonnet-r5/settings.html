@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notification settings</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --text: #1a1d23;
+    --muted: #5a6270;
+    --border: #d5d9e0;
+    --accent: #2f5bea;
+    --accent-text: #ffffff;
+    --track-off: #8a93a2;
+    --focus: #2f5bea;
+    --ok: #17713a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --surface: #1a1d24;
+      --text: #eceef2;
+      --muted: #a2a9b6;
+      --border: #333844;
+      --accent: #7b9bff;
+      --accent-text: #0f1115;
+      --track-off: #6b7383;
+      --focus: #9db4ff;
+      --ok: #5fd08a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  h1 { margin: 0 0 4px; font-size: 1.25rem; line-height: 1.3; }
+  .lead { margin: 0 0 8px; color: var(--muted); font-size: .9rem; }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  legend { padding: 0; }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .row:first-of-type { margin-top: 8px; }
+  .label { font-weight: 600; display: block; }
+  .desc { display: block; color: var(--muted); font-size: .875rem; margin-top: 2px; }
+
+  /* Switch: a real checkbox, so keyboard + assistive tech work natively */
+  .switch { position: relative; flex: none; width: 44px; height: 26px; }
+  .switch input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    margin: 0; opacity: 0; cursor: pointer;
+  }
+  .track {
+    position: absolute; inset: 0; border-radius: 13px;
+    background: var(--track-off);
+    transition: background .15s;
+    pointer-events: none;
+  }
+  .track::after {
+    content: ""; position: absolute; top: 3px; left: 3px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #fff;
+    transition: transform .15s;
+  }
+  .switch input:checked + .track { background: var(--accent); }
+  .switch input:checked + .track::after { transform: translateX(18px); background: var(--accent-text); }
+  .switch input:focus-visible + .track { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .actions { display: flex; align-items: center; gap: 12px; margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--border); }
+  button {
+    font: inherit; font-weight: 600;
+    background: var(--accent); color: var(--accent-text);
+    border: 0; border-radius: 8px; padding: 10px 20px; cursor: pointer;
+  }
+  button:hover { filter: brightness(1.08); }
+  button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  #status { color: var(--ok); font-size: .9rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track, .track::after { transition: none; }
+  }
+  @media (forced-colors: active) {
+    .track { border: 2px solid ButtonText; background: Canvas; }
+    .switch input:checked + .track { background: Highlight; }
+  }
+</style>
+</head>
+<body>
+  <main class="card">
+    <form id="form" action="#" method="post">
+      <h1 id="title">Notification settings</h1>
+      <p class="lead">Choose how you'd like to hear from us.</p>
+
+      <fieldset aria-labelledby="title">
+        <label class="row">
+          <span>
+            <span class="label">Email</span>
+            <span class="desc" id="d-email">Get important updates and account activity in your inbox.</span>
+          </span>
+          <span class="switch">
+            <input type="checkbox" role="switch" name="email" aria-describedby="d-email" checked>
+            <span class="track"></span>
+          </span>
+        </label>
+
+        <label class="row">
+          <span>
+            <span class="label">Push</span>
+            <span class="desc" id="d-push">Receive instant alerts on your device.</span>
+          </span>
+          <span class="switch">
+            <input type="checkbox" role="switch" name="push" aria-describedby="d-push">
+            <span class="track"></span>
+          </span>
+        </label>
+
+        <label class="row">
+          <span>
+            <span class="label">Weekly digest</span>
+            <span class="desc" id="d-digest">A summary of the week's activity, sent once a week.</span>
+          </span>
+          <span class="switch">
+            <input type="checkbox" role="switch" name="digest" aria-describedby="d-digest">
+            <span class="track"></span>
+          </span>
+        </label>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit">Save</button>
+        <span id="status" role="status" aria-live="polite"></span>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('form');
+    const status = document.getElementById('status');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(
+        [...form.querySelectorAll('input[type=checkbox]')].map(i => [i.name, i.checked])
+      );
+      console.log('Saved settings', data);
+      status.textContent = 'Settings saved.';
+    });
+    form.addEventListener('change', () => { status.textContent = ''; });
+  </script>
+</body>
+</html>

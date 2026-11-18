@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/b-used
+$ node $REPO/harness/cli.mjs upgrade --from $REPO --dry-run 2>&1 | head -3
+----
+This project has no harness/manifest.json, so upgrade cannot tell which files are yours.
+  fix: Review $REPO's harness/manifest.json, copy it to harness/manifest.json, then run the upgrade again.
+---- exit 1

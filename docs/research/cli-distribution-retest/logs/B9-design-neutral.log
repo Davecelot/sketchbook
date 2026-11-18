@@ -1,0 +1,5 @@
+$ cd $SANDBOX/sbx2/b-used/design-system
+$ node -e 'const c=require("./harness.config.json");console.log("design",JSON.stringify(c.adapters.design),"catalog.source",c.catalog.source,"starter",c.starter,"harnessVersion",c.harnessVersion)'
+----
+design {"tool":null,"file":null,"available":false} catalog.source false starter from-codebase harnessVersion 0.2.0
+---- exit 0

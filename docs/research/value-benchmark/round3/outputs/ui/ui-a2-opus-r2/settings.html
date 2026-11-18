@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Notification settings</title>
+  <!-- Design-system tokens (light + dark) and the classic-script component bundle: both work from file:// -->
+  <link rel="stylesheet" href="tokens.css">
+  <script src="sketchbook.js"></script>
+  <style>
+    html { color-scheme: light; }
+    html[data-theme="dark"] { color-scheme: dark; }
+    @media (prefers-color-scheme: dark) { html:not([data-theme]) { color-scheme: dark; } }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--sb-color-background);
+      color: var(--sb-color-foreground);
+      font-family: var(--sb-font-family-sans);
+      font-size: var(--sb-font-size-sm);
+      line-height: var(--sb-font-line-height-normal);
+    }
+    .page {
+      box-sizing: border-box;
+      max-width: 36rem;
+      margin: 0 auto;
+      padding: var(--sb-space-12) var(--sb-space-4);
+      display: grid;
+      gap: var(--sb-space-4);
+    }
+    .toolbar { display: flex; justify-content: flex-end; }
+    sb-card-title h1 { margin: 0; font: inherit; }
+    .settings__fields { display: grid; gap: var(--sb-space-6); }
+    .settings__footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--sb-space-4); width: 100%; }
+    .settings__status { margin: 0; margin-inline-end: auto; color: var(--sb-color-muted-foreground); }
+    /* Hide components until registered so there is no flash of raw markup. */
+    :not(:defined) { visibility: hidden; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="toolbar">
+      <sb-button id="theme-toggle" variant="ghost" size="sm" aria-label="Switch to dark theme">Dark theme</sb-button>
+    </div>
+
+    <form id="notification-settings" aria-labelledby="settings-title" novalidate>
+      <sb-card>
+        <sb-card-header>
+          <sb-card-title><h1 id="settings-title">Notification settings</h1></sb-card-title>
+          <sb-card-description>Choose how we keep you in the loop. Changes apply when you save.</sb-card-description>
+        </sb-card-header>
+        <sb-card-content class="settings__fields">
+          <sb-switch name="email" label="Email" description="Account activity and replies, sent to your inbox." checked></sb-switch>
+          <sb-switch name="push" label="Push" description="Real-time alerts on devices where you're signed in."></sb-switch>
+          <sb-switch name="weekly-digest" label="Weekly digest" description="A short summary of the week, every Monday morning."></sb-switch>
+        </sb-card-content>
+        <sb-card-footer>
+          <div class="settings__footer">
+            <p id="save-status" class="settings__status" role="status" aria-live="polite"></p>
+            <sb-button type="submit">Save</sb-button>
+          </div>
+        </sb-card-footer>
+      </sb-card>
+    </form>
+  </main>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('theme-toggle');
+      var dark = window.matchMedia('(prefers-color-scheme: dark)');
+
+      function isDark() {
+        var t = root.getAttribute('data-theme');
+        return t ? t === 'dark' : dark.matches;
+      }
+      function syncToggle() {
+        var next = isDark() ? 'light' : 'dark';
+        toggle.textContent = next === 'dark' ? 'Dark theme' : 'Light theme';
+        toggle.setAttribute('aria-label', 'Switch to ' + next + ' theme');
+      }
+      toggle.addEventListener('click', function () {
+        root.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+        syncToggle();
+      });
+      dark.addEventListener('change', syncToggle);
+      syncToggle();
+
+      var form = document.getElementById('notification-settings');
+      var status = document.getElementById('save-status');
+      var labels = { email: 'Email', push: 'Push', 'weekly-digest': 'Weekly digest' };
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var data = new FormData(form);
+        var on = Object.keys(labels).filter(function (k) { return data.has(k); })
+          .map(function (k) { return labels[k]; });
+        status.textContent = 'Saved. ' + (on.length ? 'On: ' + on.join(', ') + '.' : 'All notifications off.');
+      });
+      form.addEventListener('change', function () { status.textContent = ''; });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notification settings</title>
+  <link rel="stylesheet" href="tokens.css">
+  <script src="sketchbook.js" defer></script>
+  <style>
+    :root { color-scheme: light dark; }
+    [data-theme="light"] { color-scheme: light; }
+    [data-theme="dark"] { color-scheme: dark; }
+
+    body {
+      margin: 0;
+      background: var(--sb-color-background);
+      color: var(--sb-color-foreground);
+      font-family: var(--sb-font-family-body);
+      font-size: var(--sb-font-size-body);
+    }
+
+    main {
+      max-inline-size: 36rem;
+      margin-inline: auto;
+      padding: var(--sb-space-inset-surface);
+    }
+
+    sb-card-title h1 {
+      margin: 0;
+      font: inherit;
+    }
+
+    .fields {
+      display: grid;
+      gap: var(--sb-space-stack-lg);
+    }
+
+    sb-card-footer {
+      justify-content: flex-end;
+      gap: var(--sb-space-stack-md);
+    }
+
+    .status {
+      color: var(--sb-color-muted-foreground);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <form id="notifications" aria-labelledby="notifications-title">
+      <sb-card>
+        <sb-card-header>
+          <sb-card-title><h1 id="notifications-title">Notification settings</h1></sb-card-title>
+          <sb-card-description>Choose how we keep you updated.</sb-card-description>
+        </sb-card-header>
+        <sb-card-content class="fields">
+          <sb-switch name="email" label="Email" description="Account activity and replies, sent to your inbox." checked></sb-switch>
+          <sb-switch name="push" label="Push" description="Instant alerts on your devices."></sb-switch>
+          <sb-switch name="weekly-digest" label="Weekly digest" description="A short recap every Monday."></sb-switch>
+        </sb-card-content>
+        <sb-card-footer>
+          <span class="status" role="status"></span>
+          <sb-button type="submit">Save</sb-button>
+        </sb-card-footer>
+      </sb-card>
+    </form>
+  </main>
+  <script>
+    const form = document.getElementById('notifications');
+    const status = form.querySelector('[role="status"]');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const on = [...new FormData(form).keys()];
+      status.textContent = on.length ? `Saved. On: ${on.length} of 3.` : 'Saved. All notifications off.';
+    });
+    form.addEventListener('change', () => { status.textContent = ''; });
+  </script>
+</body>
+</html>

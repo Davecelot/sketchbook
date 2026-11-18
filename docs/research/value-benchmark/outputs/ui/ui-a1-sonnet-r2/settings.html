@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Notification settings</title>
+<link rel="stylesheet" href="../generated/css/tokens.css">
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: var(--sb-space-6);
+    box-sizing: border-box;
+    background: var(--sb-color-background);
+    color: var(--sb-color-foreground);
+    font: var(--sb-font-weight-regular) var(--sb-font-size-body)/var(--sb-font-line-height-normal) var(--sb-font-family-body);
+  }
+  .card {
+    width: 100%;
+    max-width: 28rem;
+    box-sizing: border-box;
+    padding: var(--sb-space-inset-surface);
+    background: var(--sb-color-card);
+    color: var(--sb-color-card-foreground);
+    border: var(--sb-border-width-1) solid var(--sb-color-border);
+    border-radius: var(--sb-radius-surface);
+    box-shadow: var(--sb-shadow-sm);
+  }
+  h1 { margin: 0; font-size: var(--sb-font-size-heading); font-weight: var(--sb-font-weight-semibold); line-height: var(--sb-font-line-height-tight); }
+  .intro { margin: var(--sb-space-1) 0 0; color: var(--sb-color-muted-foreground); }
+  fieldset { margin: var(--sb-space-6) 0 0; padding: 0; border: 0; min-width: 0; }
+  legend { padding: 0; position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sb-space-4);
+    padding: var(--sb-space-4) 0;
+    border-top: var(--sb-border-width-1) solid var(--sb-color-border);
+  }
+  .row label { flex: 1; cursor: pointer; }
+  .name { display: block; font-weight: var(--sb-font-weight-medium); }
+  .desc { display: block; color: var(--sb-color-muted-foreground); font-size: var(--sb-font-size-caption); margin-top: var(--sb-space-0-5); }
+
+  .switch {
+    appearance: none;
+    flex: none;
+    margin: var(--sb-space-0-5) 0 0;
+    inline-size: 2.25rem;
+    block-size: 1.25rem;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+    border: var(--sb-border-width-1) solid var(--sb-color-input);
+    border-radius: var(--sb-radius-pill);
+    background: var(--sb-color-input-background);
+    transition: background-color var(--sb-motion-duration-fast), border-color var(--sb-motion-duration-fast);
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    inset-block: 2px;
+    inset-inline-start: 2px;
+    aspect-ratio: 1;
+    border-radius: var(--sb-radius-pill);
+    background: var(--sb-color-input);
+    transition: transform var(--sb-motion-duration-fast), background-color var(--sb-motion-duration-fast);
+  }
+  .switch:checked { background: var(--sb-color-primary); border-color: var(--sb-color-primary); }
+  .switch:checked::after { background: var(--sb-color-primary-foreground); transform: translateX(1rem); }
+  .switch:dir(rtl):checked::after { transform: translateX(-1rem); }
+  .switch:focus-visible { outline: var(--sb-focus-ring-width) solid var(--sb-color-ring); outline-offset: 2px; }
+
+  .actions { display: flex; align-items: center; gap: var(--sb-space-3); padding-top: var(--sb-space-4); border-top: var(--sb-border-width-1) solid var(--sb-color-border); }
+  button {
+    font: inherit;
+    font-weight: var(--sb-font-weight-medium);
+    padding: var(--sb-space-2) var(--sb-space-control-padding-x-default);
+    border: 0;
+    border-radius: var(--sb-radius-control);
+    background: var(--sb-color-primary);
+    color: var(--sb-color-primary-foreground);
+    cursor: pointer;
+  }
+  button:hover { opacity: .9; }
+  button:focus-visible { outline: var(--sb-focus-ring-width) solid var(--sb-color-ring); outline-offset: 2px; }
+  #status { color: var(--sb-color-muted-foreground); font-size: var(--sb-font-size-caption); }
+
+  @media (prefers-reduced-motion: reduce) { .switch, .switch::after { transition: none; } }
+  @media (forced-colors: active) {
+    .switch::after { background: ButtonText; }
+    .switch:checked { background: Highlight; border-color: Highlight; }
+    .switch:checked::after { background: HighlightText; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <form class="card" id="settings" aria-labelledby="title">
+    <h1 id="title">Notification settings</h1>
+    <p class="intro">Choose how you want to hear from us.</p>
+
+    <fieldset>
+      <legend>Notification channels</legend>
+      <div class="row">
+        <label for="email"><span class="name">Email</span><span class="desc" id="email-d">Get updates about your account in your inbox.</span></label>
+        <input class="switch" type="checkbox" role="switch" id="email" name="email" aria-describedby="email-d" checked>
+      </div>
+      <div class="row">
+        <label for="push"><span class="name">Push</span><span class="desc" id="push-d">Receive alerts on this device as they happen.</span></label>
+        <input class="switch" type="checkbox" role="switch" id="push" name="push" aria-describedby="push-d">
+      </div>
+      <div class="row">
+        <label for="digest"><span class="name">Weekly digest</span><span class="desc" id="digest-d">A summary of the week, sent every Monday.</span></label>
+        <input class="switch" type="checkbox" role="switch" id="digest" name="digest" aria-describedby="digest-d">
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit">Save</button>
+      <span id="status" role="status"></span>
+    </div>
+  </form>
+</main>
+<script>
+  const form = document.getElementById('settings');
+  const status = document.getElementById('status');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const on = [...new FormData(form).keys()];
+    status.textContent = 'Saved: ' + (on.length ? on.join(', ') : 'all notifications off') + '.';
+  });
+  form.addEventListener('change', () => { status.textContent = ''; });
+</script>
+</body>
+</html>

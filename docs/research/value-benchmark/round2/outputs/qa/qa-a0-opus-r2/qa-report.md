@@ -1,0 +1,9 @@
+- `<sb-switch name="push" ...>` has a `description` but no `label`, so the switch has no visible label or accessible name. Fix: add `label="Push notifications"`.
+- `<sb-toggle name="digest" label=... description=...>` uses a toggle (pressed-state button) for an on/off setting in a list of switches, and toggles don't take label/description. Fix: change it to `<sb-switch name="digest" label="Weekly digest" description="A summary every Monday">`.
+- `tone="success"` on the Email `<sb-switch>` sets a semantic tone on a form control, and only this one switch has it, so it looks different from the other two. Fix: remove `tone="success"`.
+- The Save button is a raw `<button class="save">` with hand-made `.save` styles (padding, radius, primary colors, `border: 0`) instead of the design-system button. Fix: use `<sb-button type="submit" variant="primary">Save</sb-button>` and delete the `.save` rule.
+- `.hint { color: #d33; }` hardcodes a hex color instead of using a token. Fix: use a color token, e.g. `color: var(--sb-color-muted-foreground)`.
+- `.hint` is red even though "Changes apply after you save." is neutral helper text, so it reads as an error. Fix: give it the muted foreground token, not a red/danger color.
+- `.fields { gap: var(--sb-space-17); }` uses a spacing step far past the other steps on the page (2, 4, 6). It is likely not in the scale, which would make the gap unset or far too large. Fix: use a step in the scale, e.g. `var(--sb-space-4)`.
+- `<p class="hint">` sits right under `.fields` inside `<sb-card-content>` with no spacing token, so it touches the last control. Fix: add `margin-top: var(--sb-space-4)` or put it inside the `.fields` grid.
+- The `.actions` wrapper with flex/justify-end is custom layout inside `<sb-card-footer>`, duplicating what the footer should already handle. Fix: put the button directly in `<sb-card-footer>` and use the footer's alignment, removing `.actions`.

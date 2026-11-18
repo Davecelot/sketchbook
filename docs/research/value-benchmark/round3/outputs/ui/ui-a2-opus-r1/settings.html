@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Notification settings</title>
+    <!-- Design-system tokens (light, dark, and system-preference fallback). -->
+    <link rel="stylesheet" href="assets/tokens.css" />
+    <!-- Design-system components as a classic (non-module) script so the page works from file://. -->
+    <script src="assets/sketchbook.js" defer></script>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      :root[data-theme='dark'] {
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) {
+          color-scheme: dark;
+        }
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--sb-color-background);
+        color: var(--sb-color-foreground);
+        font-family: var(--sb-font-family-body);
+        font-size: var(--sb-font-size-body);
+      }
+      main {
+        box-sizing: border-box;
+        max-width: 32rem;
+        margin: 0 auto;
+        padding: var(--sb-space-12) var(--sb-space-4);
+      }
+      .toolbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: var(--sb-space-4);
+      }
+      .status {
+        margin: 0;
+        color: var(--sb-color-muted-foreground);
+        flex: 1;
+        align-self: center;
+      }
+      sb-card-footer {
+        gap: var(--sb-space-3);
+      }
+      /* Avoid a flash of unstyled custom elements before the bundle registers them. */
+      :not(:defined) {
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="toolbar">
+        <sb-button id="theme-toggle" variant="outline" size="sm">Switch to dark theme</sb-button>
+      </div>
+
+      <form id="notification-settings" aria-labelledby="settings-title">
+        <sb-card>
+          <sb-card-header>
+            <sb-card-title id="settings-title" role="heading" aria-level="1">Notification settings</sb-card-title>
+            <sb-card-description>Choose how and when we contact you.</sb-card-description>
+          </sb-card-header>
+          <sb-card-content>
+            <sb-field-group>
+              <sb-checkbox
+                name="email"
+                label="Email"
+                description="Get account activity and updates in your inbox."
+                checked
+              ></sb-checkbox>
+              <sb-checkbox
+                name="push"
+                label="Push"
+                description="Get instant alerts on your devices."
+              ></sb-checkbox>
+              <sb-checkbox
+                name="weekly-digest"
+                label="Weekly digest"
+                description="Get one summary of the week's activity every Monday."
+              ></sb-checkbox>
+            </sb-field-group>
+          </sb-card-content>
+          <sb-card-footer>
+            <p class="status" id="save-status" role="status" aria-live="polite"></p>
+            <sb-button type="submit">Save changes</sb-button>
+          </sb-card-footer>
+        </sb-card>
+      </form>
+    </main>
+
+    <script>
+      // Theme: follows the system until the user picks one; the choice is remembered.
+      (function () {
+        var root = document.documentElement;
+        var toggle = document.getElementById('theme-toggle');
+        var stored = null;
+        try {
+          stored = localStorage.getItem('theme');
+        } catch (e) {}
+        if (stored === 'light' || stored === 'dark') root.setAttribute('data-theme', stored);
+
+        function isDark() {
+          var t = root.getAttribute('data-theme');
+          if (t) return t === 'dark';
+          return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        function render() {
+          // sb-button forwards only aria-label, so the visible text carries the action.
+          toggle.textContent = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+        }
+        toggle.addEventListener('click', function () {
+          var next = isDark() ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try {
+            localStorage.setItem('theme', next);
+          } catch (e) {}
+          render();
+        });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+        render();
+      })();
+
+      // Save: no backend, so report what would be sent.
+      (function () {
+        var form = document.getElementById('notification-settings');
+        var status = document.getElementById('save-status');
+        var labels = { email: 'Email', push: 'Push', 'weekly-digest': 'Weekly digest' };
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          var data = new FormData(form);
+          var on = Object.keys(labels)
+            .filter(function (k) {
+              return data.has(k);
+            })
+            .map(function (k) {
+              return labels[k];
+            });
+          status.textContent = 'Saved. ' + (on.length ? 'On: ' + on.join(', ') + '.' : 'All notifications off.');
+        });
+        form.addEventListener('change', function () {
+          status.textContent = '';
+        });
+      })();
+    </script>
+  </body>
+</html>

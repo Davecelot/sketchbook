@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx3/b-used
+$ $SANDBOX/scripts/st.sh $SANDBOX/sbx3/b-used
+----
+tracked files changed:
+untracked (new) files by top-level path:
+---- exit 0

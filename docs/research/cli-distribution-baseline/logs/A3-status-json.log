@@ -1,0 +1,18 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node $REPO/harness/cli.mjs status --json
+----
+{
+  "ok": false,
+  "command": "status",
+  "changed": [],
+  "warnings": [],
+  "errors": [
+    {
+      "file": null,
+      "msg": "ENOENT: no such file or directory, open '$SANDBOX/sbx/a-empty-engine/harness.config.json'",
+      "fix": "Run sketchbook help status."
+    }
+  ],
+  "next": null
+}
+---- exit 1

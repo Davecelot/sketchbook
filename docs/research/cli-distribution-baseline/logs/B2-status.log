@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/b-used
+$ node $REPO/harness/cli.mjs status 2>&1 | head -2
+----
+ENOENT: no such file or directory, open '$SANDBOX/sbx/b-used/harness.config.json'
+  fix: Run sketchbook help status.
+---- exit 1

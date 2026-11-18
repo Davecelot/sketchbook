@@ -1,0 +1,33 @@
+$ cd $SANDBOX/sbx3/a-empty
+$ ls .claude | tr '\n' ' '; echo; test -e move-to-.claude && echo 'move-to-.claude still here' || echo 'move-to-.claude removed'; node -e 'const s=require("./.claude/settings.json");console.log("hook events:",Object.keys(s.hooks).join(", "))'; npm run -s sketchbook -- check --only H1 | tail -2; npm run -s sketchbook -- doctor | grep -E 'Claude layer|Commit gate'
+----
+ls: .claude: No such file or directory
+
+move-to-.claude still here
+node:internal/modules/cjs/loader:1573
+  throw err;
+  ^
+
+Error: Cannot find module './.claude/settings.json'
+Require stack:
+- $SANDBOX/sbx3/a-empty/[eval]
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1569:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1123:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1147:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1174:12)
+    at Module._load (node:internal/modules/cjs/loader:1346:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.require (node:internal/modules/cjs/loader:1679:12)
+    at require (node:internal/modules/helpers:196:16)
+    at [eval]:1:9
+    at runScriptInThisContext (node:internal/vm:219:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '$SANDBOX/sbx3/a-empty/[eval]' ]
+}
+
+Node.js v26.5.0
+
+All checks passed.
+Claude layer: staged in move-to-.claude/ (not active yet: ask Claude Code to install it, move-to-.claude/INSTALL.md)
+Commit gate: active (npm run check runs before every commit)
+---- exit 0

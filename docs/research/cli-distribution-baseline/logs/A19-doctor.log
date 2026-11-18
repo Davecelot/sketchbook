@@ -1,0 +1,12 @@
+$ cd $SANDBOX/sbx/a-empty-engine
+$ node harness/cli.mjs doctor
+----
+Starter: library
+Harness: unrecorded (files here: 0.2.0)
+Components: 35 installed, 0 more in the catalog, 0 customized, 0 team-made
+Kits: 0 installed, 8 available
+Brands: single brand
+Overrides: 0
+Design: figma, tokens never synced, 0 stale component(s)
+Checks: all pass
+---- exit 0

@@ -1,0 +1,6 @@
+$ cd $SANDBOX/sbx/b-used
+$ node harness/cli.mjs check --json | node $SANDBOX/scripts/errs.mjs
+----
+ok=false errors=5 warnings=0
+  5x P1 src/styles/app.css
+---- exit 1

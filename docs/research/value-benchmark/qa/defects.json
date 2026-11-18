@@ -1,0 +1,40 @@
+{
+  "note": "Six defects seeded into qa/settings.html. A finding line counts as a hit when it matches the pattern; the same patterns are used for every arm. U1 was not seeded on purpose: it is a real defect the first batch of runs found, added to the ground truth afterwards.",
+  "defects": [
+    {
+      "id": "D1-literal-colour",
+      "what": "hard-coded #d33 on .hint instead of a colour token",
+      "pattern": "#d33|hard-?coded colou?r|literal colou?r|raw colou?r|colou?r token"
+    },
+    {
+      "id": "D2-unlabelled-switch",
+      "what": "Push switch has no label (no accessible name)",
+      "pattern": "push[^\\n]{0,160}(label|accessible name|aria-label)|(label|accessible name)[^\\n]{0,160}push"
+    },
+    {
+      "id": "D3-invented-attribute",
+      "what": "tone=\"success\" is not a Switch prop",
+      "pattern": "tone"
+    },
+    {
+      "id": "D4-raw-button",
+      "what": "native <button class=save> instead of sb-button",
+      "pattern": "<button|native button|raw button|plain button|instead of[^\\n]{0,30}sb-button"
+    },
+    {
+      "id": "D5-missing-token",
+      "what": "--sb-space-17 does not exist",
+      "pattern": "space-17|nonexistent token|non-existent token|unknown token|undefined token|missing token"
+    },
+    {
+      "id": "D6-wrong-component",
+      "what": "sb-toggle is a real component (a pressed toggle button), used here for an on/off setting with label, name and description props it does not support; the right component is sb-switch",
+      "pattern": "sb-toggle"
+    }
+  ],
+  "unseeded": {
+    "id": "U1-missing-font-size-token",
+    "what": "--sb-font-size-small does not exist in generated/css/tokens.css (written by mistake in the seed page, found by the runs, verified afterwards)",
+    "pattern": "font-size-small|small[^\\n]{0,40}(not a|isn.t a|no such|nonexistent|non-existent|unknown) token"
+  }
+}
