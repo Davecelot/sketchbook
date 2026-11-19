@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "moduleDetection": "legacy",
+    "types": [],
+    "rootDir": "content/_assets",
+    "outDir": "../../site-dist/assets",
+    "declaration": false,
+    "noEmitOnError": true
+  },
+  "include": ["content/_assets/docs.ts"],
+  "exclude": []
+}

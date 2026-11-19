@@ -91,7 +91,7 @@
     "format": "prettier --write \"src/**/*.{ts,scss}\" \"playwright/**/*.ts\"",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.stories.json && tsc -p tsconfig.tools.json",
     "typecheck:harness": "tsc --noEmit --incremental false -p tsconfig.harness.json",
-    "pretypecheck": "npm run generate",
+    "pretypecheck": "npm run generate && tsc --noEmit -p apps/docs/tsconfig.browser.json",
     "storybook": "npm run generate && storybook dev -p ${SKETCHBOOK_PORT:-6006}",
     "build-storybook": "storybook build",
     "prebuild-storybook": "npm run generate",

@@ -1,4 +1,6 @@
+import { execFileSync } from 'node:child_process';
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import MarkdownIt from 'markdown-it';
 import { parseJson } from '../../../harness/lib/files.mjs';
@@ -490,7 +492,8 @@ await cp('dist/sketchbook.js', `${OUT}/assets/sketchbook.js`);
 await cp("brand/sketchbook-icon.png", `${OUT}/assets/sketchbook-icon.png`);
 await cp('node_modules/minisearch/dist/umd/index.js', `${OUT}/assets/minisearch.js`);
 await cp('apps/docs/content/_assets/docs.css', `${OUT}/assets/docs.css`);
-await cp('apps/docs/content/_assets/docs.js', `${OUT}/assets/docs.js`);
+const tsc = createRequire(import.meta.url).resolve('typescript/bin/tsc');
+execFileSync(process.execPath, [tsc, '-p', 'apps/docs/tsconfig.browser.json'], { stdio: 'inherit' });
 await cp('apps/docs/content/_assets/Sketchbook.fig', `${OUT}/assets/Sketchbook.fig`);
 
 const sectionOf = (p: Page) => SECTIONS.find((s) => s.dir === p.dir)?.title ?? '';
