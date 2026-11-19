@@ -6,7 +6,7 @@ import { cp, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/p
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { promisify } from 'node:util';
-import { ROOT } from './helpers.mjs';
+import { parsePackedPackage, ROOT } from './helpers.mjs';
 
 const exec = promisify(execFile);
 
@@ -21,10 +21,7 @@ test('npm pack runs prepack and emits parseable JSON', { skip: process.env.SKETC
     await mkdir(artifacts);
     const env = { ...process.env, npm_config_cache: join(temp, 'npm-cache'), npm_config_offline: 'true' };
     const result = await exec('npm', ['pack', '--json', '--pack-destination', artifacts], { cwd: source, env, timeout: 90000, maxBuffer: 64 * 1024 * 1024 });
-    const entries = JSON.parse(result.stdout) as { filename: string; files: { path: string }[] }[];
-    assert.equal(entries.length, 1);
-    const packed = entries[0];
-    assert.ok(packed);
+    const packed = parsePackedPackage(result.stdout);
     assert.ok(packed.filename.endsWith('.tgz'));
     for (const file of ['dist/index.js', 'harness/cli.mjs', 'harness/templates/project/.codex/hooks.json', 'docs/agent-compatibility.md']) {
       assert.ok(packed.files.some((entry) => entry.path === file), `${file} was not packed`);

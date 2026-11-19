@@ -9,7 +9,7 @@ import { copyFile, cp, mkdir, mkdtemp, readFile, realpath, rename, rm, symlink, 
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { ROOT, CHECKOUT, failing, checkoutOnly, must } from './helpers.mjs';
+import { ROOT, CHECKOUT, failing, checkoutOnly, must, packedFiles } from './helpers.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { installed, installedMarkdown } from '../lib/installed.mjs';
 import { engineSpec } from '../commands/bootstrap.mjs';
@@ -545,9 +545,8 @@ pkgTest('U1 upgrade in a project without harness/ refreshes the harness-owned fi
 void realTest('B16 a fresh library+kits project lints and typechecks with no error or warning against the engine as packed', { skip: PACKAGE && CHECKOUT ? false : 'needs the engine package and a source checkout\'s node_modules' }, async () => {
   const { dir } = await created('library+kits');
   try {
-    const [{ files }] = parseJson<[{ files: { path: string }[] }]>(execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }));
     const engine = join(dir, 'node_modules', String(ENGINE_NAME));
-    for (const { path } of files) {
+    for (const { path } of packedFiles()) {
       await mkdir(dirname(join(engine, path)), { recursive: true });
       await copyFile(join(ROOT, path), join(engine, path));
     }

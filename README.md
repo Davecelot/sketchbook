@@ -40,7 +40,7 @@ Bring nothing, your brand, your tokens or an existing product. The process is th
 
 ## Quick start
 
-Use Node 22.18.x or a later Node 22 release, or Node 24 and above. To create a separate design system, pack the engine from this checkout and pass the tarball to both npm and Sketchbook.
+Use Node.js 26.13.1 LTS and npm 12.2.3. See the [contributor setup instructions](./CONTRIBUTING.md) for patched versions on older LTS lines. To create a separate design system, pack the engine from this checkout and pass the tarball to both npm and Sketchbook.
 
 ```sh
 npm ci

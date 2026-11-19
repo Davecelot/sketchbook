@@ -7,8 +7,7 @@ import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSy
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { must, sourceRepoOnly } from './helpers.mjs';
-import { parseJson } from '../lib/files.mjs';
+import { must, packedFiles, sourceRepoOnly } from './helpers.mjs';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 // scripts/build-harness.mjs stays hand-written JS (it bootstraps the build), so its exports are typed here.
@@ -59,8 +58,7 @@ test('BH2 the committed .gitignore files match the .mts sources and every output
 });
 
 test('BH3 the package ships compiled engine modules and hooks, with docs builders kept in the checkout', sourceRepoOnly, () => {
-  const [{ files }] = parseJson<[{ files: { path: string }[] }]>(execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }));
-  const shipped = new Set(files.map((f) => f.path));
+  const shipped = new Set(packedFiles().map((f) => f.path));
   assert.deepEqual([...shipped].filter((p) => p.endsWith('.mts') && !p.endsWith('.d.mts')), []);
   for (const base of built(SOURCE_ROOTS)) {
     const shouldShip = base !== 'apps/docs/scripts';

@@ -1,6 +1,8 @@
 # Contributing to Sketchbook
 
-Use Node 22.18.x or a later Node 22 release, or Node 24 and above. Run `npm ci` from the repository root.
+Use Node.js 26.13.1 LTS and npm 12.2.3 for development and builds. If you use an older LTS line, use Node.js 24.22.3 or 22.23.5, or a newer security patch on that line. [Node.js security releases](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases)
+
+After selecting Node.js with your version manager, run `npm install --global npm@12.2.3`. Check `node -v` and `npm -v`, then run `npm ci` from the repository root.
 
 ## Repository map
 

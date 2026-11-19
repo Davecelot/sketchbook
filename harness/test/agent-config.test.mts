@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { renderAgentSetup } from '../lib/agent-config.mjs';
 import { nativeHookStatus } from '../lib/agent-diagnostics.mjs';
-import { ROOT, sourceRepoOnly } from './helpers.mjs';
+import { packedFiles, ROOT, sourceRepoOnly } from './helpers.mjs';
 
 test('native agent adapters use a renamed scoped engine and retain their edit protections', sourceRepoOnly, async () => {
   const dir = await mkdtemp(join(tmpdir(), 'sketchbook-renamed-agent-'));
@@ -42,14 +42,12 @@ test('native agent adapters use a renamed scoped engine and retain their edit pr
 });
 
 test('init and repair render adapters with the installed engine package name', sourceRepoOnly, async () => {
-  const { execFileSync } = await import('node:child_process');
   const { copyFile } = await import('node:fs/promises');
   const dir = await mkdtemp(join(tmpdir(), 'sketchbook-renamed-engine-'));
   const engine = join(dir, 'engine');
   const project = join(dir, 'project');
   try {
-    const packed = JSON.parse(execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })) as [{ files: { path: string }[] }];
-    for (const { path } of packed[0].files) {
+    for (const { path } of packedFiles()) {
       const target = join(engine, path);
       await mkdir((await import('node:path')).dirname(target), { recursive: true });
       await copyFile(join(ROOT, path), target);

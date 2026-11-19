@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { join, relative } from 'node:path';
-import { sourceRepoOnly, checkoutOnly } from './helpers.mjs';
+import { sourceRepoOnly, checkoutOnly, packedFiles } from './helpers.mjs';
 import { fileURLToPath } from 'node:url';
 import { parseJson } from '../lib/files.mjs';
 
@@ -54,10 +54,8 @@ const SHIPPED = [
   'harness/templates/project/gitignore', 'harness/templates/project/AGENTS.md', 'harness/templates/project/.trae/rules/sketchbook.md', 'harness/templates/project/.aiassistant/rules/sketchbook.md', 'harness/templates/project/.agents/skills/sketchbook/SKILL.md', 'harness/templates/project/AGENT-WORKFLOWS.md', 'harness/templates/project/GEMINI.md', 'harness/templates/project/.codex/hooks.json', 'harness/templates/project/.codex/sketchbook-guard.mjs', 'harness/templates/project/.gemini/settings.json', 'harness/templates/project/.gemini/sketchbook-guard.mjs', 'harness/agent/gemini-guard.mjs', 'harness/templates/project/.github/copilot-instructions.md', 'harness/templates/project/.github/hooks/sketchbook.json', 'harness/templates/project/.github/hooks/sketchbook-guard.mjs', '.claude/skills/hammock/SKILL.md', '.claude/hooks/guard-generated.mjs', '.claude/hooks/guard-decisions.mjs',
   '.claude/commands/add.md', '.claude/rules/contract-first.md', '.githooks/pre-commit', '.githooks/pre-push', 'scripts/build-barrel.mjs', 'docs/cli.md', 'docs/agent-compatibility.md', 'spec/schemas/contract.schema.json', 'harness/templates/move-to-claude-INSTALL.md',
 ];
-test('the package ships the engine, the project template and the Claude layer', sourceRepoOnly, async () => {
-  const { execFileSync } = await import('node:child_process');
-  const out = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-  const files = new Set(parseJson<[{ files: { path: string }[] }]>(out)[0].files.map((f) => f.path));
+test('the package ships the engine, the project template and the Claude layer', sourceRepoOnly, () => {
+  const files = new Set(packedFiles().map((f) => f.path));
   assert.deepEqual(SHIPPED.filter((f) => !files.has(f)), [], 'add the missing paths to package.json "files"');
   assert.deepEqual([...files].filter((f) => /^(?:apps\/docs\/|site-dist\/|scripts\/docs-(?:site|components)\.mjs$)/.test(f)), [], 'docs app build files stay in the source repo');
 });

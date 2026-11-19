@@ -2,6 +2,7 @@
 // never from the team's), JSON edits, failing check ids.
 import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { copyParts, reference } from './reference.mjs';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +29,21 @@ export const writeJson = (dir: string, file: string, j: unknown): Promise<void> 
 export async function edit<T = unknown>(dir: string, file: string, fn: (j: T) => unknown): Promise<void> { const j = await readJson<T>(dir, file); fn(j); await writeJson(dir, file, j); }
 export const failing = (report: Report): string[] => report.results.filter((r) => r.errors.length).map((r) => r.id);
 export const errorsOf = (report: Report): string => JSON.stringify(report.results.filter((x) => x.errors.length).map((x) => [x.id, x.errors.slice(0, 3)]));
+
+interface PackedPackage { filename: string; files: { path: string }[] }
+
+export function parsePackedPackage(output: string): PackedPackage {
+  const result = parseJson<PackedPackage[] | Record<string, PackedPackage>>(output);
+  // npm 11 returns an array. npm 12 keys results by package name.
+  const packages = Array.isArray(result) ? result : Object.values(result);
+  if (packages.length !== 1) throw new Error(`expected one package from npm pack, got ${packages.length}`);
+  return must(packages[0], 'npm pack result');
+}
+
+export function packedFiles(): PackedPackage['files'] {
+  const output = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  return parsePackedPackage(output).files;
+}
 
 // Narrows a value the test relies on; where the untyped test threw a TypeError on a missing value, this throws by name.
 export function must<T>(value: T | null | undefined, what: string): T {

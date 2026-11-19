@@ -4,7 +4,7 @@ description: "Create a Sketchbook project and run its first checks."
 order: 10
 ---
 
-Use Node 22.18.x or a later Node 22 release, or Node 24 and above.
+Use Node.js 26.13.1 LTS and npm 12.2.3. For older LTS lines, use Node.js 24.22.3 or 22.23.5, or a newer security patch on the same line.
 
 1. **Pack the engine.** Run these commands from your [Sketchbook checkout](https://github.com/Davecelot/sketchbook). If you already have a tarball, set `SKETCHBOOK_TARBALL` to its absolute path and continue with step 2.
 

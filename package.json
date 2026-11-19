@@ -106,7 +106,7 @@
     "docs:serve": "http-server site-dist -p 4173 -c-1"
   },
   "dependencies": {
-    "lucide-static": "1.73.0",
+    "lucide-static": "1.76.0",
     "postcss": "8.5.33",
     "postcss-scss": "4.0.9",
     "sass": "1.108.2",
@@ -125,7 +125,7 @@
     "@storybook/addon-a11y": "10.6.7",
     "@storybook/addon-docs": "10.6.7",
     "@storybook/web-components-vite": "10.6.7",
-    "axe-core": "4.14.0",
+    "axe-core": "4.14.1",
     "eslint": "10.15.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-lit": "2.3.1",
