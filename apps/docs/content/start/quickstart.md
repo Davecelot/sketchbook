@@ -6,39 +6,34 @@ order: 10
 
 Use Node.js 26.13.1 LTS and npm 12.2.3. For older LTS lines, use Node.js 24.22.3 or 22.23.5, or a newer security patch on the same line.
 
-1. **Pack the engine.** Run these commands from your [Sketchbook checkout](https://github.com/Davecelot/sketchbook). If you already have a tarball, set `SKETCHBOOK_TARBALL` to its absolute path and continue with step 2.
+The CLI is published as [`@usesketchbook/cli` on npm](https://www.npmjs.com/package/@usesketchbook/cli). For a project inside an existing app, follow [Use in an existing app](/guides/adopt-in-app/).
+
+1. **Create an empty project folder.**
 
    ```terminal
-   npm ci
-   SKETCHBOOK_TARBALL="$PWD/$(npm pack --silent)"
+   mkdir my-design-system
+   cd my-design-system
    ```
 
-2. **Create an empty project folder.** From the checkout, these commands put it next to Sketchbook. If you already have a tarball, use any empty folder. Keep the same terminal session so the tarball path is available.
+2. **Preview the setup.** `--dry-run` shows what would change in the project.
 
    ```terminal
-   mkdir ../my-design-system
-   cd ../my-design-system
+   npm exec --yes --package=@usesketchbook/cli -- sketchbook init --start library --dry-run
    ```
 
-3. **Preview the setup.** `--dry-run` shows what would change and writes nothing.
+3. **Run init.** It creates and checks the project, adds `@usesketchbook/cli` to `devDependencies`, and installs dependencies and Chromium for the browser tests.
 
    ```terminal
-   npm exec --yes --package="$SKETCHBOOK_TARBALL" -- sketchbook init --start library --engine "$SKETCHBOOK_TARBALL" --dry-run
+   npm exec --yes --package=@usesketchbook/cli -- sketchbook init --start library
    ```
 
-4. **Run init.** It creates the project, installs dependencies and Chromium, and runs the checks. Keep the tarball at that path while the project depends on it.
-
-   ```terminal
-   npm exec --yes --package="$SKETCHBOOK_TARBALL" -- sketchbook init --start library --engine "$SKETCHBOOK_TARBALL"
-   ```
-
-5. **Look at the project.** `status` is read-only. Open `docs/harness.md` for the initial installation inventory.
+4. **Look at the project.** Run `npx sketchbook` commands from this folder to use the installed CLI. Open `docs/harness.md` for the initial installation inventory.
 
    ```terminal
    npx sketchbook status
    ```
 
-6. **Run the checks.** Exit 0 means pass, 1 a failure, 2 a pass with hand edits kept as overrides.
+5. **Run the checks.** Exit 0 means pass, 1 a failure, 2 a pass with hand edits kept as overrides.
 
    ```terminal
    npx sketchbook check
@@ -46,7 +41,7 @@ Use Node.js 26.13.1 LTS and npm 12.2.3. For older LTS lines, use Node.js 24.22.3
 
 ## Choose agent integrations
 
-The commands above create a core-only project. To set up Claude Code during install, append `--agent claude` to the init command in steps 3 and 4. To add it later, run `npx sketchbook init --agent claude` from the project and follow [Claude Code activation](/concepts/claude-layer/). For multiple clients, pass a comma-separated list such as `--agent codex,trae`.
+The commands above create a core-only project. To set up Claude Code during install, append `--agent claude` to both `init` commands. To add it later, run `npx sketchbook init --agent claude` from the project and follow [Claude Code activation](/concepts/claude-layer/). For multiple clients, pass a comma-separated list such as `--agent codex,trae`.
 
 See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile). Run `npx sketchbook doctor` to inspect your project's setup.
 
@@ -63,7 +58,7 @@ See [available profiles and their files](/concepts/agent-compatibility/#install-
 
 ## Starting points
 
-In step 4, pass the starter you need to `--start`.
+In both `init` commands, pass the starter you need to `--start`.
 
 | Starter | Choose it when |
 | --- | --- |
@@ -84,5 +79,6 @@ For example, replace `--start library` with `--start pick --components card,butt
 - [How it works](/concepts/how-it-works/)
 - [Change your foundations](/guides/foundations/)
 - [Add a component](/guides/add-component/)
+- [Upgrade the CLI and harness](/guides/adopt-in-app/#upgrade)
 
 Source of truth: `harness/starters/*.json`, `docs/cli.md`, `harness/templates/move-to-claude-INSTALL.md`

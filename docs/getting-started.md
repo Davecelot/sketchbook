@@ -1,6 +1,6 @@
 # Getting started
 
-This walkthrough is for an initialized design-system project. Follow the [quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) to pack the engine and create a project. Init writes `docs/harness.md` with the initial installation inventory.
+This walkthrough is for an initialized design-system project. Follow the [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) to create a project with `@usesketchbook/cli` from npm. `init` adds the CLI as a dev dependency and writes `docs/harness.md` with the initial installation inventory.
 
 Coding agents can use `AGENTS.md` and `AGENT-WORKFLOWS.md`. The Claude Code layer is optional, and hook coverage varies by client. Run `npx sketchbook doctor` to inspect the local setup.
 

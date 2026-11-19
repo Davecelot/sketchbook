@@ -10,7 +10,7 @@ layout: home
 <sb-button variant="tertiary" href="/concepts/how-it-works/">How it works</sb-button>
 </div>
 
-Pack the engine from a Sketchbook checkout and use the tarball to create a new project. [Quickstart](/start/quickstart/).
+Create a design system with the published CLI. [Quickstart](/start/quickstart/) · [`@usesketchbook/cli` on npm](https://www.npmjs.com/package/@usesketchbook/cli)
 
 ## What you get
 

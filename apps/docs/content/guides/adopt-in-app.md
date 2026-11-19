@@ -6,18 +6,18 @@ order: 40
 
 Adopting adds the design system in its own folder, `design-system/` by default, and adds one script to the app's `package.json` that runs its checks.
 
-Pack the engine as shown in the [quickstart](/start/quickstart/) and keep `SKETCHBOOK_TARBALL` set to the tarball's absolute path. Run the following commands from your app directory.
+Run the following commands from your app directory. npm fetches `@usesketchbook/cli`, and `init` adds it as a dev dependency of the design-system project.
 
 1. **Preview.** Use `--dir` to name another folder.
 
    ```terminal
-   npm exec --yes --package="$SKETCHBOOK_TARBALL" -- sketchbook init --adopt --engine "$SKETCHBOOK_TARBALL" --dry-run
+   npm exec --yes --package=@usesketchbook/cli -- sketchbook init --adopt --start library --dry-run
    ```
 
-2. **Run it.** Add a starter if you know it.
+2. **Run it.** Replace `library` in both commands if you want a different [starter](/start/quickstart/#starting-points).
 
    ```terminal
-   npm exec --yes --package="$SKETCHBOOK_TARBALL" -- sketchbook init --adopt --start library --engine "$SKETCHBOOK_TARBALL"
+   npm exec --yes --package=@usesketchbook/cli -- sketchbook init --adopt --start library
    ```
 
    The command creates a core-only project. Append `--agent trae` to select TRAE or use a comma-separated list to set up several clients. See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile). `--no-install` skips dependency and Chromium setup.
@@ -44,14 +44,20 @@ npx sketchbook doctor
 
 ## Upgrade
 
-`upgrade` updates harness-owned files only. Team-owned files are listed and never touched. When the engine runs from `node_modules`, update the package, then run `upgrade` without `--from`. Otherwise point `--from` at a newer Sketchbook folder or git URL. Preview first.
+From the design-system folder, install the intended CLI release and preview the changes to harness-owned files.
 
 ```terminal
+npm install --save-dev @usesketchbook/cli@latest
 npx sketchbook upgrade --dry-run
-npx sketchbook upgrade --from ../sketchbook --yes
 ```
 
-> **Warning** A git URL needs `--yes` because it writes upstream harness code. Review the dry run first.
+Review the preview, then apply the changes.
+
+```terminal
+npx sketchbook upgrade --yes
+```
+
+Replace `latest` with a version number to select a specific release. The install command also replaces an existing `file:` dependency on a local tarball. `upgrade` reads from the installed CLI and reports which team-owned files it leaves in your project. For upgrades directly from a Sketchbook checkout or Git URL, see [`upgrade` in the CLI reference](/cli/project/#upgrade).
 
 ## Next steps
 

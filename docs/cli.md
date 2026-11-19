@@ -47,7 +47,7 @@ Changes files; supports `--dry-run`.
 | `--yes` | Confirm what would lose work: with --start, removing components or kits the starter does not include; with brand options or a starter that patches foundations, letting the brand links overwrite hand-edited linked tokens. It never detaches the catalog |
 | `--dir` | Create the project in this folder (new or empty), e.g. a design-system folder inside an existing repository; default: here |
 | `--adopt` | In an existing project: add the design system in its own folder (design-system/, or --dir) without changing your files; your package.json gets one script that runs its checks |
-| `--engine` | New project only: the npm spec of the engine package to depend on (default: this version; a tarball or git URL before it is published). Relative local paths are resolved from the directory where init starts |
+| `--engine` | For new projects, override the engine dependency with an npm version or tag, a local tarball, or a Git URL. A published CLI uses its version range by default. Relative local paths are resolved from the directory where init starts |
 | `--no-install` | New project only: skip npm install and the Chromium download (init lists them as next steps) |
 | `--agent` | Install selected agent profiles (comma-separated): claude, codex, gemini, copilot, trae, jetbrains, generic. New projects default to core only |
 | `--with` | Select the Claude profile and add optional groups (comma-separated): forge. Forge adds the forge-me-a-skill skill |

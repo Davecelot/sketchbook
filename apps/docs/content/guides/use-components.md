@@ -8,6 +8,14 @@ The default components are native Web Components, so they work in plain HTML and
 
 ## Add them to a page
 
+To try the reference components, install the npm package in your app.
+
+```terminal
+npm install @usesketchbook/cli
+```
+
+If your team has [created its own design system](/start/quickstart/), install and import your team's package to use its components and tokens.
+
 Without a bundler, load the self-contained bundle (Lit included):
 
 ```html

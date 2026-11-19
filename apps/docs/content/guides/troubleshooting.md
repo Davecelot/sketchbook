@@ -51,7 +51,17 @@ W1 guards brand and product names that must never appear in components, stories,
 
 ## `init` cannot find the package
 
-The package is not published yet. Pass `--engine <tarball or git URL>`; add `--no-install` to skip `npm install` and the Chromium download. See the [quickstart](/start/quickstart/).
+Check which registry npm uses for the scope and which version it can resolve.
+
+```terminal
+npm config get @usesketchbook:registry
+npm config get registry
+npm view @usesketchbook/cli version
+```
+
+If the scoped registry is `undefined`, npm uses the default registry shown by the second command. For a 404, check that this registry can serve the public package and that the requested version exists. Compare with the [npm package listing](https://www.npmjs.com/package/@usesketchbook/cli).
+
+For a local or unreleased build, pass `--engine <npm spec>` to `init` to choose the new project's engine dependency. Use `--no-install` to create the project and defer `npm install` and the Chromium download. See the [CLI reference](/cli/project/#init).
 
 ## The design file sync stops
 

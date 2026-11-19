@@ -41,18 +41,17 @@ Bring nothing, your brand, your tokens or an existing product. The process is th
 
 ## Quick start
 
-Use Node.js 26.13.1 LTS and npm 12.2.3. See the [contributor setup instructions](./CONTRIBUTING.md) for patched versions on older LTS lines. To create a separate design system, pack the engine from this checkout and pass the tarball to both npm and Sketchbook.
+Use Node.js 26.13.1 LTS and npm 12.2.3. See the [contributor setup instructions](./CONTRIBUTING.md) for patched versions on older LTS lines. Create a design system with [`@usesketchbook/cli` on npm](https://www.npmjs.com/package/@usesketchbook/cli).
 
 ```sh
-npm ci
-SKETCHBOOK_TARBALL="$PWD/$(npm pack --silent)"
-mkdir ../my-design-system
-cd ../my-design-system
-npm exec --yes --package="$SKETCHBOOK_TARBALL" -- sketchbook init --start library --engine "$SKETCHBOOK_TARBALL"
+mkdir my-design-system
+cd my-design-system
+npm exec --yes --package=@usesketchbook/cli -- sketchbook init --start library --dry-run
+npm exec --yes --package=@usesketchbook/cli -- sketchbook init --start library
 npx sketchbook check
 ```
 
-For an existing app, use the same tarball with `init --adopt` from the app directory. To bring your own tokens, use `--start import --from <tokens file>`. See the [quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for all seven starters.
+`init` adds the CLI as a dev dependency of the design-system project. For an existing app, add `--adopt` to `init` and run it from the app directory. To bring your own tokens, use `--start import --from <tokens file>`. See the [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for all seven starters and the [upgrade guide](https://sketchbook-docs.vercel.app/guides/adopt-in-app/#upgrade) for updating the CLI and harness.
 
 Plain `init` creates a core-only project and writes its initial inventory to `docs/harness.md`. Add `--agent claude` to stage Claude Code, or `--agent codex,trae` to install both selected integrations. The same flag adds profiles to an existing project. Run `npx sketchbook doctor` to inspect your setup. [Agent compatibility guide](./docs/agent-compatibility.md)
 
