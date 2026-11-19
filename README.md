@@ -10,6 +10,7 @@ Sources of truth, generators, deterministic checks, gates and agent guidance mak
 <br />
 
 [![official web](https://img.shields.io/badge/official%20web-sketchbook--docs.vercel.app-111111?style=flat-square&labelColor=555)](https://sketchbook-docs.vercel.app)
+[![npm version](https://img.shields.io/npm/v/@usesketchbook/cli?style=flat-square&labelColor=555)](https://www.npmjs.com/package/@usesketchbook/cli?activeTab=readme)
 ![license](https://img.shields.io/badge/license-MIT-6aa84f?style=flat-square&labelColor=555)
 ![process](https://img.shields.io/badge/process-contract--first%20%C2%B7%20test--first-e69138?style=flat-square&labelColor=555)
 ![checks](https://img.shields.io/badge/checks-26%20deterministic-3d85c6?style=flat-square&labelColor=555)
