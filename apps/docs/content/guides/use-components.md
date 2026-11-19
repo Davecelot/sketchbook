@@ -11,23 +11,23 @@ The default components are native Web Components, so they work in plain HTML and
 Without a bundler, load the self-contained bundle (Lit included):
 
 ```html
-<link rel="stylesheet" href="node_modules/sketchbook/generated/css/tokens.css" />
-<script src="node_modules/sketchbook/dist/sketchbook.js"></script>
+<link rel="stylesheet" href="node_modules/@usesketchbook/cli/generated/css/tokens.css" />
+<script src="node_modules/@usesketchbook/cli/dist/sketchbook.js"></script>
 
 <sb-input label="Email" type="email" name="email" required></sb-input>
 <sb-button type="submit">Save</sb-button>
 ```
 
-With a bundler, `import 'sketchbook'` and `import 'sketchbook/tokens.css'`. `lit` and `@lit/context` are peer dependencies, so the app and the elements share one copy.
+With a bundler, `import '@usesketchbook/cli'` and `import '@usesketchbook/cli/tokens.css'`. `lit` and `@lit/context` are peer dependencies, so the app and the elements share one copy.
 
 The package exports four entries for apps (the `./harness/*` export is for the CLI and adapters):
 
 | Import | What it is |
 | --- | --- |
-| `sketchbook` | The elements, as ES modules |
-| `sketchbook/tokens.css` | Every token as a CSS custom property |
-| `sketchbook/fonts.css` | The font faces the foundations use |
-| `sketchbook/bundle` | One file with every element, for pages without a bundler |
+| `@usesketchbook/cli` | The elements, as ES modules |
+| `@usesketchbook/cli/tokens.css` | Every token as a CSS custom property |
+| `@usesketchbook/cli/fonts.css` | The font faces the foundations use |
+| `@usesketchbook/cli/bundle` | One file with every element, for pages without a bundler |
 
 ## Theme
 

@@ -13,7 +13,7 @@ test('native hook diagnostics distinguish missing, custom, malformed and registe
   try {
     assert.equal(codexSubdirectoryLauncher(dir), false);
     assert.equal(codexSubdirectoryAdapterMatches(dir), null);
-    assert.deepEqual(nativeHookStatus(dir), { codex: { registration: 'missing', scriptPresent: false, scriptMatchesTemplate: null }, gemini: { registration: 'missing', scriptPresent: false, scriptMatchesTemplate: null, enginePresent: false }, copilot: { registration: 'missing', scriptPresent: false, scriptMatchesTemplate: null, enginePresent: false } });
+    assert.deepEqual(nativeHookStatus(dir, 'sketchbook'), { codex: { registration: 'missing', scriptPresent: false, scriptMatchesTemplate: null }, gemini: { registration: 'missing', scriptPresent: false, scriptMatchesTemplate: null, enginePresent: false }, copilot: { registration: 'missing', scriptPresent: false, scriptMatchesTemplate: null, enginePresent: false } });
     await mkdir(join(dir, '.codex'), { recursive: true });
     await cp(join(ROOT, 'harness/templates/project/.codex/hooks.json'), join(dir, '.codex/hooks.json'));
     assert.equal(codexSubdirectoryLauncher(dir), true);
@@ -33,12 +33,12 @@ test('native hook diagnostics distinguish missing, custom, malformed and registe
     await mkdir(join(dir, '.github/hooks'), { recursive: true });
     await writeFile(join(dir, '.gemini/settings.json'), '{bad json');
     await writeFile(join(dir, '.github/hooks/sketchbook.json'), JSON.stringify({ version: 1, hooks: { preToolUse: [{ command: `touch ${join(dir, 'executed')}` }] } }));
-    assert.equal(nativeHookStatus(dir).gemini.registration, 'invalid');
-    assert.equal(nativeHookStatus(dir).copilot.registration, 'unrecognized');
+    assert.equal(nativeHookStatus(dir, 'sketchbook').gemini.registration, 'invalid');
+    assert.equal(nativeHookStatus(dir, 'sketchbook').copilot.registration, 'unrecognized');
     assert.equal(existsSync(join(dir, 'executed')), false);
     await cp(join(ROOT, 'harness/templates/project/.gemini/settings.json'), join(dir, '.gemini/settings.json'));
     await cp(join(ROOT, 'harness/templates/project/.github/hooks/sketchbook.json'), join(dir, '.github/hooks/sketchbook.json'));
-    const incomplete = nativeHookStatus(dir);
+    const incomplete = nativeHookStatus(dir, 'sketchbook');
     assert.equal(incomplete.gemini.registration, 'registered');
     assert.equal(incomplete.gemini.enginePresent, false);
     assert.equal(incomplete.copilot.registration, 'registered');
@@ -47,21 +47,21 @@ test('native hook diagnostics distinguish missing, custom, malformed and registe
     await cp(join(ROOT, 'harness/templates/project/.github/hooks/sketchbook-guard.mjs'), join(dir, '.github/hooks/sketchbook-guard.mjs'));
     await mkdir(join(dir, 'node_modules'));
     await symlink(ROOT, join(dir, 'node_modules/sketchbook'), 'dir');
-    const present = nativeHookStatus(dir);
+    const present = nativeHookStatus(dir, 'sketchbook');
     assert.equal(present.gemini.enginePresent, true);
     assert.equal(present.copilot.enginePresent, true);
     assert.equal(present.copilot.scriptPresent, true);
     assert.equal(present.gemini.scriptMatchesTemplate, true);
     assert.equal(present.copilot.scriptMatchesTemplate, true);
     await writeFile(join(dir, '.github/hooks/sketchbook-guard.mjs'), '// team-owned adapter\n');
-    assert.equal(nativeHookStatus(dir).copilot.scriptMatchesTemplate, false);
+    assert.equal(nativeHookStatus(dir, 'sketchbook').copilot.scriptMatchesTemplate, false);
     assert.equal(await (await import('node:fs/promises')).readFile(join(dir, '.github/hooks/sketchbook-guard.mjs'), 'utf8'), '// team-owned adapter\n');
     await writeFile(join(dir, '.gemini/settings.json'), JSON.stringify({ hooks: { BeforeTool: [{ matcher: 'write_file|replace', hooks: [{ type: 'command', command: 'node "${GEMINI_PROJECT_DIR}/.gemini/sketchbook-guard.mjs"' }] }] } }));
-    assert.deepEqual(nativeHookStatus(dir).gemini, { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: true, enginePresent: true });
+    assert.deepEqual(nativeHookStatus(dir, 'sketchbook').gemini, { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: true, enginePresent: true });
     await writeFile(join(dir, '.gemini/settings.json'), JSON.stringify({ hooks: { BeforeTool: [{ matcher: 'write_file|replace', hooks: [{ type: 'command', command: 'node "${GEMINI_PROJECT_DIR}/node_modules/sketchbook/harness/agent/gemini-guard.mjs"' }] }] } }));
-    assert.deepEqual(nativeHookStatus(dir).gemini, { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: null, enginePresent: true });
+    assert.deepEqual(nativeHookStatus(dir, 'sketchbook').gemini, { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: null, enginePresent: true });
     await writeFile(join(dir, '.gemini/settings.json'), JSON.stringify({ hooks: { BeforeTool: [{ matcher: 'read_file', hooks: [{ type: 'command', command: 'node custom.mjs' }] }] } }));
-    assert.equal(nativeHookStatus(dir).gemini.registration, 'unrecognized');
+    assert.equal(nativeHookStatus(dir, 'sketchbook').gemini.registration, 'unrecognized');
   } finally { await rm(dir, { recursive: true, force: true }); }
 });
 

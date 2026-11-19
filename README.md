@@ -111,19 +111,19 @@ Every command, with options: [docs/cli.md](./docs/cli.md).
 <details>
 <summary><b>Use the default components</b> in plain HTML</summary>
 
-The `sketchbook` package is the engine (CLI, checks, generators and the tools they run) plus this reference library, so it installs those tools too. An app should depend on the team's own package instead: `sketchbook init` creates it with `lit` as its only runtime dependency.
+The `@usesketchbook/cli` package is the engine (CLI, checks, generators and the tools they run) plus this reference library, so it installs those tools too. An app should depend on the team's own package instead: `sketchbook init` creates it with `lit` as its only runtime dependency.
 
 Without a bundler, load the self-contained bundle (Lit included):
 
 ```html
-<link rel="stylesheet" href="node_modules/sketchbook/generated/css/tokens.css" />
-<script src="node_modules/sketchbook/dist/sketchbook.js"></script>
+<link rel="stylesheet" href="node_modules/@usesketchbook/cli/generated/css/tokens.css" />
+<script src="node_modules/@usesketchbook/cli/dist/sketchbook.js"></script>
 
 <sb-input label="Email" type="email" name="email" required></sb-input>
 <sb-button type="submit">Save</sb-button>
 ```
 
-With a bundler, `import 'sketchbook'` and `import 'sketchbook/tokens.css'`; `lit` and `@lit/context` are peer dependencies, so the app shares one copy.
+With a bundler, `import '@usesketchbook/cli'` and `import '@usesketchbook/cli/tokens.css'`; `lit` and `@lit/context` are peer dependencies, so the app shares one copy.
 
 Dark mode follows `prefers-color-scheme`, or set `data-theme="dark"` on `<html>`. Rename the `sb` prefix with `npx sketchbook prefix <name>`.
 

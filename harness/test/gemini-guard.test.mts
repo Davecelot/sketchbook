@@ -114,6 +114,6 @@ test('Gemini launcher finds an engine hoisted above the project', sourceRepoOnly
     assertDenied(result);
     assert.match(result.stdout, /Blocked/);
     const { nativeHookStatus } = await import('../lib/agent-diagnostics.mjs');
-    assert.deepEqual(nativeHookStatus(project).gemini, { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: true, enginePresent: true });
+    assert.deepEqual(nativeHookStatus(project, 'sketchbook').gemini, { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: true, enginePresent: true });
   } finally { await rm(workspace, { recursive: true, force: true }); }
 });

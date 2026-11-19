@@ -6,11 +6,12 @@ import { cp, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/p
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { promisify } from 'node:util';
-import { parsePackedPackage, ROOT } from './helpers.mjs';
+import { parsePackedPackage, readJson, ROOT } from './helpers.mjs';
 
 const exec = promisify(execFile);
 
 test('npm pack runs prepack and emits parseable JSON', { skip: process.env.SKETCHBOOK_TEST_LIFECYCLE !== '1', timeout: 300000 }, async () => {
+  const { name } = await readJson<{ name: string }>(ROOT, 'package.json');
   const temp = await mkdtemp(join(tmpdir(), 'sketchbook-pack-lifecycle-'));
   const source = join(temp, 'source');
   const artifacts = join(temp, 'artifacts');
@@ -40,14 +41,14 @@ test('npm pack runs prepack and emits parseable JSON', { skip: process.env.SKETC
       assert.equal((JSON.parse(init.stdout) as { ok: boolean }).ok, true);
       const project = join(consumer, 'design system');
       const projectPackage = JSON.parse(await readFile(join(project, 'package.json'), 'utf8')) as { devDependencies: Record<string, string> };
-      assert.equal(projectPackage.devDependencies.sketchbook, `file:${await realpath(tarball)}`);
+      assert.equal(projectPackage.devDependencies[name], `file:${await realpath(tarball)}`);
       assert.match(await readFile(join(project, 'AGENT-WORKFLOWS.md'), 'utf8'), /Sketchbook workflows for coding agents/);
       assert.match(await readFile(join(project, '.github/copilot-instructions.md'), 'utf8'), /AGENTS\.md/);
       assert.match(await readFile(join(project, '.codex/hooks.json'), 'utf8'), /sketchbook-guard/);
       if (process.env.SKETCHBOOK_TEST_LIFECYCLE_PROJECT_INSTALL === '1') {
         await exec('npm', ['install', '--offline', '--no-audit', '--no-fund'], { cwd: project, env: installEnv, timeout: 120000, maxBuffer: 64 * 1024 * 1024 });
-        const installed = JSON.parse(await readFile(join(project, 'node_modules/sketchbook/package.json'), 'utf8')) as { name: string };
-        assert.equal(installed.name, 'sketchbook');
+        const installed = JSON.parse(await readFile(join(project, 'node_modules', name, 'package.json'), 'utf8')) as { name: string };
+        assert.equal(installed.name, name);
         const doctor = await exec('npx', ['--no-install', 'sketchbook', 'doctor', '--json'], { cwd: project, env: installEnv, timeout: 60000, maxBuffer: 64 * 1024 * 1024 });
         const report = JSON.parse(doctor.stdout) as { ok: boolean; data: { nativeHooks: { gemini: { enginePresent: boolean }; copilot: { enginePresent: boolean } } } };
         assert.equal(report.ok, true);
