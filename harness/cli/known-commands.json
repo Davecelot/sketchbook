@@ -11,13 +11,13 @@
   ],
   "commands": {
     "init": {
-      "summary": "In a new or empty folder: install the whole harness (engine, Claude layer, hooks, configs, starter content), check it, then explain what was installed. In a project: pick a starting point (--start) and/or set the brand, regenerate, then check."
+      "summary": "In a new or empty folder: install the core harness and any selected agent integrations. In a project: add or repair integrations (--agent), pick a starting point (--start), or set the brand."
     },
     "status": {
       "summary": "Show the prefix, brand summary, components by status, overrides and design sync state (read-only)."
     },
     "doctor": {
-      "summary": "Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, the Claude layer (installed or staged) and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides)."
+      "summary": "Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, selected agent integrations and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides)."
     },
     "upgrade": {
       "summary": "Update harness-owned files. In a project that runs the engine from node_modules: from the installed engine (after npm update), no --from. Elsewhere: from a newer Sketchbook folder or git URL (harness-owned in both manifests); team-owned, shared, reclassified and protected files (the manifest itself, configs, package files) are listed, never touched; writing anything needs --yes (a dry run first shows what)."

@@ -62,6 +62,7 @@ export function installed(root: string): Installed {
   const config = parseJson<Partial<HarnessConfigJson>>(read(join(root, 'harness.config.json')) ?? '{}');
   const files: [string, string][] = [
     ['.agents/skills/sketchbook/SKILL.md', 'Portable Agent Skill routes Sketchbook tasks to the project workflows.'],
+    ['CLAUDE.md', 'Claude Code project instructions and the design-system index.'],
     ['AGENTS.md', 'Shared project instructions for coding agents; see AGENT-WORKFLOWS.md for task guidance.'],
     ['AGENT-WORKFLOWS.md', 'Provider-neutral component, token, kit and design workflows, with references to detailed guidance.'],
     ['.aiassistant/rules/sketchbook.md', 'JetBrains AI Assistant chat rule points to shared project guidance.'],

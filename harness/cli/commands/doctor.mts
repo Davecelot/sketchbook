@@ -9,7 +9,8 @@ import { runChecks } from '../../checks/run.mjs';
 import { readJsonSync, harnessPath, parseJson } from '../../lib/files.mjs';
 import type { HarnessConfigJson } from '../../../generated/types/harness-config.js';
 import { alwaysOnContext } from '../../lib/claude-layer.mjs';
-import { claudeBase } from '../../lib/installed.mjs';
+import { expectedAgentFiles } from '../../commands/bootstrap.mjs';
+import { agentFileState, hasClaudeLayer, selectedAgentProfiles, STAGED } from '../../lib/agent-config.mjs';
 import { codexSubdirectoryAdapterMatches, codexSubdirectoryLauncher, copilotRepositoryHookLocation, instructionReferences, nativeHookStatus } from '../../lib/agent-diagnostics.mjs';
 import { designState } from './status.mjs';
 import type { Command } from '../types.mjs';
@@ -17,7 +18,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'doctor',
   group: 'project',
-  summary: 'Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, the Claude layer (installed or staged) and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides).',
+  summary: 'Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, selected agent integrations and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides).',
   args: [],
   options: {},
   examples: ['sketchbook doctor', 'sketchbook doctor --json'],
@@ -30,6 +31,14 @@ export default {
     const report = await runChecks(root);
     const kits = kitIndex(root);
     const brands = listBrands(root);
+    const profiles = selectedAgentProfiles(root);
+    const expected = expectedAgentFiles(root, profiles);
+    const nativeProfiles = (['codex', 'gemini', 'copilot'] as const).filter((profile) => profiles.includes(profile));
+    const hookStatus = nativeProfiles.length ? nativeHookStatus(root) : null;
+    const claude = !profiles.includes('claude') ? 'not-selected'
+      : hasClaudeLayer(root, STAGED) ? 'staged'
+        : hasClaudeLayer(root, '.claude') ? 'installed' : 'missing';
+    const claudeBase = claude === 'staged' ? STAGED : '.claude';
     const data = {
       starter: config.starter ?? null,
       harnessVersion: config.harnessVersion ?? null,
@@ -46,16 +55,17 @@ export default {
       overrides: (await listOverrides(root)).length,
       design: await designState(root, config),
       checks: { exitCode: report.exitCode, failing: report.results.filter((r) => r.errors.length).map((r) => r.id), warnings: report.results.reduce((n, r) => n + r.warnings.length, 0) },
+      agentProfiles: profiles,
       // File presence is not proof that a particular client loaded or followed its instructions.
-      agentInstructions: Object.fromEntries(['AGENTS.md', '.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.gemini/settings.json', '.github/copilot-instructions.md'].map((file) => [file, existsSync(join(root, file)) && statSync(join(root, file)).isFile()])),
-      agentInstructionReferences: instructionReferences(root),
-      nativeHooks: nativeHookStatus(root),
-      codexSubdirectoryLauncher: codexSubdirectoryLauncher(root),
-      codexSubdirectoryAdapterMatches: codexSubdirectoryAdapterMatches(root),
-      copilotRepositoryHookLocation: copilotRepositoryHookLocation(root),
-      // While move-to-.claude/ exists the layer is staged, even next to a .claude/ the team already had.
-      claude: existsSync(join(root, 'move-to-.claude')) ? 'staged' : existsSync(join(root, '.claude')) ? 'installed' : 'missing',
-      contextBudget: config.contextBudget?.alwaysOnBytes ? { bytes: alwaysOnContext(root, claudeBase(root)).total, budget: config.contextBudget.alwaysOnBytes } : null,
+      agentInstructions: Object.fromEntries([...expected].map((file) => [file, agentFileState(root, file) === 'file'])),
+      agentInstructionReferences: instructionReferences(root, expected),
+      nativeHooks: Object.fromEntries(nativeProfiles.map((profile) => [profile, hookStatus?.[profile]])),
+      codexSubdirectoryLauncher: profiles.includes('codex') ? codexSubdirectoryLauncher(root) : null,
+      codexSubdirectoryAdapterMatches: profiles.includes('codex') ? codexSubdirectoryAdapterMatches(root) : null,
+      copilotRepositoryHookLocation: profiles.includes('copilot') ? copilotRepositoryHookLocation(root) : null,
+      claude,
+      contextBudget: (claude === 'staged' || claude === 'installed') && config.contextBudget?.alwaysOnBytes
+        ? { bytes: alwaysOnContext(root, claudeBase).total, budget: config.contextBudget.alwaysOnBytes } : null,
       // Active only when git points at .githooks and the hook can run: git silently skips a non-executable one.
       gitHook: spawnSync('git', ['-C', root, 'config', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim().match(/(^|\/)\.githooks\/?$/) && existsSync(join(root, '.githooks/pre-commit')) && statSync(join(root, '.githooks/pre-commit')).mode & 0o111 ? 'active' : 'inactive',
     };
@@ -69,17 +79,22 @@ export default {
     out(`Design: ${data.design.tool ?? 'none'}${data.design.tool ? `, tokens ${data.design.tokens}, ${data.design.components.stale.length} stale component(s)` : ''}`);
     out(`Checks: ${data.checks.failing.length ? `failing ${data.checks.failing.join(', ')}` : 'all pass'}${data.checks.warnings ? `, ${data.checks.warnings} warning(s)` : ''}`);
     const missingInstructions = Object.entries(data.agentInstructions).filter(([, present]) => !present).map(([file]) => file);
-    out(`Agent instructions: ${missingInstructions.length ? `missing ${missingInstructions.join(', ')} (sketchbook init can restore missing setup files when paths are available)` : 'all portable instruction files present'}; presence does not verify client loading`);
+    if (!profiles.length) out('Agent integrations: core only.');
+    else out(`Agent setup (${profiles.join(', ')}): ${missingInstructions.length ? `missing ${missingInstructions.join(', ')} (sketchbook init can restore missing setup files when paths are available)` : 'all selected files present'}; presence does not verify client loading`);
     const reviewInstructions = Object.entries(data.agentInstructionReferences).filter(([, status]) => status === 'not-detected').map(([file]) => file);
     if (reviewInstructions.length) out(`Agent instruction references not detected: ${reviewInstructions.join(', ')}. Review preserved team instructions for the shared workflow; a textual check cannot determine whether equivalent guidance is present or loaded.`);
     const scriptState = (present: boolean, matches: boolean | null) => !present ? 'not found' : matches === false ? 'present, differs from current template' : 'present';
-    out(`Native edit hooks: Codex ${data.nativeHooks.codex.registration} (script ${scriptState(data.nativeHooks.codex.scriptPresent, data.nativeHooks.codex.scriptMatchesTemplate)}); Gemini ${data.nativeHooks.gemini.registration} (script ${scriptState(data.nativeHooks.gemini.scriptPresent, data.nativeHooks.gemini.scriptMatchesTemplate)}, engine ${data.nativeHooks.gemini.enginePresent ? 'present' : 'not found'}); Copilot ${data.nativeHooks.copilot.registration} (script ${scriptState(data.nativeHooks.copilot.scriptPresent, data.nativeHooks.copilot.scriptMatchesTemplate)}, engine ${data.nativeHooks.copilot.enginePresent ? 'present' : 'not found'}). Registration is not proof that a client loaded or trusted a hook.`);
-    if (data.nativeHooks.codex.registration === 'registered' && data.codexSubdirectoryLauncher === false) out('Codex subdirectory launcher: not recognized. Existing hook settings are preserved; review the current template before merging any update.');
+    for (const [profile, hook] of Object.entries(data.nativeHooks)) {
+      if (!hook) continue;
+      const engine = 'enginePresent' in hook ? `, engine ${hook.enginePresent ? 'present' : 'not found'}` : '';
+      out(`Native edit hooks (${profile}): ${hook.registration} (script ${scriptState(hook.scriptPresent, hook.scriptMatchesTemplate)}${engine}). Verify activation and trust in the client.`);
+    }
+    if (data.nativeHooks.codex?.registration === 'registered' && data.codexSubdirectoryLauncher === false) out('Codex subdirectory launcher: not recognized. Existing hook settings are preserved; review the current template before merging any update.');
     if (data.codexSubdirectoryLauncher === true && data.codexSubdirectoryAdapterMatches === false) out('Codex subdirectory launcher: the adapter differs from the shipped version beyond line endings, so this launcher will skip it. Review your customization and use the project root until an appropriate hook is configured and trusted.');
     if (data.copilotRepositoryHookLocation === 'nested') out('Copilot repository hook: this project is nested, so its .github/hooks/ is not at the Git repository root. Copilot hook discovery varies by client and workspace: verify the local hook, and review root configuration for cloud or repository-root sessions.');
     else if (data.copilotRepositoryHookLocation === 'unknown') out('Copilot repository hook: Git repository root could not be determined; verify hook discovery in your workspace.');
-    if (Object.values(data.nativeHooks).some((hook) => hook.scriptMatchesTemplate === false)) out('Review differing adapter scripts against the installed templates and merge any changes deliberately; project files are not overwritten.');
-    out(`Claude layer: ${data.claude === 'staged' ? 'staged in move-to-.claude/ (optional Claude Code setup: move-to-.claude/INSTALL.md)' : data.claude === 'missing' ? 'missing (sketchbook init puts it back)' : data.claude}${data.contextBudget && data.claude !== 'missing' ? `, always-on context ${data.contextBudget.bytes} of ${data.contextBudget.budget} bytes (${Math.round((data.contextBudget.bytes / data.contextBudget.budget) * 100)}%)` : ''}`);
+    if (Object.values(data.nativeHooks).some((hook) => hook?.scriptMatchesTemplate === false)) out('Review differing adapter scripts against the installed templates and merge any changes deliberately; project files are not overwritten.');
+    if (data.claude !== 'not-selected') out(`Claude layer: ${data.claude === 'staged' ? 'staged in move-to-.claude/ (optional Claude Code setup: move-to-.claude/INSTALL.md)' : data.claude === 'missing' ? 'missing (sketchbook init puts it back)' : data.claude}${data.contextBudget && data.claude !== 'missing' ? `, always-on context ${data.contextBudget.bytes} of ${data.contextBudget.budget} bytes (${Math.round((data.contextBudget.bytes / data.contextBudget.budget) * 100)}%)` : ''}`);
     out(`Commit gate: ${data.gitHook === 'active' ? 'active (npm run check runs before every commit)' : 'inactive (git config core.hooksPath .githooks at the repository root, or call npm run check from your own hook)'}`);
     const next = data.checks.failing.length ? 'sketchbook check (each error has a fix)'
       : missingInstructions.length ? 'sketchbook init (restores missing setup files when paths are available)'

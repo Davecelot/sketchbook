@@ -4,7 +4,7 @@ description: "Create a Sketchbook project and run its first checks."
 order: 10
 ---
 
-Use Node 22.18.x or a later Node 22 release, or Node 24 and above. Claude Code setup is optional.
+Use Node 22.18.x or a later Node 22 release, or Node 24 and above.
 
 1. **Pack the engine.** Run these commands from your [Sketchbook checkout](https://github.com/Davecelot/sketchbook). If you already have a tarball, set `SKETCHBOOK_TARBALL` to its absolute path and continue with step 2.
 
@@ -44,7 +44,11 @@ Use Node 22.18.x or a later Node 22 release, or Node 24 and above. Claude Code s
    npx sketchbook check
    ```
 
-Portable agent instructions in `AGENTS.md` and `AGENT-WORKFLOWS.md` are available immediately. The optional Claude Code layer is staged in `move-to-.claude/`. Run `npx sketchbook doctor` to inspect the current setup. [Agent compatibility](/concepts/agent-compatibility/) · [Claude Code](/concepts/claude-layer/).
+## Choose agent integrations
+
+The commands above create a core-only project. To set up Claude Code during install, append `--agent claude` to the init command in steps 3 and 4. To add it later, run `npx sketchbook init --agent claude` from the project and follow [Claude Code activation](/concepts/claude-layer/). For multiple clients, pass a comma-separated list such as `--agent codex,trae`.
+
+See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile). Run `npx sketchbook doctor` to inspect your project's setup.
 
 ## Commands you will use
 

@@ -22,10 +22,10 @@ Deterministic half of the harness. Run `sketchbook <command>` (or `node harness/
 
 ### init
 
-In a new or empty folder: install the whole harness (engine, Claude layer, hooks, configs, starter content), check it, then explain what was installed. In a project: pick a starting point (--start) and/or set the brand, regenerate, then check.
+In a new or empty folder: install the core harness and any selected agent integrations. In a project: add or repair integrations (--agent), pick a starting point (--start), or set the brand.
 
 ```
-sketchbook init [--name <value>] [--primary <value>] [--font <value>] [--radius <value>] [--density <value>] [--danger <value>] [--design <value>] [--file <value>] [--prefix <value>] [--start <starter>] [--components <a,b>] [--from <file>] [--yes] [--dir <folder>] [--adopt] [--engine <spec>] [--no-install] [--with <groups>] [--detach-catalog] [--dry-run] [--json]
+sketchbook init [--name <value>] [--primary <value>] [--font <value>] [--radius <value>] [--density <value>] [--danger <value>] [--design <value>] [--file <value>] [--prefix <value>] [--start <starter>] [--components <a,b>] [--from <file>] [--yes] [--dir <folder>] [--adopt] [--engine <spec>] [--no-install] [--agent <profiles>] [--with <groups>] [--detach-catalog] [--dry-run] [--json]
 ```
 
 Changes files; supports `--dry-run`.
@@ -49,12 +49,15 @@ Changes files; supports `--dry-run`.
 | `--adopt` | In an existing project: add the design system in its own folder (design-system/, or --dir) without changing your files; your package.json gets one script that runs its checks |
 | `--engine` | New project only: the npm spec of the engine package to depend on (default: this version; a tarball or git URL before it is published). Relative local paths are resolved from the directory where init starts |
 | `--no-install` | New project only: skip npm install and the Chromium download (init lists them as next steps) |
-| `--with` | Optional Claude-layer groups to install (forge; comma-separated): forge (forge-me-a-skill, the skill standard for writing your own skills). In a new project they are staged with it; in a project they are added. Without it none are installed |
+| `--agent` | Install selected agent profiles (comma-separated): claude, codex, gemini, copilot, trae, jetbrains, generic. New projects default to core only |
+| `--with` | Select the Claude profile and add optional groups (comma-separated): forge. Forge adds the forge-me-a-skill skill |
 | `--detach-catalog` | With --start in the catalog source repo (catalog.source true): stop tracking harness/catalog; the components become the team's own |
 
 Examples:
 
 - `sketchbook init`
+- `sketchbook init --agent claude`
+- `sketchbook init --agent codex,trae --dry-run`
 - `sketchbook init --dir design-system --start library`
 - `sketchbook init --start library`
 - `sketchbook init --with forge`
@@ -81,7 +84,7 @@ Examples:
 
 ### doctor
 
-Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, the Claude layer (installed or staged) and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides).
+Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, selected agent integrations and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides).
 
 ```
 sketchbook doctor [--json]

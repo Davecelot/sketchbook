@@ -39,7 +39,7 @@ test('npm pack runs prepack and emits parseable JSON', { skip: process.env.SKETC
       await exec('npm', ['install', '--offline', '--no-audit', '--no-fund', '--save-dev', tarball], { cwd: consumer, env: installEnv, timeout: 60000, maxBuffer: 64 * 1024 * 1024 });
       const help = await exec('npx', ['--no-install', 'sketchbook', 'help', '--json'], { cwd: consumer, env: installEnv, timeout: 30000 });
       assert.equal((JSON.parse(help.stdout) as { command: string }).command, 'help');
-      const init = await exec('npx', ['--no-install', 'sketchbook', 'init', '--dir', 'design system', '--start', 'blank', '--no-install', '--engine', relative(consumer, tarball), '--json'], { cwd: consumer, env: installEnv, timeout: 90000, maxBuffer: 64 * 1024 * 1024 });
+      const init = await exec('npx', ['--no-install', 'sketchbook', 'init', '--dir', 'design system', '--start', 'blank', '--agent', 'codex,gemini,copilot', '--no-install', '--engine', relative(consumer, tarball), '--json'], { cwd: consumer, env: installEnv, timeout: 90000, maxBuffer: 64 * 1024 * 1024 });
       assert.equal((JSON.parse(init.stdout) as { ok: boolean }).ok, true);
       const project = join(consumer, 'design system');
       const projectPackage = JSON.parse(await readFile(join(project, 'package.json'), 'utf8')) as { devDependencies: Record<string, string> };

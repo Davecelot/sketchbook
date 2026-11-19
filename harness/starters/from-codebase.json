@@ -7,6 +7,6 @@
   "kits": "all",
   "next": [
     "sketchbook audit-css <path|glob>",
-    "Review generated/import/codebase.proposal.json and apply chosen values using the foundations workflow in AGENT-WORKFLOWS.md"
+    "Review generated/import/codebase.proposal.json and apply chosen foundation values with sketchbook tokens"
   ]
 }

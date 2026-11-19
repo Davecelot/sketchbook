@@ -5,5 +5,5 @@
   "foundations": null,
   "components": "all",
   "kits": "none",
-  "next": ["Follow AGENT-WORKFLOWS.md for foundations (Claude Code: /foundations guided)", "npm run storybook"]
+  "next": ["Review the foundations with sketchbook tokens", "npm run storybook"]
 }

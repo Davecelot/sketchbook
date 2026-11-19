@@ -396,7 +396,7 @@ test('S20 audit-css clusters colors by OKLCH distance and proposes foundations, 
   assert.equal(p.proposedFoundations.typography.baseSize, 14);
   const a = cliJson(dir, 'audit-css', 'app', '--json');
   assert.equal(a.json.ok, true, a.out);
-  assert.match(must(a.json.next, 'next'), /AGENT-WORKFLOWS\.md/);
+  assert.match(must(a.json.next, 'next'), /sketchbook tokens/);
   const first = await readFile(join(dir, 'generated/import/codebase.proposal.json'));
   cli(dir, 'audit-css', 'app');
   assert.ok((await readFile(join(dir, 'generated/import/codebase.proposal.json'))).equals(first), 'same input, same bytes');
@@ -422,7 +422,7 @@ test('S21 import and from-codebase starters run or print their next step', async
   const code = cliJson(dir, 'init', '--start', 'from-codebase', '--from', 'legacy', '--json');
   assert.equal(code.json.ok, true, code.out);
   assert.ok(code.json.changed.includes('generated/import/codebase.proposal.json'));
-  assert.match(must(code.json.next, 'next'), /AGENT-WORKFLOWS\.md/);
+  assert.match(must(code.json.next, 'next'), /sketchbook tokens/);
   assert.doesNotMatch(must(code.json.next, 'next'), /\/foundations import/);
   assert.ok(await exists(join(dir, 'generated/import/codebase.proposal.json')));
   const imp = cliJson(dir, 'init', '--start', 'import', '--json');

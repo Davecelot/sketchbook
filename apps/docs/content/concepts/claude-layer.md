@@ -41,7 +41,7 @@ Hammock mode is `lite`, `full` (default), `ultra` or `off`. Switch it with `/ham
 
 ## Install it
 
-`sketchbook init` stages the layer in `move-to-.claude/` and does not write into `.claude/`, which Claude Code protects. Ask Claude:
+Run `sketchbook init --agent claude` when creating a project or from an existing Sketchbook project. The command stages the layer in `move-to-.claude/` for activation. Open Claude Code in the design-system folder and ask it to install the staged files.
 
 ```text
 Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md).

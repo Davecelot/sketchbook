@@ -25,9 +25,13 @@ The failure names the pair, the mode and the nearest passing step. Change the se
 
 `pre-commit` runs `sketchbook check` and blocks on exit 1; exit 2 is allowed. `pre-push` runs the checks again, so `--no-verify` only delays the failure. `sketchbook doctor` shows whether the gate is active. It is set only when the folder is its own git repository; inside an app's repository the harness leaves that repository's hooks alone and tells you the line to add (see [Use in an existing app](/guides/adopt-in-app/)).
 
+## Agent instructions are missing
+
+Run `npx sketchbook doctor` from the design-system folder to see the selected profiles. Use `npx sketchbook init --dry-run` to preview repairs for a selected profile, or `npx sketchbook init --agent trae --dry-run` to preview adding a profile. If a path is blocked, review the existing file or symlink before retrying. See [agent compatibility](/concepts/agent-compatibility/#install-a-profile) for the files each profile uses.
+
 ## Claude ignores the rules, skills or hooks
 
-Claude Code reads `.claude/` only from the folder where the session starts. If the design system lives in a subfolder of an app, start Claude Code in that folder. If `sketchbook doctor` says the Claude layer is staged, not installed (check H1 warns too), open Claude Code there and ask it to install the layer from `move-to-.claude/`; its `INSTALL.md` is written for Claude.
+Claude Code reads `.claude/` only from the folder where the session starts. If the design system lives in a subfolder of an app, start Claude Code in that folder. If Claude is unselected, run `npx sketchbook init --agent claude`. If `sketchbook doctor` says the Claude layer is staged, not installed (check H1 warns too), open Claude Code there and ask it to install the layer from `move-to-.claude/`; its `INSTALL.md` is written for Claude.
 
 ## H1 warns about the context budget
 

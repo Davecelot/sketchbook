@@ -6,7 +6,6 @@
   "components": "all",
   "kits": "all",
   "next": [
-    "Claude Code: /import-tokens <file>",
     "sketchbook tokens import <file>"
   ]
 }

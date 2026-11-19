@@ -64,6 +64,10 @@ export interface HarnessConfigJson {
     [k: string]: unknown;
   };
   /**
+   * Sketchbook agent integrations selected for this project (sketchbook init --agent). An empty list is core only.
+   */
+  agentProfiles?: ("claude" | "codex" | "gemini" | "copilot" | "trae" | "jetbrains" | "generic")[];
+  /**
    * Optional Claude-layer groups installed in this project (sketchbook init --with); harness/manifest.json "optional" lists their files.
    */
   claudeExtras?: "forge"[];

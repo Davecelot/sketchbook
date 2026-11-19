@@ -4,7 +4,25 @@ description: "Portable instructions, client-specific hooks and their current lim
 order: 55
 ---
 
-The CLI, configuration, contracts, generators and deterministic checks do not require a particular AI model. `sketchbook init` creates shared instructions in `AGENTS.md` and `AGENT-WORKFLOWS.md`, plus client entry points. Run `npx sketchbook doctor` to inspect the files and recognized hook registrations; this cannot prove a client loaded or trusted them.
+Plain `sketchbook init` creates a core-only project. The CLI, contracts, generators, and checks are available with every setup.
+
+## Install a profile
+
+Append `--agent claude` to your [Quickstart](/start/quickstart/) command to stage only Claude Code. Use a comma-separated list to select multiple profiles. In an existing project, preview an addition with `npx sketchbook init --agent codex,trae --dry-run`, then run it without `--dry-run`. Run `npx sketchbook doctor` to inspect your selection and recognized hook registrations.
+
+| `--agent` profile | Project files |
+| --- | --- |
+| `claude` | `CLAUDE.md` and the staged skills, commands, rules, hooks, and activation guide under `move-to-.claude/` |
+| `codex` | Shared guidance, `.agents/skills/sketchbook/SKILL.md`, `.codex/hooks.json`, and `.codex/sketchbook-guard.mjs` |
+| `gemini` | Shared guidance, `GEMINI.md`, `.gemini/settings.json`, and `.gemini/sketchbook-guard.mjs` |
+| `copilot` | Shared guidance, `.agents/skills/sketchbook/SKILL.md`, `.github/copilot-instructions.md`, `.github/hooks/sketchbook.json`, and `.github/hooks/sketchbook-guard.mjs` |
+| `trae` | Shared guidance and `.trae/rules/sketchbook.md` |
+| `jetbrains` | Shared guidance and `.aiassistant/rules/sketchbook.md` for AI Assistant chat |
+| `generic` | Shared guidance for clients that read `AGENTS.md`, such as Cursor, OpenCode, Windsurf, Kiro, and Antigravity |
+
+Shared guidance consists of `AGENTS.md` and `AGENT-WORKFLOWS.md`. Multiple profiles reuse those files.
+
+## Client and hook coverage
 
 | Client | Project entry point | Hook coverage |
 | --- | --- | --- |

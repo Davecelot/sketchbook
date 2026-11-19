@@ -1,10 +1,11 @@
 // The Claude layer (.claude/ skills and their agent briefs, commands, rules, hooks) must load and must not invent CLI
 // commands (SB-0038, SB-0073). Used by check H1 in every project and by harness/test/claude-layer.test.mts.
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, basename, dirname } from 'node:path';
 import { harnessPath, readJsonSync, ENGINE } from './files.mjs';
+import { agentFileState } from './agent-config.mjs';
 
 export interface Frontmatter {
   metadata?: Record<string, string>;
@@ -19,8 +20,25 @@ export interface ClaudeLayerProblems { frontmatter: string[]; skills: string[]; 
 export type AlwaysOnParts = Record<'CLAUDE.md' | 'rules' | 'descriptions' | 'hooks', number>;
 export interface AlwaysOnContext { parts: AlwaysOnParts; total: number; unmeasured: string[] }
 
-interface ClaudeSettings {
-  hooks?: Record<string, { matcher?: string; hooks?: { command: string; timeout?: number }[] }[]>;
+export interface HookCommand { command?: string; timeout?: number; [key: string]: unknown }
+export interface HookEntry { matcher?: string; hooks?: HookCommand[]; [key: string]: unknown }
+interface ClaudeSettings { hooks?: Record<string, HookEntry[]>; [key: string]: unknown }
+
+const isObject = (value: unknown): boolean => !!value && typeof value === 'object' && !Array.isArray(value);
+const isDirectory = (path: string): boolean => lstatSync(path, { throwIfNoEntry: false })?.isDirectory() === true;
+
+export function readClaudeSettings(path: string): ClaudeSettings | null {
+  const settings = readJsonSync<ClaudeSettings>(path);
+  if (!settings || !isObject(settings)) return null;
+  if (settings.hooks === undefined) return settings;
+  if (!isObject(settings.hooks)) return null;
+  for (const entries of Object.values(settings.hooks)) {
+    if (!Array.isArray(entries)) return null;
+    for (const entry of entries) {
+      if (!isObject(entry) || (entry.hooks !== undefined && (!Array.isArray(entry.hooks) || !entry.hooks.every(isObject)))) return null;
+    }
+  }
+  return settings;
 }
 
 const str = (value: string | Record<string, string> | undefined): string | undefined => (typeof value === 'string' ? value : undefined);
@@ -31,7 +49,7 @@ function walk(dir: string, skip?: string): string[] {
     const p = join(dir, entry.name);
     if (p === skip) continue;
     if (entry.isDirectory()) out.push(...walk(p, skip));
-    else out.push(p);
+    else if (entry.isFile()) out.push(p);
   }
   return out;
 }
@@ -138,7 +156,7 @@ export const loadKnown = (root: string): KnownCommands | null => readJsonSync<Kn
 export function claudeLayerProblems(root: string, known: KnownCommands | null = loadKnown(root), base = '.claude'): ClaudeLayerProblems {
   const out: ClaudeLayerProblems = { frontmatter: [], skills: [], commands: [] };
   const claude = join(root, base);
-  if (!existsSync(claude)) return out;
+  if (!isDirectory(claude)) return out;
   if (!known) throw new TypeError("Cannot read properties of null (reading 'commands')");
   const files = walk(claude, join(claude, 'worktrees'));
   for (const file of files) {
@@ -166,17 +184,17 @@ export function claudeLayerProblems(root: string, known: KnownCommands | null = 
     }
   }
   const skills = join(claude, 'skills');
-  if (existsSync(skills)) {
+  if (isDirectory(skills)) {
     for (const entry of readdirSync(skills, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;
       const dir = join(skills, entry.name);
       const folders = readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
       const skill = join(dir, 'SKILL.md');
-      if (!existsSync(skill)) { out.skills.push(`${base}/skills/${entry.name}: no SKILL.md`); continue; }
+      if (agentFileState(root, relative(root, skill)) !== 'file') { out.skills.push(`${base}/skills/${entry.name}: no SKILL.md`); continue; }
       for (const p of skillProblems(entry.name, readFileSync(skill, 'utf8'), folders)) out.skills.push(`${base}/skills/${entry.name}: ${p}`);
     }
   }
-  if (existsSync(join(claude, 'agents')) && readdirSync(join(claude, 'agents')).length) out.skills.push(`${base}/agents/ exists: move each agent into its skill's agents/ folder`);
+  if (isDirectory(join(claude, 'agents')) && readdirSync(join(claude, 'agents')).length) out.skills.push(`${base}/agents/ exists: move each agent into its skill's agents/ folder`);
   return out;
 }
 
@@ -200,35 +218,41 @@ export function knownHook(root: string, base: string, command: unknown): string 
   if (!rel || rel.split('/').includes('..')) return null;
   const local = join(root, base, rel);
   const engine = join(ENGINE, '.claude', rel);
-  if (!existsSync(local) || !existsSync(engine)) return null;
+  if (agentFileState(root, join(base, rel)) !== 'file' || !existsSync(engine)) return null;
   return readFileSync(local).equals(readFileSync(engine)) ? local : null;
 }
 export function alwaysOnContext(root: string, base = '.claude'): AlwaysOnContext {
   const claude = join(root, base);
   const parts: AlwaysOnParts = { 'CLAUDE.md': 0, rules: 0, descriptions: 0, hooks: 0 };
-  if (existsSync(join(root, 'CLAUDE.md'))) parts['CLAUDE.md'] = readFileSync(join(root, 'CLAUDE.md')).length;
-  const list = (dir: string): string[] => (existsSync(dir) ? readdirSync(dir) : []);
+  if (agentFileState(root, 'CLAUDE.md') === 'file') parts['CLAUDE.md'] = readFileSync(join(root, 'CLAUDE.md')).length;
+  const list = (dir: string): string[] => isDirectory(claude) && isDirectory(dir) ? readdirSync(dir) : [];
   for (const f of list(join(claude, 'rules')).filter((f) => f.endsWith('.md'))) {
-    const text = readFileSync(join(claude, 'rules', f), 'utf8');
+    const file = join(base, 'rules', f);
+    if (agentFileState(root, file) !== 'file') continue;
+    const text = readFileSync(join(root, file), 'utf8');
     if (!/^---\n(?:[^\n]*\n)*?paths:/.test(text)) parts.rules += Buffer.byteLength(text);
   }
   const described = [
     ...list(join(claude, 'skills')).map((s) => join(claude, 'skills', s, 'SKILL.md')),
     ...list(join(claude, 'commands')).filter((f) => f.endsWith('.md')).map((f) => join(claude, 'commands', f)),
-  ].filter((f) => existsSync(f));
+  ].filter((f) => agentFileState(root, relative(root, f)) === 'file');
   for (const f of described) {
     const fm = frontmatter(readFileSync(f, 'utf8'));
     if (fm && fm['disable-model-invocation'] !== 'true') parts.descriptions += Buffer.byteLength(str(fm.description) ?? '');
   }
-  const settings = existsSync(join(claude, 'settings.json')) ? readJsonSync<ClaudeSettings>(join(claude, 'settings.json')) : {};
-  if (!settings) throw new TypeError("Cannot read properties of null (reading 'hooks')");
+  const settingsFile = join(base, 'settings.json');
+  const settingsState = agentFileState(root, settingsFile);
+  const settings = settingsState === 'file' ? readClaudeSettings(join(root, settingsFile)) : null;
   // Hooks may write state under $CLAUDE_PROJECT_DIR; a check must not, so they get a throwaway one.
   const scratch = mkdtempSync(join(tmpdir(), 'sb-hooks-'));
-  const unmeasured: string[] = [];
+  const unmeasured = !settings && settingsState !== 'missing' ? [`${settingsFile}: unreadable or invalid settings`] : [];
   try {
     for (const [event, input] of Object.entries(HOOK_EVENTS)) {
-      for (const group of settings.hooks?.[event] ?? []) {
-        if (group.matcher && !new RegExp(`^(${group.matcher})$`).test(input.source ?? '')) continue;
+      for (const group of settings?.hooks?.[event] ?? []) {
+        if (group.matcher) {
+          try { if (!new RegExp(`^(${group.matcher})$`).test(input.source ?? '')) continue; }
+          catch { unmeasured.push(`${event}: invalid matcher`); continue; }
+        }
         for (const h of group.hooks ?? []) {
           const file = knownHook(root, base, h.command);
           if (!file) { unmeasured.push(`${event}: ${h.command}`); continue; }

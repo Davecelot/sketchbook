@@ -61,7 +61,7 @@ test('init and repair render adapters with the installed engine package name', s
     await mkdir(project);
     const cli = join(engine, 'harness/cli.mjs');
     const init = (...args: string[]) => spawnSync('node', [cli, 'init', ...args, '--json'], { cwd: project, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-    const fresh = init('--start', 'blank', '--no-install');
+    const fresh = init('--start', 'blank', '--agent', 'gemini,copilot', '--no-install');
     assert.equal(fresh.status, 0, fresh.stdout + fresh.stderr);
     const gemini = join(project, '.gemini/sketchbook-guard.mjs');
     const copilot = join(project, '.github/hooks/sketchbook-guard.mjs');

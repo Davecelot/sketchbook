@@ -17,6 +17,6 @@ export default {
     if (dryRun) { out(`Would write generated/import/codebase.proposal.json from ${summary}`); return { changed: ['generated/import/codebase.proposal.json'], data: p }; }
     const file = writeProposal(root, p);
     out(`${file} from ${summary}\nProposed primary ${p.proposedFoundations.color.primary}, body ${p.proposedFoundations.typography.baseSize}px. Nothing is applied.`);
-    return { changed: [file], data: p, next: 'Review the CSS audit proposal; in a Sketchbook project, use the foundations workflow in AGENT-WORKFLOWS.md to apply chosen values' };
+    return { changed: [file], data: p, next: 'Review the CSS audit proposal; in a Sketchbook project, apply chosen foundation values with sketchbook tokens' };
   },
 } satisfies Command;

@@ -7,4 +7,4 @@ This project uses the Sketchbook CLI and a contract-first design system. Read `d
 - Use `npx sketchbook status`, `doctor`, and `check` to inspect the project; use `npx sketchbook help <command>` for supported options. Run appropriate tests and `npm run check` after changes.
 - Do not modify settled decisions in `spec/decisions/DECISIONS.md`; add a superseding decision instead. For a complete HTML page using this library, provide a level-one heading and a main landmark.
 - Component tokens reference semantic tokens, and semantic tokens reference foundation tokens. Rename interface tokens through `npx sketchbook tokens rename`.
-- The optional Claude Code integration is staged in `move-to-.claude/` until installed. Its hooks and slash commands use Claude formats; other clients may import some of them, but do not assume they are active. The CLI and checks work independently of that integration.
+- Run `npx sketchbook doctor` to see the selected integrations and their setup status. Use the CLI and Git checks in any client.

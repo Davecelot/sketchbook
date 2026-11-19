@@ -1,7 +1,7 @@
 # Install the Claude layer
 
 This folder is the design system's Claude layer (skills, slash commands, rules, hooks and their settings), staged by
-`sketchbook init`. It is not active until it lives in `.claude/`. Ask Claude Code, opened in this design-system folder:
+`sketchbook init --agent claude`. It is not active until it lives in `.claude/`. Ask Claude Code, opened in this design-system folder:
 
 > Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md).
 

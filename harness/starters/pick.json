@@ -5,5 +5,5 @@
   "foundations": null,
   "components": [],
   "kits": "none",
-  "next": ["sketchbook list --available", "sketchbook add <name>", "Follow AGENT-WORKFLOWS.md for foundations (Claude Code: /foundations guided)"]
+  "next": ["sketchbook list --available", "sketchbook add <name>", "Review the foundations with sketchbook tokens"]
 }

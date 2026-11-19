@@ -1,7 +1,8 @@
 import { init, INIT_OPTIONS } from '../../commands/init.mjs';
 import { staleLinks } from '../../commands/tokens.mjs';
 import { applyStarter, listStarters, planStarter, preflightStarter, refuseStaleLinks } from '../../commands/start.mjs';
-import { addExtras, bootstrap, EXTRAS, isProject, repair, STAGED } from '../../commands/bootstrap.mjs';
+import { installAgents, bootstrap, EXTRAS, isProject, repair, STAGED } from '../../commands/bootstrap.mjs';
+import { AGENT_PROFILES, parseAgentProfiles } from '../../lib/agent-config.mjs';
 import { installedSummary } from '../../lib/installed.mjs';
 import { resolve } from 'node:path';
 import { show } from '../../lib/files.mjs';
@@ -17,7 +18,8 @@ const START_OPTIONS = {
   adopt: { type: 'boolean', description: 'In an existing project: add the design system in its own folder (design-system/, or --dir) without changing your files; your package.json gets one script that runs its checks' },
   engine: { type: 'string', value: 'spec', description: 'New project only: the npm spec of the engine package to depend on (default: this version; a tarball or git URL before it is published). Relative local paths are resolved from the directory where init starts' },
   'no-install': { type: 'boolean', description: 'New project only: skip npm install and the Chromium download (init lists them as next steps)' },
-  with: { type: 'string', value: 'groups', description: `Optional Claude-layer groups to install (${EXTRAS.join(', ')}; comma-separated): forge (forge-me-a-skill, the skill standard for writing your own skills). In a new project they are staged with it; in a project they are added. Without it none are installed` },
+  agent: { type: 'string', value: 'profiles', description: `Install selected agent profiles (comma-separated): ${AGENT_PROFILES.join(', ')}. New projects default to core only` },
+  with: { type: 'string', value: 'groups', description: `Select the Claude profile and add optional groups (comma-separated): ${EXTRAS.join(', ')}. Forge adds the forge-me-a-skill skill` },
   'detach-catalog': { type: 'boolean', description: 'With --start in the catalog source repo (catalog.source true): stop tracking harness/catalog; the components become the team\'s own' },
 } satisfies OptionSpecs;
 
@@ -30,10 +32,10 @@ const densityOf = (density: BrandConfig['density']) => (density && typeof densit
 export default {
   name: 'init',
   group: 'project',
-  summary: 'In a new or empty folder: install the whole harness (engine, Claude layer, hooks, configs, starter content), check it, then explain what was installed. In a project: pick a starting point (--start) and/or set the brand, regenerate, then check.',
+  summary: 'In a new or empty folder: install the core harness and any selected agent integrations. In a project: add or repair integrations (--agent), pick a starting point (--start), or set the brand.',
   args: [],
   options,
-  examples: ['sketchbook init', 'sketchbook init --dir design-system --start library', 'sketchbook init --start library', 'sketchbook init --with forge', 'sketchbook init --start blank --yes', 'sketchbook init --start pick --components card,button', 'sketchbook init --start from-codebase --from "../app/**/*.css"', 'sketchbook init --primary "#2563EB" --font Inter --radius round', 'sketchbook init --density compact --dry-run'],
+  examples: ['sketchbook init', 'sketchbook init --agent claude', 'sketchbook init --agent codex,trae --dry-run', 'sketchbook init --dir design-system --start library', 'sketchbook init --start library', 'sketchbook init --with forge', 'sketchbook init --start blank --yes', 'sketchbook init --start pick --components card,button', 'sketchbook init --start from-codebase --from "../app/**/*.css"', 'sketchbook init --primary "#2563EB" --font Inter --radius round', 'sketchbook init --density compact --dry-run'],
   mutates: true,
   project: false,
   dryRun: true,
@@ -41,39 +43,41 @@ export default {
     // Every INIT_OPTIONS option is a string option, so typeof only narrows.
     const opts = Object.fromEntries(Object.entries(options).flatMap(([k, v]) => (k in INIT_OPTIONS && typeof v === 'string' ? [[k, v]] : [])));
     const start = options.start;
+    const profiles = parseAgentProfiles(options.agent);
+    const extras = options.with?.split(',').map((group) => group.trim()).filter(Boolean) ?? [];
     const target = resolve(root, options.dir ?? (options.adopt ? 'design-system' : '.'));
     if (!isProject(target)) {
-      const r = await bootstrap(root, { dir: options.dir, adopt: options.adopt, engine: options.engine, extras: options.with ? options.with.split(',').map((x) => x.trim()).filter(Boolean) : [], start: start ?? 'library', components: options.components, from: options.from, opts, dryRun, install: !options['no-install'], json, out });
+      const r = await bootstrap(root, { dir: options.dir, adopt: options.adopt, engine: options.engine, extras, profiles, start: start ?? 'library', components: options.components, from: options.from, opts, dryRun, install: !options['no-install'], json, out });
       for (const l of r.lines ?? []) out(l);
       if (r.exitCode === 1) return r;
       // Past the exitCode 1 return, data is the install summary; `in` only narrows the inferred union.
       if (!dryRun && 'target' in r.data) { out(`\nSketchbook installed in ${r.data.target}. What it installed (docs/harness.md has the full list):`); for (const l of installedSummary(r.data.installed)) out(l); }
       for (const w of r.warnings ?? []) out(`warning: ${w.msg}${w.fix ? `\n  fix: ${w.fix}` : ''}`);
-      if (r.claudeStep) out(`\nOptional setup for Claude Code: the Claude layer (skills, commands, rules, hooks) is staged in ${STAGED}/.\n  ${r.claudeStep.charAt(0).toUpperCase()}${r.claudeStep.slice(1)}.\n  Claude Code asks for approval to write into .claude/. Other agents can use AGENTS.md and AGENT-WORKFLOWS.md now.`);
+      if (r.claudeStep) out(`\nOptional setup for Claude Code: the Claude layer (skills, commands, rules, hooks) is staged in ${STAGED}/.\n  ${r.claudeStep.charAt(0).toUpperCase()}${r.claudeStep.slice(1)}.\n  Claude Code asks for approval to write into .claude/.`);
       if (r.next) out(`Next: ${r.next}`);
       return r;
     }
     if (options.dir && target !== resolve(root)) throw Object.assign(new Error(`${options.dir} is already a Sketchbook project.`), { fix: `cd ${options.dir}, then run sketchbook init there.` });
     for (const k of ['no-install', 'adopt', 'engine'] as const) if (options[k] !== undefined) throw Object.assign(new Error(`--${k} goes with a new project (a folder without harness.config.json).`), { fix: `Drop --${k}.` });
-    if (options.with && !Object.keys(opts).length && !start && !options.components && !options.from && !options.yes && !options['detach-catalog']) {
-      const r = addExtras(root, options.with.split(',').map((x) => x.trim()).filter(Boolean), { dryRun });
-      out(`${dryRun ? 'Would add' : 'Added'} ${r.added.length} file(s) of the optional Claude layer:\n  ${r.added.join('\n  ') || 'none (already here)'}`);
-      return { changed: dryRun ? [] : r.added, data: { extras: r }, next: 'sketchbook doctor' };
-    }
-    // init again, with nothing to change: repair (put back what is missing, never overwrite).
-    if (!Object.keys(opts).length && !start && !options.components && !options.from && !options.yes && !options['detach-catalog']) {
-      const r = repair(root, { dryRun });
+    const agentInstall = options.agent !== undefined || options.with !== undefined;
+    const projectChange = Object.keys(opts).length || start || options.components || options.from || options.yes || options['detach-catalog'];
+    if (agentInstall && projectChange) throw Object.assign(new Error('Apply integration and starter or brand options in separate commands in an existing project.'), { fix: 'Run sketchbook init --agent <profiles> separately.' });
+    if (!projectChange) {
+      const r = agentInstall ? installAgents(root, profiles, extras, { dryRun }) : { ...repair(root, { dryRun }), configChanged: false };
+      if ('profiles' in r) out(`Agent profiles: ${r.profiles.join(', ') || 'none'}`);
+      if (r.configChanged) out(`${dryRun ? 'Would record' : 'Recorded'} the selection in harness.config.json.`);
       if (r.added.length) out(`${dryRun ? 'Would restore' : 'Restored'} ${r.added.length} missing file(s):\n  ${r.added.join('\n  ')}`);
       else if (!r.skipped.length) out('Nothing missing: every harness-owned and setup file is here.');
-      // repair always sets hooks (from syncHarness); the type has it optional.
-      const hooks = r.hooks ?? [];
+      const { hooks } = r;
       if (hooks.length) out(`${dryRun ? 'Would add or update' : 'Added or updated'} ${hooks.length} Sketchbook hook(s) in settings.json (your own hooks and settings are kept):\n  ${hooks.join('\n  ')}`);
       if (r.edited.length) out(`Harness-owned files that differ from the installed engine (kept; sketchbook upgrade replaces them):\n  ${r.edited.join('\n  ')}`);
+      if (r.preserved.length) out(`Existing agent files kept: ${r.preserved.join(', ')}`);
       if (r.skipped.length) out(`Could not restore agent instructions without touching existing paths: ${r.skipped.join(', ')}. Resolve the path conflict and run sketchbook init again.`);
-      if (r.git?.line) out(r.git.line);
-      if (r.git?.warning) out(`warning: ${r.git.warning.msg}\n  fix: ${r.git.warning.fix}`);
+      const git = 'git' in r ? r.git : undefined;
+      if (git?.line) out(git.line);
+      if (git?.warning) out(`warning: ${git.warning.msg}\n  fix: ${git.warning.fix}`);
       out('To change the starting point or the brand: sketchbook init --start <starter> and/or --primary, --font, … (sketchbook help init).');
-      return { changed: dryRun ? [] : r.added, warnings: [...(r.git?.warning ? [r.git.warning] : []), ...r.skipped.map((file) => ({ file, msg: 'Agent instructions were not restored because an existing path blocks them.', fix: 'Resolve the path conflict and run sketchbook init again.' }))], data: { repair: r, starters: listStarters(root).map((s) => s?.id) }, next: r.edited.length ? 'sketchbook upgrade --dry-run' : 'sketchbook check' };
+      return { changed: [...r.added, ...(r.configChanged ? ['harness.config.json'] : []), ...(hooks.length && r.hookSettings ? [r.hookSettings] : [])], warnings: [...(git?.warning ? [git.warning] : []), ...r.skipped.map((file) => ({ file, msg: 'Agent instructions were not restored because an existing path blocks them.', fix: 'Resolve the path conflict and run sketchbook init again.' }))], data: { repair: r, starters: listStarters(root).map((s) => s?.id) }, next: agentInstall ? 'sketchbook doctor' : r.edited.length ? 'sketchbook upgrade --dry-run' : 'sketchbook check' };
     }
     if (!start && (options.components || options.from || options['detach-catalog'])) throw Object.assign(new Error('--components, --from and --detach-catalog go with --start <starter>.'), { fix: 'sketchbook init --start pick --components card,button' });
     if (!start && options.yes && !Object.keys(opts).length) throw Object.assign(new Error('--yes goes with --start <starter> or brand options.'), { fix: 'sketchbook init --start blank --yes' });

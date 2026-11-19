@@ -13,7 +13,9 @@ import type { HarnessConfigJson } from '../../generated/types/harness-config.js'
 import type { FixError } from './catalog.mjs';
 import { walk, readJsonSync, readJsonStrict, writeFileAtomic, globToRegExp } from '../lib/files.mjs';
 
-export interface HarnessManifest { version?: string; harness: string[]; team: string[]; shared?: string[]; ignore?: string[] }
+import { agentFileState, claudeDestination, isAgentFile, isClaudeLayerFile, profileFiles, selectedAgentProfiles, STAGED } from '../lib/agent-config.mjs';
+
+export interface HarnessManifest { version?: string; harness: string[]; team: string[]; shared?: string[]; ignore?: string[]; optional?: Record<string, string[]> }
 export type Ownership = 'harness' | 'team' | 'shared' | 'other' | 'ignore';
 export type TreeOwnership = Ownership | 'reclassified' | 'protected';
 export interface TreeDiff { update: string[]; add: string[]; removedUpstream: string[]; teamDiffers: string[]; sharedDiffers: string[]; upstreamOnly: string[]; reclassified: string[]; protected: string[] }
@@ -63,7 +65,7 @@ export function classifyBoth(path: string, local: HarnessManifest, upstream: Har
   const there = classify(path, upstream);
   // The manifest and the agent settings are always reported, never written; the rest of the pinned list only matters
   // when a manifest calls it harness-owned (both: protected; one: reclassified, as any one-sided claim).
-  if (path === 'harness/manifest.json' || /^\.claude\/settings[^/]*\.json$/.test(path)) return 'protected';
+  if (path === 'harness/manifest.json' || /^(?:\.claude|move-to-\.claude)\/settings[^/]*\.json$/.test(path)) return 'protected';
   // Only the engine's schema files (a project keeps them as editor hints) escape the pinned spec/** glob, and only when
   // both manifests list them by name; anything else pinned (package.json, configs) stays protected even then.
   const schema = /^spec\/schemas\/[a-z-]+\.schema\.json$/.test(path) && local.harness.includes(path) && upstream.harness.includes(path);
@@ -76,7 +78,26 @@ export function classifyBoth(path: string, local: HarnessManifest, upstream: Har
 export function compareTrees(root: string, source: string, local: HarnessManifest, upstream: HarnessManifest = local): TreeDiff {
   const files = [...new Set([...walk(source, '.'), ...walk(root, '.')])].sort();
   const out: TreeDiff = { update: [], add: [], removedUpstream: [], teamDiffers: [], sharedDiffers: [], upstreamOnly: [], reclassified: [], protected: [] };
+  const profiles = selectedAgentProfiles(root);
+  const agentFiles = profileFiles(profiles);
+  const claudeBase = profiles.includes('claude') ? claudeDestination(root) : null;
+  const config = readJsonSync<HarnessConfigJson>(join(root, 'harness.config.json'));
+  const omittedClaudeGroups = config?.catalog?.source === true ? [] : Object.entries(upstream.optional ?? {})
+    .filter(([group]) => !config?.claudeExtras?.some((extra) => extra === group))
+    .flatMap(([, paths]) => paths.map((path) => globToRegExp(path)));
   for (const f of files) {
+    if (isAgentFile(f)) {
+      const claudeFile = isClaudeLayerFile(f);
+      const selected = claudeFile ? claudeBase && f.startsWith(`${claudeBase}/`) : agentFiles.has(f);
+      if (claudeFile && omittedClaudeGroups.some((path) => path.test(f.replace(/^move-to-/, '')))) continue;
+      if (!selected) continue;
+      if (agentFileState(root, f) === 'blocked') { out.protected.push(f); continue; }
+      if (!claudeFile || f === `${STAGED}/INSTALL.md`) {
+        const shared = read(join(source, f));
+        if (shared && !shared.equals(read(join(root, f)) ?? Buffer.alloc(0))) out.protected.push(f);
+        continue;
+      }
+    }
     const cls = classifyBoth(f, local, upstream);
     if (cls === 'ignore' || cls === 'other') continue;
     const s = read(join(source, f));

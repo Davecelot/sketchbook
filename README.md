@@ -53,7 +53,7 @@ npx sketchbook check
 
 For an existing app, use the same tarball with `init --adopt` from the app directory. To bring your own tokens, use `--start import --from <tokens file>`. See the [quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for all seven starters.
 
-Init writes `AGENTS.md` and `AGENT-WORKFLOWS.md`, plus an initial installation inventory at `docs/harness.md` in the new project. Claude Code setup is optional. Run `npx sketchbook doctor` for the current setup and see the [agent compatibility guide](./docs/agent-compatibility.md) for client-specific hook coverage.
+Plain `init` creates a core-only project and writes its initial inventory to `docs/harness.md`. Add `--agent claude` to stage Claude Code, or `--agent codex,trae` to install both selected integrations. The same flag adds profiles to an existing project. Run `npx sketchbook doctor` to inspect your setup. [Agent compatibility guide](./docs/agent-compatibility.md)
 
 ## Work on this repository
 

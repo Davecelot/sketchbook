@@ -54,6 +54,12 @@
     },
     "ui": { "type": "object", "properties": { "reference": { "type": "string" }, "note": { "type": "string" } } },
     "process": { "type": "object", "properties": { "reference": { "type": "string" }, "note": { "type": "string" } } },
+    "agentProfiles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["claude", "codex", "gemini", "copilot", "trae", "jetbrains", "generic"] },
+      "description": "Sketchbook agent integrations selected for this project (sketchbook init --agent). An empty list is core only."
+    },
     "claudeExtras": { "type": "array", "items": { "enum": ["forge"] }, "description": "Optional Claude-layer groups installed in this project (sketchbook init --with); harness/manifest.json \"optional\" lists their files." },
     "starter": { "type": "string", "description": "The starting point chosen with sketchbook init --start (harness/starters/<id>.json)." },
     "harnessVersion": { "type": "string", "description": "Version of the harness-owned files (harness/manifest.json), bumped by sketchbook upgrade." },

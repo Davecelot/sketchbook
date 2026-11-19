@@ -20,24 +20,23 @@ Pack the engine as shown in the [quickstart](/start/quickstart/) and keep `SKETC
    npm exec --yes --package="$SKETCHBOOK_TARBALL" -- sketchbook init --adopt --start library --engine "$SKETCHBOOK_TARBALL"
    ```
 
-   The folder has the same layout as a new project: the engine runs from `node_modules`, and the Claude layer is staged in `move-to-.claude/`. `--no-install` skips `npm install` and the Chromium download.
+   The command creates a core-only project. Append `--agent trae` to select TRAE or use a comma-separated list to set up several clients. See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile). `--no-install` skips dependency and Chromium setup.
 
-3. **Open the design-system folder in your agent.** The portable instructions are available immediately. To set up the optional Claude Code layer, follow `move-to-.claude/INSTALL.md`. [Agent compatibility](/concepts/agent-compatibility/).
-
-4. **Start Claude Code in the design-system folder.** It reads `.claude/settings.json`, and so the hooks, only from the folder it starts in. From the app root, `/add-dir <folder>` loads skills and commands but not hooks or settings.
+3. **Open the design-system folder in your agent.** For Claude Code, add `--agent claude` during adoption and follow the [activation steps](/concepts/claude-layer/) from that folder. Client setup files live inside the design-system folder.
 
 ## Repair
 
-From the design-system folder, run `init` again to repair a project. Pass `--with forge` to add the optional skill for writing your own skills.
+From the design-system folder, run `init` again to restore files for the selected profiles. Use `--agent` to add a profile or `--with forge` to set up Claude and the optional skill for writing your own skills.
 
 ```terminal
 npx sketchbook init
+npx sketchbook init --agent codex --dry-run
 npx sketchbook init --with forge
 ```
 
 ## Check health
 
-`doctor` is read-only. It reports the starter, harness version, components, kits, overrides, design sync, brands, the commit gate, failing checks and the Claude layer.
+`doctor` is read-only. It reports the starter, harness version, components, kits, overrides, design sync, brands, the commit gate, failing checks and the selected agent integrations.
 
 ```terminal
 npx sketchbook doctor

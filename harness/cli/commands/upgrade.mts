@@ -34,11 +34,12 @@ export default {
       out(`Harness ${before ?? 'unrecorded'} -> ${version} (the installed engine${dryRun ? '; dry run: nothing written' : ''})`);
       if (r.added.length) out(`${dryRun ? 'Would add' : 'Added'} (${r.added.length}):\n  ${r.added.join('\n  ')}`);
       if (r.updated.length) out(`${dryRun ? 'Would update' : 'Updated'} (${r.updated.length}):\n  ${r.updated.join('\n  ')}`);
-      // syncHarness always sets hooks; SyncResult types it optional for its other callers.
-      const hooks = r.hooks ?? [];
+      const { hooks } = r;
       if (hooks.length) out(`${dryRun ? 'Would add or update' : 'Added or updated'} ${hooks.length} Sketchbook hook(s) in settings.json (your own hooks and settings are kept):\n  ${hooks.join('\n  ')}`);
-      if (!r.added.length && !r.updated.length && !hooks.length) out('The harness-owned files here already match the installed engine.');
-      return { changed: [...r.added, ...r.updated, ...(dryRun ? [] : ['harness.config.json'])], data: { version: { before, after: version }, ...r }, next: dryRun ? 'sketchbook upgrade' : 'sketchbook check' };
+      if (r.preserved.length) out(`Existing agent files kept: ${r.preserved.join(', ')}`);
+      if (r.skipped.length) out(`Blocked agent setup paths (kept): ${r.skipped.join(', ')}`);
+      if (!r.skipped.length && !r.added.length && !r.updated.length && !hooks.length) out('The harness-owned files here already match the installed engine.');
+      return { changed: [...r.added, ...r.updated, ...(hooks.length && r.hookSettings ? [r.hookSettings] : []), ...(dryRun ? [] : ['harness.config.json'])], warnings: r.skipped.map((file) => ({ file, msg: 'Existing path blocks agent setup.', fix: 'Review the path and run sketchbook init.' })), data: { version: { before, after: version }, ...r }, next: dryRun ? 'sketchbook upgrade' : 'sketchbook check' };
     }
     if (!options.from) throw Object.assign(new Error('Usage: sketchbook upgrade --from <path|git-url> [--dry-run] [--yes]'), { fix: 'Point --from at a newer Sketchbook (this project has its own harness/).' });
     const r = upgrade(root, options.from, { dryRun, yes: options.yes });

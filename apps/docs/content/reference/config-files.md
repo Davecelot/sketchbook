@@ -11,13 +11,14 @@ order: 10
 | File | Controls | Owner | Change with |
 | --- | --- | --- | --- |
 | `brand.config.json` | Foundations: color, typography, spacing, radius, density, contrast, breakpoints and more. Each is a `preset` or `custom`. | Team | `sketchbook tokens set\|preset`, or the `foundations` skill |
-| `harness.config.json` | Prefix, the `language` of AI and human output, adapters, feature switches, the `ui` and `process` references, white-label terms, catalog source, and `contextBudget` (the always-on context limit that check H1 enforces). | Team | Edit it; `sketchbook prefix <new>` renames the prefix |
+| `harness.config.json` | Prefix, the `language` of AI and human output, adapters, feature switches, the `ui` and `process` references, white-label terms, catalog source, selected `agentProfiles`, and `contextBudget` (the always-on context limit that check H1 enforces). | Team | Edit it; `sketchbook prefix <new>` renames the prefix |
 | `brand/` | The brand mark (icon SVG and PNG), shipped in the package. The `size.brand.mark` semantic token sizes it. | Team | Replace the files |
 | `spec/registry.json` | Components, tier, status, tag and path. | Team | `sketchbook add`, `sketchbook remove` |
 
 ```json
 {
   "prefix": "sb",
+  "agentProfiles": [],
   "features": { "planningGate": true, "testFirst": true },
   "ui": { "reference": "shadcn/ui" },
   "process": { "reference": "contract-first standard" }

@@ -1,11 +1,12 @@
 // sketchbook init in a folder that is not a Sketchbook project yet (SB-0097 to SB-0099). The whole project is built in a
 // stage beside the target and moved in only when the checks pass, so a failure leaves the folder as it was. The engine
 // is a dependency (node_modules), not copied; the Claude layer is staged in move-to-.claude/ for Claude to install.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync, copyFileSync, cpSync, chmodSync, statSync, lstatSync, constants } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync, copyFileSync, cpSync, chmodSync, statSync, lstatSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve, sep } from 'node:path';
+import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import type { ComponentRegistry } from '../../generated/types/registry.js';
-import { walk, HARNESS, ENGINE, globToRegExp, parseJson, readJson, readJsonSync } from '../lib/files.mjs';
+import { walk, HARNESS, ENGINE, globToRegExp, parseJson, readJson, readJsonSync, writeFileAtomic } from '../lib/files.mjs';
 import { loadOwnership, classify } from './upgrade.mjs';
 import type { HarnessManifest } from './upgrade.mjs';
 import { applyStarter, DETACHED_NOTE } from './start.mjs';
@@ -17,16 +18,17 @@ import type { CheckReport } from './tokens.mjs';
 import { runGenerator } from '../generators/foundation.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { installed, installedMarkdown } from '../lib/installed.mjs';
-import { hookScript } from '../lib/claude-layer.mjs';
+import { hookScript, readClaudeSettings } from '../lib/claude-layer.mjs';
+import type { HookEntry, HookCommand } from '../lib/claude-layer.mjs';
 import { emptyLog, inheritDecisions } from '../lib/decisions.mjs';
-import { AGENT_ENGINE_FILES, renderAgentSetup } from '../lib/agent-config.mjs';
+import { AGENT_ENGINE_FILES, agentFileState, claudeDestination, hasClaudeLayer, isAgentFile, profileFiles, renderAgentSetup, selectedAgentProfiles, STAGED } from '../lib/agent-config.mjs';
+import type { AgentProfile } from '../lib/agent-config.mjs';
+
+export { STAGED };
 
 export interface Warning { file: string | null; msg: string; fix: string | null }
-export interface SyncResult { added: string[]; updated: string[]; edited: string[]; hooks?: string[] }
+export interface SyncResult { added: string[]; updated: string[]; edited: string[]; hooks: string[]; skipped: string[]; preserved: string[]; hookSettings?: string }
 export interface GitSetup { inside?: string; warning?: Warning; line?: string | null }
-export interface HookCommand { command: string; [k: string]: unknown }
-export interface HookEntry { matcher?: string; hooks?: HookCommand[]; [k: string]: unknown }
-export interface ClaudeSettings { hooks?: Record<string, HookEntry[]>; [k: string]: unknown }
 export interface EnginePackage {
   name: string;
   version: string;
@@ -52,18 +54,17 @@ export interface BootstrapOptions {
   opts?: Record<string, string | undefined>;
   engine?: string;
   extras?: string[];
+  profiles?: AgentProfile[];
   dryRun?: boolean;
   install?: boolean;
   json?: boolean;
   out?: (line: string) => void;
 }
-type ManifestWithGroups = HarnessManifest & { optional?: Record<string, string[]> };
 interface PackageLock { name?: string; version?: string; packages: Record<string, unknown>; [k: string]: unknown }
-type ProjectConfig = AdapterConfig & { catalog?: { source?: boolean; note?: string }; harnessVersion?: string; starter?: string; claudeExtras?: string[] };
+type ProjectConfig = AdapterConfig & { catalog?: { source?: boolean; note?: string }; harnessVersion?: string; starter?: string; claudeExtras?: string[]; agentProfiles?: AgentProfile[] };
 
 const TEMPLATE = join(HARNESS, 'templates/project');
 const IGNORED = new Set(['.git', '.DS_Store']);
-export const STAGED = 'move-to-.claude';
 const fail = (msg: string, fix: string): FixError => Object.assign(new Error(msg), { fix });
 const serialize = (j: unknown): string => JSON.stringify(j, null, 2) + '\n';
 const enginePkg = (): EnginePackage => readJson<EnginePackage>(join(ENGINE, 'package.json'));
@@ -72,13 +73,13 @@ const enginePkg = (): EnginePackage => readJson<EnginePackage>(join(ENGINE, 'pac
 const isEngine = (f: string): boolean => /^(harness|scripts)\//.test(f) || (f.startsWith('.claude/') && f.endsWith('.mts'));
 
 export const EXTRAS = ['forge'];
-const groupOf = (f: string, m: ManifestWithGroups): string | null => Object.entries(m.optional ?? {}).find(([, globs]) => globs.some((g) => globToRegExp(g).test(f)))?.[0] ?? null;
+const groupOf = (f: string, m: HarnessManifest): string | null => Object.entries(m.optional ?? {}).find(([, globs]) => globs.some((g) => globToRegExp(g).test(f)))?.[0] ?? null;
 const extrasOf = (root: string): string[] => readJsonSync<{ claudeExtras?: string[] }>(join(root, 'harness.config.json'), {})?.claudeExtras ?? [];
 
 export const isProject = (dir: string): boolean => existsSync(join(dir, 'harness.config.json'));
 
 // Harness-owned files of this install (harness/manifest.json "harness"), walked from each glob's fixed prefix only.
-export function harnessFiles(source: string = ENGINE): { manifest: ManifestWithGroups; files: string[] } {
+export function harnessFiles(source: string = ENGINE): { manifest: HarnessManifest; files: string[] } {
   const m = loadOwnership(source);
   const files = new Set<string>();
   for (const glob of m.harness) {
@@ -88,31 +89,73 @@ export function harnessFiles(source: string = ENGINE): { manifest: ManifestWithG
   return { manifest: m, files: [...files].sort() };
 }
 
-// Where a harness file lives in a project: the Claude layer stays staged in move-to-.claude/ until Claude installs it.
-export function destOf(root: string, f: string): string {
-  if (!f.startsWith('.claude/')) return f;
-  return existsSync(join(root, STAGED)) || !existsSync(join(root, '.claude')) ? `${STAGED}/${f.slice('.claude/'.length)}` : f;
+function claudeFiles(files: string[], manifest: HarnessManifest, extras: string[]): string[] {
+  return files.filter((file) => {
+    if (!file.startsWith('.claude/') || isEngine(file)) return false;
+    const group = groupOf(file, manifest);
+    return !group || extras.includes(group);
+  });
 }
 
-// The project's copies of the harness-owned files that are not the engine: add the missing ones, and with all: true
-// replace the ones that differ (upgrade); otherwise report them as edited (repair never overwrites).
-export function syncHarness(root: string, { all = false, dryRun = false, extras = extrasOf(root) }: { all?: boolean; dryRun?: boolean; extras?: string[] } = {}): SyncResult {
-  const out: SyncResult = { added: [], updated: [], edited: [] };
-  const { files, manifest } = harnessFiles();
-  for (const f of files.filter((x) => !isEngine(x) && ((g: string | null) => !g || extras.includes(g))(groupOf(x, manifest)))) {
-    const dest = destOf(root, f);
-    const src = readFileSync(join(ENGINE, f));
-    const abs = join(root, dest);
-    if (!existsSync(abs)) out.added.push(dest);
-    else if (!readFileSync(abs).equals(src)) (all ? out.updated : out.edited).push(dest);
-    else continue;
-    if (dryRun || (existsSync(abs) && !all)) continue;
-    mkdirSync(dirname(abs), { recursive: true });
-    writeFileSync(abs, src);
-    // Keep the engine file's mode: git ignores a pre-commit hook that is not executable.
-    chmodSync(abs, f.startsWith('.githooks/') ? 0o755 : statSync(join(ENGINE, f)).mode & 0o777);
+export function expectedAgentFiles(root: string, profiles: AgentProfile[]): Set<string> {
+  const expected = profileFiles(profiles);
+  if (profiles.includes('claude')) {
+    const { files, manifest } = harnessFiles();
+    const base = claudeDestination(root);
+    for (const file of claudeFiles(files, manifest, extrasOf(root))) expected.add(file.replace(/^\.claude/, base));
+    expected.add(`${base}/settings.json`);
+    if (base === STAGED) expected.add(`${base}/INSTALL.md`);
   }
-  out.hooks = mergeHooks(join(root, destOf(root, '.claude/settings.json')), dryRun);
+  return expected;
+}
+
+// Upgrade can refresh harness-owned files. Shared entry points and native adapter files are write-once.
+export function syncHarness(root: string, {
+  all = false, dryRun = false, agentsOnly = false, profiles = selectedAgentProfiles(root), extras = extrasOf(root),
+}: { all?: boolean; dryRun?: boolean; agentsOnly?: boolean; profiles?: AgentProfile[]; extras?: string[] } = {}): SyncResult {
+  const out: SyncResult = { added: [], updated: [], edited: [], hooks: [], skipped: [], preserved: [] };
+  const { files, manifest } = harnessFiles();
+  function copy(source: string, dest: string, { owned = false, agent = false } = {}) {
+    const abs = join(root, dest);
+    const state = agent ? agentFileState(root, dest) : existsSync(abs) ? 'file' : 'missing';
+    if (state === 'blocked') { out.skipped.push(dest); return; }
+    const template = readFileSync(source);
+    const src = AGENT_ENGINE_FILES.some((file) => file === dest) ? Buffer.from(renderAgentSetup(dest, template.toString('utf8'), enginePkg().name)) : template;
+    if (state === 'missing') out.added.push(dest);
+    else {
+      if (readFileSync(abs).equals(src)) return;
+      if (!owned) { out.preserved.push(dest); return; }
+      (all ? out.updated : out.edited).push(dest);
+    }
+    if (dryRun || (state === 'file' && !all)) return;
+    mkdirSync(dirname(abs), { recursive: true });
+    writeFileSync(abs, src, { flag: agent && state === 'missing' ? 'wx' : 'w', mode: dest.startsWith('.githooks/') ? 0o755 : statSync(source).mode & 0o777 });
+    if (dest.startsWith('.githooks/')) chmodSync(abs, 0o755);
+  }
+  if (!agentsOnly) {
+    for (const file of files.filter((file) => !isEngine(file) && !isAgentFile(file))) copy(join(ENGINE, file), file, { owned: true });
+  }
+  for (const file of profileFiles(profiles)) {
+    const source = file === 'CLAUDE.md' ? join(HARNESS, 'templates', file) : join(TEMPLATE, file);
+    copy(source, file, { agent: true });
+  }
+  if (profiles.includes('claude')) {
+    const base = claudeDestination(root);
+    const knownLayer = hasClaudeLayer(root, base);
+    for (const file of claudeFiles(files, manifest, extras)) {
+      copy(join(ENGINE, file), file.replace(/^\.claude/, base), { agent: true, owned: true });
+    }
+    if (base === STAGED) copy(join(HARNESS, 'templates/move-to-claude-INSTALL.md'), `${base}/INSTALL.md`, { agent: true });
+    const settings = `${base}/settings.json`;
+    const state = agentFileState(root, settings);
+    if (state === 'missing') copy(join(TEMPLATE, '.claude/settings.json'), settings, { agent: true });
+    else if (state === 'blocked' || !knownLayer) out.skipped.push(settings);
+    else {
+      const hooks = mergeHooks(join(root, settings), dryRun);
+      if (hooks === null) out.skipped.push(settings);
+      else { out.hooks = hooks; out.hookSettings = settings; }
+    }
+  }
   return out;
 }
 
@@ -120,11 +163,12 @@ export function syncHarness(root: string, { all = false, dryRun = false, extras 
 // nothing the team has is removed, and only a Sketchbook hook from before the launcher (SB-0119), which calls its script
 // directly, is changed: into the template's launcher command for the same script, so it runs once, from its current
 // file. Returns the added and the replaced commands.
-function mergeHooks(settingsPath: string, dryRun: boolean): string[] {
-  const have = readJsonSync<ClaudeSettings>(settingsPath, {}) ?? {};
+function mergeHooks(settingsPath: string, dryRun: boolean): string[] | null {
+  const have = readClaudeSettings(settingsPath);
+  if (!have) return null;
   const added: string[] = [];
-  const template = readJsonSync<{ hooks?: Record<string, (HookEntry & { hooks: HookCommand[] })[]> }>(join(TEMPLATE, '.claude/settings.json'));
-  const script = (command: string): string | undefined => hookScript(command)?.replace(/\.m?js$/, '');
+  const template = readJsonSync<{ hooks?: Record<string, (HookEntry & { hooks: (HookCommand & { command: string })[] })[]> }>(join(TEMPLATE, '.claude/settings.json'));
+  const script = (command: unknown): string | undefined => hookScript(command)?.replace(/\.m?js$/, '');
   const launched = new Map(Object.values(template?.hooks ?? {}).flat().flatMap((e) => e.hooks).filter((h) => / "\$\{CLAUDE_PROJECT_DIR\}\/\.claude\/hooks\/run\.mjs" /.test(h.command)).map((h) => [script(h.command), h.command]));
   for (const [event, entries] of Object.entries(have.hooks ?? {})) {
     for (const h of entries.flatMap((e) => e.hooks ?? [])) {
@@ -143,20 +187,28 @@ function mergeHooks(settingsPath: string, dryRun: boolean): string[] {
       added.push(...missing.map((h) => `${event}: ${h.command}`));
     }
   }
-  if (added.length && !dryRun) { mkdirSync(dirname(settingsPath), { recursive: true }); writeFileSync(settingsPath, serialize(have)); }
+  if (added.length && !dryRun) writeFileSync(settingsPath, serialize(have));
   return added;
 }
 
-// sketchbook init --with <group>: record the optional Claude-layer groups and copy their files.
-export function addExtras(root: string, groups: string[], { dryRun = false }: { dryRun?: boolean } = {}): SyncResult {
-  const bad = groups.filter((g) => !EXTRAS.includes(g));
-  if (bad.length) throw fail(`Unknown --with group: ${bad.join(', ')}.`, `Choose from ${EXTRAS.join(', ')}.`);
+export function installAgents(root: string, requested: AgentProfile[], groups: string[], { dryRun = false }: { dryRun?: boolean } = {}) {
+  validateExtras(groups);
   const configPath = join(root, 'harness.config.json');
-  const config = readJsonSync<{ claudeExtras?: string[]; [k: string]: unknown }>(configPath);
-  if (!config) throw new TypeError("Cannot read properties of null (reading 'claudeExtras')");
+  if (agentFileState(root, 'harness.config.json') !== 'file') throw fail('Cannot record agent profiles in harness.config.json.', 'Use a regular project config file.');
+  const config = readJson<ProjectConfig>(configPath);
+  const profiles = [...new Set([...selectedAgentProfiles(root), ...requested, ...(groups.length ? ['claude' as const] : [])])];
   const extras = [...new Set([...(config.claudeExtras ?? []), ...groups])];
-  if (!dryRun) writeFileSync(configPath, serialize({ ...config, claudeExtras: extras }));
-  return syncHarness(root, { dryRun, extras });
+  const configChanged = !Array.isArray(config.agentProfiles)
+    || profiles.some((profile) => !config.agentProfiles?.includes(profile))
+    || groups.some((group) => !config.claudeExtras?.includes(group));
+  if (configChanged && !dryRun) writeFileAtomic(configPath, serialize({ ...config, agentProfiles: profiles, ...(extras.length ? { claudeExtras: extras } : {}) }));
+  const result = syncHarness(root, { agentsOnly: true, dryRun, profiles, extras });
+  return { ...result, profiles, configChanged };
+}
+
+function validateExtras(groups: string[]): void {
+  const unknown = groups.filter((group) => !EXTRAS.includes(group));
+  if (unknown.length) throw fail(`Unknown --with group: ${unknown.join(', ')}.`, `Choose from ${EXTRAS.join(', ')}.`);
 }
 
 const PROJECT_SCRIPTS = (engine: EnginePackage): Record<string, string | undefined> => ({
@@ -216,22 +268,15 @@ function projectPackage(name: string, spec: string) {
 
 const slug = (s: string): string => s.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'design-system';
 
-async function build(stage: string, target: string, { start, components, from, brand, spec, extras = [] }: { start: string; components?: string; from?: string; brand: InitOptions; spec: string; extras?: string[] }) {
+async function build(stage: string, target: string, { start, components, from, brand, spec, extras, profiles }: { start: string; components?: string; from?: string; brand: InitOptions; spec: string; extras: string[]; profiles: AgentProfile[] }) {
   const harness = harnessFiles();
-  cpSync(TEMPLATE, stage, { recursive: true });
-  for (const file of AGENT_ENGINE_FILES) {
-    const path = join(stage, file);
-    const text = readFileSync(path, 'utf8');
-    const rendered = renderAgentSetup(file, text, enginePkg().name);
-    if (rendered !== text) writeFileSync(path, rendered);
+  for (const file of walk(TEMPLATE, '.')) {
+    if (!isAgentFile(file)) cpSync(join(TEMPLATE, file), join(stage, file));
   }
   renameSync(join(stage, 'gitignore'), join(stage, '.gitignore'));
-  renameSync(join(stage, '.claude'), join(stage, STAGED));
-  syncHarness(stage, { extras });
-  copyFileSync(join(HARNESS, 'templates/move-to-claude-INSTALL.md'), join(stage, STAGED, 'INSTALL.md'));
+  syncHarness(stage, { extras, profiles });
   for (const d of ['spec/components', 'src/components']) mkdirSync(join(stage, d), { recursive: true });
   copyFileSync(join(HARNESS, 'test/golden/brand.default.json'), join(stage, 'brand.config.json'));
-  copyFileSync(join(HARNESS, 'templates/CLAUDE.md'), join(stage, 'CLAUDE.md'));
   const pkg = projectPackage(slug(basename(target)), spec);
   writeFileSync(join(stage, 'package.json'), serialize(pkg));
   // The template's lockfile is this repo's: npm install then gets the versions a clone gets, not whatever the registry
@@ -248,6 +293,7 @@ async function build(stage: string, target: string, { start, components, from, b
   config.catalog = { source: false, note: DETACHED_NOTE };
   config.harnessVersion = harness.manifest.version;
   delete config.starter;
+  config.agentProfiles = profiles;
   if (extras.length) config.claudeExtras = extras;
   writeFileSync(configPath, serialize(config));
   // Nothing is installed yet: every registry entry starts planned, and each install sets its own status.
@@ -380,11 +426,11 @@ function wireApp(app: string, target: string): { lines: string[]; warnings: Warn
   return { lines, warnings };
 }
 
-export async function bootstrap(cwd: string, { dir, adopt = false, start = 'library', components, from, opts = {}, engine, extras = [], dryRun = false, install = true, json = false, out = () => {} }: BootstrapOptions = {}) {
+export async function bootstrap(cwd: string, { dir, adopt = false, start = 'library', components, from, opts = {}, engine, extras = [], profiles = [], dryRun = false, install = true, json = false, out = () => {} }: BootstrapOptions = {}) {
   dir ??= adopt ? 'design-system' : undefined;
   const target = resolve(cwd, dir ?? '.');
-  const unknown = extras.filter((g) => !EXTRAS.includes(g));
-  if (unknown.length) throw fail(`Unknown --with group: ${unknown.join(', ')}.`, `Choose from ${EXTRAS.join(', ')}.`);
+  validateExtras(extras);
+  if (extras.length && !profiles.includes('claude')) profiles = [...profiles, 'claude'];
   if (existsSync(target)) {
     const present = readdirSync(target).filter((f) => !IGNORED.has(f));
     if (present.length) {
@@ -395,16 +441,16 @@ export async function bootstrap(cwd: string, { dir, adopt = false, start = 'libr
   }
   const brand: InitOptions = Object.fromEntries(Object.entries(opts).filter(([k, v]) => k in INIT_OPTIONS && v !== undefined));
   const spec = engineSpec(engine, cwd);
-  mkdirSync(dirname(target), { recursive: true });
-  const stage = mkdtempSync(join(dirname(target), '.sketchbook-init-'));
+  if (!dryRun) mkdirSync(dirname(target), { recursive: true });
+  const stage = mkdtempSync(join(dryRun ? tmpdir() : dirname(target), '.sketchbook-init-'));
   try {
-    const r = await build(stage, target, { start, components, from: from ? resolve(cwd, from) : undefined, brand, spec, extras });
+    const r = await build(stage, target, { start, components, from: from ? resolve(cwd, from) : undefined, brand, spec, extras, profiles });
     const files = walk(stage, '.');
     const checks = { exitCode: r.report.exitCode, failing: r.report.results.filter((x) => x.errors.length).map((x) => x.id) };
     const errors = r.report.results.flatMap((x) => x.errors.map((e) => ({ ...e, id: x.id })));
     if (r.report.exitCode === 1) return { exitCode: 1, errors, changed: [], data: { checks }, next: 'Nothing was written. Fix the cause above (each error has a fix), then run init again.' };
-    const data = { target, engine: { package: enginePkg().name, spec }, starter: { id: start, components: r.starter.plan.components.target, kits: r.starter.plan.kits.target }, staged: STAGED, checks, installed: r.installed };
-    if (dryRun) return { changed: files, data, lines: [`Would create ${files.length} file(s) in ${target}: the engine as a dependency (${data.engine.package}@${spec}), the Claude layer staged in ${STAGED}/, starter ${start} (${data.starter.components.length} component(s), ${data.starter.kits.length} kit(s)); checks ${checks.failing.length ? `fail: ${checks.failing.join(', ')}` : 'pass'}.`] };
+    const data = { target, engine: { package: enginePkg().name, spec }, starter: { id: start, components: r.starter.plan.components.target, kits: r.starter.plan.kits.target }, agentProfiles: profiles, staged: profiles.includes('claude') ? STAGED : null, checks, installed: r.installed };
+    if (dryRun) return { changed: files, data, lines: [`Would create ${files.length} file(s) in ${target}: the engine as a dependency (${data.engine.package}@${spec}), agent profiles ${profiles.join(', ') || 'none'}, starter ${start} (${data.starter.components.length} component(s), ${data.starter.kits.length} kit(s)); checks ${checks.failing.length ? `fail: ${checks.failing.join(', ')}` : 'pass'}.`, ...files.filter(isAgentFile).map((file) => `  ${file}`)] };
     mkdirSync(target, { recursive: true });
     for (const e of readdirSync(stage)) renameSync(join(stage, e), join(target, e));
     const warnings: Warning[] = [];
@@ -415,61 +461,34 @@ export async function bootstrap(cwd: string, { dir, adopt = false, start = 'libr
     if (install) { out('Installing dependencies (npm install, then Chromium for the behavior tests)…'); warnings.push(...installDeps(target, json)); }
     else warnings.push({ file: 'package.json', msg: 'Dependencies not installed (--no-install).', fix: `cd ${target} && npm install && npx playwright install chromium` });
     if (r.starter.warning) warnings.push({ file: 'harness.config.json', msg: r.starter.warning, fix: null });
-    const claude = `open Claude Code in ${dir ? dir : 'this folder'} and ask: "Install the Claude layer from ${STAGED}/ (follow ${STAGED}/INSTALL.md)"`;
-    const workspace = g.inside ? `open ${dir ?? 'the design-system folder'} as the agent workspace; verify Copilot hook discovery for the workspace; cloud and repository-root sessions need a root hook configuration` : null;
-    return { changed: files, warnings, data, lines, claudeStep: claude, next: [...(dir ? [`cd ${dir}`] : []), ...(workspace ? [workspace] : []), `optional for Claude Code: ${claude}`, ...r.starter.next].join('; ') };
+    const claude = profiles.includes('claude') ? `open Claude Code in ${dir ? dir : 'this folder'} and ask: "Install the Claude layer from ${STAGED}/ (follow ${STAGED}/INSTALL.md)"` : null;
+    const workspace = g.inside && profiles.length
+      ? `open ${dir ?? 'the design-system folder'} as the agent workspace${profiles.includes('copilot') ? '; verify Copilot hook discovery for the workspace; cloud and repository-root sessions need a root hook configuration' : ''}`
+      : null;
+    return { changed: files, warnings, data, lines, claudeStep: claude, next: [...(dir ? [`cd ${dir}`] : []), ...(workspace ? [workspace] : []), ...(claude ? [`for Claude Code: ${claude}`] : []), ...r.starter.next].join('; ') };
   } finally {
     rmSync(stage, { recursive: true, force: true });
   }
 }
 
-// Portable setup files may share directories with a team's existing agent configuration.
-const AGENT_SETUP = new Set(['AGENTS.md', '.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']);
-function agentSetupObstacle(root: string, file: string): string | null {
-  const parts = file.split('/');
-  for (let i = 1; i <= parts.length; i++) {
-    const path = join(root, ...parts.slice(0, i));
-    try {
-      const stat = lstatSync(path);
-      if (i === parts.length || stat.isSymbolicLink() || !stat.isDirectory()) return parts.slice(0, i).join('/');
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
-      throw error;
-    }
-  }
-  return null;
-}
-
 // sketchbook init again in a project: put back what is missing, never overwrite. Harness-owned files the team edited
 // are reported (sketchbook upgrade replaces them); missing setup files (shared, from the template) come back too.
-export function repair(root: string, { dryRun = false }: { dryRun?: boolean } = {}): { added: string[]; edited: string[]; hooks: string[] | undefined; git: GitSetup; skipped: string[] } {
+export function repair(root: string, { dryRun = false }: { dryRun?: boolean } = {}): SyncResult & { git: GitSetup } {
   const harness = syncHarness(root, { dryRun });
   const m = loadOwnership(ENGINE);
   const restored: string[] = [];
-  const skipped: string[] = [];
   for (const rel of walk(TEMPLATE, '.')) {
-    const live = rel === 'gitignore' ? '.gitignore' : rel.startsWith('.claude/') ? destOf(root, rel) : rel;
-    if (classify(live, m) !== 'shared') continue;
-    if (AGENT_SETUP.has(live)) {
-      // Inspect parents even when the destination exists: it may be a directory,
-      // or reached through a symlink, neither of which is an installed file.
-      const obstacle = agentSetupObstacle(root, live);
-      if (obstacle) {
-        if (obstacle !== live || !lstatSync(join(root, live)).isFile()) skipped.push(live);
-        continue;
-      }
-    } else if (existsSync(join(root, live))) continue;
+    if (isAgentFile(rel)) continue;
+    const live = rel === 'gitignore' ? '.gitignore' : rel;
+    if (classify(live, m) !== 'shared' || existsSync(join(root, live))) continue;
     // A project from before the configs became .ts keeps its .js one; both beside each other would be ambiguous.
     if (live.endsWith('.ts') && existsSync(join(root, live.replace(/\.ts$/, '.js')))) continue;
     restored.push(live);
     if (!dryRun) {
       mkdirSync(dirname(join(root, live)), { recursive: true });
-      if (AGENT_ENGINE_FILES.some((file) => file === rel)) {
-        const text = renderAgentSetup(rel, readFileSync(join(TEMPLATE, rel), 'utf8'), enginePkg().name);
-        writeFileSync(join(root, live), text, { flag: 'wx' });
-      } else copyFileSync(join(TEMPLATE, rel), join(root, live), AGENT_SETUP.has(live) ? constants.COPYFILE_EXCL : 0);
+      copyFileSync(join(TEMPLATE, rel), join(root, live));
     }
   }
   const git = dryRun ? {} : setupGit(root);
-  return { added: [...harness.added, ...restored], edited: harness.edited, hooks: harness.hooks, git, skipped };
+  return { ...harness, added: [...harness.added, ...restored], git };
 }
