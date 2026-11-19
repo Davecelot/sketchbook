@@ -1,6 +1,6 @@
 {
   "name": "@usesketchbook/cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Provider-neutral harness for building an accessible, white-label Web Components design system from a spec.",
   "type": "module",
   "publishConfig": {
