@@ -4,8 +4,8 @@
 
 # Sketchbook
 
-**The harness for building a design system, with Claude.**<br />
-Sources of truth, generators, deterministic checks, gates and a Claude layer that make design-system work repeatable. A component library is one of its outputs.
+**The harness for building a design system with coding agents.**<br />
+Sources of truth, generators, deterministic checks, gates and agent guidance make design-system work repeatable. A component library is one of its outputs.
 
 <br />
 
@@ -25,7 +25,7 @@ Sources of truth, generators, deterministic checks, gates and a Claude layer tha
 
 ## What is Sketchbook
 
-Sketchbook is the layer around your design system, not the design system's UI. It holds the way of working: what the source of truth is, how outputs are rebuilt from it, what is checked, which steps need approval, and how Claude is told to behave while it works.
+Sketchbook is the layer around your design system, not the design system's UI. It holds the way of working: what the source of truth is, how outputs are rebuilt from it, what is checked, which steps need approval, and how coding agents find the project’s guidance.
 
 | Part | What it is |
 | --- | --- |
@@ -33,7 +33,7 @@ Sketchbook is the layer around your design system, not the design system's UI. I
 | **Generators** | Rebuild foundation tokens, CSS, component styles, Storybook and the Figma file from the sources. |
 | **Checks** | 26 deterministic checks (including one maintainer-only check): tokens, contrast, contracts, drift, white-label, decisions and more. |
 | **Gates** | A new component stops at a planning gate, is built test-first, and is reviewed before it leaves beta. |
-| **Claude layer** | Rules, skills, slash commands and hooks that keep an agent inside the process, so it follows your system instead of guessing. |
+| **Agent guidance** | Portable project instructions and task workflows, plus the existing Claude Code rules, skills, commands and hooks. |
 | **Outputs** | Tokens, a Web Components library, 8 page templates, Storybook, a Figma file and docs. The default library follows [shadcn/ui](https://ui.shadcn.com) and is a starting point you can edit or replace. |
 
 Bring nothing, your brand, your tokens or an existing product. The process is the same.
@@ -59,7 +59,7 @@ flowchart LR
 5. **Implement** the smallest code that passes, using only the component's own tokens.
 6. **Gates.** Checks, typecheck and tests pass, then a multi-lens review before the component moves to `beta`.
 
-**The rules are enforced, not suggested.** Hooks block hand edits to generated files and to accepted decisions, and a commit gate blocks any commit while a check fails. The Claude layer keeps the always-on rules in every session and loads task-specific ones by `paths:` when matching files are read (SB-0114), so the agent knows the contract comes first and names the supported route when you ask for something the process forbids.
+**Checks and hooks have different scopes.** The configured Git commit gate runs deterministic checks. Claude Code hooks can block edits to generated files and accepted decisions; Gemini CLI and Copilot have adapters for specific native edit tools. Hook activation, trust and tool coverage vary by client. The Claude layer also loads task-specific rules by `paths:` (SB-0114). See the [compatibility map](./docs/agent-compatibility.md) for current coverage and limitations.
 
 | You edit | The harness generates | Never edit |
 | --- | --- | --- |
@@ -88,7 +88,7 @@ Pick the path that matches where you are:
 | Adding the harness to an existing app | `npx sketchbook init --adopt --start from-codebase` |
 | Bringing existing tokens (DTCG, Tokens Studio, CSS) | `npx sketchbook init --start import --from <tokens file>` |
 
-`init` stages the Claude layer in `move-to-.claude/` and asks Claude to install it, so you approve every change to `.claude/`. Your own hooks, commands and permissions are kept.
+`init` creates portable agent guidance and stages the existing Claude layer in `move-to-.claude/`. Claude Code installation is optional; existing team instruction and settings files are kept. Run `npx sketchbook doctor` to inspect setup, and see the [agent compatibility map](./docs/agent-compatibility.md) for client-specific behavior.
 
 <details>
 <summary><b>With Claude Code</b>: slash commands</summary>
@@ -135,8 +135,8 @@ Dark mode follows `prefers-color-scheme`, or set `data-theme="dark"` on `<html>`
 
 | | |
 | --- | --- |
-| **A process, not a pile of files** | Contract, plan, approval, tests, checks, review. Every component follows it, and the agent follows it too. |
-| **Claude stays inside your system** | Rules, skills and hooks give the agent your sources of truth and block the shortcuts. |
+| **A process, not a pile of files** | Contract, plan, approval, tests, checks and review, documented for contributors and agents. |
+| **Agent guidance** | Shared instructions describe the process; client-specific hooks and deterministic checks provide additional safeguards. |
 | **Checked without AI** | 26 deterministic checks cost no model spend and can each fail. |
 | **One source, every output** | Code, Storybook, CSS variables and Figma stay in step because they come from the same files. |
 | **Every foundation is yours** | 19 foundation families with 63 cited presets, or your own values, in one config. |
@@ -171,12 +171,12 @@ Round 3, before the lighter Claude layer (out of 10 runs):
 ## What you can do with it
 
 - Run design-system work as a repeatable process: contract, plan, approval, tests, checks, review.
-- Keep Claude on your rules: it reads your sources, follows the gates and is blocked from editing generated output.
+- Give coding agents your sources, workflow gates and the safeguards supported by their client.
 - Define color, type, spacing and radius from presets or your own values, and see the impact before you apply it.
 - Import tokens from Figma, Tokens Studio, DTCG or CSS variables, and review them as a proposal first.
 - Add the harness to an existing app, in its own folder, with one script in your `package.json`.
 - Propose tokens from an existing codebase's CSS (`sketchbook audit-css`).
-- Design a new component with Claude, contract first, with tests written before the code.
+- Design a new component with an agent, contract first, with tests written before the code.
 - Roast your foundations against standards and accessibility, with evidence.
 - Keep Figma in step with code: variables, styles and components generated and read back.
 - Start from the shadcn/ui look and edit it until it is yours, or replace the library and keep the harness.
@@ -196,6 +196,7 @@ Round 3, before the lighter Claude layer (out of 10 runs):
 
 - [Getting started](./docs/getting-started.md): a walkthrough from install to your first check.
 - [CLI reference](./docs/cli.md): every command and option.
+- [Agent compatibility](./docs/agent-compatibility.md): supported instruction entry points, hook coverage and model-family test targets.
 - [Decisions](./spec/decisions/DECISIONS.md): why the system is the way it is.
 - [Research](./docs/research/): standards and starting-point research behind the presets.
 - [CLAUDE.md](./CLAUDE.md): the full map of the repository.

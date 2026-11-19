@@ -19,12 +19,16 @@ export const liveOf = (rel: string): string => LIVE_NAME[rel] ?? rel;
 // skeleton lacks breaks a project's typecheck.
 export const PINNED_DIRS = ['playwright/helpers', 'src/controllers', 'src/mixins', 'src/utils'];
 
+// These are consumer instructions, not copies of the source repository's own agent instructions.
+// They are exercised by the bootstrap and package tests and must not be overwritten by reference-sync.
+export const PROJECT_AGENT_INSTRUCTIONS = new Set(['AGENTS.md', '.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']);
+
 // Skeleton path -> 'same' | 'differs' | 'missing' (no live counterpart); a live file in a PINNED_DIRS folder that the
 // skeleton lacks -> 'unpinned'.
 export interface Drift { file: string; state: 'same' | 'differs' | 'missing' | 'unpinned' }
 
 export function skeletonDrift(root: string = ROOT): Drift[] {
-  const pinned = walk(SKELETON, '.').sort().map((rel): Drift => {
+  const pinned = walk(SKELETON, '.').filter((rel) => !PROJECT_AGENT_INSTRUCTIONS.has(rel)).sort().map((rel): Drift => {
     const live = join(root, liveOf(rel));
     if (!existsSync(live)) return { file: rel, state: 'missing' };
     return { file: rel, state: readFileSync(live).equals(readFileSync(join(SKELETON, rel))) ? 'same' : 'differs' };

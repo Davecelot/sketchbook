@@ -1,7 +1,7 @@
 // Compiles harness/**/*.mts, scripts/**/*.mts and the Claude hooks (.claude/hooks, .claude/skills/*/hooks) in place (x.mts -> x.mjs, so every `import './x.mjs'` keeps working)
 // and lists each output in a .gitignore beside its tree, so a hand-written .mjs is never ignored by accident.
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -83,9 +83,19 @@ export function compile(root) {
   for (const out of outputs) {
     const from = path.join(root, CACHE, out);
     const to = path.join(root, out);
-    if (existsSync(to) && readFileSync(to).equals(readFileSync(from))) continue;
-    mkdirSync(path.dirname(to), { recursive: true });
-    copyFileSync(from, to);
+    if (!existsSync(to) || !readFileSync(to).equals(readFileSync(from))) {
+      mkdirSync(path.dirname(to), { recursive: true });
+      copyFileSync(from, to);
+    }
+    // The hook launcher compares source/output mtimes. A touched source or a
+    // clock skew can leave identical (or freshly copied) output older, causing
+    // every hook invocation to rebuild indefinitely.
+    if (to.endsWith('.mjs')) {
+      const source = to.slice(0, -4) + '.mts';
+      const sourceTime = statSync(source).mtime;
+      const outputTime = statSync(to);
+      if (sourceTime > outputTime.mtime) utimesSync(to, outputTime.atime, sourceTime);
+    }
   }
 }
 

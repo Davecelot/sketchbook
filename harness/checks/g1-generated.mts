@@ -32,7 +32,7 @@ function foundationAndLinks(root: string, brand: BrandConfig, errors: CheckIssue
   try { built = buildFoundation(brand, overrides); } catch (e) { errors.push({ file: 'brand.config.json', msg: errorMessage(e), fix: 'Fix brand.config.json (see sketchbook presets).' }); return; }
   for (const [name, doc] of Object.entries(built.files)) {
     const file = `spec/tokens/foundation/${name}.tokens.json`;
-    if (read(join(root, file)) !== serialize(doc)) errors.push({ file, msg: 'differs from generator(brand.config.json) + overrides (brand.config changed without regenerating, or a hand edit not recorded yet)', fix: 'Run npm run tokens:generate (it keeps and records hand edits), then npm run tokens:build.' });
+    if (read(join(root, file)) !== serialize(doc)) errors.push({ file, msg: 'differs from generator(brand.config.json) + overrides (brand.config changed without regenerating, or a hand edit not recorded yet)', fix: 'Review npx sketchbook tokens rebuild --dry-run --yes, then run it without --dry-run if the linked-token changes are acceptable.' });
   }
   // Only the generator's files live in the foundation folder: a file it does not make is never rebuilt or checked.
   for (const f of list(join(root, 'spec/tokens/foundation'))) {
@@ -40,14 +40,14 @@ function foundationAndLinks(root: string, brand: BrandConfig, errors: CheckIssue
   }
   // The snapshot is how the generator tells a hand edit from its own output: without it, edits can't be told apart.
   const snap = read(join(root, SNAPSHOT));
-  if (snap === null) errors.push({ file: SNAPSHOT, msg: 'missing: the generator cannot tell hand edits from its own output without it', fix: 'Run npm run tokens:generate (it records every value that differs from the generator as an override), then review sketchbook tokens overrides list.' });
-  else if (snap !== snapshotText(generate(brand).files)) errors.push({ file: SNAPSHOT, msg: 'differs from generate(brand.config.json) (brand.config changed without regenerating, or the snapshot was edited)', fix: 'Run npm run tokens:generate; never edit the snapshot by hand.' });
+  if (snap === null) errors.push({ file: SNAPSHOT, msg: 'missing: the generator cannot tell hand edits from its own output without it', fix: 'Review npx sketchbook tokens rebuild --dry-run --yes, then run it without --dry-run if the changes are acceptable; review sketchbook tokens overrides list.' });
+  else if (snap !== snapshotText(generate(brand).files)) errors.push({ file: SNAPSHOT, msg: 'differs from generate(brand.config.json) (brand.config changed without regenerating, or the snapshot was edited)', fix: 'Review npx sketchbook tokens rebuild --dry-run --yes, then run it without --dry-run if the changes are acceptable; never edit the snapshot by hand.' });
   const links = readJson<{ links?: BrandLinks }>(join(root, 'spec/tokens/brand-links.json'))?.links;
   if (!links) return;
   const semantic: SemanticDocs = {};
   for (const name of ['base', ...built.resolved.modes.map((m) => m.name)]) { const doc = readJson<DtcgDoc>(join(root, `spec/tokens/semantic/${name}.tokens.json`)); if (doc) semantic[name] = doc; }
   const r = computeLinks({ links, semantic, resolved: built.resolved, anchors: built.anchors, fmap: foundationMap(built.files) });
-  for (const c of r.changed) errors.push({ file: `spec/tokens/semantic/${c.split(':')[0]}.tokens.json`, token: (c.split(': ')[1] ?? '').split(' -> ')[0], msg: `linked token is stale (${c})`, fix: 'Run npm run tokens:generate; to own the token by hand, delete its entry in spec/tokens/brand-links.json.' });
+  for (const c of r.changed) errors.push({ file: `spec/tokens/semantic/${c.split(':')[0]}.tokens.json`, token: (c.split(': ')[1] ?? '').split(' -> ')[0], msg: `linked token is stale (${c})`, fix: 'Review npx sketchbook tokens rebuild --dry-run --yes; to own the token by hand, delete its entry in spec/tokens/brand-links.json.' });
   warnings.push(...r.missing);
 }
 
@@ -65,18 +65,18 @@ export async function run({ root, brand }: CheckContext): Promise<CheckResult> {
   const stale = (file: string, cmd: string) => errors.push({ file, msg: 'differs from a fresh rebuild (edited by hand, or not regenerated)', fix: `Run ${cmd}; change the source, not the output.` });
   foundationAndLinks(root, brand, errors, warnings);
   const { css, componentJson, fontsCss } = await build({ root, write: false });
-  if (read(join(root, 'generated/css/tokens.css')) !== css) stale('generated/css/tokens.css', 'npm run tokens:build');
-  if (read(join(root, 'generated/css/fonts.css')) !== fontsCss) stale('generated/css/fonts.css', 'npm run tokens:build');
-  if (read(join(root, 'generated/tokens/component.tokens.json')) !== componentJson) stale('generated/tokens/component.tokens.json', 'npm run tokens:build');
+  if (read(join(root, 'generated/css/tokens.css')) !== css) stale('generated/css/tokens.css', 'npm run generate');
+  if (read(join(root, 'generated/css/fonts.css')) !== fontsCss) stale('generated/css/fonts.css', 'npm run generate');
+  if (read(join(root, 'generated/tokens/component.tokens.json')) !== componentJson) stale('generated/tokens/component.tokens.json', 'npm run generate');
   // A missing output is stale too, whenever its source is in this project.
   const missing = (file: string, cmd: string) => errors.push({ file, msg: 'missing (generated output not built)', fix: `Run ${cmd}.` });
   const idx = read(join(root, 'src/index.ts'));
-  if (idx === null) { if (existsSync(join(root, 'src/components'))) missing('src/index.ts', 'npm run build:barrel'); } else if (idx !== barrel(root)) stale('src/index.ts', 'npm run build:barrel');
-  if (read(join(root, INTERFACE_FILE)) !== (await buildInterface(root, { write: false })).text) stale(INTERFACE_FILE, 'npm run build:interface (or npm run generate)');
+  if (idx === null) { if (existsSync(join(root, 'src/components'))) missing('src/index.ts', 'npm run generate'); } else if (idx !== barrel(root)) stale('src/index.ts', 'npm run generate');
+  if (read(join(root, INTERFACE_FILE)) !== (await buildInterface(root, { write: false })).text) stale(INTERFACE_FILE, 'npm run generate');
   // docs/cli.md and known-commands.json follow the CLI registry, which lives in harness/cli when the harness is here.
   const cli = existsSync(join(root, 'harness/cli'));
   const docs = read(join(root, 'docs/cli.md'));
-  if (docs === null) { if (cli) missing('docs/cli.md', 'npm run build:cli-docs'); } else if (docs !== cliDocs()) stale('docs/cli.md', 'npm run build:cli-docs');
+  if (docs === null) { if (cli) missing('docs/cli.md', 'npm run build:cli-docs'); } else if (docs !== cliDocs()) stale('docs/cli.md', cli ? 'npm run build:cli-docs' : 'npx sketchbook upgrade');
   const known = read(join(root, KNOWN_FILE));
   if (known === null) { if (cli) missing(KNOWN_FILE, 'npm run build:cli-docs'); } else if (known !== knownCommands()) stale(KNOWN_FILE, 'npm run build:cli-docs');
   const sources = scssSources(root);
@@ -84,8 +84,8 @@ export async function run({ root, brand }: CheckContext): Promise<CheckResult> {
   for (const file of sources) {
     const { out, contents } = compileStyles(file, vars);
     const now = read(out);
-    if (now === null) missing(relative(root, out), 'npm run build:styles');
-    else if (now !== contents) stale(relative(root, out), 'npm run build:styles');
+    if (now === null) missing(relative(root, out), 'npm run generate');
+    else if (now !== contents) stale(relative(root, out), 'npm run generate');
   }
   // A *.styles.ts whose .scss is gone is never rebuilt: it ships styles nobody can edit.
   const scss = new Set(sources.map((f) => relative(root, f)));

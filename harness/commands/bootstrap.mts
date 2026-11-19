@@ -1,8 +1,8 @@
 // sketchbook init in a folder that is not a Sketchbook project yet (SB-0097 to SB-0099). The whole project is built in a
 // stage beside the target and moved in only when the checks pass, so a failure leaves the folder as it was. The engine
 // is a dependency (node_modules), not copied; the Claude layer is staged in move-to-.claude/ for Claude to install.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync, copyFileSync, cpSync, chmodSync, statSync } from 'node:fs';
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync, copyFileSync, cpSync, chmodSync, statSync, lstatSync, constants } from 'node:fs';
+import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import type { ComponentRegistry } from '../../generated/types/registry.js';
 import { walk, HARNESS, ENGINE, globToRegExp, parseJson, readJson, readJsonSync } from '../lib/files.mjs';
@@ -19,6 +19,7 @@ import { runChecks } from '../checks/run.mjs';
 import { installed, installedMarkdown } from '../lib/installed.mjs';
 import { hookScript } from '../lib/claude-layer.mjs';
 import { emptyLog, inheritDecisions } from '../lib/decisions.mjs';
+import { AGENT_ENGINE_FILES, renderAgentSetup } from '../lib/agent-config.mjs';
 
 export interface Warning { file: string | null; msg: string; fix: string | null }
 export interface SyncResult { added: string[]; updated: string[]; edited: string[]; hooks?: string[] }
@@ -181,7 +182,17 @@ const ENGINE_RUNTIME = ['postcss', 'postcss-scss', 'sass', 'style-dictionary', '
 
 // The engine package: the name is read from its package.json (renaming it is one edit there). A source checkout
 // links itself; an installed engine is pinned by version unless --engine says otherwise (a tarball, a git URL).
-export const engineSpec = (given?: string): string => given ?? (existsSync(join(ENGINE, '.git')) ? `file:${ENGINE.replace(/\/$/, '')}` : `^${enginePkg().version}`);
+export const engineSpec = (given?: string, cwd = process.cwd()): string => {
+  if (!given) return existsSync(join(ENGINE, '.git')) ? `file:${ENGINE.replace(/\/$/, '')}` : `^${enginePkg().version}`;
+  // npm resolves file specs from the generated package.json, which may be in a
+  // different folder from the command. Anchor local paths to the caller.
+  if (given.startsWith('file:') && !given.startsWith('file://')) {
+    const path = given.slice('file:'.length);
+    return path && !path.startsWith('~') ? `file:${resolve(cwd, path)}` : given;
+  }
+  if (/^(?:\.{1,2}[\\/]|\/|[A-Za-z]:[\\/])/.test(given) || (!given.includes(':') && /\.t(?:ar\.)?gz$/i.test(given))) return `file:${resolve(cwd, given)}`;
+  return given;
+};
 
 // The project's package.json: a publishable library (its own dist and token CSS) whose tools come from the engine.
 function projectPackage(name: string, spec: string) {
@@ -208,6 +219,12 @@ const slug = (s: string): string => s.toLowerCase().replace(/[^a-z0-9-]+/g, '-')
 async function build(stage: string, target: string, { start, components, from, brand, spec, extras = [] }: { start: string; components?: string; from?: string; brand: InitOptions; spec: string; extras?: string[] }) {
   const harness = harnessFiles();
   cpSync(TEMPLATE, stage, { recursive: true });
+  for (const file of AGENT_ENGINE_FILES) {
+    const path = join(stage, file);
+    const text = readFileSync(path, 'utf8');
+    const rendered = renderAgentSetup(file, text, enginePkg().name);
+    if (rendered !== text) writeFileSync(path, rendered);
+  }
   renameSync(join(stage, 'gitignore'), join(stage, '.gitignore'));
   renameSync(join(stage, '.claude'), join(stage, STAGED));
   syncHarness(stage, { extras });
@@ -257,7 +274,11 @@ export function setupGit(target: string): GitSetup {
     const r = spawnSync('git', ['init', '-q', target], { encoding: 'utf8' });
     if (r.status !== 0) return { warning: { file: null, msg: `git init failed: ${r.stderr.trim()}; the pre-commit gate is not active.`, fix: 'git init, then git config core.hooksPath .githooks' } };
   } else if (realpathSync(top.stdout.trim()) !== realpathSync(target)) {
-    return { inside: top.stdout.trim(), warning: { file: '.githooks/pre-commit', msg: `The pre-commit gate is not active: this folder is inside another repository (${top.stdout.trim()}), whose hooks were left alone.`, fix: `Add "npm --prefix ${relative(top.stdout.trim(), target) || '.'} run check" to that repository's pre-commit hook, or run npm run check here before committing.` } };
+    const rel = (relative(top.stdout.trim(), target) || '.').split(sep).join('/');
+    const fix = /^[\w./-]+$/.test(rel) && !rel.startsWith('-')
+      ? `Add "npm --prefix ${rel} run check" to that repository's pre-commit hook, or run npm run check here before committing.`
+      : 'Run npm run check from the design-system folder before committing, or add an equivalent command to the repository pre-commit hook.';
+    return { inside: top.stdout.trim(), warning: { file: '.githooks/pre-commit', msg: `The pre-commit gate is not active: this folder is inside another repository (${top.stdout.trim()}), whose hooks were left alone.`, fix } };
   }
   const current = spawnSync('git', ['-C', target, 'config', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
   if (/(^|\/)\.githooks\/?$/.test(current)) return { line: null };
@@ -277,34 +298,86 @@ function installDeps(target: string, json: boolean): Warning[] {
 
 // Adopt (SB-0099): the app keeps every file; it gets one npm script that runs the design system's checks, added only
 // when its package.json has no script by that name.
-function wireApp(app: string, target: string): string[] {
-  const rel = relative(app, target);
+function rootScriptsLocation(text: string): { count: number; afterBrace: number | null } {
+  let depth = 0;
+  let count = 0;
+  let afterBrace: number | null = null;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '"') {
+      const start = i++;
+      while (i < text.length && text[i] !== '"') { if (text[i] === '\\') i++; i++; }
+      if (depth !== 1) continue;
+      let cursor = i + 1;
+      while (/\s/.test(text[cursor] ?? '') && cursor < text.length) cursor++;
+      if (text[cursor] !== ':' || JSON.parse(text.slice(start, i + 1)) !== 'scripts') continue;
+      count++;
+      cursor++;
+      while (/\s/.test(text[cursor] ?? '') && cursor < text.length) cursor++;
+      afterBrace = text[cursor] === '{' ? cursor + 1 : null;
+    } else if (char === '{' || char === '[') depth++;
+    else if (char === '}' || char === ']') depth--;
+  }
+  return { count, afterBrace };
+}
+
+function wireApp(app: string, target: string): { lines: string[]; warnings: Warning[] } {
+  const path = relative(app, target).split(sep).join('/');
+  const rel = path.startsWith('-') ? `./${path}` : path;
   const lines: string[] = [];
+  const warnings: Warning[] = [];
   const pkgPath = join(app, 'package.json');
-  if (existsSync(pkgPath)) {
-    const text = readFileSync(pkgPath, 'utf8');
-    const pkg = parseJson<{ scripts?: Record<string, string>; [k: string]: unknown }>(text);
+  // Inspect the path itself: do not follow a team's symlink and modify its target.
+  let packageStat;
+  try { packageStat = lstatSync(pkgPath); } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return { lines, warnings };
+    warnings.push({ file: 'package.json', msg: 'The app package.json could not be inspected and was kept.', fix: 'Review it and add the design-system check script manually.' });
+    return { lines, warnings };
+  }
+  if (packageStat.isFile()) {
+    let text: string;
+    let pkg: { scripts?: unknown; [k: string]: unknown };
+    try {
+      text = readFileSync(pkgPath, 'utf8');
+      const parsed = parseJson<unknown>(text);
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('package.json must contain an object');
+      pkg = parsed as { scripts?: unknown; [k: string]: unknown };
+    } catch {
+      warnings.push({ file: 'package.json', msg: 'The app package.json could not be read as a JSON object and was kept.', fix: 'Review it and add the design-system check script manually.' });
+      return { lines, warnings };
+    }
     const key = `${slug(basename(target))}:check`;
-    if (!pkg.scripts?.[key]) {
-      const value = `npm --prefix ${rel} run check`;
+    const location = rootScriptsLocation(text);
+    if (location.count > 1 || (location.count === 1 && (!pkg.scripts || typeof pkg.scripts !== 'object' || Array.isArray(pkg.scripts) || location.afterBrace === null))) {
+      warnings.push({ file: 'package.json', msg: 'The existing scripts field could not be safely updated and was kept.', fix: `Add a "${key}" script manually after reviewing package.json.` });
+      return { lines, warnings };
+    }
+    if (!Object.hasOwn(pkg.scripts ?? {}, key)) {
+      // Keep ordinary paths readable. For shell metacharacters, pass a base64
+      // argument to npm's own CLI so neither POSIX shells nor cmd interpret it.
+      const value = /^[\w./-]+$/.test(rel) ? `npm --prefix ${rel} run check`
+        : /^[\w./ -]+$/.test(rel) ? `npm --prefix "${rel}" run check`
+          : `node -e "process.exit(require('node:child_process').spawnSync(process.execPath,[process.env.npm_execpath,'--prefix',Buffer.from('${Buffer.from(rel).toString('base64')}','base64').toString(),'run','check'],{stdio:'inherit'}).status??1)"`;
       // Inserted as text at the top of "scripts", in the spacing that follows its brace, so every other byte stays.
-      const at = /"scripts"\s*:\s*\{(\s*)/.exec(text);
-      let next: string | null = null;
-      if (at) {
-        const end = at.index + at[0].length;
-        const empty = text[end] === '}';
-        next = text.slice(0, end) + `${JSON.stringify(key)}: ${JSON.stringify(value)}${empty ? at[1] : `,${at[1] || ' '}`}` + text.slice(end);
-        try { JSON.parse(next); } catch { next = null; }
-      }
+      const start = location.afterBrace ?? text.indexOf('{') + 1;
+      let end = start;
+      while (/\s/.test(text[end] ?? '') && end < text.length) end++;
+      const space = text.slice(start, end);
+      const empty = text[end] === '}';
+      const entry = `${JSON.stringify(key)}: ${JSON.stringify(value)}`;
+      let next: string | null = location.count === 1
+        ? text.slice(0, end) + `${entry}${empty ? space : `,${space || ' '}`}` + text.slice(end)
+        : text.slice(0, end) + `"scripts": { ${entry} }${empty ? '' : `,${space || ' '}`}` + text.slice(end);
+      try { JSON.parse(next); } catch { next = null; }
       if (!next) {
-        pkg.scripts = { ...(pkg.scripts ?? {}), [key]: value };
-        next = JSON.stringify(pkg, null, /\n([ \t]+)"/.exec(text)?.[1] ?? '  ') + '\n';
+        warnings.push({ file: 'package.json', msg: 'The app check script could not be added safely; package.json was kept.', fix: `Add a "${key}" script manually after reviewing package.json.` });
+        return { lines, warnings };
       }
       writeFileSync(pkgPath, next);
       lines.push(`App package.json: added the script "${key}" (npm run ${key} runs the design system's checks).`);
-    }
-  }
-  return lines;
+    } else warnings.push({ file: 'package.json', msg: `The existing "${key}" script was kept.`, fix: 'Review it before using it to run design-system checks.' });
+  } else warnings.push({ file: 'package.json', msg: 'The app package.json is not a regular file and was kept.', fix: 'Review it and add the design-system check script manually.' });
+  return { lines, warnings };
 }
 
 export async function bootstrap(cwd: string, { dir, adopt = false, start = 'library', components, from, opts = {}, engine, extras = [], dryRun = false, install = true, json = false, out = () => {} }: BootstrapOptions = {}) {
@@ -321,7 +394,7 @@ export async function bootstrap(cwd: string, { dir, adopt = false, start = 'libr
     }
   }
   const brand: InitOptions = Object.fromEntries(Object.entries(opts).filter(([k, v]) => k in INIT_OPTIONS && v !== undefined));
-  const spec = engineSpec(engine);
+  const spec = engineSpec(engine, cwd);
   mkdirSync(dirname(target), { recursive: true });
   const stage = mkdtempSync(join(dirname(target), '.sketchbook-init-'));
   try {
@@ -338,31 +411,65 @@ export async function bootstrap(cwd: string, { dir, adopt = false, start = 'libr
     const lines = [...r.starter.lines];
     const g = setupGit(target);
     if (g.warning) warnings.push(g.warning); else if (g.line) lines.push(g.line);
-    if (adopt) lines.push(...wireApp(cwd, target));
+    if (adopt) { const app = wireApp(cwd, target); lines.push(...app.lines); warnings.push(...app.warnings); }
     if (install) { out('Installing dependencies (npm install, then Chromium for the behavior tests)…'); warnings.push(...installDeps(target, json)); }
     else warnings.push({ file: 'package.json', msg: 'Dependencies not installed (--no-install).', fix: `cd ${target} && npm install && npx playwright install chromium` });
     if (r.starter.warning) warnings.push({ file: 'harness.config.json', msg: r.starter.warning, fix: null });
     const claude = `open Claude Code in ${dir ? dir : 'this folder'} and ask: "Install the Claude layer from ${STAGED}/ (follow ${STAGED}/INSTALL.md)"`;
-    return { changed: files, warnings, data, lines, claudeStep: claude, next: [...(dir ? [`cd ${dir}`] : []), claude, ...r.starter.next].join('; ') };
+    const workspace = g.inside ? `open ${dir ?? 'the design-system folder'} as the agent workspace; verify Copilot hook discovery for the workspace; cloud and repository-root sessions need a root hook configuration` : null;
+    return { changed: files, warnings, data, lines, claudeStep: claude, next: [...(dir ? [`cd ${dir}`] : []), ...(workspace ? [workspace] : []), `optional for Claude Code: ${claude}`, ...r.starter.next].join('; ') };
   } finally {
     rmSync(stage, { recursive: true, force: true });
   }
 }
 
+// Portable setup files may share directories with a team's existing agent configuration.
+const AGENT_SETUP = new Set(['AGENTS.md', '.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']);
+function agentSetupObstacle(root: string, file: string): string | null {
+  const parts = file.split('/');
+  for (let i = 1; i <= parts.length; i++) {
+    const path = join(root, ...parts.slice(0, i));
+    try {
+      const stat = lstatSync(path);
+      if (i === parts.length || stat.isSymbolicLink() || !stat.isDirectory()) return parts.slice(0, i).join('/');
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
+      throw error;
+    }
+  }
+  return null;
+}
+
 // sketchbook init again in a project: put back what is missing, never overwrite. Harness-owned files the team edited
 // are reported (sketchbook upgrade replaces them); missing setup files (shared, from the template) come back too.
-export function repair(root: string, { dryRun = false }: { dryRun?: boolean } = {}): { added: string[]; edited: string[]; hooks: string[] | undefined; git: GitSetup } {
+export function repair(root: string, { dryRun = false }: { dryRun?: boolean } = {}): { added: string[]; edited: string[]; hooks: string[] | undefined; git: GitSetup; skipped: string[] } {
   const harness = syncHarness(root, { dryRun });
   const m = loadOwnership(ENGINE);
   const restored: string[] = [];
+  const skipped: string[] = [];
   for (const rel of walk(TEMPLATE, '.')) {
     const live = rel === 'gitignore' ? '.gitignore' : rel.startsWith('.claude/') ? destOf(root, rel) : rel;
-    if (classify(live, m) !== 'shared' || existsSync(join(root, live))) continue;
+    if (classify(live, m) !== 'shared') continue;
+    if (AGENT_SETUP.has(live)) {
+      // Inspect parents even when the destination exists: it may be a directory,
+      // or reached through a symlink, neither of which is an installed file.
+      const obstacle = agentSetupObstacle(root, live);
+      if (obstacle) {
+        if (obstacle !== live || !lstatSync(join(root, live)).isFile()) skipped.push(live);
+        continue;
+      }
+    } else if (existsSync(join(root, live))) continue;
     // A project from before the configs became .ts keeps its .js one; both beside each other would be ambiguous.
     if (live.endsWith('.ts') && existsSync(join(root, live.replace(/\.ts$/, '.js')))) continue;
     restored.push(live);
-    if (!dryRun) { mkdirSync(dirname(join(root, live)), { recursive: true }); copyFileSync(join(TEMPLATE, rel), join(root, live)); }
+    if (!dryRun) {
+      mkdirSync(dirname(join(root, live)), { recursive: true });
+      if (AGENT_ENGINE_FILES.some((file) => file === rel)) {
+        const text = renderAgentSetup(rel, readFileSync(join(TEMPLATE, rel), 'utf8'), enginePkg().name);
+        writeFileSync(join(root, live), text, { flag: 'wx' });
+      } else copyFileSync(join(TEMPLATE, rel), join(root, live), AGENT_SETUP.has(live) ? constants.COPYFILE_EXCL : 0);
+    }
   }
   const git = dryRun ? {} : setupGit(root);
-  return { added: [...harness.added, ...restored], edited: harness.edited, hooks: harness.hooks, git };
+  return { added: [...harness.added, ...restored], edited: harness.edited, hooks: harness.hooks, git, skipped };
 }

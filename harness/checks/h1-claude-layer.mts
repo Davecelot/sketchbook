@@ -30,6 +30,6 @@ export function run({ root, config }: CheckContext): CheckResult {
     if (total > budget) errors.push({ file: 'harness.config.json', msg: `the Claude layer puts ${usage} in context every session, over budget`, fix });
     else if (total >= budget * 0.9) warnings.push({ file: 'harness.config.json', msg: `the Claude layer puts ${usage} in context every session, close to the budget`, fix });
   }
-  if (staged) warnings.push({ file: STAGED, msg: 'the Claude layer is staged, not installed: its skills, rules and hooks are not active yet', fix: `Open Claude Code here and ask it to install the Claude layer from ${STAGED}/ (${STAGED}/INSTALL.md); the install deletes ${STAGED}/ at the end.` });
+  if (staged) warnings.push({ file: STAGED, msg: 'the Claude layer is staged, not installed: its skills, rules and hooks are not active yet', fix: `For Claude Code, optionally install the layer from ${STAGED}/ (${STAGED}/INSTALL.md); the install deletes ${STAGED}/ at the end. Other clients can use the portable instructions and CLI.` });
   return { errors, warnings };
 }

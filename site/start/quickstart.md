@@ -37,7 +37,7 @@ You need Node.js and npm. Claude Code is optional.
    npx sketchbook check
    ```
 
-Claude Code protects `.claude/`, so ask Claude to install the staged layer. See [Claude Code](/concepts/claude-layer/).
+Portable agent instructions are available immediately. Installing the staged Claude Code layer is optional. See [Agent compatibility](/concepts/agent-compatibility/) and [Claude Code](/concepts/claude-layer/).
 
 > **Note** Before the package is published, pass `--engine <spec>` with a tarball or git URL. Add `--no-install` to skip `npm install` and the Chromium download.
 

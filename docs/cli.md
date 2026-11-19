@@ -47,7 +47,7 @@ Changes files; supports `--dry-run`.
 | `--yes` | Confirm what would lose work: with --start, removing components or kits the starter does not include; with brand options or a starter that patches foundations, letting the brand links overwrite hand-edited linked tokens. It never detaches the catalog |
 | `--dir` | Create the project in this folder (new or empty), e.g. a design-system folder inside an existing repository; default: here |
 | `--adopt` | In an existing project: add the design system in its own folder (design-system/, or --dir) without changing your files; your package.json gets one script that runs its checks |
-| `--engine` | New project only: the npm spec of the engine package to depend on (default: this version; a tarball or git URL before it is published) |
+| `--engine` | New project only: the npm spec of the engine package to depend on (default: this version; a tarball or git URL before it is published). Relative local paths are resolved from the directory where init starts |
 | `--no-install` | New project only: skip npm install and the Chromium download (init lists them as next steps) |
 | `--with` | Optional Claude-layer groups to install (forge; comma-separated): forge (forge-me-a-skill, the skill standard for writing your own skills). In a new project they are staged with it; in a project they are added. Without it none are installed |
 | `--detach-catalog` | With --start in the catalog source repo (catalog.source true): stop tracking harness/catalog; the components become the team's own |
@@ -339,7 +339,7 @@ Changes files; supports `--dry-run`.
 
 | Argument | Meaning |
 | --- | --- |
-| `subcommand` | set | preset | presets | diff | impact | add | remove | rename | import | scratch | overrides |
+| `subcommand` | rebuild | set | preset | presets | diff | impact | add | remove | rename | import | scratch | overrides |
 | `args` (optional) | The subcommand's arguments (see below) |
 
 | Option | Meaning |
@@ -363,6 +363,7 @@ Changes files; supports `--dry-run`.
 
 | Subcommand | What it does |
 | --- | --- |
+| `sketchbook tokens rebuild` | Rebuild foundations and linked tokens from the current brand, preserving recorded and hand-edited foundation overrides. Review the dry run first. |
 | `sketchbook tokens set <key> <value>` | Set one value in brand.config.json by dot path (validated against the schema and the catalog); a .preset key replaces its sibling fine overrides. |
 | `sketchbook tokens preset <foundation> <id>` | Switch a foundation to a catalog preset. <foundation> is a family (typeScale), its config key (typography.scale) or an area (typography, color, z-index). |
 | `sketchbook tokens presets [foundation]` | List the standards catalog (same as sketchbook presets); an area lists each of its families. Read-only. |
@@ -381,6 +382,8 @@ Examples:
 - `sketchbook tokens impact color.border`
 - `sketchbook tokens rename color.muted color.subtle --dry-run`
 - `sketchbook tokens import theme.css --from css`
+- `sketchbook tokens rebuild --dry-run`
+- `sketchbook tokens rebuild`
 - `sketchbook tokens set typography.family Inter`
 - `sketchbook tokens set spacing.preset grid-8 --dry-run`
 - `sketchbook tokens set color.primary "#0F766E"`
@@ -586,6 +589,48 @@ Examples:
 - `sketchbook docs sign-in`
 
 ## Quality
+
+### audit-page
+
+Check a complete HTML page using this design system for a level-one heading and main landmark. This static check is not a full accessibility audit.
+
+```
+sketchbook audit-page <file> [--json]
+```
+
+Read-only.
+
+| Argument | Meaning |
+| --- | --- |
+| `file` | HTML file to check, relative to the current project |
+
+Examples:
+
+- `sketchbook audit-page preview.html`
+- `sketchbook audit-page preview.html --json`
+
+### audit-decisions
+
+Compare the decision log with a trusted earlier copy or Git revision and report changes to settled entries. This read-only audit does not replace check X1.
+
+```
+sketchbook audit-decisions [baseline] [--git-ref <ref>] [--json]
+```
+
+Read-only.
+
+| Argument | Meaning |
+| --- | --- |
+| `baseline` (optional) | Path to a trusted earlier copy of spec/decisions/DECISIONS.md |
+
+| Option | Meaning |
+| --- | --- |
+| `--git-ref` | Compare against the committed log at this Git revision (for example HEAD) |
+
+Examples:
+
+- `sketchbook audit-decisions ../decisions-before.md`
+- `sketchbook audit-decisions --git-ref HEAD --json`
 
 ### check
 

@@ -5,5 +5,5 @@
   "foundations": null,
   "components": "all",
   "kits": "all",
-  "next": ["/foundations guided", "npm run storybook (Patterns)", "/kits"]
+  "next": ["Follow AGENT-WORKFLOWS.md for foundations (Claude Code: /foundations guided)", "npm run storybook (Patterns)", "sketchbook kits list (Claude Code: /kits)"]
 }

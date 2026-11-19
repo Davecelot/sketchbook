@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { copyFile, mkdtemp, mkdir, writeFile, rm, symlink, utimes } from 'node:fs/promises';
+import { copyFile, mkdtemp, mkdir, realpath, writeFile, rm, symlink, utimes } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -28,6 +28,40 @@ test('H-G1 guard-generated blocks edits to outputs and lets sources through', as
   await rm(dir, { recursive: true, force: true });
 });
 
+test('guards recognize Windows path separators', async () => {
+  const windowsRoot = 'C:\\work\\design system';
+  for (const path of ['generated\\css\\tokens.css', 'spec\\tokens\\foundation\\color.tokens.json', 'src\\index.ts']) {
+    const r = hook('guard-generated.mjs', windowsRoot, { tool_input: { file_path: `${windowsRoot}\\${path}` } });
+    assert.equal(r.status, 2, path);
+  }
+  assert.equal(hook('guard-generated.mjs', windowsRoot, { tool_input: { file_path: 'c:\\WORK\\Design System\\GENERATED\\tokens.css' } }).status, 2);
+  assert.equal(hook('guard-generated.mjs', '/', { tool_input: { file_path: '/generated/tokens.css' } }).status, 2);
+  const aliasRoot = await mkdtemp(join(tmpdir(), 'sketchbook-hook-alias-'));
+  try {
+    const project = join(aliasRoot, 'project');
+    await mkdir(join(project, 'generated'), { recursive: true });
+    await symlink(project, join(aliasRoot, 'alias'), 'dir');
+    const aliasPath = join(aliasRoot, 'alias', 'generated', 'new.css');
+    assert.equal(hook('guard-generated.mjs', await realpath(project), { tool_input: { file_path: aliasPath } }).status, 2);
+    await rm(join(project, 'generated'), { recursive: true });
+    await mkdir(join(aliasRoot, 'outside'));
+    await symlink(join(aliasRoot, 'outside'), join(project, 'generated'), 'dir');
+    assert.equal(hook('guard-generated.mjs', await realpath(project), { tool_input: { file_path: aliasPath } }).status, 2);
+  } finally { await rm(aliasRoot, { recursive: true, force: true }); }
+  assert.equal(hook('guard-generated.mjs', windowsRoot, { tool_input: { file_path: `${windowsRoot}\\src\\button.ts` } }).status, 0);
+  // On POSIX, backslashes can be used in a filename; on Windows they are path separators.
+  const dir = await mkdtemp(join(tmpdir(), 'sketchbook-hook-separators-'));
+  try {
+    const file = join(dir, 'spec', 'decisions', 'DECISIONS.md');
+    await mkdir(join(dir, 'spec', 'decisions'), { recursive: true });
+    await writeFile(file, LOG);
+    const winFile = process.platform === 'win32' ? file : join(dir, 'spec\\decisions\\DECISIONS.md');
+    if (process.platform !== 'win32') await writeFile(winFile, LOG);
+    const result = hook('guard-decisions.mjs', dir, { tool_name: 'Edit', tool_input: { file_path: winFile, old_string: '**Decision:** Use a native button.', new_string: '**Decision:** Use a div.' } });
+    assert.equal(result.status, 2, result.stderr);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
 test('H-D1 guard-decisions: settled entries cannot be reworded, appended to or removed; new entries and proposed ones can change', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'sketchbook-hook-'));
   await mkdir(join(dir, 'spec/decisions'), { recursive: true });
@@ -39,6 +73,14 @@ test('H-D1 guard-decisions: settled entries cannot be reworded, appended to or r
   assert.equal(edit('**Decision:** Use a native button.', '**Decision:** Use a native button. Unless it is a link.').status, 2, 'text appended inside the entry');
   assert.equal(edit(ACCEPTED, '').status, 2, 'removed');
   assert.equal(hook('guard-decisions.mjs', dir, { tool_name: 'Write', tool_input: { file_path: file, content: LOG.replace(ACCEPTED, '') } }).status, 2, 'a write that drops it');
+  const alias = join(dir, 'decisions-alias.md');
+  await symlink(file, alias);
+  assert.equal(hook('guard-decisions.mjs', dir, { tool_name: 'Write', tool_input: { file_path: alias, content: LOG.replace(ACCEPTED, '') } }).status, 2, 'an alias to the decision log is protected');
+  const elsewhere = join(dir, 'outside-log.md');
+  await writeFile(elsewhere, LOG);
+  await rm(file);
+  await symlink(elsewhere, file);
+  assert.equal(hook('guard-decisions.mjs', dir, { tool_name: 'Write', tool_input: { file_path: elsewhere, content: LOG.replace(ACCEPTED, '') } }).status, 2, 'the target of a linked decision log is protected');
   // Allowed: new entries next to settled ones, the index, proposed entries.
   assert.equal(edit(ACCEPTED, `${ACCEPTED}\n\n---\n\n${NEW}`).status, 0, 'a new entry after it');
   assert.equal(edit(ACCEPTED, `${NEW}\n\n---\n\n${ACCEPTED}`).status, 0, 'a new entry before it');
@@ -125,6 +167,12 @@ test('H-L4 a hook whose source changed after it was compiled (a pull) is rebuilt
   await utimes(source, later, later);
   const r = launch(dir, 'hooks/say', '');
   assert.equal(r.stdout, 'v2', r.stderr);
+  const second = launch(dir, 'hooks/say', '');
+  assert.deepEqual([second.status, second.stdout, second.stderr], [0, 'v2', ''], 'a future-dated source does not cause repeated builds');
+  const laterAgain = new Date(Date.now() + 20_000);
+  await utimes(source, laterAgain, laterAgain);
+  assert.match(launch(dir, 'hooks/say', '').stderr, /\[build:harness\]/, 'a touched source is checked once');
+  assert.equal(launch(dir, 'hooks/say', '').stderr, '', 'unchanged compiled output is not repeatedly rebuilt');
   await rm(dir, { recursive: true, force: true });
 });
 

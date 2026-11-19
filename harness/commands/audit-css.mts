@@ -1,7 +1,7 @@
 // sketchbook audit-css <path|glob>... (starter from-codebase, SB-0046): reads an existing product's CSS/SCSS and proposes
 // foundations from the values it repeats. Deterministic: same files, same bytes. A proposal only, written to
 // generated/import/codebase.proposal.json; nothing in brand.config.json or spec/ changes until a person applies it
-// (foundations skill, import mode).
+// using the foundations workflow.
 //   colors   clustered by OKLCH distance (greedy, most used first; ΔE_ok < 0.03 joins a cluster)
 //   type     font-size values in px (rem/em x 16), counted; base = most used between 12 and 20 px
 //   spacing  margin/padding/gap/inset values in px; base grid = the largest of 2/4/8 that fits most of them

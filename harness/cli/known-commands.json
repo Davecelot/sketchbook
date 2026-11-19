@@ -54,6 +54,7 @@
     "tokens": {
       "summary": "Change foundations and semantic tokens through the harness: set, preset, presets, diff, impact, add, remove, rename, import, scratch, overrides.",
       "subcommands": [
+        "rebuild",
         "set",
         "preset",
         "presets",
@@ -99,6 +100,12 @@
     },
     "audit-css": {
       "summary": "Audit an existing product's CSS: cluster its colors (OKLCH distance), font sizes, spacing, radii and shadows into a foundations proposal (generated/import/codebase.proposal.json)."
+    },
+    "audit-page": {
+      "summary": "Check a complete HTML page using this design system for a level-one heading and main landmark. This static check is not a full accessibility audit."
+    },
+    "audit-decisions": {
+      "summary": "Compare the decision log with a trusted earlier copy or Git revision and report changes to settled entries. This read-only audit does not replace check X1."
     },
     "sync": {
       "summary": "Write the Figma MCP (use_figma) scripts for the design file (tokens: variable collections, modes and styles), read the file back (\"sync verify\", then \"--ingest\"), record a push or a component stage with \"sync stamp\", list the progress of the component docs with \"sync progress\", or write the design realization of each contract from the library read-back with \"sync realize\".",

@@ -5,13 +5,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync } from 'node:fs';
-import { copyFile, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile, appendFile } from 'node:fs/promises';
+import { copyFile, cp, mkdir, mkdtemp, readFile, realpath, rename, rm, symlink, writeFile, appendFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { ROOT, CHECKOUT, failing, checkoutOnly, must } from './helpers.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { installed, installedMarkdown } from '../lib/installed.mjs';
+import { engineSpec } from '../commands/bootstrap.mjs';
 import { parseJson } from '../lib/files.mjs';
 import type { Envelope } from '../cli/types.mjs';
 import type { BrandConfig } from '../../generated/types/brand-config.js';
@@ -19,8 +20,8 @@ import type { ComponentContract } from '../../generated/types/contract.js';
 import type { HarnessConfigJson } from '../../generated/types/harness-config.js';
 
 // The parts of each command's --json `data` these tests read.
-interface InitData { checks: { exitCode: number }; installed?: unknown; repair: { hooks: unknown[]; added: string[]; edited: string[] } }
-interface DoctorData { gitHook: string; claude: string }
+interface InitData { checks: { exitCode: number }; installed?: unknown; repair: { hooks: unknown[]; added: string[]; edited: string[]; skipped: string[] } }
+interface DoctorData { codexSubdirectoryAdapterMatches: boolean | null; codexSubdirectoryLauncher: boolean | null; copilotRepositoryHookLocation: string; gitHook: string; claude: string; agentInstructions: Record<string, boolean>; agentInstructionReferences: Record<string, string>; nativeHooks: { codex: { registration: string; scriptPresent: boolean }; gemini: { registration: string; enginePresent: boolean }; copilot: { registration: string; scriptPresent: boolean; enginePresent: boolean } } }
 interface UpgradeData { hooks: unknown[]; added: string[]; updated: string[] }
 type PackageJson = Record<string, unknown> & { name: string; scripts: Record<string, string>; dependencies: Record<string, string>; devDependencies: Record<string, string>; imports: Record<string, string> };
 interface ClaudeSettings { hooks: Record<string, { hooks: { type: string; command: string }[] }[]>; permissions?: unknown }
@@ -67,7 +68,7 @@ pkgTest('B1 init in an empty folder: the engine is a dependency, the Claude laye
   const { dir, r } = await created();
   assert.equal(r.json?.ok, true);
   for (const f of ['move-to-.claude/INSTALL.md', 'move-to-.claude/settings.json', 'move-to-.claude/skills/contract-author/SKILL.md', 'move-to-.claude/commands/add.md',
-    'move-to-.claude/rules/contract-first.md', 'move-to-.claude/hooks/guard-generated.mjs', '.githooks/pre-commit', '.githooks/pre-push', 'docs/cli.md', 'docs/harness.md', 'CLAUDE.md',
+    'move-to-.claude/rules/contract-first.md', 'move-to-.claude/hooks/guard-generated.mjs', '.githooks/pre-commit', '.githooks/pre-push', 'docs/cli.md', 'docs/harness.md', 'CLAUDE.md', 'AGENTS.md', '.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs',
     '.gitignore', 'package.json', 'package-lock.json', 'brand.config.json', 'spec/registry.json', 'spec/decisions/DECISIONS.md', 'spec/schemas/contract.schema.json',
     'src/styles/_a11y.scss', 'src/index.ts', 'spec/components/button/contract.json', 'generated/css/tokens.css', 'playwright/helpers/a11y.ts', 'tsconfig.json',
     'THIRD_PARTY_NOTICES.md']) assert.ok(existsSync(join(dir, f)), f);
@@ -82,6 +83,10 @@ pkgTest('B1 init in an empty folder: the engine is a dependency, the Claude laye
   assert.equal(pkg.imports['#harness/*'], `${ENGINE_NAME}/harness/*`, 'a bare specifier: Node refuses import targets inside node_modules');
   assert.equal(pkg.scripts.check, 'sketchbook check');
   assert.equal(pkg.scripts['test:harness'], 'sketchbook selftest');
+  for (const guide of ['CLAUDE.md', 'AGENTS.md', 'AGENT-WORKFLOWS.md']) {
+    const text = await readFile(join(dir, guide), 'utf8');
+    for (const match of text.matchAll(/\bnpm run ([\w:-]+)/g)) assert.ok(pkg.scripts[match[1] ?? ''], `${guide} names missing npm script ${match[1]}`);
+  }
   assert.deepEqual(Object.entries(pkg.scripts).filter(([, s]) => /harness\/|scripts\//.test(s)).map(([k]) => k), [], 'no script reaches engine paths');
   assert.ok(pkg.dependencies.lit && !pkg.dependencies.postcss, 'the engine brings its own tools');
   assert.ok(!pkg.bin);
@@ -99,7 +104,44 @@ pkgTest('B1 init in an empty folder: the engine is a dependency, the Claude laye
   const { statSync } = await import('node:fs');
   assert.ok(statSync(join(dir, '.githooks/pre-commit')).mode & 0o111, 'the hook is executable, or git ignores it');
   assert.ok(statSync(join(dir, '.githooks/pre-push')).mode & 0o111, 'the push gate is executable, or git ignores it');
-  assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.gitHook, 'active');
+  const doctor = run<DoctorData>(dir, 'doctor', '--json').json?.data;
+  assert.equal(doctor?.gitHook, 'active');
+  assert.equal(doctor?.copilotRepositoryHookLocation, 'repository-root');
+  assert.equal(doctor?.codexSubdirectoryLauncher, true);
+  assert.equal(doctor?.codexSubdirectoryAdapterMatches, true);
+  assert.deepEqual(doctor?.nativeHooks, { codex: { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: true }, gemini: { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: true, enginePresent: false }, copilot: { registration: 'registered', scriptPresent: true, scriptMatchesTemplate: true, enginePresent: false } });
+  const codexHooks = join(dir, '.codex/hooks.json');
+  const originalCodexHooks = await readFile(codexHooks, 'utf8');
+  const legacySettings = JSON.parse(originalCodexHooks) as { hooks: { PreToolUse: { hooks: unknown[] }[] } };
+  legacySettings.hooks.PreToolUse[0]?.hooks.pop();
+  const legacyText = JSON.stringify(legacySettings);
+  await writeFile(codexHooks, legacyText);
+  assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.codexSubdirectoryLauncher, false);
+  assert.match(run(dir, 'doctor').out, /Codex subdirectory launcher: not recognized/);
+  assert.equal(await readFile(codexHooks, 'utf8'), legacyText);
+  await writeFile(codexHooks, originalCodexHooks);
+  const codexAdapter = join(dir, '.codex/sketchbook-guard.mjs');
+  const originalCodexAdapter = await readFile(codexAdapter, 'utf8');
+  await writeFile(codexAdapter, originalCodexAdapter.replace(/\n/g, '\r\n'));
+  const windowsDoctor = run<DoctorData>(dir, 'doctor', '--json').json?.data;
+  assert.equal(windowsDoctor?.codexSubdirectoryAdapterMatches, true);
+  assert.equal((windowsDoctor?.nativeHooks.codex as { scriptMatchesTemplate?: boolean }).scriptMatchesTemplate, true);
+  await writeFile(codexAdapter, originalCodexAdapter + '\n// Team customization\n');
+  assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.codexSubdirectoryAdapterMatches, false);
+  assert.match(run(dir, 'doctor').out, /this launcher will skip it/);
+  assert.equal(await readFile(codexAdapter, 'utf8'), originalCodexAdapter + '\n// Team customization\n');
+  await writeFile(codexAdapter, originalCodexAdapter);
+  const adapterPath = join(dir, '.github/hooks/sketchbook-guard.mjs');
+  const originalAdapter = await readFile(adapterPath, 'utf8');
+  await writeFile(adapterPath, originalAdapter + '\n// Team customization\n');
+  const customized = run<DoctorData>(dir, 'doctor', '--json');
+  assert.equal((customized.json?.data.nativeHooks.copilot as { scriptMatchesTemplate?: boolean }).scriptMatchesTemplate, false);
+  assert.match(run(dir, 'doctor').out, /differs from current template/);
+  assert.equal(await readFile(adapterPath, 'utf8'), originalAdapter + '\n// Team customization\n');
+  await writeFile(adapterPath, originalAdapter);
+  assert.deepEqual(doctor?.agentInstructions, { 'AGENTS.md': true, '.trae/rules/sketchbook.md': true, '.aiassistant/rules/sketchbook.md': true, '.agents/skills/sketchbook/SKILL.md': true, 'AGENT-WORKFLOWS.md': true, 'GEMINI.md': true, '.gemini/settings.json': true, '.github/copilot-instructions.md': true });
+  const summary = await readFile(join(dir, 'docs/harness.md'), 'utf8');
+  for (const file of Object.keys(doctor?.agentInstructions ?? {})) assert.ok(summary.includes(file), file);
   assert.deepEqual(failing(await runChecks(dir)), []);
   await rm(dir, { recursive: true, force: true });
 });
@@ -126,6 +168,11 @@ pkgTest('B3 init --dir creates the project in a new folder inside an existing re
   assert.equal(await readFile(join(app, 'package.json'), 'utf8'), '{ "name": "app" }\n', '--dir alone never touches the app');
   assert.equal(git(app, 'config', 'core.hooksPath').stdout.trim(), '', 'the app repository keeps its hooks');
   assert.ok(r.json?.warnings.some((w) => typeof w !== 'string' && /pre-commit/.test(w.msg) && /npm --prefix design-system run check/.test(w.fix ?? '')), 'says how to call the gate from the app\'s hook');
+  const nestedDoctor = run<DoctorData>(join(app, 'design-system'), 'doctor', '--json');
+  assert.equal(nestedDoctor.json?.data.copilotRepositoryHookLocation, 'nested');
+  assert.equal(nestedDoctor.json?.data.nativeHooks.copilot.registration, 'registered');
+  assert.match(run(join(app, 'design-system'), 'doctor').out, /not at the Git repository root/);
+  assert.ok(!existsSync(join(app, '.github')), 'doctor does not write to the parent repository');
   assert.deepEqual(failing(await runChecks(join(app, 'design-system'))), []);
   await rm(app, { recursive: true, force: true });
 });
@@ -153,10 +200,17 @@ pkgTest('B6 --from is read from the folder init was started in (from-codebase in
   const app = await empty();
   await mkdir(join(app, 'styles'));
   await writeFile(join(app, 'styles/app.css'), ':root { --brand: #1d4ed8; } .btn { padding: 8px 16px; border-radius: 6px; color: #1d4ed8; }\n');
-  const r = run(app, 'init', '--dir', 'ds', '--start', 'from-codebase', '--from', 'styles/app.css', '--no-install', '--json');
+  const r = run(app, 'init', '--dir', 'ds', '--start', 'from-codebase', '--from', 'styles/app.css', '--engine', './engine.tgz', '--no-install', '--json');
   assert.equal(r.code, 0, r.out + r.err);
   assert.ok(existsSync(join(app, 'ds/generated/import/codebase.proposal.json')));
+  assert.equal((await readJson<PackageJson>(join(app, 'ds'), 'package.json')).devDependencies[ENGINE_NAME ?? 'sketchbook'], `file:${join(await realpath(app), 'engine.tgz')}`);
   await rm(app, { recursive: true, force: true });
+});
+
+test('local engine specs resolve from the command directory without changing registry or Git specs', () => {
+  const cwd = join(tmpdir(), 'engine path with spaces');
+  for (const spec of ['./engine.tgz', 'engine.tgz', 'file:./engine.tgz']) assert.equal(engineSpec(spec, cwd), `file:${join(cwd, 'engine.tgz')}`);
+  for (const spec of ['^1.2.3', 'latest', 'git+https://example.com/repo.git', 'https://example.com/engine.tgz', 'file:///tmp/engine.tgz']) assert.equal(engineSpec(spec, cwd), spec);
 });
 
 pkgTest('B7 init with options in an existing project keeps today\'s behavior (no bootstrap)', async () => {
@@ -172,9 +226,14 @@ pkgTest('B8 after init the CLI names the step left for Claude: install the Claud
   const dir = await empty();
   const r = run(dir, 'init', '--start', 'blank', '--no-install');
   assert.equal(r.code, 0, r.out + r.err);
-  assert.match(r.out, /One step left, with Claude/);
+  assert.match(r.out, /Optional setup for Claude Code/);
+  assert.match(r.out, /Other agents can use AGENTS.md/);
   assert.match(r.out, /Install the Claude layer from move-to-\.claude\/ \(follow move-to-\.claude\/INSTALL\.md\)/);
-  assert.match(await readFile(join(dir, 'move-to-.claude/INSTALL.md'), 'utf8'), /Merge the settings/);
+  const instructions = await readFile(join(dir, 'move-to-.claude/INSTALL.md'), 'utf8');
+  assert.match(instructions, /Merge the settings/);
+  assert.match(instructions, /prefer the staged folder/);
+  assert.match(instructions, /rename the backup back to `move-to-\.claude\/`/);
+  assert.match(instructions, /Cursor compatibility/);
   await rm(dir, { recursive: true, force: true });
 });
 
@@ -315,6 +374,9 @@ pkgTest('B11 init --adopt adds the design system to an existing app in design-sy
   await writeFile(join(app, 'src/index.ts'), 'export {};\n');
   const r = run(app, 'init', '--adopt', '--start', 'blank', '--no-install', '--json');
   assert.equal(r.code, 0, r.out + r.err);
+  assert.match(r.json?.next ?? '', /open design-system as the agent workspace/);
+  assert.match(r.json?.next ?? '', /verify Copilot hook discovery for the workspace/);
+  assert.match(r.json?.next ?? '', /AGENT-WORKFLOWS\.md.*Claude Code: \/foundations guided/);
   assert.deepEqual(ls(app), ['.git', 'design-system', 'package.json', 'src']);
   assert.equal(await readFile(join(app, 'src/index.ts'), 'utf8'), 'export {};\n');
   const pkg = parseJson<PackageJson>(await readFile(join(app, 'package.json'), 'utf8'));
@@ -336,6 +398,85 @@ pkgTest('B14 init --adopt inserts its script into the app package.json as text: 
   await rm(app, { recursive: true, force: true });
 });
 
+pkgTest('adopted app check scripts handle spaces, shell metacharacters and leading dashes', async () => {
+  for (const [name, script] of [['design system', 'design-system:check'], ['design $sample', 'design-sample:check'], ['--design', 'design:check']] as const) {
+    const app = await empty();
+    try {
+      await writeFile(join(app, 'package.json'), JSON.stringify({ name: 'app', private: true, scripts: {} }));
+      const init = run(app, 'init', '--adopt', `--dir=${name}`, '--start', 'blank', '--no-install', '--json');
+      assert.equal(init.code, 0, init.out + init.err);
+      const target = join(app, name);
+      const project = await readJson<PackageJson>(target, 'package.json');
+      project.scripts.check = `node -e "process.stdout.write('checked')"`;
+      await writeFile(join(target, 'package.json'), JSON.stringify(project));
+      const check = spawnSync('npm', ['run', script], { cwd: app, encoding: 'utf8', env: { ...process.env, sample: 'unexpected' } });
+      assert.equal(check.status, 0, check.stdout + check.stderr);
+      assert.match(check.stdout, /checked/);
+    } finally { await rm(app, { recursive: true, force: true }); }
+  }
+});
+
+pkgTest('adoption preserves existing app check scripts even when empty', async () => {
+  for (const [command, json] of [['', false], ['echo team-check', true]] as const) {
+    const app = await empty();
+    try {
+      const original = JSON.stringify({ name: 'app', scripts: { 'design-system:check': command } }, null, 2) + '\n';
+      await writeFile(join(app, 'package.json'), original);
+      const init = run(app, 'init', '--adopt', '--start', 'blank', '--no-install', ...(json ? ['--json'] : []));
+      assert.equal(init.code, 0, init.out + init.err);
+      assert.equal(await readFile(join(app, 'package.json'), 'utf8'), original);
+      if (json) assert.match(JSON.stringify(init.json?.warnings), /existing.*design-system:check.*script was kept/);
+      else assert.match(init.out, /existing "design-system:check" script was kept/);
+    } finally { await rm(app, { recursive: true, force: true }); }
+  }
+});
+
+pkgTest('adoption updates only the root scripts object and preserves ambiguous app configuration', async () => {
+  const cases = [
+    { text: '{ "name":"app", "metadata":{"scripts":{"demo":"keep"}}, "scripts":{"dev":"vite"} }\n', expected: '{ "name":"app", "metadata":{"scripts":{"demo":"keep"}}, "scripts":{"design-system:check": "npm --prefix design-system run check", "dev":"vite"} }\n' },
+    { text: '{ "name":"app", "metadata":{"scripts":{"demo":"keep"}} }\n', expected: '{ "scripts": { "design-system:check": "npm --prefix design-system run check" }, "name":"app", "metadata":{"scripts":{"demo":"keep"}} }\n' },
+    { text: '{ "name":"app", "scripts":null }\n', expected: null },
+    { text: '{ "name":"app", "scripts":{}, "scripts":{} }\n', expected: null },
+  ];
+  for (const { text, expected } of cases) {
+    const app = await empty();
+    try {
+      await writeFile(join(app, 'package.json'), text);
+      const init = run(app, 'init', '--adopt', '--start', 'blank', '--no-install', '--json');
+      assert.equal(init.code, 0, init.out + init.err);
+      assert.equal(await readFile(join(app, 'package.json'), 'utf8'), expected ?? text);
+      if (expected === null) assert.match(JSON.stringify(init.json?.warnings), /could not be safely updated/);
+    } finally { await rm(app, { recursive: true, force: true }); }
+  }
+});
+
+pkgTest('adoption preserves malformed, non-object and symlinked app package files', async () => {
+  for (const text of ['{broken', 'null\n', '[]\n']) {
+    const app = await empty();
+    try {
+      await writeFile(join(app, 'package.json'), text);
+      const init = run(app, 'init', '--adopt', '--start', 'blank', '--no-install', '--json');
+      assert.equal(init.code, 0, init.out + init.err);
+      assert.equal(await readFile(join(app, 'package.json'), 'utf8'), text);
+      assert.match(JSON.stringify(init.json?.warnings), /could not be read as a JSON object/);
+      assert.ok(existsSync(join(app, 'design-system/harness.config.json')));
+    } finally { await rm(app, { recursive: true, force: true }); }
+  }
+  const workspace = await empty();
+  try {
+    const app = join(workspace, 'app');
+    const shared = join(workspace, 'shared-package.json');
+    const text = '{"name":"shared","scripts":{}}\n';
+    await mkdir(app);
+    await writeFile(shared, text);
+    await symlink(shared, join(app, 'package.json'));
+    const init = run(app, 'init', '--adopt', '--start', 'blank', '--no-install', '--json');
+    assert.equal(init.code, 0, init.out + init.err);
+    assert.equal(await readFile(shared, 'utf8'), text);
+    assert.match(JSON.stringify(init.json?.warnings), /not a regular file/);
+  } finally { await rm(workspace, { recursive: true, force: true }); }
+});
+
 pkgTest('B12 a blank project starts with an empty decision log; installing a component copies in the decisions it cites', async () => {
   const { dir } = await created('blank');
   const start = await readFile(join(dir, 'spec/decisions/DECISIONS.md'), 'utf8');
@@ -345,11 +486,34 @@ pkgTest('B12 a blank project starts with an empty decision log; installing a com
   assert.match(start, new RegExp(`Number your own entries from ${next} on`), 'the header says where team numbering starts, for anyone writing an entry by hand');
   const r = run(dir, 'add', 'button', '--json');
   assert.equal(r.code, 0, r.out + r.err);
+  const docs = run(dir, 'docs', 'button');
+  assert.equal(docs.code, 0, docs.out + docs.err);
+  assert.match(docs.out, /Button/);
+  assert.match(docs.out, /Accessibility/);
+  await writeFile(join(dir, 'spec/design-docs.json'), '{broken');
+  const invalidDocs = run(dir, 'docs', 'button');
+  assert.notEqual(invalidDocs.code, 0);
+  assert.match(invalidDocs.err + invalidDocs.out, /not valid JSON/);
+  await rm(join(dir, 'spec/design-docs.json'));
   const cited = must(parseJson<ComponentContract>(await readFile(join(dir, 'spec/components/button/contract.json'), 'utf8')).decisions, 'button decisions').filter((d) => d.startsWith('SB-'));
   const log = await readFile(join(dir, 'spec/decisions/DECISIONS.md'), 'utf8');
   for (const id of cited) assert.match(log, new RegExp(`^### ${id} `, 'm'), id);
   assert.deepEqual(failing(await runChecks(dir, { only: ['X1'] })), []);
   await rm(dir, { recursive: true, force: true });
+});
+
+pkgTest('an installed project repairs outdated CLI documentation with upgrade', async () => {
+  const { dir } = await created('blank');
+  try {
+    await writeFile(join(dir, 'docs/cli.md'), 'Outdated CLI documentation\n');
+    const check = run(dir, 'check', '--only', 'G1', '--json');
+    assert.equal(check.code, 1);
+    assert.match(check.out, /npx sketchbook upgrade/);
+    const upgrade = run(dir, 'upgrade', '--json');
+    assert.equal(upgrade.code, 0, upgrade.out + upgrade.err);
+    const fixed = run(dir, 'check', '--only', 'G1', '--json');
+    assert.equal(fixed.code, 0, fixed.out + fixed.err);
+  } finally { await rm(dir, { recursive: true, force: true }); }
 });
 
 pkgTest('B13 a new decision in a project is numbered after every default decision, so an inherited one never collides', async () => {
@@ -395,4 +559,108 @@ void realTest('B16 a fresh library+kits project lints and typechecks with no err
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+
+pkgTest('portable instructions are restored only when missing and preserve team edits', async () => {
+  const { dir } = await created('blank');
+  const file = join(dir, 'AGENTS.md');
+  assert.match(await readFile(join(dir, '.aiassistant/rules/sketchbook.md'), 'utf8'), /^---\napply: always\n---\n/);
+  for (const path of ['.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']) {
+    const target = join(dir, path);
+    await writeFile(target, 'Team instructions\n');
+  }
+  assert.match(await readFile(file, 'utf8'), /npx sketchbook help/);
+  await writeFile(file, 'Team instructions\n');
+  assert.equal(run(dir, 'init', '--json').code, 0);
+  assert.equal(await readFile(file, 'utf8'), 'Team instructions\n');
+  const custom = run<DoctorData>(dir, 'doctor', '--json').json?.data.agentInstructionReferences;
+  assert.equal(custom?.['AGENTS.md'], 'not-detected');
+  assert.equal(custom?.['.github/copilot-instructions.md'], 'not-detected');
+  assert.match(run(dir, 'doctor').out, /Review preserved team instructions/);
+  for (const path of ['.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']) {
+    const target = join(dir, path);
+    assert.equal(await readFile(target, 'utf8'), 'Team instructions\n');
+    await rm(target);
+  }
+  await rm(file);
+  const report = run<DoctorData>(dir, 'doctor', '--json').json;
+  const missing = report?.data.agentInstructions;
+  assert.ok(missing && Object.values(missing).every((present) => !present));
+  assert.match(report?.next ?? '', /sketchbook init/);
+  assert.doesNotMatch(report?.next ?? '', /Claude Code/);
+  assert.equal(run(dir, 'init', '--json').code, 0);
+  assert.match(await readFile(file, 'utf8'), /contract-first/);
+  assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.agentInstructionReferences['AGENTS.md'], 'referenced');
+  assert.match(await readFile(join(dir, '.aiassistant/rules/sketchbook.md'), 'utf8'), /^---\napply: always\n---\n/);
+  for (const path of ['.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']) assert.ok(existsSync(join(dir, path)), path);
+  await rm(dir, { recursive: true, force: true });
+});
+
+pkgTest('repair preserves conflicting and symlinked agent setup paths', async () => {
+  const { dir } = await created('blank');
+  const outside = await empty();
+  await rm(join(dir, '.github'), { recursive: true });
+  await symlink(outside, join(dir, '.github'));
+  await rm(join(dir, '.codex'), { recursive: true });
+  await writeFile(join(outside, 'hooks.json'), 'team hook settings');
+  await symlink(outside, join(dir, '.codex'));
+  await rm(join(dir, '.trae'), { recursive: true });
+  await symlink(outside, join(dir, '.trae'));
+  await rm(join(dir, '.aiassistant'), { recursive: true });
+  await symlink(outside, join(dir, '.aiassistant'));
+  await rm(join(dir, 'AGENTS.md'));
+  await symlink(join(outside, 'missing.md'), join(dir, 'AGENTS.md'));
+  for (const args of [['--dry-run', '--json'], ['--json']]) {
+    const result = run<InitData & { repair: { skipped: string[] } }>(dir, 'init', ...args);
+    assert.equal(result.code, 0, result.out + result.err);
+    assert.deepEqual(result.json?.data.repair.skipped.sort(), ['.aiassistant/rules/sketchbook.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook-guard.mjs', '.github/hooks/sketchbook.json', '.trae/rules/sketchbook.md', 'AGENTS.md']);
+    assert.equal(existsSync(join(outside, 'rules/sketchbook.md')), false);
+    assert.equal(existsSync(join(outside, 'copilot-instructions.md')), false);
+    assert.equal(await readFile(join(outside, 'hooks.json'), 'utf8'), 'team hook settings');
+    assert.equal(existsSync(join(outside, 'sketchbook-guard.mjs')), false);
+    assert.equal(existsSync(join(outside, 'missing.md')), false);
+  }
+  await rm(join(dir, '.github'));
+  await writeFile(join(dir, '.github'), 'team file');
+  const result = run<InitData & { repair: { skipped: string[] } }>(dir, 'init', '--json');
+  assert.equal(result.code, 0, result.out + result.err);
+  assert.ok(result.json?.data.repair.skipped.includes('.github/copilot-instructions.md'));
+  assert.equal(await readFile(join(dir, '.github'), 'utf8'), 'team file');
+  await rm(dir, { recursive: true, force: true });
+  await rm(outside, { recursive: true, force: true });
+});
+
+pkgTest('repair reports a directory occupying an instruction file path', async () => {
+  const { dir } = await created('blank');
+  const target = join(dir, '.aiassistant/rules/sketchbook.md');
+  try {
+    await rm(target);
+    await mkdir(target);
+    await writeFile(join(target, 'team-file'), 'keep');
+    for (const args of [['--dry-run', '--json'], ['--json']]) {
+      const result = run<InitData>(dir, 'init', ...args);
+      assert.equal(result.code, 0, result.out + result.err);
+      assert.ok(result.json?.data.repair.skipped.includes('.aiassistant/rules/sketchbook.md'));
+      assert.equal(await readFile(join(target, 'team-file'), 'utf8'), 'keep');
+    }
+  } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
+
+pkgTest('the staged layer can be backed up to verify the installed copy and restored on failure', async () => {
+  const { dir } = await created('blank');
+  try {
+    const staged = join(dir, 'move-to-.claude');
+    const backup = join(dir, 'move-to-.claude.install-backup');
+    await cp(staged, join(dir, '.claude'), { recursive: true });
+    await writeFile(join(staged, 'commands/bad.md'), '---\ndescription: Bad\n---\nRun `sketchbook teleport`.\n');
+    assert.ok(must((await runChecks(dir, { only: ['H1'] })).results[0], 'H1').errors.length);
+    await rename(staged, backup);
+    assert.deepEqual(must((await runChecks(dir, { only: ['H1'] })).results[0], 'H1').errors, []);
+    assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.claude, 'installed');
+    await rename(backup, staged);
+    assert.ok(must((await runChecks(dir, { only: ['H1'] })).results[0], 'H1').errors.length);
+    assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.claude, 'staged');
+  } finally { await rm(dir, { recursive: true, force: true }); }
 });

@@ -22,6 +22,7 @@ The package is not published yet; the [quickstart](/start/quickstart/) shows the
 - **Checks that can fail.** <!-- stat:checks --> deterministic checks, including one maintainer-only check, with tests that show them failing on broken fixtures. The commit hook runs the standard checks.
 - **A component library as one output.** <!-- stat:components --> components in [the demo](/demo/), a starting point you can edit or replace.
 - **A CLI for all of it.** [Commands and options](/cli/overview/), generated from the code.
+- **Agent guidance.** [Compatibility](/concepts/agent-compatibility/) explains the available instructions and client-specific hooks.
 - **Honest numbers.** [Status](/reference/status/) is computed from the repository; [Evidence](/reference/evidence/) lists every study, including what did not work.
 
 ## Where to go next

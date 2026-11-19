@@ -208,6 +208,30 @@ test('L12 outside a project: project commands fail with "not a Sketchbook projec
   await rm(dir, { recursive: true });
 });
 
+test('project commands identify the nearest ancestor project without executing from a subdirectory', async () => {
+  const { mkdtemp } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const parent = await mkdtemp(join(tmpdir(), 'sketchbook project root '));
+  const project = join(parent, 'design system');
+  const nested = join(project, 'src/components');
+  try {
+    await mkdir(nested, { recursive: true });
+    await writeFile(join(parent, 'harness.config.json'), '{}');
+    await writeFile(join(project, 'harness.config.json'), '{}');
+    for (const command of ['status', 'doctor', 'check']) {
+      const result = cli(nested, command, '--json');
+      assert.equal(result.code, 1);
+      const fix = must(must(result.json, 'JSON envelope').errors[0], 'an error').fix ?? '';
+      assert.ok(fix.includes(project), fix);
+      assert.match(fix, /Change directory to the project root/);
+    }
+    const human = cli(nested, 'status');
+    assert.match(human.err, /Change directory to the project root/);
+    assert.ok(human.err.includes(project));
+    assert.equal((await readFile(join(project, 'harness.config.json'), 'utf8')), '{}');
+  } finally { await rm(parent, { recursive: true, force: true }); }
+});
+
 test('L13 generate rebuilds every generated output from the spec (what a project\'s npm scripts call; no engine paths)', async () => {
   const dir = await fixture();
   await rm(join(dir, 'generated/css/tokens.css'));

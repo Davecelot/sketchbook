@@ -1,7 +1,7 @@
 {
   "name": "sketchbook",
   "version": "0.1.0",
-  "description": "White-label, Claude-driven harness for building an accessible Web Components design system from a spec.",
+  "description": "Provider-neutral harness for building an accessible, white-label Web Components design system from a spec.",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -46,6 +46,7 @@
     ".githooks",
     "brand",
     "docs/cli.md",
+    "docs/agent-compatibility.md",
     "spec/schemas"
   ],
   "sideEffects": [
@@ -85,7 +86,7 @@
     "pregenerate": "npm run -s build:harness",
     "generate": "npm run tokens:build && npm run brands:build && npm run build:styles && npm run build:barrel && npm run build:schema-types && npm run build:interface && npm run build:cli-docs && npm run catalog:build",
     "build": "npm run generate && tsup",
-    "prepack": "npm run build",
+    "prepack": "npm run build 1>&2",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,scss}\" \"playwright/**/*.ts\"",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.stories.json && tsc -p tsconfig.tools.json",

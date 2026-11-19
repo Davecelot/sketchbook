@@ -1,6 +1,10 @@
 # Getting started
 
-This walkthrough assumes no design-system background.
+This walkthrough assumes no design-system background. Coding agents can use `AGENTS.md` and `AGENT-WORKFLOWS.md`; `npx sketchbook doctor` reports the local setup. In JetBrains AI Assistant chat, verify that the Sketchbook rule is set to **Always** under Settings → Tools → AI Assistant → Rules; check response attachments to confirm it is included. Existing project rules are preserved during init and upgrade.
+
+For Codex, verify hook trust and activation. New projects include a subdirectory launcher that runs only the shipped adapter (allowing line-ending differences); existing or customized hook settings are preserved and may need a deliberate update. `npx sketchbook doctor` reports the recognized launcher and warns when the adapter will be skipped. The guard does not cover shell edits or settled decisions.
+
+For a design system inside an existing Git repository, Copilot hook discovery varies by workspace and client; cloud and repository-root sessions need a root hook configuration. If your team wants to enable the nested project's edit guard, see the **Copilot repository hooks for an adopted app** section in the engine package's `docs/agent-compatibility.md` for a root configuration example. Review existing hooks before adding a separate file; initialization never changes them.
 
 ## 1. What you are editing
 | You edit | It controls | Never edit (generated) |
@@ -43,16 +47,16 @@ Every change regenerates the foundation layer (color ramps in OKLCH, type and sp
 
 ## 5. Trace any value
 ```sh
-node harness/cli.mjs explain --sb-button-default-bg
-node harness/cli.mjs explain sb-input
-node harness/cli.mjs explain SB-0009
+npx sketchbook explain --sb-button-default-bg
+npx sketchbook explain sb-input
+npx sketchbook explain SB-0009
 ```
 
 ## 6. Add or change a component
-`npx sketchbook add <name>` installs a reference component from the catalog; `/kits` adds page templates. To design a new one: `/add <Name>` in Claude Code; the flow for a new component is always: contract → `npm run check` → plan → tests written first and seen failing → code → green → review → `beta`.
+`npx sketchbook add <name>` installs a reference component from the catalog; `npx sketchbook kits` manages page templates. To design a new one, follow `AGENT-WORKFLOWS.md` or use `/add <Name>` in Claude Code; the flow for a new component is always: contract → `npm run check` → plan → tests written first and seen failing → code → green → review → `beta`.
 
 ## 7. Keep the design file in step
-Figma: open the file named in `harness.config.json`, connect the Figma MCP, then `/sync`. `npm run check` (D1) tells you when the design file is behind the spec.
+Figma: open the file named in `harness.config.json`, connect the Figma MCP, then use `npx sketchbook help sync` or `/sync` in Claude Code. `npm run check` (D1) tells you when the design file is behind the spec.
 
 ## 8. Swap a piece
-`node harness/cli.mjs swap tokens plain` (no Style Dictionary), `node harness/cli.mjs swap design none` (no design file). The spec doesn't change.
+`npx sketchbook swap tokens plain` (no Style Dictionary), `npx sketchbook swap design none` (no design file). The spec doesn't change.

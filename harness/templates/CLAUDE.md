@@ -1,17 +1,18 @@
 # Design system
 
-Index only. Facts live in the files linked here; do not repeat them. Everything `sketchbook init` installed, and what each part is for, is listed in `docs/harness.md` (generated).
+Index only. Facts live in the files linked here; do not repeat them. The initial installation inventory and what each part is for are listed in `docs/harness.md` (generated at project creation; later changes may not be reflected). Inspect the project and run `sketchbook doctor` for current status.
 This design system started from Sketchbook: the default (UI and theme following shadcn/ui; the component API speaks `spec/api.json`, SB-0122) is a starting point to edit or redo. Component creation follows the contract-first standard. See `harness.config.json` (`ui`, `process`, `features`).
 
 ## Source of truth (edit these)
-- `brand.config.json`: foundations, each a `preset` from the standards catalog (`harness/standards/`) or `custom`. Change it with the `foundations` skill or `sketchbook tokens`.
-- `spec/tokens/semantic/*.tokens.json`: semantic tokens (light, dark, base). `spec/tokens/brand-links.json`: which follow the brand. `spec/tokens/interface.json`: what components depend on (rename only via `sketchbook tokens rename`).
+- `brand.config.json`: foundations, each a `preset` from the standards catalog (`sketchbook presets`) or `custom`. Change it with the `foundations` skill or `sketchbook tokens`.
+- `spec/tokens/semantic/*.tokens.json`: semantic tokens (light, dark, base). `spec/tokens/brand-links.json`: which follow the brand.
 - `spec/components/<name>/contract.json` + `contract.md` + `plan.md`: component spec; component tokens live in `tokens`.
 - `spec/registry.json`: components and lifecycle status. `spec/tokens/contrast.json`: contrast pairs. `src/patterns/<kit>/`: template kits.
 - `spec/decisions/DECISIONS.md`: design-system decisions (the entries Sketchbook started with stay; add yours on top).
 
 ## Outputs (never edit by hand; rebuild)
-- `spec/tokens/foundation/*` (`npm run tokens:generate`; hand edits are kept and flagged as overrides).
+- `spec/tokens/foundation/*` (review regeneration with `sketchbook tokens rebuild --dry-run --yes`; hand edits are kept and flagged as overrides).
+- `spec/tokens/interface.json` (what components depend on; rename tokens only via `sketchbook tokens rename`).
 - `generated/**`, `src/components/*/*.styles.ts`, `src/index.ts` (`npm run generate`).
 
 ## Commands

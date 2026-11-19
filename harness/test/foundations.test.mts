@@ -184,7 +184,7 @@ test('F11 G1 rejects a foundation that no longer matches brand.config', async ()
   const g1 = must((await runChecks(dir, { only: ['G1'] })).results[0], 'the G1 result');
   const e = g1.errors.find((x) => x.file === 'spec/tokens/foundation/radius.tokens.json');
   assert.ok(e, JSON.stringify(g1.errors));
-  assert.match(e.fix ?? '', /npm run tokens:generate/);
+  assert.match(e.fix ?? '', /sketchbook tokens rebuild/);
   await rm(dir, { recursive: true });
 });
 

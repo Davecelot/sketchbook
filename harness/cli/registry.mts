@@ -20,13 +20,15 @@ import icons from './commands/icons.mjs';
 import api from './commands/api.mjs';
 import brand from './commands/brand.mjs';
 import auditCss from './commands/audit-css.mjs';
+import auditPage from './commands/audit-page.mjs';
+import auditDecisions from './commands/audit-decisions.mjs';
 import tokens from './commands/tokens.mjs';
 import generate from './commands/generate.mjs';
 import selftest from './commands/selftest.mjs';
 import propagate from './commands/propagate.mjs';
 import type { Command, GroupId, SubcommandInfo } from './types.mjs';
 
-const ALL: Command[] = [init, status, doctor, upgrade, propagate, generate, prefix, swap, add, remove, list, kits, tokens, presets, brand, icons, api, auditCss, sync, docs, check, selftest, explain, help];
+const ALL: Command[] = [init, status, doctor, upgrade, propagate, generate, prefix, swap, add, remove, list, kits, tokens, presets, brand, icons, api, auditCss, auditPage, auditDecisions, sync, docs, check, selftest, explain, help];
 export const GROUPS: Record<GroupId, string> = { project: 'Project', components: 'Components', tokens: 'Tokens', design: 'Design file', quality: 'Quality', meta: 'Help' };
 
 export const commands = (): Command[] => ALL;

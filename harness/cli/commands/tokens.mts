@@ -104,6 +104,15 @@ const readOnly = (ctx: Pick<TokensContext, 'dryRun'>, name: string): void => { i
 
 const SUBCOMMANDS: TokensSubcommand[] = [
   {
+    name: 'rebuild', usage: 'rebuild', mutates: true,
+    summary: 'Rebuild foundations and linked tokens from the current brand, preserving recorded and hand-edited foundation overrides. Review the dry run first.',
+    examples: ['sketchbook tokens rebuild --dry-run', 'sketchbook tokens rebuild'],
+    async run(ctx) {
+      if (ctx.args.length) throw fail('tokens rebuild takes no arguments.', 'Run sketchbook help tokens.');
+      return mutate(ctx, { summary: ['Rebuild foundations and linked tokens from the current brand.'], warnings: [], data: {} });
+    },
+  },
+  {
     name: 'set', usage: 'set <key> <value>', mutates: true,
     summary: 'Set one value in brand.config.json by dot path (validated against the schema and the catalog); a .preset key replaces its sibling fine overrides.',
     examples: ['sketchbook tokens set typography.family Inter', 'sketchbook tokens set spacing.preset grid-8 --dry-run', 'sketchbook tokens set color.primary "#0F766E"'],

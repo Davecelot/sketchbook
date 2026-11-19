@@ -4,7 +4,7 @@
 import { parseArgs } from 'node:util';
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { commands, find } from './registry.mjs';
 import help from './commands/help.mjs';
@@ -35,6 +35,18 @@ export interface DispatchIO {
   root?: string;
   stdout?: (s: string) => unknown;
   stderr?: (s: string) => unknown;
+}
+
+// Commands retain their project-root working-directory contract. Only suggest an ancestor;
+// silently changing root would reinterpret file arguments and could write to the wrong project.
+function ancestorProject(start: string): string | null {
+  let dir = dirname(resolve(start));
+  for (;;) {
+    if (existsSync(join(dir, 'harness.config.json'))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) return null;
+    dir = parent;
+  }
 }
 
 export async function dispatch(argv: string[], { root = process.cwd(), stdout = (s) => process.stdout.write(s), stderr = (s) => process.stderr.write(s) }: DispatchIO = {}): Promise<number> {
@@ -69,7 +81,12 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
   const values: OptionValues = parsed.values;
   const positionals = parsed.positionals.map((p) => (p.startsWith(MARK) ? p.slice(1) : p));
   if (values.help) return finish(name, help.run({ root, args: [name], options: {}, json, out }));
-  if (cmd.project !== false && !existsSync(join(root, 'harness.config.json'))) return fail(name, `Not a Sketchbook project (no harness.config.json in ${root}).`, 'sketchbook init (in an empty folder, or --dir <new folder>) creates one; or cd into your design-system folder.');
+  if (cmd.project !== false && !existsSync(join(root, 'harness.config.json'))) {
+    const ancestor = ancestorProject(root);
+    return fail(name, `Not a Sketchbook project (no harness.config.json in ${root}).`, ancestor
+      ? `Change directory to the project root ${ancestor} and retry; file paths are interpreted from that root.`
+      : 'sketchbook init (in an empty folder, or --dir <new folder>) creates one; or cd into your design-system folder.');
+  }
   if (values['dry-run'] && !cmd.dryRun) return fail(name, `${name} does not support --dry-run.`, `Run sketchbook help ${name}.`);
   const required = cmd.args.filter((a) => a.required).length;
   if (positionals.length < required) return fail(name, `Usage: ${usage(cmd)}`, `Run sketchbook help ${name}.`);

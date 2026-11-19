@@ -1,6 +1,7 @@
 // Doc blueprints for the design file: spec/design-docs.json + the spec -> data a design adapter renders.
 // Every value comes from the harness (tokens, brand.config, contracts). Readable view: docs/design-docs/.
 import { readdir, readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { modeNames } from '../../standards/resolve.mjs';
 import { loadAll, resolve, tokensForMode } from '../tokens.mjs';
@@ -265,8 +266,11 @@ export async function componentDoc(root: string, name: string): Promise<DocBluep
   for (const s of await a11ySource(root, name)) a11yCards.push({ type: 'code', span: [1, 1], title: s.path, source: s.lines, marks: a11yMarks(s.lines) });
   sections.push({ title: 'Accessibility', cards: a11yCards });
 
-  if (!spec) throw new Error(`${DOCS_FILE} is missing or not valid JSON.`);
-  const groups = spec.shell.tokenGroups;
+  // Fresh projects may not have opted into design-file documentation. The
+  // component's contract is still useful as text; show its tokens together.
+  // A present but malformed file remains an error rather than being ignored.
+  if (!spec && existsSync(join(root, DOCS_FILE))) throw new Error(`${DOCS_FILE} is missing or not valid JSON.`);
+  const groups = spec?.shell.tokenGroups ?? [];
   const by = new Map(groups.map((g): [string, TagItem[]] => [g.label, []]));
   const other: TagItem[] = [];
   for (const [token, def] of Object.entries(c.tokens || {})) {

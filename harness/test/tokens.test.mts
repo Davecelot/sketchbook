@@ -57,10 +57,28 @@ test('K1 tokens is one registry command with documented subcommands', () => {
   assert.ok(c && c.mutates && c.dryRun && c.cssVarArgs);
   const subcommands = must(c.subcommands, 'tokens subcommands').map((s) => { assert.ok(typeof s === 'object', 'every tokens subcommand is described'); return s; });
   const names = subcommands.map((s) => s.name);
-  assert.deepEqual(names, ['set', 'preset', 'presets', 'diff', 'impact', 'add', 'remove', 'rename', 'import', 'scratch', 'overrides']);
+  assert.deepEqual(names, ['rebuild', 'set', 'preset', 'presets', 'diff', 'impact', 'add', 'remove', 'rename', 'import', 'scratch', 'overrides']);
   for (const s of subcommands) for (const k of ['name', 'usage', 'summary', 'mutates', 'examples']) assert.ok(k in s, `${s.name} lacks ${k}`);
   const known = parseJson<{ commands: { tokens: { subcommands: string[] } } }>(spawnSync('cat', [join(ROOT, 'harness/cli/known-commands.json')], { encoding: 'utf8' }).stdout);
   assert.deepEqual(known.commands.tokens.subcommands, names);
+});
+
+test('tokens rebuild previews and applies a direct brand edit without requiring repository-only npm scripts', async () => {
+  const dir = await fixture(PARTS);
+  try {
+    await edit<{ radius: unknown }>(dir, 'brand.config.json', (brand) => { brand.radius = { style: 'round' }; });
+    const foundation = join(dir, 'spec/tokens/foundation/radius.tokens.json');
+    const before = await readFile(foundation, 'utf8');
+    const preview = await sb(dir, 'tokens', 'rebuild', '--dry-run', '--yes');
+    ok(preview, 'rebuild dry run');
+    assert.equal(await readFile(foundation, 'utf8'), before);
+    const result = await sb(dir, 'tokens', 'rebuild', '--yes');
+    ok(result, 'rebuild');
+    assert.notEqual(await readFile(foundation, 'utf8'), before);
+    assert.deepEqual(failing(await runChecks(dir, { only: ['G1'] })), []);
+    const unexpected = await sb(dir, 'tokens', 'rebuild', 'extra');
+    assert.equal(unexpected.code, 1);
+  } finally { await rm(dir, { recursive: true, force: true }); }
 });
 
 test('K2 + K3 read-only subcommands answer the envelope; every mutating dry run writes nothing', async () => {
@@ -71,7 +89,7 @@ test('K2 + K3 read-only subcommands answer the envelope; every mutating dry run 
   const before = await snapshot(dir);
   for (const args of [['presets'], ['presets', 'color'], ['impact', 'color.primary'], ['impact', '--sb-color-border'], ['overrides', 'list']]) ok(await sb(dir, 'tokens', ...args), args.join(' '));
   const dry = [
-    ['set', 'typography.family', 'Inter'], ['preset', 'spacing', 'grid-8'],
+    ['rebuild'], ['set', 'typography.family', 'Inter'], ['preset', 'spacing', 'grid-8'],
     ['add', 'color.highlight', '--light', '{color.neutral.100}', '--dark', '{color.neutral.800}'],
     ['rename', 'color.muted', 'color.subtle'], ['import', join(FIX, 'tokens-studio.json'), '--from', 'dtcg'],
     ['import', 'apply', proposal], ['scratch', '--answers', 'answers.json'], ['overrides', 'reset', '--all'],

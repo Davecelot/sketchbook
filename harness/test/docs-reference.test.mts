@@ -71,3 +71,12 @@ test('internal links and anchors in site/ sources resolve', sourceRepoOnly, asyn
   }
   assert.deepEqual(bad, []);
 });
+
+
+test('the project getting-started guide uses the installed CLI and matches its source', sourceRepoOnly, async () => {
+  const source = await readFile(`${ROOT}docs/getting-started.md`, 'utf8');
+  const template = await readFile(`${ROOT}harness/templates/project/docs/getting-started.md`, 'utf8');
+  assert.equal(template, source);
+  assert.doesNotMatch(template, /node harness\/cli\.mjs/);
+  assert.match(template, /npx sketchbook explain/);
+});

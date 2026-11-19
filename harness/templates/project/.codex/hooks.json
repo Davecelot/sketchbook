@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^(apply_patch|functions\\.apply_patch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .codex/sketchbook-guard.mjs"
+          },
+          {
+            "type": "command",
+            "command": "node -e \"const f=require('node:fs'),p=require('node:path'),c=require('node:crypto');let d=process.cwd(),g;for(;;){let x=p.join(d,'.codex','sketchbook-guard.mjs');if(f.existsSync(x)){g=x;break}let n=p.dirname(d);if(n===d)break;d=n}if(!g){process.stdout.write('{}\\n')}else{let s=f.readFileSync(g,'utf8').replace(/\\r\\n/g,'\\n');if(c.createHash('sha256').update(s).digest('hex')!=='c4a0d8e8ae2cb571a0f69948d6c0f0b5a02459a4571dbcc5fd79b11a8090d45c'){process.stderr.write('Sketchbook subdirectory guard skipped: adapter differs from the trusted template.\\n');process.stdout.write('{}\\n')}else{let a='const root = resolve(dirname(fileURLToPath(import.meta.url)), \\x27..\\x27);';if(!s.includes(a)){process.stderr.write('Sketchbook subdirectory guard could not locate its root.\\n');process.stdout.write('{}\\n')}else{let r=p.dirname(p.dirname(f.realpathSync(g)));s=s.replace(a,'const root = '+JSON.stringify(r)+';');import('data:text/javascript;base64,'+Buffer.from(s).toString('base64')).catch(e=>{process.stderr.write(String(e)+'\\n');process.exitCode=1})}}}\""
+          }
+        ]
+      }
+    ]
+  }
+}

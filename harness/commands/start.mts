@@ -90,13 +90,13 @@ function starterAction(root: string, id: string, from: string | undefined): Star
     if (!from) return { lines: ['Next: import your tokens into a proposal (nothing is applied until you approve it).'], next: ['sketchbook tokens import <file>'] };
     if (!hasTokens) return { lines: [`sketchbook tokens is not available in this harness yet; run it once it is: sketchbook tokens import ${from}`], next: [`sketchbook tokens import ${from}`] };
     const r = spawnSync('node', [join(HARNESS, 'cli.mjs'), 'tokens', 'import', from], { cwd: root, encoding: 'utf8' });
-    return { lines: [r.stdout.trim(), r.stderr.trim()].filter(Boolean), next: ['/import-tokens (review the proposal)'], exitCode: r.status };
+    return { lines: [r.stdout.trim(), r.stderr.trim()].filter(Boolean), next: ['Review the generated token proposal (Claude Code: /import-tokens)'], exitCode: r.status };
   }
   if (id === 'from-codebase') {
     if (!from) return { lines: ['Next: audit your product\'s CSS into a foundations proposal.'], next: ['sketchbook audit-css <path|glob>'] };
     const proposal = auditCss(root, [from]);
     writeProposal(root, proposal);
-    return { lines: [`CSS audit of ${proposal.sources.length} file(s) -> ${PROPOSAL}: ${proposal.colors.clusters.length} color cluster(s), ${proposal.fontSizes.length} font size(s), spacing base ${proposal.spacing.base}px.`], changed: [PROPOSAL], next: ['/foundations import (on the proposal)'] };
+    return { lines: [`CSS audit of ${proposal.sources.length} file(s) -> ${PROPOSAL}: ${proposal.colors.clusters.length} color cluster(s), ${proposal.fontSizes.length} font size(s), spacing base ${proposal.spacing.base}px.`], changed: [PROPOSAL], next: ['Review the CSS audit proposal and apply chosen values using the foundations workflow in AGENT-WORKFLOWS.md'] };
   }
   return { lines: [], next: [] };
 }

@@ -2,13 +2,24 @@
 // PreToolUse (Edit|Write|MultiEdit): settled decisions stay settled. New entries may be added to
 // spec/decisions/DECISIONS.md, and the index may change, but an existing entry's text may not.
 // To change a decision, add a new entry that supersedes it.
-import { readFileSync } from 'node:fs';
+import { readFileSync, realpathSync } from 'node:fs';
+import { join } from 'node:path';
 
 interface Edit { old_string?: string; new_string?: string }
 interface ToolCall { tool_name?: string; tool_input?: Edit & { file_path?: string; content?: string; edits?: Edit[] } }
 const input = JSON.parse(await new Promise<string>((r) => { let d = ''; process.stdin.on('data', (c: Buffer) => (d += String(c))); process.stdin.on('end', () => r(d || '{}')); })) as ToolCall;
 const file = String(input.tool_input?.file_path ?? '');
-if (!file.endsWith('spec/decisions/DECISIONS.md')) process.exit(0);
+const normalizedFile = file.replace(/\\/g, '/');
+const windowsPath = process.platform === 'win32' || /^[A-Za-z]:\//.test(normalizedFile);
+let isDecisions = windowsPath ? normalizedFile.toLowerCase().endsWith('spec/decisions/decisions.md') : normalizedFile.endsWith('spec/decisions/DECISIONS.md');
+if (!isDecisions && process.env.CLAUDE_PROJECT_DIR) {
+  try {
+    const actual = realpathSync(file);
+    const expected = realpathSync(join(process.env.CLAUDE_PROJECT_DIR, 'spec/decisions/DECISIONS.md'));
+    isDecisions = process.platform === 'win32' ? actual.toLowerCase() === expected.toLowerCase() : actual === expected;
+  } catch { /* A missing or inaccessible alias cannot be compared. */ }
+}
+if (!isDecisions) process.exit(0);
 let current = '';
 try { current = readFileSync(file, 'utf8'); } catch { process.exit(0); }
 // Only accepted (and superseded/incident) entries are settled; proposed ones can still be edited.
