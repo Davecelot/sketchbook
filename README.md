@@ -17,7 +17,7 @@ Sources of truth, generators, deterministic checks, gates and agent guidance mak
 ![accessibility](https://img.shields.io/badge/accessibility-WCAG%202.2%20AA-8e7cc3?style=flat-square&labelColor=555)
 ![default output](https://img.shields.io/badge/default%20output-Web%20Components-d9683f?style=flat-square&labelColor=555)
 
-[Quick start](#quick-start) · [Contributing](./CONTRIBUTING.md) · [How it works](#how-it-works) · [Evidence](#evidence) · [Use cases](#what-you-can-do-with-it) · [Docs](#docs)
+[Quick start](#quick-start) · [Contributing](./CONTRIBUTING.md) · [How it works](#how-it-works) · [Evidence](#evidence) · [Use cases](#what-you-can-do-with-it) · [Public docs](https://sketchbook-docs.vercel.app/)
 
 </div>
 
@@ -192,7 +192,8 @@ Round 3, before the lighter Claude layer (out of 10 runs):
 
 ## Docs
 
-- [Documentation index](./docs/README.md) for guides, references, and evidence.
+- [Public documentation](https://sketchbook-docs.vercel.app/) for setup guides, the CLI reference, and interactive component demos.
+- [Repository documentation index](./docs/README.md) for guides, audits, and research.
 - [Security policy](./SECURITY.md) for private vulnerability reporting and supported code.
 - [Getting started](./docs/getting-started.md) for your first changes in an initialized project.
 - [CLI reference](./docs/cli.md): every command and option.

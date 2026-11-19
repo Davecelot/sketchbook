@@ -13,7 +13,7 @@ Use Node 22.18.x or a later Node 22 release, or Node 24 and above. Run `npm ci` 
 | Repository docs | [`docs/`](./docs/README.md) indexes guides, references, audits, and research. |
 | Agent guidance | [`AGENTS.md`](./AGENTS.md) points to the shared workflows. [`.claude/`](./.claude/) holds the Claude Code integration. Project templates in `harness/templates/project/` supply the instructions and hooks installed by init. |
 
-The npm tarball ships the engine and the reference library together. The docs site deploys from `site-dist/`.
+The npm tarball ships the engine and the reference library together. The [public docs site](https://sketchbook-docs.vercel.app/) deploys from `site-dist/`.
 
 ## Sources and generated files
 

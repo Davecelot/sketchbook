@@ -1,5 +1,6 @@
 # Sketchbook documentation
 
+- [Public documentation](https://sketchbook-docs.vercel.app/) for guides, CLI commands, and interactive examples.
 - [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for creating a project and [getting started](./getting-started.md) for the first changes inside it.
 - [CLI reference](./cli.md) for commands and [agent compatibility](./agent-compatibility.md) for project guidance, diagnostics, and hook coverage.
 - [API standard](./api-standard.md), [design-file documentation](./design-docs/README.md), and [Figma practices](./figma-practices.md) for component and design conventions.
