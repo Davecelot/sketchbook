@@ -2,6 +2,7 @@
 
 Index only. Facts live in the files linked here; do not repeat them.
 Sketchbook is the first draft of a design system: teams bring their own brand and way of working; the default (UI and theme following shadcn/ui; the component API speaks `spec/api.json`, SB-0122) is a starting point to edit or redo. Component creation follows the contract-first standard. See `harness.config.json` (`ui`, `process`, `features`).
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repository map and [docs/README.md](./docs/README.md) for documentation.
 
 ## Source of truth (edit these)
 - `brand.config.json`: foundations, each a `preset` from the standards catalog (`harness/standards/`) or `custom`; generates the foundation layer. Change it with the `foundations` skill or `sketchbook tokens`.

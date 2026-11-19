@@ -59,6 +59,7 @@ test('the package ships the engine, the project template and the Claude layer', 
   const out = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
   const files = new Set(parseJson<[{ files: { path: string }[] }]>(out)[0].files.map((f) => f.path));
   assert.deepEqual(SHIPPED.filter((f) => !files.has(f)), [], 'add the missing paths to package.json "files"');
+  assert.deepEqual([...files].filter((f) => /^(?:apps\/docs\/|site-dist\/|scripts\/docs-(?:site|components)\.mjs$)/.test(f)), [], 'docs app build files stay in the source repo');
 });
 
 test('the engine\'s run-time imports are dependencies, not devDependencies', async () => {

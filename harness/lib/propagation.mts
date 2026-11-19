@@ -59,16 +59,13 @@ export async function inputsHash(root: string): Promise<string> {
 }
 
 // What the docs site is built from: its pages and assets, the generators, the CLI reference and the brand (playground defaults).
-const DOCS_DIRS = ['site'];
 const DOCS_FILES = ['docs/cli.md', 'brand.config.json'];
 
 export async function docsInputsHash(root: string): Promise<string> {
   const files: string[] = [];
-  for (const d of DOCS_DIRS) await walk(root, d, files, /\.(json|md|html|css|js|svg)$/);
-  for (const f of DOCS_FILES) files.push(f);
-  try {
-    for (const e of await readdir(join(root, 'scripts'))) if (/^docs-.*\.m(js|ts)$/.test(e)) files.push(`scripts/${e}`);
-  } catch { /* no generators here */ }
+  await walk(root, 'apps/docs/content', files, /\.(json|md|html|css|js|svg|fig)$/);
+  await walk(root, 'apps/docs/scripts', files, /\.m(js|ts)$/);
+  files.push(...DOCS_FILES);
   const h = createHash('sha256');
   for (const f of withoutCompiled(files).sort()) {
     let body: Buffer | null = null;

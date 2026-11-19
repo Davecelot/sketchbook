@@ -18,7 +18,8 @@ const field = (v: unknown, k: string): unknown => (isRecord(v) ? v[k] : undefine
 export function run({ root, config, registry, all, maintainer }: CheckContext): CheckResult {
   const errors: CheckIssue[] = [];
   if (!maintainer) return { errors };
-  const site = existsSync(join(root, 'site'));
+  const content = 'apps/docs/content';
+  const site = config.catalog?.source === true || existsSync(join(root, content));
   const tool = config.adapters?.design?.tool;
   const design = tool && tool !== 'none';
   const batched = new Set(list(loadDesignDocs(root)?.batches).flatMap((b) => list(field(b, 'components'))));
@@ -32,8 +33,8 @@ export function run({ root, config, registry, all, maintainer }: CheckContext): 
     const fail = (msg: string, fix: string) => errors.push({ file: 'spec/registry.json', token: c.name, msg: `${c.status}: ${msg}`, fix });
     if (!audits.some((f) => f.startsWith(`${name}-`))) fail('no parity audit report', 'Launch .claude/skills/component-builder/agents/parity-auditor.md (writes docs/parity-audits/<name>-<date>.md).');
     if (site) {
-      if (!existsSync(join(root, `site/demo/${name}.md`))) fail(`no docs site page site/demo/${name}.md`, 'Run npm run docs:components (generated from the contract).');
-      if (!existsSync(join(root, `site/_examples/${name}.html`))) fail(`no docs site example site/_examples/${name}.html`, 'Write a curated live example for the docs site.');
+      if (!existsSync(join(root, `${content}/demo/${name}.md`))) fail(`no docs site page ${content}/demo/${name}.md`, 'Run npm run docs:components (generated from the contract).');
+      if (!existsSync(join(root, `${content}/_examples/${name}.html`))) fail(`no docs site example ${content}/_examples/${name}.html`, 'Write a curated live example for the docs site.');
     }
     if (!design || c.status === 'code-only') continue;
     if (!batched.has(name)) fail('in no batch of spec/design-docs.json', 'Add it to a batch so sync components draws its doc page.');
@@ -43,9 +44,9 @@ export function run({ root, config, registry, all, maintainer }: CheckContext): 
   }
   if (site) {
     const LEAK = /PROPOSAL|owner to confirm|\(Q\d+\)/;
-    for (const f of existsSync(join(root, 'site/demo')) ? readdirSync(join(root, 'site/demo')).filter((x) => x.endsWith('.md')) : []) {
-      const hit = readFileSync(join(root, 'site/demo', f), 'utf8').split('\n').findIndex((line) => LEAK.test(line));
-      if (hit >= 0) errors.push({ file: `site/demo/${f}`, msg: `line ${hit + 1} shows a contract drafting label (PROPOSAL, owner to confirm, Q-number) on a public page`, fix: 'Run npm run docs:components; scripts/docs-components.mjs drops these labels.' });
+    for (const f of existsSync(join(root, `${content}/demo`)) ? readdirSync(join(root, `${content}/demo`)).filter((x) => x.endsWith('.md')) : []) {
+      const hit = readFileSync(join(root, `${content}/demo`, f), 'utf8').split('\n').findIndex((line) => LEAK.test(line));
+      if (hit >= 0) errors.push({ file: `${content}/demo/${f}`, msg: `line ${hit + 1} shows a contract drafting label (PROPOSAL, owner to confirm, Q-number) on a public page`, fix: 'Run npm run docs:components to regenerate the page without drafting labels.' });
     }
   }
   return { errors };

@@ -22,7 +22,7 @@ export async function run({ root, maintainer }: CheckContext): Promise<CheckResu
       if (got === null) errors.push({ file: rec.file, msg: `${name} build output is missing`, fix: 'Run sketchbook propagate --maintainer.' });
       else if (got !== rec.hash) errors.push({ file: rec.file, msg: `${name} build output differs from the propagate record`, fix: 'Run sketchbook propagate --maintainer.' });
       if (name === 'docs' && got !== null && rec.inputs !== await docsInputsHash(root)) {
-        errors.push({ file: 'site', msg: 'the docs site sources changed since the last build (site/, docs/cli.md or brand.config.json)', fix: 'Run sketchbook propagate --maintainer.' });
+        errors.push({ file: 'apps/docs', msg: 'the docs site sources changed since the last build (apps/docs/, docs/cli.md or brand.config.json)', fix: 'Run sketchbook propagate --maintainer.' });
       }
     }
   }

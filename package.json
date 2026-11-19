@@ -100,8 +100,9 @@
     "templates:sync": "cp spec/tokens/semantic/*.tokens.json harness/templates/semantic/",
     "catalog:build": "node scripts/build-catalog.mjs",
     "brands:build": "node harness/commands/brand.mjs",
-    "docs:build": "npm run build && npm run docs:components && node scripts/docs-site.mjs",
-    "docs:components": "node scripts/docs-components.mjs",
+    "docs:build": "npm run build && npm run docs:components && node apps/docs/scripts/docs-site.mjs",
+    "predocs:components": "npm run -s build:harness",
+    "docs:components": "node apps/docs/scripts/docs-components.mjs",
     "docs:serve": "http-server site-dist -p 4173 -c-1"
   },
   "dependencies": {

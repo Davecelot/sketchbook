@@ -33,11 +33,17 @@ test('O1 record gate: no record yet is not a failure; a record that matches the 
   assert.deepEqual(failing(await only(dir, ['O1'])), [], 'propagate records the new inputs and the gate passes');
 });
 
-test('O1 maintainer gate: a docs site source changed after the last docs build fails until propagate --maintainer records again', async () => {
+test('O1 maintainer gate detects changes to docs content, builders and the downloadable Figma file', async () => {
   const dir = await fixture(PARTS);
-  await mkdir(join(dir, 'site'), { recursive: true });
-  await mkdir(join(dir, 'site-dist'), { recursive: true });
-  await writeFile(join(dir, 'site/index.md'), '# Home\n');
+  const sources = {
+    'apps/docs/content/index.md': '# Home\n',
+    'apps/docs/content/_assets/Sketchbook.fig': 'example file',
+    'apps/docs/scripts/docs-site.mts': 'export {};\n',
+  };
+  for (const folder of ['apps/docs/content/_assets', 'apps/docs/scripts', 'site-dist']) {
+    await mkdir(join(dir, folder), { recursive: true });
+  }
+  for (const [path, body] of Object.entries(sources)) await writeFile(join(dir, path), body);
   await writeFile(join(dir, 'site-dist/index.html'), '<h1>Home</h1>');
   const record = async () => writeRecord(dir, {
     inputsHash: await inputsHash(dir), at: 'test',
@@ -46,10 +52,14 @@ test('O1 maintainer gate: a docs site source changed after the last docs build f
   const maintainerErrors = async () => must((await runChecks(dir, { only: ['O1'], maintainer: true })).results[0], 'the O1 result').errors.map((e) => e.msg).join('\n');
   await record();
   assert.equal(await maintainerErrors(), '', 'a docs build recorded from the current sources passes');
-  await writeFile(join(dir, 'site/index.md'), '# Home, edited\n');
-  assert.match(await maintainerErrors(), /docs site sources changed/, 'a page edited after the build fails');
-  await record();
-  assert.equal(await maintainerErrors(), '', 'recording again passes');
+  await writeFile(join(dir, 'apps/docs/scripts/docs-site.mjs'), 'export {};\n');
+  assert.equal(await maintainerErrors(), '', 'compiling a builder adds no tracked inputs');
+  for (const [path, body] of Object.entries(sources)) {
+    await writeFile(join(dir, path), body + '\n');
+    assert.match(await maintainerErrors(), /docs site sources changed/, `${path} invalidates the build`);
+    await record();
+    assert.equal(await maintainerErrors(), '', 'recording again passes');
+  }
 });
 
 test('O1 counts contract and standards changes as foundations, but not generated outputs', async () => {
@@ -84,10 +94,10 @@ test('propagation reaches the generated outputs: a brand change moves the token 
   assert.ok(cssAfter.toLowerCase().includes('#2563eb') || cssAfter.includes('--sb-color-brand'), 'the new brand color reaches the CSS variables');
 });
 
-test('the consumer boundary: the published package ships no maintainer terrain (site, docs build, Storybook output, source tree)', async () => {
+test('the package allowlist excludes the docs app, maintainer builds and source tree', async () => {
   const pkg = await readJson<{ files?: string[] }>(ROOT, 'package.json');
   const files = pkg.files ?? [];
-  for (const forbidden of ['site', 'site-dist', 'storybook-static', 'src', 'spec/tokens', 'spec/components', 'generated/design']) {
+  for (const forbidden of ['apps', 'site-dist', 'storybook-static', 'src', 'spec/tokens', 'spec/components', 'generated/design']) {
     assert.ok(!files.some((f) => f === forbidden || f.startsWith(forbidden + '/')), `${forbidden} is not in the published package`);
   }
 });

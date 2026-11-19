@@ -19,14 +19,14 @@ test('README check counts match the site statistic', sourceRepoOnly, async () =>
   assert.notDeepEqual(counts(readme.replace(`${CHECKS.length} deterministic checks`, `${CHECKS.length - 1} deterministic checks`)), Array(4).fill(CHECKS.length));
 });
 
-test('site/reference/checks.md lists every check and only real ones', sourceRepoOnly, async () => {
-  const page = await readFile(`${ROOT}site/reference/checks.md`, 'utf8');
+test('apps/docs/content/reference/checks.md lists every check and only real ones', sourceRepoOnly, async () => {
+  const page = await readFile(`${ROOT}apps/docs/content/reference/checks.md`, 'utf8');
   const documented = [...page.matchAll(/^\| ([A-Z]\d+) \|/gm)].map((m) => m[1]).sort();
   assert.deepEqual(documented, CHECKS.map((c) => c.id).sort());
 });
 
-test('site/reference/rules.md has one section per rule file', sourceRepoOnly, async () => {
-  const page = await readFile(`${ROOT}site/reference/rules.md`, 'utf8');
+test('apps/docs/content/reference/rules.md has one section per rule file', sourceRepoOnly, async () => {
+  const page = await readFile(`${ROOT}apps/docs/content/reference/rules.md`, 'utf8');
   const documented = [...page.matchAll(/^## (\S+)$/gm)].map((m) => m[1]).sort();
   const files = (await readdir(`${ROOT}.claude/rules`)).filter((f) => f.endsWith('.md')).map((f) => f.slice(0, -3)).sort();
   assert.deepEqual(documented, files);
@@ -42,8 +42,8 @@ async function* mdFiles(dir: string): AsyncGenerator<string> {
   }
 }
 
-test('internal links and anchors in site/ sources resolve', sourceRepoOnly, async () => {
-  const site = `${ROOT}site`;
+test('internal links and anchors in docs app sources resolve', sourceRepoOnly, async () => {
+  const site = `${ROOT}apps/docs/content`;
   const pages = new Map<string, { file: string; text: string; ids: Set<string> } | null>();
   for await (const file of mdFiles(site)) {
     const rel = file.slice(site.length + 1, -3);
@@ -52,10 +52,11 @@ test('internal links and anchors in site/ sources resolve', sourceRepoOnly, asyn
     const ids = new Set([...text.matchAll(/^#{1,6} (.+)$/gm)].map((m) => slug((m[1] ?? '').replace(/[`*]/g, '').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1'))));
     pages.set(url, { file: rel, text, ids });
   }
-  const generator = await readFile(`${ROOT}scripts/docs-site.mjs`, 'utf8');
+  const generator = await readFile(`${ROOT}apps/docs/scripts/docs-site.mjs`, 'utf8');
   for (const [, s] of generator.matchAll(/slug: '([\w-]+)'/g)) pages.set(`/cli/${s}/`, null);
   for (const [, source, asset] of generator.matchAll(/await cp\('([^']+)', `\$\{OUT\}\/assets\/([^`]+)`\)/g)) {
-    await readFile(join(ROOT, source!));
+    // The docs build produces the bundle before running the generator. The harness suite also runs from a clean checkout.
+    if (source !== 'dist/sketchbook.js') await readFile(join(ROOT, source!));
     pages.set(`/assets/${asset}`, null);
   }
   const bad: string[] = [];

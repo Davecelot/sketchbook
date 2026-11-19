@@ -17,7 +17,7 @@ Sources of truth, generators, deterministic checks, gates and agent guidance mak
 ![accessibility](https://img.shields.io/badge/accessibility-WCAG%202.2%20AA-8e7cc3?style=flat-square&labelColor=555)
 ![default output](https://img.shields.io/badge/default%20output-Web%20Components-d9683f?style=flat-square&labelColor=555)
 
-[Quick start](#quick-start) · [How it works](#how-it-works) · [Evidence](#evidence) · [Use cases](#what-you-can-do-with-it) · [Docs](#docs)
+[Quick start](#quick-start) · [Contributing](./CONTRIBUTING.md) · [How it works](#how-it-works) · [Evidence](#evidence) · [Use cases](#what-you-can-do-with-it) · [Docs](#docs)
 
 </div>
 
@@ -25,7 +25,7 @@ Sources of truth, generators, deterministic checks, gates and agent guidance mak
 
 ## What is Sketchbook
 
-Sketchbook is the layer around your design system, not the design system's UI. It holds the way of working: what the source of truth is, how outputs are rebuilt from it, what is checked, which steps need approval, and how coding agents find the project’s guidance.
+Sketchbook gives your team a workflow for building and maintaining a design system. It ships a CLI, a reference Web Components library, and starters you can adapt to your brand. The harness connects your design-system spec to generated outputs, checks, and instructions that coding agents can follow.
 
 | Part | What it is |
 | --- | --- |
@@ -37,6 +37,27 @@ Sketchbook is the layer around your design system, not the design system's UI. I
 | **Outputs** | Tokens, a Web Components library, 8 page templates, Storybook, a Figma file and docs. The default library follows [shadcn/ui](https://ui.shadcn.com) and is a starting point you can edit or replace. |
 
 Bring nothing, your brand, your tokens or an existing product. The process is the same.
+
+## Quick start
+
+Use Node 22.18.x or a later Node 22 release, or Node 24 and above. To create a separate design system, pack the engine from this checkout and pass the tarball to both npm and Sketchbook.
+
+```sh
+npm ci
+SKETCHBOOK_TARBALL="$PWD/$(npm pack --silent)"
+mkdir ../my-design-system
+cd ../my-design-system
+npm exec --yes --package="$SKETCHBOOK_TARBALL" -- sketchbook init --start library --engine "$SKETCHBOOK_TARBALL"
+npx sketchbook check
+```
+
+For an existing app, use the same tarball with `init --adopt` from the app directory. To bring your own tokens, use `--start import --from <tokens file>`. See the [quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for all seven starters.
+
+Init writes `AGENTS.md` and `AGENT-WORKFLOWS.md`, plus an initial installation inventory at `docs/harness.md` in the new project. Claude Code setup is optional. Run `npx sketchbook doctor` for the current setup and see the [agent compatibility guide](./docs/agent-compatibility.md) for client-specific hook coverage.
+
+## Work on this repository
+
+From the checkout root, run `npm ci` and then `npm run storybook` for the reference library or `npm run docs:build` for the public docs. The [contributor guide](./CONTRIBUTING.md) maps the engine, reference library, and docs app and lists the verification commands.
 
 ## How it works
 
@@ -66,29 +87,6 @@ flowchart LR
 | `brand.config.json` | Foundation tokens (color, type, spacing, radius, elevation, motion, density, grid, icons, layers) | `spec/tokens/foundation/*` |
 | `spec/tokens/semantic/*` | Light and dark theme variables | `generated/**` |
 | `spec/components/<name>/contract.json` | Component styles, docs, stories, Figma components | `src/components/*/*.styles.ts` |
-
-## Quick start
-
-Needs Node 22.18+ or 24+.
-
-```sh
-npm install
-npm run test:install                    # Chromium for behavior tests (once)
-npx sketchbook init --start library     # or blank | foundations | library+kits | pick | import | from-codebase
-npx sketchbook tokens preset spacing grid-8 --dry-run   # preview a change before making it
-npm run storybook                       # every foundation and component, light and dark
-npm run check                           # deterministic checks, no AI involved
-```
-
-Pick the path that matches where you are:
-
-| Where you are | Command |
-| --- | --- |
-| Starting fresh | `npx sketchbook init --start library` |
-| Adding the harness to an existing app | `npx sketchbook init --adopt --start from-codebase` |
-| Bringing existing tokens (DTCG, Tokens Studio, CSS) | `npx sketchbook init --start import --from <tokens file>` |
-
-`init` creates portable agent guidance and stages the existing Claude layer in `move-to-.claude/`. Claude Code installation is optional; existing team instruction and settings files are kept. Run `npx sketchbook doctor` to inspect setup, and see the [agent compatibility map](./docs/agent-compatibility.md) for client-specific behavior.
 
 <details>
 <summary><b>With Claude Code</b>: slash commands</summary>
@@ -178,7 +176,7 @@ Round 3, before the lighter Claude layer (out of 10 runs):
 - Propose tokens from an existing codebase's CSS (`sketchbook audit-css`).
 - Design a new component with an agent, contract first, with tests written before the code.
 - Roast your foundations against standards and accessibility, with evidence.
-- Keep Figma in step with code: variables, styles and components generated and read back.
+- Keep Figma in step with code. Explore the downloadable example and configure your own sync target. [Figma setup](https://sketchbook-docs.vercel.app/concepts/design-file/).
 - Start from the shadcn/ui look and edit it until it is yours, or replace the library and keep the harness.
 - Build pages from templates: sign-in, settings, dashboard, data table, onboarding, profile, docs article, form states.
 - Rename the element prefix, or swap the token builder or design tool, without touching the spec.
@@ -194,12 +192,13 @@ Round 3, before the lighter Claude layer (out of 10 runs):
 
 ## Docs
 
-- [Getting started](./docs/getting-started.md): a walkthrough from install to your first check.
+- [Documentation index](./docs/README.md) for guides, references, and evidence.
+- [Security policy](./SECURITY.md) for private vulnerability reporting and supported code.
+- [Getting started](./docs/getting-started.md) for your first changes in an initialized project.
 - [CLI reference](./docs/cli.md): every command and option.
 - [Agent compatibility](./docs/agent-compatibility.md): supported instruction entry points, hook coverage and model-family test targets.
 - [Decisions](./spec/decisions/DECISIONS.md): why the system is the way it is.
 - [Research](./docs/research/): standards and starting-point research behind the presets.
-- [CLAUDE.md](./CLAUDE.md): the full map of the repository.
 
 ## Credits
 

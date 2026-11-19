@@ -1,0 +1,8 @@
+# Sketchbook documentation
+
+- [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for creating a project and [getting started](./getting-started.md) for the first changes inside it.
+- [CLI reference](./cli.md) for commands and [agent compatibility](./agent-compatibility.md) for project guidance, diagnostics, and hook coverage.
+- [API standard](./api-standard.md), [design-file documentation](./design-docs/README.md), and [Figma practices](./figma-practices.md) for component and design conventions.
+- [Decisions](../spec/decisions/DECISIONS.md) and [simplicity debt](./simplicity-debt.md) for tradeoffs behind the design system.
+- [Accessibility audits](./a11y-audits/), [parity audits](./parity-audits/), and [research](./research/) for the evidence behind Sketchbook.
+- [Contributor guide](../CONTRIBUTING.md) for the repository map and verification commands. Public site sources live in [`apps/docs/`](../apps/docs/).

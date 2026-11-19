@@ -58,11 +58,16 @@ test('BH2 the committed .gitignore files match the .mts sources and every output
   }
 });
 
-test('BH3 the package ships each .mts as its compiled .mjs (and harness/ its .d.mts) and never the source', sourceRepoOnly, () => {
+test('BH3 the package ships compiled engine modules and hooks, with docs builders kept in the checkout', sourceRepoOnly, () => {
   const [{ files }] = parseJson<[{ files: { path: string }[] }]>(execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }));
   const shipped = new Set(files.map((f) => f.path));
   assert.deepEqual([...shipped].filter((p) => p.endsWith('.mts') && !p.endsWith('.d.mts')), []);
-  for (const base of built(SOURCE_ROOTS)) for (const out of built(compiledOutputs)(ROOT, base)) assert.ok(shipped.has(`${base}${out}`), `${base}${out} is missing from the package`);
+  for (const base of built(SOURCE_ROOTS)) {
+    const shouldShip = base !== 'apps/docs/scripts';
+    for (const out of built(compiledOutputs)(ROOT, base)) {
+      assert.equal(shipped.has(`${base}${out}`), shouldShip, `${base}${out} package inclusion`);
+    }
+  }
 });
 
 test('BH4 a fresh clone (sources only, nothing compiled) builds with the script alone', sourceRepoOnly, () => {

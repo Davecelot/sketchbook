@@ -1,4 +1,4 @@
-// Compiles harness/**/*.mts, scripts/**/*.mts and the Claude hooks (.claude/hooks, .claude/skills/*/hooks) in place (x.mts -> x.mjs, so every `import './x.mjs'` keeps working)
+// Compiles harness/**/*.mts, scripts/**/*.mts, apps/docs/scripts/**/*.mts and the Claude hooks (.claude/hooks, .claude/skills/*/hooks) in place (x.mts -> x.mjs, so every `import './x.mjs'` keeps working)
 // and lists each output in a .gitignore beside its tree, so a hand-written .mjs is never ignored by accident.
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const SOURCE_ROOTS = ['harness', 'scripts', '.claude'];
+export const SOURCE_ROOTS = ['harness', 'scripts', 'apps/docs/scripts', '.claude'];
 const SKIP = ['harness/templates/', 'harness/catalog/'];
 
 // Not harness/lib/files.mjs: this script compiles that module, so it cannot depend on it.

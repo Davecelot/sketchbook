@@ -276,23 +276,23 @@ test('M1 rejects a shipped component missing its docs, only in maintainer mode',
   const dir = await fixture();
   await withProbe(dir, { ...CONTRACT, status: 'beta' });
   await edit<ComponentRegistry>(dir, 'spec/registry.json', (r) => { Object.assign(must(r.components.find((c) => c.name === 'Probe'), 'registry entry Probe'), { status: 'beta', path: 'src/components/probe' }); });
-  await mkdir(join(dir, 'site/demo'), { recursive: true });
+  await mkdir(join(dir, 'apps/docs/content/demo'), { recursive: true });
   assert.deepEqual(failing(await runChecks(dir, { only: ['M1'] })), []);
   const msgs = first(await runChecks(dir, { only: ['M1'], maintainer: true })).errors.filter((e) => e.token === 'Probe').map((e) => e.msg).join('\n');
   assert.match(msgs, /no parity audit report/);
-  assert.match(msgs, /no docs site page site\/demo\/probe\.md/);
+  assert.match(msgs, /no docs site page apps\/docs\/content\/demo\/probe\.md/);
   assert.match(msgs, /no docs site example/);
   await rm(dir, { recursive: true });
 });
 
 test('M1 rejects a contract drafting label on a public demo page, only in maintainer mode', async () => {
   const dir = await fixture();
-  await mkdir(join(dir, 'site/demo'), { recursive: true });
-  await writeFile(join(dir, 'site/demo/probe.md'), 'Events\n\n| `sb-toggle` | PROPOSAL: fires after open changes |\n');
+  await mkdir(join(dir, 'apps/docs/content/demo'), { recursive: true });
+  await writeFile(join(dir, 'apps/docs/content/demo/probe.md'), 'Events\n\n| `sb-toggle` | PROPOSAL: fires after open changes |\n');
   assert.deepEqual(failing(await runChecks(dir, { only: ['M1'] })), []);
   const msgs = first(await runChecks(dir, { only: ['M1'], maintainer: true })).errors.map((e) => e.msg).join('\n');
   assert.match(msgs, /drafting label/);
-  await writeFile(join(dir, 'site/demo/probe.md'), 'Events\n\n| `sb-toggle` | fires after open changes |\n');
+  await writeFile(join(dir, 'apps/docs/content/demo/probe.md'), 'Events\n\n| `sb-toggle` | fires after open changes |\n');
   assert.ok(!first(await runChecks(dir, { only: ['M1'], maintainer: true })).errors.some((e) => /drafting label/.test(e.msg)));
   await rm(dir, { recursive: true });
 });

@@ -9,9 +9,9 @@ import litA11y from 'eslint-plugin-lit-a11y';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-const typedFiles = ['src/**/*.ts', 'playwright/**/*.ts', 'harness/**/*.mts', 'scripts/**/*.mts', '.claude/hooks/**/*.mts', '.claude/skills/*/hooks/**/*.mts'];
+const typedFiles = ['src/**/*.ts', 'playwright/**/*.ts', 'harness/**/*.mts', 'scripts/**/*.mts', 'apps/docs/scripts/**/*.mts', '.claude/hooks/**/*.mts', '.claude/skills/*/hooks/**/*.mts'];
 // The compiled .mjs beside each .mts: scripts/build-harness.mjs lists them in a .gitignore (absent in a project, which has no harness sources).
-const compiled = ['harness', 'scripts', '.claude'].flatMap((dir) => {
+const compiled = ['harness', 'scripts', 'apps/docs/scripts', '.claude'].flatMap((dir) => {
   const file = path.join(import.meta.dirname, dir, '.gitignore');
   return existsSync(file) ? readFileSync(file, 'utf8').split('\n').filter((line) => line.startsWith('/')).map((line) => dir + line) : [];
 });
@@ -31,10 +31,10 @@ export default tseslint.config(
   { files: ['src/**/*.ts'], ...litConfigs['flat/recommended'] },
   // lit-a11y ships no flat config, so its recommended rules are wired by hand.
   { files: ['src/**/*.ts'], plugins: { 'lit-a11y': litA11y }, rules: litA11y.configs.recommended.rules },
-  { files: ['scripts/**/*.{mjs,mts}', 'harness/**/*.{mjs,mts}', '.claude/**/*.{js,mjs,mts}', '*.config.{js,ts}'], languageOptions: { globals: globals.node } },
+  { files: ['scripts/**/*.{mjs,mts}', 'apps/docs/scripts/**/*.{mjs,mts}', 'harness/**/*.{mjs,mts}', '.claude/**/*.{js,mjs,mts}', '*.config.{js,ts}'], languageOptions: { globals: globals.node } },
   { files: ['harness/templates/project/.storybook/**/*.ts'], languageOptions: { globals: globals.browser } },
   // The docs site script runs in the browser; MiniSearch is loaded by a script tag before it.
-  { files: ['site/_assets/**/*.js'], languageOptions: { globals: { ...globals.browser, MiniSearch: 'readonly' } } },
+  { files: ['apps/docs/content/_assets/**/*.js'], languageOptions: { globals: { ...globals.browser, MiniSearch: 'readonly' } } },
   // Node scripts that also hand functions to page.evaluate, which run in the browser.
   { files: ['docs/research/**/*.mjs', 'harness/lib/design/compare.mts'], languageOptions: { globals: { ...globals.node, ...globals.browser } } },
   {
