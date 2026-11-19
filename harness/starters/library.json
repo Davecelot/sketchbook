@@ -1,7 +1,7 @@
 {
   "id": "library",
   "title": "Reference library",
-  "for": "Teams that want a working library now and rebrand it later (default).",
+  "for": "Start with a working component library and make it yours. This is the default.",
   "foundations": null,
   "components": "all",
   "kits": "none",

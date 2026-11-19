@@ -5,9 +5,11 @@ description: "A pressable control that stays on or off until pressed again, for 
 
 <!-- Generated from spec/components/toggle/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-toggle>` · status `stable` · version `0.1.0`
+Use `<sb-toggle>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Press Bold twice to see its pressed and unpressed states.
 
 <div class="live-demo">
 <sb-toggle>Bold</sb-toggle>
@@ -35,7 +37,7 @@ Tag `<sb-toggle>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Enter` | toggle |
 | `Space` | toggle |

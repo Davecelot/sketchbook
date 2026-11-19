@@ -1,7 +1,7 @@
 {
   "id": "profile",
   "title": "Profile",
-  "summary": "An account page: breadcrumb, the person with avatar and role, an editable public profile and a list of connected services.",
+  "summary": "Let people update their public profile and see which services are connected.",
   "path": "src/patterns/profile",
   "components": [
     "avatar",
@@ -30,15 +30,15 @@
     },
     {
       "path": "src/patterns/profile/Profile.stories.ts",
-      "hash": "5b58bb5f93ecf12d69ff"
+      "hash": "de99237cdcfb4ddef8dd"
     },
     {
       "path": "src/patterns/profile/README.md",
-      "hash": "0fdd3c14afbdadcf1969"
+      "hash": "adccaa2829c56d7fa215"
     },
     {
       "path": "src/patterns/profile/pattern.json",
-      "hash": "4aeca453e4792abf29de"
+      "hash": "38a6ccd576aca5c96612"
     },
     {
       "path": "src/patterns/profile/profile.css",

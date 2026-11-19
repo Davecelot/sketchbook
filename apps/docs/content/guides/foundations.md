@@ -1,10 +1,10 @@
 ---
 title: "Change a foundation"
-description: "Change brand color, type, spacing, radius or density, then review the diff and impact."
+description: "Change a brand value and see which tokens and components use it."
 order: 10
 ---
 
-`brand.config.json` holds your foundation decisions. Each one is a `preset` from the standards catalog, a `custom` value, or a preset plus small overrides. `spec/tokens/foundation/*` is generated from it. A hand edit there is kept as a flagged override, and `sketchbook check` exits 2 until you resolve it.
+Make foundation changes in `brand.config.json`. You can choose a preset, set a custom value, or override part of a preset. Sketchbook rebuilds the foundation tokens from that file. To resolve a hand edit flagged by exit code 2, use the override tools below.
 
 1. **List the presets.** Pass a family to see its presets.
 

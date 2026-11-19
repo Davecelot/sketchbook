@@ -5,9 +5,11 @@ description: "A horizontal bar that shows how far a task has come, or that it is
 
 <!-- Generated from spec/components/progress/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-progress>` · status `stable` · version `0.1.0`
+Use `<sb-progress>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The bar shows an upload that is 60% complete. In a real upload, pass the measured progress to `value`.
 
 <div class="live-demo">
 <sb-progress value="60" label="Upload progress" style="display:block;width:320px"></sb-progress>

@@ -1,10 +1,10 @@
 ---
 title: "Config files"
-description: "The source and config files a team edits, who owns each, and the command to change it."
+description: "Find where a setting lives, who owns the file, and how to change it."
 order: 10
 ---
 
-"Team" means you edit it. "Generated" means a command rebuilds it and hand edits are flagged. "Harness" means the engine owns it and `sketchbook upgrade` replaces it.
+Edit team-owned files when you want to change a setting. Rebuild generated files from their sources. The engine manages harness-owned files and replaces them with `sketchbook upgrade`.
 
 ## Project configuration
 

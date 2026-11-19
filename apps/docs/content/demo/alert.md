@@ -5,9 +5,11 @@ description: "A static message box for news people should notice without being i
 
 <!-- Generated from spec/components/alert/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-alert>` · status `stable` · version `0.1.0`
+Use `<sb-alert>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Notice what the alert tells you at a glance. The title names the update, and the description explains what is ready.
 
 <div class="live-demo">
 <sb-alert style="width:420px">

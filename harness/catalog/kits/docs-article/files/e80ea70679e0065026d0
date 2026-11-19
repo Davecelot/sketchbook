@@ -101,7 +101,7 @@ const article = html`<div class="docs">
 
 const meta: Meta = {
   title: 'Patterns/Docs Article',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Help readers follow a guide with a contents sidebar, diagram, code sample, and links to what comes next.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => article,
 };
 export default meta;

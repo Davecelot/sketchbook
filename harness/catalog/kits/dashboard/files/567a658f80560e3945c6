@@ -1,6 +1,6 @@
 # Dashboard
 
-An overview page: a top bar, the page title with an action, view tabs, stat cards, a goal, a chart, recent activity and recent orders. States: default, loading.
+Give your team one place to check progress, review recent activity, and act on orders.
 
 ## When to use
 The landing page of an app or workspace that summarizes what changed. Not a place for editing: link to the list or detail pages instead.

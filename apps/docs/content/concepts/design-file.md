@@ -1,10 +1,10 @@
 ---
 title: "Design file"
-description: "The Figma file is an output of the spec, written and read back by sketchbook sync."
+description: "Use your spec to keep Figma variables, styles, and component documentation in step."
 order: 60
 ---
 
-The design file is generated from `spec/`. It is never a source. Do not edit variables, styles or docs in the file by hand: change the spec, then sync. A hand edit shows up as a mismatch in check D1.
+Change the source in `spec/` and sync it to the design file. If someone edits a generated variable, style, or doc in Figma, check D1 reports where it differs from the spec.
 
 [Download the example Figma file](/assets/Sketchbook.fig) and import it into Figma to explore a reference snapshot of one possible Sketchbook output. Sketchbook ships with no file key: start by importing the example, then set your own file as the sync target with `sketchbook swap design figma --file <your file key>`. To sync without committing the key, set the `SKETCHBOOK_FIGMA_FILE` environment variable instead; it takes precedence over `adapters.design.file`.
 

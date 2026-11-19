@@ -1,6 +1,6 @@
 # Profile
 
-An account page: breadcrumb, the person with avatar and role, an editable public profile and connected services. States: default, with errors.
+Let people update their public profile and see which services are connected.
 
 ## When to use
 A page about one person or one record with a short form and a list of related things. For many fields, split them into cards like the settings kit.

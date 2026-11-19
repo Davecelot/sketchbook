@@ -1,10 +1,10 @@
 ---
 title: "Use in an existing app"
-description: "Add the design system to an app repository in its own folder, then repair, check and upgrade it."
+description: "Set up Sketchbook in an app you already maintain."
 order: 40
 ---
 
-Adopting adds the design system in its own folder, `design-system/` by default, and adds one script to the app's `package.json` that runs its checks.
+Create the design system in its own folder inside your app. The default is `design-system/`. Sketchbook adds a script to the app’s `package.json` so you can run the design-system checks from the app root.
 
 Run the following commands from your app directory. npm fetches `@usesketchbook/cli`, and `init` adds it as a dev dependency of the design-system project.
 

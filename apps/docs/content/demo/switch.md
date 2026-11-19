@@ -5,9 +5,11 @@ description: "A switch: a native checkbox exposed as role=\"switch\", with label
 
 <!-- Generated from spec/components/switch/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-switch>` · status `stable` · version `0.1.0`
+Use `<sb-switch>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Turn Offline mode on or off. The description explains what enabling it does.
 
 <div class="live-demo">
 <div style="max-width:360px">
@@ -45,7 +47,7 @@ Tag `<sb-switch>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | move focus to and from the switch |
 | `Space` | toggles on/off (native) |

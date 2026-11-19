@@ -116,7 +116,7 @@ const render = async () => {
   try {
     hits = (await loadIndex()).search(query).slice(0, 8);
   } catch {
-    searchStatus.textContent = 'Search could not load. Reload the page and try again.';
+    searchStatus.textContent = 'Couldn’t load search. Reload the page to try again.';
     return;
   }
   if (input.value.trim() !== query) return;
@@ -138,7 +138,7 @@ const render = async () => {
   const count = results.childElementCount;
   searchStatus.textContent = count
     ? `${count} ${count === 1 ? 'result' : 'results'}`
-    : 'No results. Try a command name such as check or tokens.';
+    : 'No results. Try a topic, command, or component name, such as tokens or button.';
 };
 
 const openSearch = () => {
@@ -212,7 +212,7 @@ for (const code of document.querySelectorAll('.code')) {
     } catch {
       getSelection()?.selectAllChildren(pre);
       button.textContent = 'Selected';
-      copyStatus.textContent = 'Copy failed. The code is selected; press copy.';
+      copyStatus.textContent = 'Couldn’t copy automatically. Use your copy shortcut to copy the selected code.';
     }
     setTimeout(() => {
       button.textContent = 'Copy';

@@ -16,7 +16,7 @@ const options = {
 export default {
   name: 'check',
   group: 'quality',
-  summary: 'Run the deterministic checks (exit 0 pass, 1 fail, 2 pass with flagged overrides).',
+  summary: 'Check that your sources and outputs agree. Exit 0 means pass, 1 means a failure, and 2 means pass with flagged overrides.',
   args: [],
   options,
   examples: ['sketchbook check', 'sketchbook check --only T6', 'sketchbook check --maintainer', 'sketchbook check --json'],

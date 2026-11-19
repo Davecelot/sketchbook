@@ -1,10 +1,10 @@
 ---
 title: "API vocabulary"
-description: "One set of names for props, content, states and events, registered in spec/api.json and checked by A1."
+description: "Find the names to use for component properties, content, states, and events."
 order: 55
 ---
 
-Every component speaks one vocabulary. `spec/api.json` registers the names, what they mean and how each is drawn in the design file, so `variant` means emphasis in every component and a state is never a prop by another name. Check A1 compares every contract against it (decision SB-0078).
+Use `spec/api.json` when you name part of a component’s API. It records what each name means and how it appears in the design file. For example, `variant` expresses emphasis across components. Check A1 compares each contract with that vocabulary.
 
 ## The rules
 

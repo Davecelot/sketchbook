@@ -1,10 +1,11 @@
+<!-- Demo: Type “account” to find Profile by keyword. Clear the search, then move through the results with the arrow keys and notice that Calculator is disabled. -->
 <sb-command label="Search commands" style="display:block;width:450px;border:1px solid var(--sb-color-border);border-radius:var(--sb-radius-control)">
-  <sb-command-input placeholder="Type a command or search..."></sb-command-input>
+  <sb-command-input placeholder="Search commands…"></sb-command-input>
   <sb-command-list>
-    <sb-command-empty>No results found.</sb-command-empty>
+    <sb-command-empty>No matching commands.</sb-command-empty>
     <sb-command-group label="Suggestions">
       <sb-command-item>Calendar</sb-command-item>
-      <sb-command-item keywords="emoji picker">Search Emoji</sb-command-item>
+      <sb-command-item keywords="emoji picker">Search emoji</sb-command-item>
       <sb-command-item disabled>Calculator</sb-command-item>
     </sb-command-group>
     <sb-command-separator></sb-command-separator>

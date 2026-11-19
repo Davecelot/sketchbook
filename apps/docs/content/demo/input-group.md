@@ -5,9 +5,11 @@ description: "One bordered shell around a text input or textarea with addons (ic
 
 <!-- Generated from spec/components/input-group/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-input-group>` · status `stable` · version `0.1.0`
+Use `<sb-input-group>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The search icon sits in an add-on next to the input. The input keeps Search as its accessible name without showing a separate label.
 
 <div class="live-demo">
 <sb-input-group style="max-width:24rem">
@@ -60,7 +62,7 @@ A compact sb-button for use inside an addon. An icon-only one needs aria-label.
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | control, then each addon button in DOM order |
 | `Enter` | in a text input, submits through the control; on an addon button, activates it |

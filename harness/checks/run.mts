@@ -75,7 +75,7 @@ export async function runChecks(root: string, { only, maintainer = false }: RunO
 // The human report as lines (npm run check prints them; sketchbook tokens prints them for its staged checks).
 // Clean checks fold into one line unless verbose: agents read this output on every run (SB-0114).
 export function formatHuman(report: Report, { verbose = false }: { verbose?: boolean } = {}): string[] {
-  const lines: string[] = [];
+  const lines = [`${report.ok ? 'All checks passed' : 'Checks failed'}${report.exitCode === 2 ? ' (with overrides)' : ''}.`, ''];
   const clean = report.results.filter((r) => !r.errors.length && !r.warnings.length);
   if (!verbose && clean.length) lines.push(`pass  ${clean.map((r) => r.id).join(' ')}`);
   for (const r of report.results) {
@@ -93,7 +93,6 @@ export function formatHuman(report: Report, { verbose = false }: { verbose?: boo
     lines.push('', `flagged  ${report.overrides.length} hand edit(s) to generated tokens (spec/tokens/overrides.json):`);
     for (const o of report.overrides) lines.push(`      ${o.token} = ${JSON.stringify(o.value)} (${o.added ? 'added by hand' : `generated ${JSON.stringify(o.generated)}`})`);
   }
-  lines.push('', `${report.ok ? 'All checks passed' : 'Checks failed'}${report.exitCode === 2 ? ' (with overrides)' : ''}.`);
   return lines;
 }
 

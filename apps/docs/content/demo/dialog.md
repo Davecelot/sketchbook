@@ -5,9 +5,11 @@ description: "A modal window over the page: the rest of the page is inert until 
 
 <!-- Generated from spec/components/dialog/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-dialog>` · status `stable` · version `0.1.0`
+Use `<sb-dialog>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Open Edit profile, then press Escape. Focus returns to the button that opened the dialog.
 
 <div class="live-demo">
 <sb-dialog>
@@ -15,7 +17,7 @@ Tag `<sb-dialog>` · status `stable` · version `0.1.0`
   <sb-dialog-content>
     <sb-dialog-header>
       <sb-dialog-title>Edit profile</sb-dialog-title>
-      <sb-dialog-description>Make changes to your profile here. Save when you are done.</sb-dialog-description>
+      <sb-dialog-description>Update how your name appears to your team.</sb-dialog-description>
     </sb-dialog-header>
     <sb-dialog-footer>
       <sb-dialog-close><sb-button variant="tertiary">Cancel</sb-button></sb-dialog-close>
@@ -31,7 +33,7 @@ Tag `<sb-dialog>` · status `stable` · version `0.1.0`
   <sb-dialog-content>
     <sb-dialog-header>
       <sb-dialog-title>Edit profile</sb-dialog-title>
-      <sb-dialog-description>Make changes to your profile here. Save when you are done.</sb-dialog-description>
+      <sb-dialog-description>Update how your name appears to your team.</sb-dialog-description>
     </sb-dialog-header>
     <sb-dialog-footer>
       <sb-dialog-close><sb-button variant="tertiary">Cancel</sb-button></sb-dialog-close>
@@ -67,7 +69,7 @@ The modal surface: a bordered, shadowed panel centered over a dimmed backdrop, w
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Escape` | close the dialog (fires sb-cancel first; a prevented sb-cancel keeps it open); ignored while an input method is composing text |
 | `Tab` | move to the next focusable element inside the dialog; from the last it wraps to the first (Shift+Tab from the first wraps to the last); the page behind is inert |

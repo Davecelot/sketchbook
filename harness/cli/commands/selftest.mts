@@ -7,7 +7,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'selftest',
   group: 'quality',
-  summary: 'Run the harness\'s own tests against the installed engine: they prove every check can still reject and that the CLI, starters and generators work (what npm run test:harness runs in a project).',
+  summary: 'Run the harness test suite to verify the tools that build and check your project.',
   args: [],
   options: {},
   examples: ['sketchbook selftest'],

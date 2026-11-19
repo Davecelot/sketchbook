@@ -1,12 +1,12 @@
 ---
 title: "Quickstart"
-description: "Create a Sketchbook project and run its first checks."
+description: "Set up your first design system and confirm the project passes its checks."
 order: 10
 ---
 
-Use Node.js 26.13.1 LTS and npm 12.2.3. For older LTS lines, use Node.js 24.22.3 or 22.23.5, or a newer security patch on the same line.
+Have Node.js 26.13.1 LTS and npm 12.2.3 ready. If you use an older LTS line, use Node.js 24.22.3 or 22.23.5, or a newer security patch on that line.
 
-The CLI is published as [`@usesketchbook/cli` on npm](https://www.npmjs.com/package/@usesketchbook/cli). For a project inside an existing app, follow [Use in an existing app](/guides/adopt-in-app/).
+These steps use [the published CLI](https://www.npmjs.com/package/@usesketchbook/cli) and start you with a working component library. If you already have an app, follow [Use in an existing app](/guides/adopt-in-app/).
 
 1. **Create an empty project folder.**
 
@@ -21,19 +21,19 @@ The CLI is published as [`@usesketchbook/cli` on npm](https://www.npmjs.com/pack
    npm exec --yes --package=@usesketchbook/cli -- sketchbook init --start library --dry-run
    ```
 
-3. **Run init.** It creates and checks the project, adds `@usesketchbook/cli` to `devDependencies`, and installs dependencies and Chromium for the browser tests.
+3. **Set up the project.** Init creates the source files, installs the project’s dependencies and Chromium, and runs the project checks.
 
    ```terminal
    npm exec --yes --package=@usesketchbook/cli -- sketchbook init --start library
    ```
 
-4. **Look at the project.** Run `npx sketchbook` commands from this folder to use the installed CLI. Open `docs/harness.md` for the initial installation inventory.
+4. **See what you installed.** Run `status` from the project folder for an overview. Open `docs/harness.md` for the list of installed files.
 
    ```terminal
    npx sketchbook status
    ```
 
-5. **Run the checks.** Exit 0 means pass, 1 a failure, 2 a pass with hand edits kept as overrides.
+5. **Check the project.** Look for exit code 0 on a fresh setup. If a check fails, read its suggested fix. [See what each exit code means](/concepts/checks/#run-the-checks).
 
    ```terminal
    npx sketchbook check

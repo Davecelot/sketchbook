@@ -8,7 +8,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'docs',
   group: 'design',
-  summary: 'Show a component\'s or a pattern\'s documentation, tool-neutral: the same doc a design file draws (variants and states grids, elements, anatomy, accessibility rules and source, tokens) as text, or its blueprint with --json for any design adapter.',
+  summary: 'Read a component or kit’s variants, tokens, and accessibility guidance. Use --json for the design blueprint.',
   args: [{ name: 'name', required: true, description: 'A component folder name (spec/components) or a pattern id (src/patterns)' }],
   options: {},
   examples: ['sketchbook docs button', 'sketchbook docs field --json', 'sketchbook docs sign-in'],
@@ -19,7 +19,7 @@ export default {
     const [name = ''] = args;
     const isComponent = existsSync(join(root, 'spec/components', name, 'contract.json'));
     const doc = !isComponent && (await patternIds(root)).includes(name) ? await patternDoc(root, name) : await componentDoc(root, name);
-    const tty = process.stdout.isTTY && !process.env.NO_COLOR;
+    const tty = process.stdout.isTTY && !('NO_COLOR' in process.env);
     out(docText(doc, { highlight: tty ? (s) => `\x1b[34m${s}\x1b[0m` : (s) => s }));
     return { data: { doc } };
   },

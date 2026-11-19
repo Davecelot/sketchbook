@@ -6,7 +6,7 @@ import { readFile, writeFile, mkdir, rm, cp } from 'node:fs/promises';
 import { join } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { runChecks } from '../checks/run.mjs';
+import { formatHuman, runChecks } from '../checks/run.mjs';
 import { compileStyles, mediaVars } from '../../scripts/build-styles.mjs';
 import { fixture, reference, ROOT, sourceRepoOnly, readJson, writeJson, must } from './helpers.mjs';
 import { parseJson } from '../lib/files.mjs';
@@ -142,6 +142,9 @@ test('generator keeps a hand edit and check flags it (exit 2)', async () => {
   assert.equal(kept.radius.md.$value, '7px');
   const r = await runChecks(dir);
   assert.equal(r.exitCode, 2);
+  const [summary, ...details] = formatHuman(r);
+  assert.equal(summary, 'All checks passed (with overrides).');
+  assert.match(details.join('\n'), /radius\.md/);
   assert.equal(must(r.overrides[0], 'the first override').token, 'radius.md');
 });
 

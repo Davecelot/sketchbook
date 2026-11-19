@@ -5,9 +5,11 @@ description: "A native select with label, description and error built in, taking
 
 <!-- Generated from spec/components/native-select/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-native-select>` · status `stable` · version `0.1.0`
+Use `<sb-native-select>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Open Region to choose a value. The list uses your browser’s native select control.
 
 <div class="live-demo">
 <div style="max-width:320px">
@@ -54,7 +56,7 @@ Tag `<sb-native-select>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | move focus in and out |
 | `Space / Enter / Alt+ArrowDown` | open the native popup (platform behavior) |

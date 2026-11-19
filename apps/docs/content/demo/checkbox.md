@@ -5,9 +5,11 @@ description: "A checkbox with its label, description and error laid out beside i
 
 <!-- Generated from spec/components/checkbox/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-checkbox>` · status `stable` · version `0.1.0`
+Use `<sb-checkbox>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Press Space on the checkbox to opt in or out. The description sets an expectation about how often you’ll hear from us.
 
 <div class="live-demo">
 <div style="max-width:360px">
@@ -45,7 +47,7 @@ Tag `<sb-checkbox>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | move focus to and from the checkbox |
 | `Space` | toggles checked (native) |

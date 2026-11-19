@@ -2,7 +2,7 @@
 
 ## Report a vulnerability
 
-Send security reports privately to the repository maintainer, [@Davecelot](https://github.com/Davecelot), through a private channel you already use with them. If you need contact details, open a [repository issue](https://github.com/Davecelot/sketchbook/issues) asking for a private reporting channel. Keep vulnerability details and attachments out of the issue.
+Report the vulnerability privately to the repository maintainer, @Davecelot. If you need a private channel, ask for one in a repository issue. Share the vulnerability details and attachments through the private channel. [Open a repository issue](https://github.com/Davecelot/sketchbook/issues)
 
 Include the Sketchbook version and commit SHA, the affected command or component, your environment, and the impact you observed. Share the smallest useful example through the private channel and redact credentials, private design data, and customer information. Keep details private while the maintainer reviews the report and coordinates disclosure with you.
 

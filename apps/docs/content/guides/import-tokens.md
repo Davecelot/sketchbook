@@ -1,10 +1,10 @@
 ---
 title: "Import tokens"
-description: "Bring existing tokens or product CSS in as a reviewed proposal, then apply it."
+description: "Review a proposal for your existing tokens or CSS before adding them to your design system."
 order: 20
 ---
 
-An import never changes your files directly. `sketchbook tokens import` writes a proposal to `generated/import/<name>.proposal.json`, mapped onto the semantic interface. You review it, then `import apply` writes it to `brand.config.json` and the semantic files. Sources are DTCG or Tokens Studio JSON (a file or a folder of sets) and CSS custom properties.
+Bring DTCG or Tokens Studio JSON, or CSS custom properties. First, `sketchbook tokens import` maps what it finds to your semantic interface and writes a proposal under `generated/import/`. Review the proposal before applying changes to your brand and semantic files.
 
 1. **Create the proposal.** `--from` is `dtcg` or `css`; by default it follows the file type. `--name` names the proposal.
 

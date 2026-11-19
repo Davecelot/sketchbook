@@ -15,7 +15,7 @@ const options = {
 export default {
   name: 'upgrade',
   group: 'project',
-  summary: 'Update harness-owned files. In a project that runs the engine from node_modules: from the installed engine (after npm update), no --from. Elsewhere: from a newer Sketchbook folder or git URL (harness-owned in both manifests); team-owned, shared, reclassified and protected files (the manifest itself, configs, package files) are listed, never touched; writing anything needs --yes (a dry run first shows what).',
+  summary: 'Update harness-owned files from the installed engine or a newer Sketchbook source. Preview the files with --dry-run. For a folder or Git URL, use --from. Updating from that source requires --yes when files would change.',
   args: [],
   options,
   examples: ['sketchbook upgrade --from ../sketchbook --dry-run', 'sketchbook upgrade --from ../sketchbook --yes', 'sketchbook upgrade --from https://example.com/sketchbook.git --dry-run'],
@@ -39,6 +39,7 @@ export default {
       if (r.preserved.length) out(`Existing agent files kept: ${r.preserved.join(', ')}`);
       if (r.skipped.length) out(`Blocked agent setup paths (kept): ${r.skipped.join(', ')}`);
       if (!r.skipped.length && !r.added.length && !r.updated.length && !hooks.length) out('The harness-owned files here already match the installed engine.');
+      out(dryRun ? 'Next: Review these paths, then run sketchbook upgrade to apply the update.' : 'Next: Run sketchbook check to verify the project.');
       return { changed: [...r.added, ...r.updated, ...(hooks.length && r.hookSettings ? [r.hookSettings] : []), ...(dryRun ? [] : ['harness.config.json'])], warnings: r.skipped.map((file) => ({ file, msg: 'Existing path blocks agent setup.', fix: 'Review the path and run sketchbook init.' })), data: { version: { before, after: version }, ...r }, next: dryRun ? 'sketchbook upgrade' : 'sketchbook check' };
     }
     if (!options.from) throw Object.assign(new Error('Usage: sketchbook upgrade --from <path|git-url> [--dry-run] [--yes]'), { fix: 'Point --from at a newer Sketchbook (this project has its own harness/).' });
@@ -56,7 +57,11 @@ export default {
     const globs = Object.entries(r.manifest).flatMap(([k, d]) => [...d.added.map((g) => `${k} + ${g}`), ...d.removed.map((g) => `${k} - ${g}`)]);
     section('Upstream harness/manifest.json differs (not applied; merge by hand what you agree with)', globs);
     const data = { version: r.version, commit: r.commit, update: r.update, add: r.add, removedUpstream: r.removedUpstream, teamDiffers: r.teamDiffers, sharedDiffers: r.sharedDiffers, upstreamOnly: r.upstreamOnly, reclassified: r.reclassified, protected: r.protected, manifest: r.manifest };
-    if (dryRun) return { changed: [...r.update, ...r.add], data, next: `sketchbook upgrade --from ${options.from}${r.update.length + r.add.length ? ' --yes' : ''}` };
+    if (dryRun) {
+      const next = `sketchbook upgrade --from ${options.from}${r.update.length + r.add.length ? ' --yes' : ''}`;
+      out('Next: Review the listed files, then rerun with the same --from value and --yes to apply updates.');
+      return { changed: [...r.update, ...r.add], data, next };
+    }
     const next = r.sharedDiffers.includes('package.json') ? 'Merge package.json by hand, npm install, then npm run check.' : 'npm run check, then npm run test:harness';
     // The checks are the code just written: they run only when the upstream was confirmed with --yes.
     if (!options.yes) {

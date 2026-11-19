@@ -10,7 +10,7 @@ const options = {
 export default {
   name: 'list',
   group: 'components',
-  summary: 'List catalog components (installed or available) with what each needs, plus template kits (read-only).',
+  summary: 'Browse installed and available components and see which dependencies they need.',
   args: [],
   options,
   examples: ['sketchbook list', 'sketchbook list --available', 'sketchbook list --installed --json'],

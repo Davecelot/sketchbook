@@ -36,6 +36,6 @@ export function presentation(enabled: boolean, color = enabled && !('NO_COLOR' i
       return match ? `${match[1]}${bold(match[2] ?? '')}${match[3]}` : line;
     }).join('\n'),
     section: (label: string) => `${accent('▸')} ${bold(label)}`,
-    error: (message: string, fix?: string | null) => wrap(`${accent('✕')} ${bold('Error')}  ${message}${fix ? `\n  ${dim('Next')}  ${fix}` : ''}`) + '\n',
+    error: (message: string, fix?: string | null, file?: string | null) => wrap(`${accent('✕')} ${bold('Error')}  ${message}${file ? `\n  ${dim('File')}  ${file}` : ''}${fix ? `\n  ${dim('Next')}  ${fix}` : ''}`) + '\n',
   };
 }

@@ -8,7 +8,7 @@ const options = { category: { type: 'string', value: 'category', description: 'a
 export default {
   name: 'icons',
   group: 'design',
-  summary: 'The icons the system uses (spec/icons.json, Lucide): list them, add one or more from Lucide (--category) or remove them. The design adapters draw one component per icon (sketchbook sync icons).',
+  summary: 'List the icons in your project or add icons from Lucide.',
   subcommands: ACTIONS,
   args: [
     { name: 'action', required: false, description: 'list (default) | add | remove' },

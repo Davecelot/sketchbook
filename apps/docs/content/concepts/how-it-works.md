@@ -1,16 +1,18 @@
 ---
 title: "How it works"
-description: "Edit a source, rebuild the outputs, run the checks."
+description: "Follow a change from the file you edit to the outputs you use."
 order: 10
 ---
 
-The harness is the code in `harness/` that turns a few source files into outputs and checks that the two still agree.
+Your team edits the spec and brand settings. The harness reads those files, rebuilds the outputs, and checks that they agree. You can see the same source change in the library, preview, or design file.
 
 ## The loop
 
-<!-- illustration: loop | Edit the sources, rebuild the outputs, check. A failed check sends you back to the sources. -->
+When a check fails, follow the loop back to the file that owns the change.
 
-1. **Edit a source of truth.** Change a brand setting, a semantic token, a contract or a decision.
+<!-- illustration: loop | The check closes the loop and shows you where to return when a change needs work. -->
+
+1. **Edit the source.** Change a brand setting, a semantic token, a contract or a decision.
 2. **Rebuild.** Generators write the foundation tokens, CSS and component styles.
 3. **Run the checks.** `sketchbook check` verifies the sources are valid and the outputs match them.
 4. **Pass the gates.** A new component stops at the planning gate and is built test-first.
@@ -23,16 +25,14 @@ sketchbook check
 
 ## What you edit
 
-| You edit | It controls | Generated (never edit) |
+| You edit | It controls | Sketchbook generates |
 | --- | --- | --- |
 | `brand.config.json` | every foundation, as a preset or your own values | `spec/tokens/foundation/*` |
 | `spec/tokens/semantic/*.tokens.json` | what each color or size means, per mode | `generated/**` |
 | `spec/components/<name>/contract.json` and `contract.md` | a component's API, tokens and accessibility | `src/components/*/*.styles.ts`, `src/index.ts` |
 | `spec/decisions/DECISIONS.md` | why things are the way they are | |
 
-> **Note** Change the source, not the output. A hook blocks Claude's edits to generated files and names the source to change. A hand edit to a foundation token is the one exception: it is kept as a flagged override (`sketchbook check` exits 2). Any other generated file is overwritten by the next rebuild.
-
-The harness has four parts: generators, deterministic checks (plain code, each can fail), gates for new components, and the `sketchbook` CLI that wraps them.
+> **Note** Rebuild after changing the source. The next rebuild replaces edits to generated files. Sketchbook keeps hand edits to foundation tokens as flagged overrides and reports them with exit code 2. If you enabled the Claude Code edit guard, a blocked edit names the source to change.
 
 ## Outputs
 

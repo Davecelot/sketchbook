@@ -83,7 +83,7 @@ export async function interactive({ root = process.cwd(), input = process.stdin,
   let last = 0;
   try {
     if (ui.enabled) write(ui.header('explore'));
-    write(`${line('  Explore your design system, one step at a time.')}\n  Choose a number and press Enter. Type q and press Enter to quit.\n`);
+    write(`${line('  Choose what you want to do in your design system.')}\n  Choose a number and press Enter. Type q and press Enter to quit.\n`);
     for (;;) {
       const groups = Object.entries(GROUPS).map(([g, label]) => ({ g, label, list: commands().filter((c) => c.group === g) })).filter((x) => x.list.length);
       const group = await choose('Groups:', groups.map((x) => ({ label: `${x.label.padEnd(12)} ${x.list.length} ${x.list.length === 1 ? 'command' : 'commands'}`, value: x })), 'q) quit');
@@ -119,25 +119,25 @@ export async function interactive({ root = process.cwd(), input = process.stdin,
           break;
         }
       }
-      const configure = Object.keys(cmd.options).length > 0 && await confirm('Configure optional settings?', 'review options', 'use defaults');
+      const configure = Object.keys(cmd.options).length > 0 && await confirm('Review optional settings?', 'review options', 'continue with defaults');
       if (configure) for (const [k, o] of Object.entries(cmd.options)) {
-        const hint = current[k] !== undefined ? ` [current: ${current[k]}; Enter keeps it]` : ' [Enter skips]';
+        const hint = current[k] !== undefined ? ` [current: ${current[k]}, Enter keeps it]` : ' [Enter skips]';
         if (o.type === 'boolean') { if (await confirm(`--${k}: ${o.description}`, 'enable', 'leave off')) argv.push(`--${k}`); continue; }
         const example = o.value && /^(?:https?:\/\/\S+|\d+(?:\.\d+)?)$/.test(o.value) ? `\n  Example to type: ${o.value}` : '';
-        const v = await ask(`\n  --${k}: ${brief(o.description)}${hint}${example}\n  Value: `);
+        const v = await ask(`\n  --${k}: ${brief(o.description)}${hint}${example}\n  Enter a value: `);
         if (v) argv.push(`--${k}`, v);
       }
       // Display a shell-safe command for people who want to repeat it.
       const shown = `sketchbook ${argv.map((x) => (/^[a-zA-Z0-9_./:=@+-]+$/.test(x) ? x : `'${x.replace(/'/g, `'\\''`)}'`)).join(' ')}`;
       if (cmd.mutates && cmd.dryRun) {
-        write(`\n${heading('Preview · no files will be changed')}\n  ${shown} --dry-run\n\n`);
+        write(`\n${heading('Preview changes')}\n  ${shown} --dry-run\n\n`);
         last = await run([...argv, '--dry-run'], { root, stdout: write, stderr: write, human: ui.enabled });
-        if (last === 1) { write('The dry run failed; nothing was changed.\n'); continue; }
-        if (!await confirm('Apply these changes?', 'apply changes', 'cancel without applying')) { write(`\n  ${ui.warning('Not applied.')} No files were changed.\n`); continue; }
+        if (last === 1) { write('The dry run failed. Review the message above and try again.\n'); continue; }
+        if (!await confirm(`Apply these changes?\n  ${shown}`, 'apply changes', 'cancel without applying')) { write(`\n  ${ui.warning('Not applied.')} Your files are as they were before the preview.\n`); continue; }
       } else if (cmd.mutates && !await confirm(`Run ${shown}? This changes files.`, 'run command', 'cancel without running')) { write(`\n  ${ui.warning('Not run.')} No files were changed.\n`); continue; }
-      write(`\n${heading('Running')}\n  Running: ${shown}\n\n`);
+      write(`\nRunning: ${shown}\n\n`);
       last = await run(argv, { root, stdout: write, stderr: write, human: ui.enabled });
-      write(`\n${heading(last === 0 ? ui.success('Done') : ui.warning(last === 2 ? 'Done with notices' : 'Command failed'))}  ${note(`exit ${last}`)}\n`);
+      write(`\n${heading(last === 0 ? ui.success('Command completed') : ui.warning(last === 2 ? 'Command completed with overrides' : 'Command failed'))}  ${note(`exit ${last}`)}\n`);
     }
   } catch (e) {
     if (!(e instanceof Quit)) throw e;

@@ -18,7 +18,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'doctor',
   group: 'project',
-  summary: 'Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, selected agent integrations and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides).',
+  summary: 'See what needs attention in your project. Review checks, installed files, agent profiles, and design sync. Uses the same exit codes as sketchbook check.',
   args: [],
   options: {},
   examples: ['sketchbook doctor', 'sketchbook doctor --json'],
@@ -70,6 +70,7 @@ export default {
       gitHook: spawnSync('git', ['-C', root, 'config', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim().match(/(^|\/)\.githooks\/?$/) && existsSync(join(root, '.githooks/pre-commit')) && statSync(join(root, '.githooks/pre-commit')).mode & 0o111 ? 'active' : 'inactive',
     };
     const c = data.components;
+    out(`Checks: ${data.checks.failing.length ? `failed ${data.checks.failing.join(', ')}` : data.checks.exitCode === 2 ? 'passed with overrides' : 'passed'}${data.checks.warnings ? `, ${data.checks.warnings} warnings` : ''}.`);
     out(`Starter: ${data.starter ?? 'not recorded (sketchbook init --start <starter>)'}`);
     out(`Harness: ${data.harnessVersion ?? 'unrecorded'} (files here: ${data.harnessAvailable ?? 'no harness/manifest.json'})${data.catalogSource ? '; this repo is the catalog source' : ''}`);
     out(`Components: ${c.installed.length} installed, ${c.available.length} more in the catalog, ${c.customized.length} customized${c.customized.length ? ` (${c.customized.join(', ')})` : ''}, ${c.teamMade.length} team-made`);
@@ -77,10 +78,9 @@ export default {
     out(`Brands: ${data.brands.list.length ? `${data.brands.list.join(', ')} (active ${data.brands.active ?? 'none of them'})` : 'single brand'}`);
     out(`Overrides: ${data.overrides}`);
     out(`Design: ${data.design.tool ?? 'none'}${data.design.tool ? `, tokens ${data.design.tokens}, ${data.design.components.stale.length} stale component(s)` : ''}`);
-    out(`Checks: ${data.checks.failing.length ? `failing ${data.checks.failing.join(', ')}` : 'all pass'}${data.checks.warnings ? `, ${data.checks.warnings} warning(s)` : ''}`);
     const missingInstructions = Object.entries(data.agentInstructions).filter(([, present]) => !present).map(([file]) => file);
     if (!profiles.length) out('Agent integrations: core only.');
-    else out(`Agent setup (${profiles.join(', ')}): ${missingInstructions.length ? `missing ${missingInstructions.join(', ')} (sketchbook init can restore missing setup files when paths are available)` : 'all selected files present'}; presence does not verify client loading`);
+    else out(`Agent setup (${profiles.join(', ')}): ${missingInstructions.length ? `missing ${missingInstructions.join(', ')} (sketchbook init can restore missing setup files when paths are available)` : 'all selected files present'}; confirm what your client loaded before relying on these files`);
     const reviewInstructions = Object.entries(data.agentInstructionReferences).filter(([, status]) => status === 'not-detected').map(([file]) => file);
     if (reviewInstructions.length) out(`Agent instruction references not detected: ${reviewInstructions.join(', ')}. Review preserved team instructions for the shared workflow; a textual check cannot determine whether equivalent guidance is present or loaded.`);
     const scriptState = (present: boolean, matches: boolean | null) => !present ? 'not found' : matches === false ? 'present, differs from current template' : 'present';
@@ -96,11 +96,12 @@ export default {
     if (Object.values(data.nativeHooks).some((hook) => hook?.scriptMatchesTemplate === false)) out('Review differing adapter scripts against the installed templates and merge any changes deliberately; project files are not overwritten.');
     if (data.claude !== 'not-selected') out(`Claude layer: ${data.claude === 'staged' ? 'staged in move-to-.claude/ (optional Claude Code setup: move-to-.claude/INSTALL.md)' : data.claude === 'missing' ? 'missing (sketchbook init puts it back)' : data.claude}${data.contextBudget && data.claude !== 'missing' ? `, always-on context ${data.contextBudget.bytes} of ${data.contextBudget.budget} bytes (${Math.round((data.contextBudget.bytes / data.contextBudget.budget) * 100)}%)` : ''}`);
     out(`Commit gate: ${data.gitHook === 'active' ? 'active (npm run check runs before every commit)' : 'inactive (git config core.hooksPath .githooks at the repository root, or call npm run check from your own hook)'}`);
-    const next = data.checks.failing.length ? 'sketchbook check (each error has a fix)'
+    const next = data.checks.failing.length ? 'Run sketchbook check to see the suggested fix for each failure.'
       : missingInstructions.length ? 'sketchbook init (restores missing setup files when paths are available)'
         : data.claude === 'staged' ? 'For Claude Code, optionally install the layer from move-to-.claude/ (move-to-.claude/INSTALL.md)'
         : data.claude === 'missing' ? 'sketchbook init (restores what is missing)'
-          : !data.starter ? 'sketchbook init --start <starter>' : null;
+          : !data.starter ? 'Run sketchbook help init --details to review the starter options.' : null;
+    if (next) out(`\nNext: ${next}`);
     return { data, next, exitCode: report.exitCode };
   },
 } satisfies Command;

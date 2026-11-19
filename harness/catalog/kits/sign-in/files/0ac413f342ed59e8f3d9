@@ -72,7 +72,7 @@ const signIn = ({ error = false, loading = false, email = '' }: SignInOptions = 
 
 const meta: Meta = {
   title: 'Patterns/Sign In',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Help people sign in or create an account, with password visibility, single sign-on, and a place to explain errors.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => signIn(),
 };
 export default meta;

@@ -5,9 +5,11 @@ description: "A single-line text field with its label, description and error bui
 
 <!-- Generated from spec/components/input/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-input>` · status `stable` · version `0.1.0`
+Use `<sb-input>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Try entering an email address. The example keeps the label and receipt explanation visible as you type.
 
 <div class="live-demo">
 <div style="max-width:320px">
@@ -50,7 +52,7 @@ Tag `<sb-input>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | move focus in and out |
 | `typing` | native text editing |

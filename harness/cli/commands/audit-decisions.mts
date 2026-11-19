@@ -20,7 +20,7 @@ function gitBaseline(root: string, ref: string, file: string): string {
 export default {
   name: 'audit-decisions',
   group: 'quality',
-  summary: 'Compare the decision log with a trusted earlier copy or Git revision and report changes to settled entries. This read-only audit does not replace check X1.',
+  summary: 'Compare settled decisions with a trusted earlier copy or Git revision. Run sketchbook check to validate the log.',
   args: [{ name: 'baseline', required: false, description: 'Path to a trusted earlier copy of spec/decisions/DECISIONS.md' }],
   options,
   examples: ['sketchbook audit-decisions ../decisions-before.md', 'sketchbook audit-decisions --git-ref HEAD --json'],

@@ -76,9 +76,8 @@ export const Page: StoryObj = {
     return foundationPage({
       id: 'motion',
       intro: html`<p>
-          Motion is a handful of durations and easing curves. Short durations suit small feedback (a hover, a toggle); longer ones suit larger
+          Press Play to compare the curves on the same movement. Motion is a handful of durations and easing curves. Short durations suit small feedback (a hover, a toggle); longer ones suit larger
           movement (a panel sliding in). Easing shapes the speed over time: things that enter slow down at the end, things that leave speed up.
-          Press Play to compare them.
         </p>
         <p>
           People can ask their system for reduced motion. Components then drop movement and keep only the change of state; these demos do the same and

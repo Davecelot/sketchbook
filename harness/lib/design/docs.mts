@@ -302,7 +302,7 @@ export async function guideDoc(root: string, { collections }: { collections?: De
   return {
     name: titleCase(pkg.name),
     link: 'docs/design-docs/README.md',
-    definition: `Brand ${brand.name}. Change the source and sync; never edit the docs here.`,
+    definition: `Explore components, tokens, and themes for ${brand.name}. Edit the project sources, then sync to update this file.`,
     sections: [
       {
         title: 'How this file works',
@@ -317,7 +317,7 @@ export async function guideDoc(root: string, { collections }: { collections?: De
         title: 'Switch the theme',
         cards: [
           { type: 'instruction', span: [1, 2], title: 'Theme axes', lines: collections ? collections.filter((c) => c.modes.length > 1).map((c) => `${c.name}: ${c.modes.join(', ')}`) : groups.map((g) => `${g}: ${payload.themes.filter((t) => t.group === g).map((t) => t.name).join(', ')}`) },
-          { type: 'instruction', span: [1, 2], title: 'How', lines: ['Select a frame or a page; in the right panel pick one mode per collection.', 'Modes of different collections combine.', `Combinations: ${groups.map((g) => payload.themes.filter((t) => t.group === g).length).join(' x ')} = ${groups.reduce((n, g) => n * payload.themes.filter((t) => t.group === g).length, 1)}`] },
+          { type: 'instruction', span: [1, 2], title: 'Try a theme', lines: ['Select a frame or page, then choose one mode per collection in the right panel.', 'Change one mode at a time to see how the choices work together.', `Combinations: ${groups.map((g) => payload.themes.filter((t) => t.group === g).length).join(' x ')} = ${groups.reduce((n, g) => n * payload.themes.filter((t) => t.group === g).length, 1)}`] },
         ],
       },
     ],

@@ -4,7 +4,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'explain',
   group: 'quality',
-  summary: 'Explain a token, CSS variable, component, tag or decision from the spec.',
+  summary: 'Trace a token to its source, find a component’s files, or look up a decision.',
   args: [{ name: 'thing', required: true, variadic: true, description: 'Token path, --css-var, component name, tag, SB-NNNN or free text' }],
   options: {},
   examples: ['sketchbook explain color.primary', 'sketchbook explain button', 'sketchbook explain SB-0024'],

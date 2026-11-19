@@ -5,9 +5,11 @@ description: "A small rotating mark that says work is in progress and its end is
 
 <!-- Generated from spec/components/spinner/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-spinner>` · status `stable` · version `0.1.0`
+Use `<sb-spinner>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The spinner shows that work is still in progress. Its label tells assistive technology what the indicator means.
 
 <div class="live-demo">
 <sb-spinner label="Loading"></sb-spinner>

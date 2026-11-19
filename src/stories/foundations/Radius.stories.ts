@@ -12,7 +12,7 @@ export const Page: StoryObj = {
       id: 'radius',
       configHint: 'radius',
       intro: html`<p>
-        Radius rounds the corners of controls and surfaces. The foundation is a short scale from square to fully round; the semantic layer says
+        Look at the corners on the control, surface, and pill examples. Radius rounds the corners of controls and surfaces. The foundation is a short scale from square to fully round; the semantic layer says
         which step each kind of element uses (control, surface, pill), so changing the radius style restyles every component at once. Keep nested
         corners consistent: an inner corner looks right when it is the outer radius minus the padding between them.
       </p>`,

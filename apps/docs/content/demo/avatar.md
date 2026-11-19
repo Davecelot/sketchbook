@@ -5,9 +5,11 @@ description: "A circular picture or initials that represent a person or entity, 
 
 <!-- Generated from spec/components/avatar/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-avatar>` · status `stable` · version `0.1.0`
+Use `<sb-avatar>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The example supplies an image and the initials AE as a fallback. In your own markup, use initials that still identify the person if their image fails to load.
 
 <div class="live-demo">
 <sb-avatar>

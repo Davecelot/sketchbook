@@ -18,7 +18,7 @@ export const Page: StoryObj = {
     return foundationPage({
       id: 'z-index',
       intro: html`<p>
-        Z-index decides what covers what when elements overlap. The foundation is a few spaced numbers; the semantic layer names each layer by role
+        Read from the bottom of the stack to find which layers can cover a dropdown. Z-index decides what covers what when elements overlap. The foundation is a few spaced numbers; the semantic layer names each layer by role
         (dropdown, sticky header, overlay, modal, toast) so no component invents its own number. The list below runs from the bottom of the stack to
         the top.
       </p>`,

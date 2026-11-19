@@ -19,7 +19,7 @@ export const Page: StoryObj = {
     foundationPage({
       id: 'icon-sizes',
       intro: html`<p>
-        Icon sizes keep glyphs in proportion with the text and controls around them: the default icon sits next to body text, smaller ones go in
+        Compare the glyph sizes before choosing one for a control. Icon sizes keep glyphs in proportion with the text and controls around them: the default icon sits next to body text, smaller ones go in
         compact controls, larger ones stand alone. An icon that can be clicked needs a hit area larger than its glyph; the control around it
         provides that, so icon size and target size are separate decisions.
       </p>`,

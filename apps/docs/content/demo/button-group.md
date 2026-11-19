@@ -5,9 +5,11 @@ description: "Joins related buttons, with optional dividers and text labels, int
 
 <!-- Generated from spec/components/button-group/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-button-group>` · status `stable` · version `0.1.0`
+Use `<sb-button-group>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Archive, Report, and Snooze act on the same message. The group keeps those actions together.
 
 <div class="live-demo">
 <sb-button-group aria-label="Message actions">
@@ -33,7 +35,7 @@ Tag `<sb-button-group>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | each button is its own tab stop; the group adds none |
 

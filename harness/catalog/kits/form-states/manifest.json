@@ -1,7 +1,7 @@
 {
   "id": "form-states",
   "title": "Form states",
-  "summary": "A gallery of every form control in its default, disabled, invalid and read-only states, for checking tokens, focus rings and right to left in one place.",
+  "summary": "Compare default, disabled, invalid, and read-only controls to check tokens, focus, and right-to-left layout.",
   "path": "src/patterns/form-states",
   "components": [
     "checkbox",
@@ -34,11 +34,11 @@
     },
     {
       "path": "src/patterns/form-states/FormStates.stories.ts",
-      "hash": "b0b51ebf587b21fd89a1"
+      "hash": "f086df13cb85411108a1"
     },
     {
       "path": "src/patterns/form-states/README.md",
-      "hash": "b52fb2fc480f0c6352bd"
+      "hash": "55a0558891d66e11c216"
     },
     {
       "path": "src/patterns/form-states/form-states.css",
@@ -46,7 +46,7 @@
     },
     {
       "path": "src/patterns/form-states/pattern.json",
-      "hash": "88252259f19ed675a0dc"
+      "hash": "64566f1a9cb16592d296"
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 <!-- GENERATED from harness/cli/commands by npm run build:cli-docs. Do not edit; change the command module. -->
 
-Deterministic half of the harness. Run `sketchbook <command>` (or `node harness/cli.mjs <command>`).
+Use the Sketchbook CLI to set up your project, change its sources, and verify the outputs. Run `sketchbook help <command> --details` for the full terminal reference.
 
 ## Conventions
 
@@ -10,21 +10,21 @@ Deterministic half of the harness. Run `sketchbook <command>` (or `node harness/
 - `--details` shows full human-readable output where a terminal view is abbreviated.
 - `--json` on every command prints one envelope: `{ ok, command, changed[], warnings[], errors[{file, msg, fix}], next, data? }`.
 - Exit codes: 0 ok, 1 failed, 2 ok with flags (for example overrides kept in spec/tokens/overrides.json).
-- Read-only commands never write. Mutating commands say what they change; those marked "dry run" accept `--dry-run`.
+- Use `--dry-run` on commands marked as supporting it to review the paths and values that would change.
 - Conventions (one registry, introspect before mutate, JSON envelope) are adapted from CLI-Anything (HKUDS, Apache-2.0, https://github.com/HKUDS/CLI-Anything); no code is used.
 
 | Global option | Meaning |
 | --- | --- |
-| `--json` | Print one JSON envelope instead of human output |
-| `--dry-run` | Show what would change without writing (mutating commands that support it) |
+| `--json` | Print a structured JSON result |
+| `--dry-run` | Preview file changes on supported commands |
 | `--help` | Show help for the command |
-| `--details` | Show the full human-readable output |
+| `--details` | Show the full terminal output |
 
 ## Project
 
 ### init
 
-In a new or empty folder: install the core harness and any selected agent integrations. In a project: add or repair integrations (--agent), pick a starting point (--start), or set the brand.
+Set up a design system from a starter, or update the setup in an existing project. Choose --agent to add guidance for your coding tools.
 
 ```
 sketchbook init [--name <value>] [--primary <value>] [--font <value>] [--radius <value>] [--density <value>] [--danger <value>] [--design <value>] [--file <value>] [--prefix <value>] [--start <starter>] [--components <a,b>] [--from <file>] [--yes] [--dir <folder>] [--adopt] [--engine <spec>] [--no-install] [--agent <profiles>] [--with <groups>] [--detach-catalog] [--dry-run] [--json]
@@ -71,7 +71,7 @@ Examples:
 
 ### status
 
-Show the prefix, brand summary, components by status, overrides and design sync state (read-only).
+See your active brand, component counts, token overrides, and design sync status.
 
 ```
 sketchbook status [--json]
@@ -86,7 +86,7 @@ Examples:
 
 ### doctor
 
-Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, selected agent integrations and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides).
+See what needs attention in your project. Review checks, installed files, agent profiles, and design sync. Uses the same exit codes as sketchbook check.
 
 ```
 sketchbook doctor [--json]
@@ -101,7 +101,7 @@ Examples:
 
 ### upgrade
 
-Update harness-owned files. In a project that runs the engine from node_modules: from the installed engine (after npm update), no --from. Elsewhere: from a newer Sketchbook folder or git URL (harness-owned in both manifests); team-owned, shared, reclassified and protected files (the manifest itself, configs, package files) are listed, never touched; writing anything needs --yes (a dry run first shows what).
+Update harness-owned files from the installed engine or a newer Sketchbook source. Preview the files with --dry-run. For a folder or Git URL, use --from. Updating from that source requires --yes when files would change.
 
 ```
 sketchbook upgrade [--from <path|git-url>] [--yes] [--dry-run] [--json]
@@ -122,7 +122,7 @@ Examples:
 
 ### propagate
 
-Carry a Foundations or harness change to every output: rebuild the tokens and components, build the engine, sync the design file scripts (tokens and foundations), and record what the outputs were built from. --maintainer also builds Storybook and the docs site (maintainers only).
+Rebuild outputs after a source change and record the build. Use --maintainer to include Storybook and the Docs site. Run the generated design scripts to carry the change into Figma.
 
 ```
 sketchbook propagate [--maintainer] [--json]
@@ -141,7 +141,7 @@ Examples:
 
 ### generate
 
-Rebuild every generated output from the spec: token CSS, component tokens, component styles, the barrel, brand CSS and the token interface (what npm run generate runs in a project).
+Rebuild tokens, styles, and other generated outputs from your project sources. Run npm run generate in an initialized project for the same build.
 
 ```
 sketchbook generate [--json]
@@ -156,7 +156,7 @@ Examples:
 
 ### prefix
 
-Rename the element and CSS prefix everywhere (sources, contracts, tests, docs), rebuild, then check.
+Change the element and CSS prefix across your project, then rebuild and check the outputs.
 
 ```
 sketchbook prefix <new> [--dry-run] [--json]
@@ -175,7 +175,7 @@ Examples:
 
 ### swap
 
-Replace an adapter (token build or design tool) without touching the spec, then rebuild and check.
+Change the tool that builds tokens or syncs your design file, then rebuild and check.
 
 ```
 sketchbook swap <output> <adapter> [--file <id>] [--dry-run] [--json]
@@ -201,7 +201,7 @@ Examples:
 
 ### add
 
-Install a component from the catalog (contract, code, stories, specs; dependencies first), or --blank to scaffold a new contract (status draft, proposed decision).
+Install a catalog component with its dependencies, or start a new contract with --blank.
 
 ```
 sketchbook add <Component Name...> [--blank] [--dry-run] [--json]
@@ -225,7 +225,7 @@ Examples:
 
 ### remove
 
-Uninstall a component: refuses while another component or a kit needs it, and without --yes when it is team-made or customized; else removes its files, sets the registry to planned and rebuilds.
+Remove a component you no longer use. Review dependencies and local edits before removing it.
 
 ```
 sketchbook remove <Component Name...> [--yes] [--dry-run] [--json]
@@ -249,7 +249,7 @@ Examples:
 
 ### list
 
-List catalog components (installed or available) with what each needs, plus template kits (read-only).
+Browse installed and available components and see which dependencies they need.
 
 ```
 sketchbook list [--installed] [--available] [--json]
@@ -270,7 +270,7 @@ Examples:
 
 ### kits
 
-Template kits (harness/kits/index.json): list them, add one (its components come from the catalog first) or remove one (--yes when it was edited).
+Browse template kits, install a kit with its components, or remove one.
 
 ```
 sketchbook kits [action] [kit...] [--yes] [--dry-run] [--json]
@@ -302,7 +302,7 @@ Examples:
 
 ### api
 
-The API vocabulary (spec/api.json): list every component prop, event and state against it (canonical, alias, extension), check that nothing is unregistered, explain one name, show the design-file axes and properties one component gets (figma), or the design-file practices Sketchbook adopted (practices, spec/figma-practices.json).
+Look up component property, event, and state names in the shared API vocabulary.
 
 ```
 sketchbook api [action] [name] [--json]
@@ -334,7 +334,7 @@ Examples:
 
 ### tokens
 
-Change foundations and semantic tokens through the harness: set, preset, presets, diff, impact, add, remove, rename, import, scratch, overrides.
+Set foundation values, manage semantic tokens, or trace the impact of a change.
 
 ```
 sketchbook tokens <subcommand> [args...] [--value <v>] [--light <v>] [--dark <v>] [--type <type>] [--pair <fg:bg>] [--kind <text|large-text|ui>] [--against <ref>] [--from <dtcg|css>] [--name <n>] [--only <semantic|foundation|mapped>] [--min-confidence <0.6>] [--answers <file.json>] [--all] [--yes] [--verbose] [--no-record] [--dry-run] [--json]
@@ -416,7 +416,7 @@ Examples:
 
 ### presets
 
-List the standards catalog: families, or one family's presets with sources (read-only).
+Browse foundation presets by family, with their values and sources.
 
 ```
 sketchbook presets [family] [--json]
@@ -435,7 +435,7 @@ Examples:
 
 ### brand
 
-Several brands over one semantic interface: brands/<name>.brand.json; add, list, use (copy into brand.config.json and regenerate) and build (tokens.<brand>.css for each).
+Add, list, or switch brands that share the same semantic token names.
 
 ```
 sketchbook brand [action] [name] [--from <current|brand>] [--yes] [--dry-run] [--json]
@@ -469,7 +469,7 @@ Examples:
 
 ### audit-css
 
-Audit an existing product's CSS: cluster its colors (OKLCH distance), font sizes, spacing, radii and shadows into a foundations proposal (generated/import/codebase.proposal.json).
+Inspect an existing stylesheet to find recurring values and draft foundation choices.
 
 ```
 sketchbook audit-css <paths...> [--dry-run] [--json]
@@ -490,7 +490,7 @@ Examples:
 
 ### icons
 
-The icons the system uses (spec/icons.json, Lucide): list them, add one or more from Lucide (--category) or remove them. The design adapters draw one component per icon (sketchbook sync icons).
+List the icons in your project or add icons from Lucide.
 
 ```
 sketchbook icons [action] [names...] [--category <category>] [--dry-run] [--json]
@@ -521,7 +521,7 @@ Examples:
 
 ### sync
 
-Write the Figma MCP (use_figma) scripts for the design file (tokens: variable collections, modes and styles), read the file back ("sync verify", then "--ingest"), record a push or a component stage with "sync stamp", list the progress of the component docs with "sync progress", or write the design realization of each contract from the library read-back with "sync realize".
+Prepare scripts to update or verify your Figma file. Record sync progress after you run the scripts. Use verify to compare a read-back with the spec, stamp to record a push or stage, and realize to write design realizations.
 
 ```
 sketchbook sync [what] [names...] [--verify] [--full] [--detail <combination>] [--url <http://localhost:6006>] [--ingest <file.json>] [--dry-run] [--json]
@@ -575,7 +575,7 @@ Examples:
 
 ### docs
 
-Show a component's or a pattern's documentation, tool-neutral: the same doc a design file draws (variants and states grids, elements, anatomy, accessibility rules and source, tokens) as text, or its blueprint with --json for any design adapter.
+Read a component or kit’s variants, tokens, and accessibility guidance. Use --json for the design blueprint.
 
 ```
 sketchbook docs <name> [--json]
@@ -597,7 +597,7 @@ Examples:
 
 ### audit-page
 
-Check a complete HTML page using this design system for a level-one heading and main landmark. This static check is not a full accessibility audit.
+Check a page for a level-one heading and a main landmark. This checks page structure only.
 
 ```
 sketchbook audit-page <file> [--json]
@@ -616,7 +616,7 @@ Examples:
 
 ### audit-decisions
 
-Compare the decision log with a trusted earlier copy or Git revision and report changes to settled entries. This read-only audit does not replace check X1.
+Compare settled decisions with a trusted earlier copy or Git revision. Run sketchbook check to validate the log.
 
 ```
 sketchbook audit-decisions [baseline] [--git-ref <ref>] [--json]
@@ -639,7 +639,7 @@ Examples:
 
 ### check
 
-Run the deterministic checks (exit 0 pass, 1 fail, 2 pass with flagged overrides).
+Check that your sources and outputs agree. Exit 0 means pass, 1 means a failure, and 2 means pass with flagged overrides.
 
 ```
 sketchbook check [--only <T1,T6>] [--fix] [--verbose] [--maintainer] [--json]
@@ -663,7 +663,7 @@ Examples:
 
 ### selftest
 
-Run the harness's own tests against the installed engine: they prove every check can still reject and that the CLI, starters and generators work (what npm run test:harness runs in a project).
+Run the harness test suite to verify the tools that build and check your project.
 
 ```
 sketchbook selftest [--json]
@@ -677,7 +677,7 @@ Examples:
 
 ### explain
 
-Explain a token, CSS variable, component, tag or decision from the spec.
+Trace a token to its source, find a component’s files, or look up a decision.
 
 ```
 sketchbook explain <thing...> [--json]
@@ -699,7 +699,7 @@ Examples:
 
 ### help
 
-List commands, or show one command's arguments, options and examples.
+Find a command or look up its usage, options, and examples.
 
 ```
 sketchbook help [command] [--json]

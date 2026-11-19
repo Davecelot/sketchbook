@@ -1,6 +1,6 @@
 {
   "name": "Profile",
-  "summary": "An account page: breadcrumb, the person with avatar and role, an editable public profile and a list of connected services.",
+  "summary": "Let people update their public profile and see which services are connected.",
   "components": [
     "sb-avatar",
     "sb-avatar-fallback",

@@ -58,8 +58,8 @@ export async function inputsHash(root: string): Promise<string> {
   return h.digest('hex');
 }
 
-// What the docs site is built from: its pages and assets, the generators, the CLI reference and the brand (playground defaults).
-const DOCS_FILES = ['docs/cli.md', 'brand.config.json'];
+// The docs build reads its pages, assets, generators, CLI reference, brand defaults and package version.
+const DOCS_FILES = ['docs/cli.md', 'brand.config.json', 'package.json'];
 
 export async function docsInputsHash(root: string): Promise<string> {
   const files: string[] = [];

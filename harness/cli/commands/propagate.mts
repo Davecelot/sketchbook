@@ -28,7 +28,7 @@ const options = {
 export default {
   name: 'propagate',
   group: 'project',
-  summary: 'Carry a Foundations or harness change to every output: rebuild the tokens and components, build the engine, sync the design file scripts (tokens and foundations), and record what the outputs were built from. --maintainer also builds Storybook and the docs site (maintainers only).',
+  summary: 'Rebuild outputs after a source change and record the build. Use --maintainer to include Storybook and the Docs site. Run the generated design scripts to carry the change into Figma.',
   args: [],
   options,
   examples: ['sketchbook propagate', 'sketchbook propagate --maintainer'],

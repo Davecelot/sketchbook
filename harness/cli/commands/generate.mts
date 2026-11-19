@@ -6,7 +6,7 @@ export const GENERATED = ['generated/css/tokens.css', 'generated/css/fonts.css',
 export default {
   name: 'generate',
   group: 'project',
-  summary: 'Rebuild every generated output from the spec: token CSS, component tokens, component styles, the barrel, brand CSS and the token interface (what npm run generate runs in a project).',
+  summary: 'Rebuild tokens, styles, and other generated outputs from your project sources. Run npm run generate in an initialized project for the same build.',
   args: [],
   options: {},
   examples: ['sketchbook generate', 'sketchbook generate --json'],

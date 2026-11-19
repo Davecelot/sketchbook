@@ -1,6 +1,6 @@
 {
   "name": "Dashboard",
-  "summary": "An overview page: a top bar, a page title with an action, view tabs, stat cards, a goal, a chart, recent activity and recent orders.",
+  "summary": "Give your team one place to check progress, review recent activity, and act on orders.",
   "components": [
     "sb-aspect-ratio",
     "sb-avatar",

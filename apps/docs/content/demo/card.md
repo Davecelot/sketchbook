@@ -5,9 +5,11 @@ description: "A surface that groups related content and actions: header, title, 
 
 <!-- Generated from spec/components/card/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-card>` · status `stable` · version `0.1.0`
+Use `<sb-card>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The report card puts its title and date range together, then ends with one action. The HTML shows which part holds each.
 
 <div class="live-demo">
 <sb-card style="width:360px">
@@ -15,7 +17,7 @@ Tag `<sb-card>` · status `stable` · version `0.1.0`
     <sb-card-title>Weekly summary</sb-card-title>
     <sb-card-description>Activity from the last seven days.</sb-card-description>
   </sb-card-header>
-  <sb-card-content>Totals and trends appear here.</sb-card-content>
+  <sb-card-content>You completed 12 tasks this week.</sb-card-content>
   <sb-card-footer><sb-button>View report</sb-button></sb-card-footer>
 </sb-card>
 </div>
@@ -26,7 +28,7 @@ Tag `<sb-card>` · status `stable` · version `0.1.0`
     <sb-card-title>Weekly summary</sb-card-title>
     <sb-card-description>Activity from the last seven days.</sb-card-description>
   </sb-card-header>
-  <sb-card-content>Totals and trends appear here.</sb-card-content>
+  <sb-card-content>You completed 12 tasks this week.</sb-card-content>
   <sb-card-footer><sb-button>View report</sb-button></sb-card-footer>
 </sb-card>
 ```

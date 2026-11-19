@@ -5,9 +5,11 @@ description: "Mutually exclusive choices shown all at once: picking one clears t
 
 <!-- Generated from spec/components/radio-group/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-radio-group>` · status `stable` · version `0.1.0`
+Use `<sb-radio-group>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Use the arrow keys to change the spacing choice. Only one option can be selected.
 
 <div class="live-demo">
 <sb-radio-group aria-label="Spacing" name="spacing" value="default">
@@ -55,7 +57,7 @@ One radio button of a sb-radio-group, with its label. The group owns its checked
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | enters the group on the selected item, else the first enabled one; leaves on the next Tab |
 | `ArrowDown` | next item and select it (wraps) |

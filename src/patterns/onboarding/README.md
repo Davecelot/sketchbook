@@ -1,6 +1,6 @@
 # Onboarding
 
-First-run screens: a setup step with progress and choices, an empty workspace with next steps, and a setting-up wait state.
+Guide someone through their first setup, then show what to do in an empty workspace.
 
 ## When to use
 The first minutes after sign-up, and any empty area that needs to explain what goes there and how to fill it.

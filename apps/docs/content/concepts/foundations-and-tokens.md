@@ -1,10 +1,10 @@
 ---
 title: "Foundations and tokens"
-description: "Set foundations once in brand.config.json and let tokens flow through three layers."
+description: "See how a brand value reaches a component through three token layers."
 order: 20
 ---
 
-`brand.config.json` holds the foundations: color, modes, typography, spacing, radius, density, contrast and breakpoints, among others (see `sketchbook presets` for every family). Each foundation is a `preset` from the standards catalog in `harness/standards/`, or `custom` values. The generator turns it into the foundation layer.
+Set your brand’s color, type, spacing, or other foundations in `brand.config.json`. Choose a preset from `harness/standards/` or supply custom values. Sketchbook generates the foundation tokens from those choices.
 
 ```terminal
 sketchbook presets
@@ -17,7 +17,9 @@ Use `--dry-run` first, then end with `sketchbook tokens diff`, `sketchbook token
 
 ## Three layers
 
-<!-- illustration: layers | Each token points one layer down, never further. -->
+Start at the component and follow the aliases to find the value you want to change.
+
+<!-- illustration: layers | The component token uses a semantic role. That role points to a foundation value. -->
 
 Each layer may reference only the layer directly below it.
 

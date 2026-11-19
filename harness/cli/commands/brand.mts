@@ -12,7 +12,7 @@ const options = {
 export default {
   name: 'brand',
   group: 'tokens',
-  summary: 'Several brands over one semantic interface: brands/<name>.brand.json; add, list, use (copy into brand.config.json and regenerate) and build (tokens.<brand>.css for each).',
+  summary: 'Add, list, or switch brands that share the same semantic token names.',
   subcommands: ['add', 'list', 'use', 'build'],
   args: [
     { name: 'action', required: false, description: 'list (default) | add | use | build' },

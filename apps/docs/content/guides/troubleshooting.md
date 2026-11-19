@@ -1,10 +1,10 @@
 ---
 title: "Troubleshooting"
-description: "What a failing check, a blocked commit or a silent Claude layer means, and the command that fixes it."
+description: "Find the next step when a check fails, a commit stops, or an agent misses project guidance."
 order: 60
 ---
 
-Start with `sketchbook doctor`: it reports the starter, harness version, component and kit counts, overrides, design file state, the last check result, the Claude layer and whether the commit gate is active. Then run `sketchbook check`; every failure names the file and a `fix`.
+Run `sketchbook doctor` to see what Sketchbook finds in your project. Then run `sketchbook check`. Find the check ID in the output and use the suggested fix or the matching section below.
 
 ## A check fails (exit 1)
 

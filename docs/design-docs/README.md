@@ -1,6 +1,6 @@
 # Design docs: how Sketchbook documents itself in a design tool
 
-A tool-agnostic spec. It says what a documentation page looks like, how a file is organised, and how themes switch, without naming any design tool. Figma is the renderer (`.claude/skills/design-figma`, `harness/adapters/design/figma/`). Any other tool re-renders the same spec: read these files and `tool-mapping.md`, nothing else needs explaining.
+Use this guide to find where Sketchbook gets the pages, tokens, and copy that appear in a design file. Change the source, then render the design file with your adapter. To set up Figma, follow the [design file guide](https://sketchbook-docs.vercel.app/concepts/design-file/).
 
 ## The four rules
 

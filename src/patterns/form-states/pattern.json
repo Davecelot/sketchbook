@@ -1,6 +1,6 @@
 {
   "name": "Form states",
-  "summary": "A gallery of every form control in its default, disabled, invalid and read-only states, for checking tokens, focus rings and right to left in one place.",
+  "summary": "Compare default, disabled, invalid, and read-only controls to check tokens, focus, and right-to-left layout.",
   "components": [
     "sb-checkbox",
     "sb-direction",

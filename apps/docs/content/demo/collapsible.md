@@ -5,9 +5,11 @@ description: "A disclosure that shows or hides one panel of content from a trigg
 
 <!-- Generated from spec/components/collapsible/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-collapsible>` · status `stable` · version `0.1.0`
+Use `<sb-collapsible>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Toggle Order details to reveal or hide the billing and delivery information.
 
 <div class="live-demo">
 <sb-collapsible style="display:block;width:350px">
@@ -58,7 +60,7 @@ The control that toggles its collapsible. Renders a native button around its slo
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Enter` | toggle the content |
 | `Space` | toggle the content |

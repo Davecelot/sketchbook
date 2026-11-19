@@ -5,9 +5,11 @@ description: "A stand-alone text label for a control: it forwards clicks to the 
 
 <!-- Generated from spec/components/label/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-label>` · status `stable` · version `0.1.0`
+Use `<sb-label>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Select Email to focus the input. The label’s `for` value matches the input’s `id`.
 
 <div class="live-demo">
 <div style="display:grid;gap:8px;max-width:320px">

@@ -122,7 +122,7 @@ const dashboard = (loading = false) => html`<div class="dashboard">
 
 const meta: Meta = {
   title: 'Patterns/Dashboard',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Give your team one place to check progress, review recent activity, and act on orders.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => dashboard(),
 };
 export default meta;

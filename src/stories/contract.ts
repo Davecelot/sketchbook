@@ -52,10 +52,13 @@ export function matrixOf(contract: Contract, render: (combo: Record<string, stri
 // The component's contract.md as its docs page: front matter, the typed-spec link and the
 // agents-only section are dropped. The page updates whenever the contract changes.
 export function docsFrom(markdown: string) {
-  return markdown
+  const contract = markdown
     .replace(/^---[\s\S]*?---\s*/, '')
     .replace(/^# .*\n+/, '')
     .replace(/ ?Typed spec: \[contract\.json\]\(\.\/contract\.json\)\.?/, '')
     .replace(/\n## Spec for agents[\s\S]*$/, '\n')
     .trim();
+  return `Open a story to try the component, then use its contract below to look up behavior and accessibility.
+
+${contract}`;
 }

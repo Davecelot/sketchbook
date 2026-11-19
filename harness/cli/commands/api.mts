@@ -12,7 +12,7 @@ const MARK = { canonical: ' ', alias: '~', extension: '+', unregistered: '!' };
 export default {
   name: 'api',
   group: 'components',
-  summary: 'The API vocabulary (spec/api.json): list every component prop, event and state against it (canonical, alias, extension), check that nothing is unregistered, explain one name, show the design-file axes and properties one component gets (figma), or the design-file practices Sketchbook adopted (practices, spec/figma-practices.json).',
+  summary: 'Look up component property, event, and state names in the shared API vocabulary.',
   subcommands: ACTIONS,
   args: [
     { name: 'action', required: false, description: 'list (default) | check | explain' },

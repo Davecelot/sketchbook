@@ -1,5 +1,7 @@
 # Sketchbook documentation
 
+Start with the public Docs when you want to use Sketchbook. Use the repository guides and records below to trace how it works and what has been tested.
+
 - [Public documentation](https://sketchbook-docs.vercel.app/) for guides, CLI commands, and interactive examples.
 - [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for creating a project and [getting started](./getting-started.md) for the first changes inside it.
 - [CLI reference](./cli.md) for commands and [agent compatibility](./agent-compatibility.md) for project guidance, diagnostics, and hook coverage.

@@ -84,7 +84,7 @@ const profile = (errors = false) => html`<div class="profile">
 
 const meta: Meta = {
   title: 'Patterns/Profile',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Let people update their public profile and see which services are connected.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => profile(),
 };
 export default meta;

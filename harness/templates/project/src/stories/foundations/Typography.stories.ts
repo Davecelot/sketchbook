@@ -83,7 +83,7 @@ export const Page: StoryObj = {
       id: 'typography',
       configHint: 'typography',
       intro: html`<p>
-        Typography is a family pair (text and code), a size scale, a few weights, line heights and letter spacing. The foundation holds the raw
+        Compare the body and heading roles at the same viewport width. Typography is a family pair (text and code), a size scale, a few weights, line heights and letter spacing. The foundation holds the raw
         scale; the semantic layer gives sizes jobs (body, control, heading-1 to heading-4, caption) so a component asks for "a heading" rather than
         "24px". Sizes are shown in px and in rem against the 16px browser default.
       </p>`,

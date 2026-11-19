@@ -5,9 +5,11 @@ description: "A pulsing placeholder block that holds the space of content that i
 
 <!-- Generated from spec/components/skeleton/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-skeleton>` · status `stable` · version `0.1.0`
+Use `<sb-skeleton>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The circle and two lines reserve space for an avatar and text while their content loads.
 
 <div class="live-demo">
 <div style="display:flex;align-items:center;gap:16px">

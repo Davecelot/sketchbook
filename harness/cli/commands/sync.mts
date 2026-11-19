@@ -34,7 +34,7 @@ async function verify({ root, options, dryRun, out, file }: VerifyContext) {
     if (dryRun) { out(`Would write ${OUT}/verify.js (read-only) for Figma file ${file}.`); return { changed: [`${OUT}/verify.js`] }; }
     const written = await prepareVerify(root, { detail: options.detail });
     const next = `Run ${written} with the Figma MCP use_figma tool, save the returned JSON (e.g. figma-verify.json), then: sketchbook sync verify --ingest figma-verify.json. A differing combination is located with sketchbook sync verify --detail "<combination>".`;
-    out(`Prepared for Figma file ${file}:\n  ${written}\nNext: ${next}`);
+    out(`Prepared a verification script for Figma file ${file}:\n  ${written}\nNext: ${next}`);
     return { changed: [written], next };
   }
   let readback: VerifyReadback | null;
@@ -60,7 +60,7 @@ async function verify({ root, options, dryRun, out, file }: VerifyContext) {
 export default {
   name: 'sync',
   group: 'design',
-  summary: 'Write the Figma MCP (use_figma) scripts for the design file (tokens: variable collections, modes and styles), read the file back ("sync verify", then "--ingest"), record a push or a component stage with "sync stamp", list the progress of the component docs with "sync progress", or write the design realization of each contract from the library read-back with "sync realize".',
+  summary: 'Prepare scripts to update or verify your Figma file. Record sync progress after you run the scripts. Use verify to compare a read-back with the spec, stamp to record a push or stage, and realize to write design realizations.',
   args: [
     { name: 'what', required: false, description: 'tokens (default) | verify | stamp | progress | describe | verify-library | layout | theme-matrix | components | patterns | compare | realize' },
     { name: 'names', required: false, variadic: true, description: 'After "stamp": tokens|foundations|components, or library|doc|checked|note|clear, then component names (clear takes names only, and removes the note and its fix flag without changing the stage); after "library" or "describe": the components (describe defaults to every drawn one); after "components": one batch id of spec/design-docs.json; after "realize" or "verify-library --ingest": the components (default every drawn one)' },
@@ -158,7 +158,7 @@ export default {
     if (dryRun) { out(`Would write the ${what} scripts to ${OUT}/ for Figma file ${file}.`); return { changed: [`${OUT}/`], next, data: { file } }; }
     const { written, skipped, delta, coverage } = await prepare(root, what, { full: options.full, names: args.slice(1), detail: options.detail });
     if (what === 'library' && skipped.length) out(`Tokens without a Figma variable or style (left unbound): ${skipped.map((s) => (typeof s === 'string' ? s : s.token)).join(', ')}`);
-    out(`Prepared for Figma file ${file}${delta ? ' (only what changed since the last stamp; --full for everything)' : ''}:\n  ${written.join('\n  ')}${coverage.total ? `\nCoverage: ${coverage.total - coverage.missing.length} of ${coverage.total} spec tokens reach the file${coverage.missing.length ? ` (missing: ${coverage.missing.slice(0, 10).join(', ')}${coverage.missing.length > 10 ? ' ...' : ''})` : ''}.` : ''}\nNext: ${next}`);
+    out(`Prepared ${what} scripts for Figma file ${file}${delta ? ' (changes since the last stamp, or use --full for all inputs)' : ''}:\n  ${written.join('\n  ')}${coverage.total ? `\nCoverage: ${coverage.total - coverage.missing.length} of ${coverage.total} spec tokens reach the file${coverage.missing.length ? ` (missing: ${coverage.missing.slice(0, 10).join(', ')}${coverage.missing.length > 10 ? ' ...' : ''})` : ''}.` : ''}\nNext: ${next}`);
     return { changed: written, next, warnings: coverage.missing.length ? [{ file: 'spec/tokens', msg: `${coverage.missing.length} token(s) do not reach the design file`, fix: 'Map their kind in harness/adapters/design/figma/variables.mts.' }] : [], data: { file, skipped: skipped.length, coverage } };
   },
 } satisfies Command<typeof options>;

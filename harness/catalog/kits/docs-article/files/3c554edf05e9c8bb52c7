@@ -1,6 +1,6 @@
 {
   "name": "Docs article",
-  "summary": "A long-form documentation page: contents sidebar, breadcrumb, typography for prose, a diagram, a code sample, a callout, a collapsible, an FAQ and previous/next links.",
+  "summary": "Help readers follow a guide with a contents sidebar, diagram, code sample, and links to what comes next.",
   "components": [
     "sb-accordion",
     "sb-accordion-content",

@@ -37,6 +37,7 @@ interface Stats {
 }
 
 const OUT = 'site-dist';
+const { version } = parseJson<{ version: string }>(await readFile('package.json', 'utf8'));
 const TABS = [
   { id: 'docs', title: 'Docs', url: '/' },
   { id: 'demo', title: 'Demo', url: '/demo/' }
@@ -56,31 +57,31 @@ const CLI_TOPICS: Record<string, Topic> = {
     slug: 'project',
     title: 'Project setup',
     order: 10,
-    description: 'Create, inspect, repair and upgrade a Sketchbook project.'
+    description: 'Set up a project, check how it’s configured, or upgrade it.'
   },
   Tokens: {
     slug: 'foundations',
     title: 'Tokens and brand',
     order: 20,
-    description: 'Change foundations, presets and brands, and import or audit existing styles.'
+    description: 'Set your foundations, work with brands, or bring in existing styles.'
   },
   Components: {
     slug: 'components',
     title: 'Components and kits',
     order: 30,
-    description: 'Install, remove and list components and kits, and read the naming standard.'
+    description: 'Browse the catalog, manage components and kits, or look up API names.'
   },
   'Design file': {
     slug: 'design-file',
     title: 'Design file',
     order: 40,
-    description: 'Sync variables, styles and docs to the design file, and manage icons.'
+    description: 'Sync your spec with the design file and manage the icon set.'
   },
   Quality: {
     slug: 'quality',
     title: 'Quality and checks',
     order: 50,
-    description: 'Run the deterministic checks, self-test the harness and trace where a value comes from.'
+    description: 'Check your project, run a harness self-test, or trace a value to its source.'
   }
 };
 const CALLOUTS = new Set(['note', 'tip', 'warning']);
@@ -239,6 +240,7 @@ async function stats(): Promise<Stats> {
 function statusTable(n: Stats) {
   const stable = n.byStatus.stable ?? 0;
   const rows = [
+    ['Sketchbook CLI version', `v${version}`, '`package.json`'],
     ['Components', `${n.components} (${Object.entries(n.byStatus).map(([k, v]) => `${v} ${k}`).join(', ')})`, '`spec/registry.json`'],
     ['Accessibility audits completed', String(n.a11yAudits), '`docs/a11y-audits/` (needed for `stable`)'],
     ['Component parity audits', String(n.parityAudits), '`docs/parity-audits/`'],
@@ -283,8 +285,8 @@ async function tokenPanel() {
 <sb-button variant="ghost" size="small" data-reset>Reset</sb-button>
 </div>
 <div class="token-groups">
-<section><h3><code>color.primary</code></h3><p>${color.length} component tokens point at it.</p>${list(color, (n) => `background: var(${n})`)}</section>
-<section><h3><code>radius.control</code></h3><p>${radius.length} component tokens point at it.</p>${list(radius, (n) => `border-radius: var(${n})`)}</section>
+<section><h3><code>color.primary</code></h3><p>Shared by ${color.length} component tokens.</p>${list(color, (n) => `background: var(${n})`)}</section>
+<section><h3><code>radius.control</code></h3><p>Shared by ${radius.length} component tokens.</p>${list(radius, (n) => `border-radius: var(${n})`)}</section>
 </div>
 </div>`;
 }
@@ -466,7 +468,7 @@ ${page.html}
 </div>
 <div class="backdrop" hidden></div>
 <dialog id="search" aria-label="Search documentation">
-  <input id="q" type="search" placeholder="Search the docs" aria-label="Search documentation" autocomplete="off">
+  <input id="q" type="search" placeholder="Search topics, commands, and components" aria-label="Search documentation" autocomplete="off">
   <ul id="results"></ul>
   <p id="status" role="status" class="muted"></p>
 </dialog>
@@ -478,7 +480,7 @@ ${page.html}
 const pages = await load();
 await rm(OUT, { recursive: true, force: true });
 await mkdir(`${OUT}/assets`, { recursive: true });
-await writeFile(join(OUT, 'build-metadata.json'), `${JSON.stringify({ commit: process.env.VERCEL_GIT_COMMIT_SHA || 'unknown' }, null, 2)}\n`);
+await writeFile(join(OUT, 'build-metadata.json'), `${JSON.stringify({ version, commit: process.env.VERCEL_GIT_COMMIT_SHA || 'unknown' }, null, 2)}\n`);
 
 for (const page of pages) {
   const dir = join(OUT, page.url);
@@ -499,7 +501,7 @@ await cp('apps/docs/content/_assets/Sketchbook.fig', `${OUT}/assets/Sketchbook.f
 const sectionOf = (p: Page) => SECTIONS.find((s) => s.dir === p.dir)?.title ?? '';
 await writeFile(
   `${OUT}/search.json`,
-  JSON.stringify(pages.map((p, id) => ({ id, url: p.url, title: p.title, section: sectionOf(p), text: p.text })))
+  JSON.stringify(pages.map((p, id) => ({ id, url: p.url, title: p.title, section: sectionOf(p), text: [p.description, p.text].filter(Boolean).join(' ') })))
 );
 await writeFile(
   `${OUT}/llms.txt`,

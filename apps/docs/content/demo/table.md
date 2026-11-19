@@ -5,9 +5,11 @@ description: "Rows and columns of data. Custom elements take ARIA table roles an
 
 <!-- Generated from spec/components/table/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-table>` · status `stable` · version `0.1.0`
+Use `<sb-table>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Read across an order to compare its status and amount. The footer reports the total using the same amount column.
 
 <div class="live-demo">
 <sb-table style="width:560px">

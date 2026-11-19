@@ -5,9 +5,11 @@ description: "A named navigation panel at the start edge of an app or docs layou
 
 <!-- Generated from spec/components/sidebar/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-sidebar>` · status `stable` · version `0.1.0`
+Use `<sb-sidebar>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Use the toggle beside the menu to change the sidebar. Introduction is marked as the current section.
 
 <div class="live-demo">
 <sb-sidebar-provider style="display:flex;min-height:320px;border:1px solid var(--sb-color-border);border-radius:var(--sb-radius-large);overflow:hidden">
@@ -113,7 +115,7 @@ An icon button that toggles the panel on wide viewports and opens the drawer on 
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | moves through the trigger and the links in document order; inside the open drawer it stays within the drawer |
 | `Shift+Tab` | moves backwards; stays within the open drawer |

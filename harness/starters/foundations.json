@@ -1,7 +1,7 @@
 {
   "id": "foundations",
   "title": "Foundations first",
-  "for": "Teams settling tokens before any component: foundations, their Storybook pages and Figma variables.",
+  "for": "Settle your tokens first and explore them in Storybook or your design file.",
   "foundations": null,
   "components": "none",
   "kits": "none",

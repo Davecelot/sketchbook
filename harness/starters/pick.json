@@ -1,7 +1,7 @@
 {
   "id": "pick",
   "title": "Pick components",
-  "for": "Teams that need a subset: the chosen components (--components a,b) and what they depend on.",
+  "for": "Choose the components you need with --components. Sketchbook includes their dependencies.",
   "foundations": null,
   "components": [],
   "kits": "none",

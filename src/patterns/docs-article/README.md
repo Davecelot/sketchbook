@@ -1,6 +1,6 @@
 # Docs article
 
-A long-form documentation page: contents sidebar, breadcrumb, prose set with Typography, a diagram, a code sample, a callout, a collapsible, an FAQ and previous/next links. States: default, right to left.
+Help readers follow a guide with a contents sidebar, diagram, code sample, and links to what comes next.
 
 ## When to use
 Guides, help articles and any page that is mostly reading. Use it to check line length, line height and the heading scale with your brand.

@@ -1,10 +1,10 @@
 ---
 title: "Contracts"
-description: "The written spec a component is built and verified against."
+description: "Write down what a component promises, then build and check it against that agreement."
 order: 30
 ---
 
-Each component has a folder, `spec/components/<name>/`, with three files.
+Use the contract to agree on the API, token roles, and accessibility behavior before you build. Find the contract and its implementation plan under `spec/components/<name>/`.
 
 | File | Holds |
 | --- | --- |
@@ -14,7 +14,9 @@ Each component has a folder, `spec/components/<name>/`, with three files.
 
 No implementation is added without a `contract.json` that passes `sketchbook check`. The component tokens it declares are the only token variables the component's CSS may use. The full field list is in [Contract format](/reference/contract-format/).
 
-<!-- illustration: contract | The contract is the source the component is built and checked against. -->
+When the code and written behavior disagree, start by checking the contract.
+
+<!-- illustration: contract | One contract defines the component and gives the checks a baseline. -->
 
 ## Lifecycle
 

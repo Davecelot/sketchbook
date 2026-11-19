@@ -18,7 +18,7 @@ const options = { blank: { type: 'boolean', description: 'Scaffold an empty cont
 export default {
   name: 'add',
   group: 'components',
-  summary: 'Install a component from the catalog (contract, code, stories, specs; dependencies first), or --blank to scaffold a new contract (status draft, proposed decision).',
+  summary: 'Install a catalog component with its dependencies, or start a new contract with --blank.',
   args: [{ name: 'Component Name', required: true, variadic: true, description: 'Catalog name (button, "Button Group") or a registry entry for --blank' }],
   options,
   examples: ['sketchbook add button', 'sketchbook add Button Group --dry-run', 'sketchbook add Date Picker --blank'],
@@ -33,9 +33,10 @@ export default {
       const r = await installComponents(root, [name], { dryRun });
       if (!r.installed.length) { out(`${name} is already installed (spec/components/${name}/). Nothing to do.`); return { data: { installed: [], already: r.already, order } }; }
       if (dryRun) { out(`Would install ${r.installed.join(', ')} from the catalog (order: ${order.filter((n) => !present.includes(n)).join(' -> ')}), writing:\n  ${r.changed.join('\n  ')}`); return { changed: r.changed, data: { installed: r.installed, order } }; }
-      out(`Installed from the catalog: ${r.installed.join(', ')} (${r.changed.length} file(s)); registry, tokens, styles and barrel rebuilt.`);
+      out(`Installed from the catalog: ${r.installed.join(', ')}. Rebuilt the token and style outputs and updated the registry.`);
       const c = await componentChecks(root);
       out(`Checks: ${c.summary}`);
+      if (!c.exitCode) out('Next: Run npm run storybook to try the component.');
       return {
         changed: [...r.changed, 'generated/css/tokens.css', 'src/index.ts'], errors: c.errors, warnings: c.warnings, exitCode: c.exitCode,
         next: c.exitCode ? 'Fix the failing checks, then sketchbook check.' : `npm run storybook (Components/${r.installed.at(-1)}), then sketchbook check.`,

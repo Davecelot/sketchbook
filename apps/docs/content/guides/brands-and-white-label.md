@@ -1,12 +1,12 @@
 ---
 title: "Brands and white-label"
-description: "Keep several brands over one set of components, and keep brand names out of shared code."
+description: "Give each brand its own foundations while sharing the same components."
 order: 60
 ---
 
 ## Several brands
 
-Brands share one semantic interface and differ in their foundations. Each brand is a file, `brands/<name>.brand.json`.
+Give each brand a file at `brands/<name>.brand.json`. The file supplies that brand’s foundation values while the components keep using the same semantic token names.
 
 ```terminal
 sketchbook brand add acme

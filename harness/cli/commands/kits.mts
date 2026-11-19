@@ -19,7 +19,7 @@ const options = { yes: { type: 'boolean', description: 'remove: confirm removing
 export default {
   name: 'kits',
   group: 'components',
-  summary: 'Template kits (harness/kits/index.json): list them, add one (its components come from the catalog first) or remove one (--yes when it was edited).',
+  summary: 'Browse template kits, install a kit with its components, or remove one.',
   subcommands: ['list', 'add', 'remove'],
   args: [
     { name: 'action', required: false, description: 'list (default) | add | remove' },
@@ -56,6 +56,7 @@ export default {
     // catalog:build (not run here: it would drop the only copy kits add restores from). See docs/simplicity-debt.md.
     const source = readConfig(root).catalog?.source === true;
     const removedNext = source && errors.some((e) => e.id === 'G1') ? `This repo is the catalog source: npm run catalog:build to drop ${ids.join(', ')} from the catalog too (G1 then passes), or sketchbook kits add ${ids.join(' ')} to put it back.` : 'sketchbook check';
+    if (!errors.length && action === 'add') out('Next: Run npm run storybook and open the kit under Patterns.');
     return { changed: r.changed, errors, exitCode: errors.length ? 1 : 0, next: action === 'add' ? 'npm run storybook (Patterns/<Kit>), then sketchbook check.' : removedNext, data: r };
   },
 } satisfies Command<typeof options>;

@@ -1,7 +1,7 @@
 {
   "id": "settings",
   "title": "Settings",
-  "summary": "A preferences page split into tabs, each a card-wrapped form with selects, radios, switches, a slider and a save bar.",
+  "summary": "Group preferences by topic so people can find, change, and save them.",
   "path": "src/patterns/settings",
   "components": [
     "alert",
@@ -37,15 +37,15 @@
     },
     {
       "path": "src/patterns/settings/README.md",
-      "hash": "d2ebbd6e94570b2c6434"
+      "hash": "08c4411e3c8dbc9e614f"
     },
     {
       "path": "src/patterns/settings/Settings.stories.ts",
-      "hash": "1a5d639c6803e7d03acc"
+      "hash": "f325b6c93ce84d356228"
     },
     {
       "path": "src/patterns/settings/pattern.json",
-      "hash": "b4a7a4ccdc59465b8de5"
+      "hash": "d1cd9cf4acd3416e3f63"
     },
     {
       "path": "src/patterns/settings/settings.css",

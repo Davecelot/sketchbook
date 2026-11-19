@@ -105,7 +105,7 @@ const settings = (tab = 'general', saved = false) => html`<main class="settings"
 
 const meta: Meta = {
   title: 'Patterns/Settings',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Group preferences by topic so people can find, change, and save them.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => settings(),
 };
 export default meta;

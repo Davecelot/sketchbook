@@ -4,7 +4,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'audit-css',
   group: 'tokens',
-  summary: 'Audit an existing product\'s CSS: cluster its colors (OKLCH distance), font sizes, spacing, radii and shadows into a foundations proposal (generated/import/codebase.proposal.json).',
+  summary: 'Inspect an existing stylesheet to find recurring values and draft foundation choices.',
   args: [{ name: 'paths', required: true, variadic: true, description: 'CSS/SCSS files, folders or globs (quote globs), relative to the project' }],
   options: {},
   examples: ['sketchbook audit-css ../product/src', 'sketchbook audit-css "app/**/*.css" --json'],

@@ -1,7 +1,7 @@
 {
   "id": "sign-in",
   "title": "Sign in",
-  "summary": "Sign-in and sign-up pages: a centered card with email, a password that can be revealed, a remember-me choice, single sign-on and a form-level error.",
+  "summary": "Help people sign in or create an account, with password visibility, single sign-on, and a place to explain errors.",
   "path": "src/patterns/sign-in",
   "components": [
     "alert",
@@ -37,15 +37,15 @@
     },
     {
       "path": "src/patterns/sign-in/README.md",
-      "hash": "552bdad5ce7559849e81"
+      "hash": "796309acee1d478d2692"
     },
     {
       "path": "src/patterns/sign-in/SignIn.stories.ts",
-      "hash": "ca224349b746c530f922"
+      "hash": "0ac413f342ed59e8f3d9"
     },
     {
       "path": "src/patterns/sign-in/pattern.json",
-      "hash": "361745a3ed43c753c615"
+      "hash": "a106d6104e40b13d7e82"
     },
     {
       "path": "src/patterns/sign-in/sign-in.css",

@@ -1,6 +1,6 @@
 ---
 title: "Reference"
-description: "Config files, the contract format, every check, the rules, live status, the evidence behind the system and a glossary."
+description: "Look up a file, check, or term, or see how the project is measured."
 order: 0
 ---
 

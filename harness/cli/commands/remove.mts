@@ -10,7 +10,7 @@ const why = (r: AtRisk): string => (r.reason === 'team-made' ? 'made by the team
 export default {
   name: 'remove',
   group: 'components',
-  summary: 'Uninstall a component: refuses while another component or a kit needs it, and without --yes when it is team-made or customized; else removes its files, sets the registry to planned and rebuilds.',
+  summary: 'Remove a component you no longer use. Review dependencies and local edits before removing it.',
   args: [{ name: 'Component Name', required: true, variadic: true, description: 'Installed component (button, "Button Group")' }],
   options,
   examples: ['sketchbook remove badge', 'sketchbook remove spinner --dry-run', 'sketchbook remove my-widget --yes'],
@@ -25,12 +25,13 @@ export default {
       if (risk) out(`Needs --yes: ${name} is ${why(risk)}.`);
       return { changed: r.changed, data: { removed: [name], atRisk: r.atRisk } };
     }
-    out(`Removed ${name} (${r.changed.length - 1} file(s)); registry -> planned; tokens, styles and barrel rebuilt.`);
+    out(`Removed ${name}. Rebuilt the token and style outputs and set its registry status to planned.`);
     const c = await componentChecks(root);
     out(`Checks: ${c.summary}`);
     const next = !risk ? `sketchbook add ${name} brings it back from the catalog.`
       : risk.reason === 'team-made' ? `${name} was not in the catalog: git is the only way back (git checkout -- the removed files).`
         : `sketchbook add ${name} brings back the catalog version; your edits are only in git.`;
+    if (!c.exitCode) out(`Next: ${next}`);
     return { changed: r.changed, errors: c.errors, warnings: c.warnings, exitCode: c.exitCode, next, data: { removed: [name], atRisk: r.atRisk } };
   },
 } satisfies Command<typeof options>;

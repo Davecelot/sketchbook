@@ -7,7 +7,7 @@ const options = { file: { type: 'string', value: 'id', description: 'Design file
 export default {
   name: 'swap',
   group: 'project',
-  summary: 'Replace an adapter (token build or design tool) without touching the spec, then rebuild and check.',
+  summary: 'Change the tool that builds tokens or syncs your design file, then rebuild and check.',
   args: [
     { name: 'output', required: true, description: `What to swap: ${Object.keys(SWAPPABLE).join(' | ')}` },
     { name: 'adapter', required: true, description: `tokens: ${(SWAPPABLE.tokens ?? []).join(' | ')}; design: ${(SWAPPABLE.design ?? []).join(' | ')}` },

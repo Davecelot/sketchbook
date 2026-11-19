@@ -5,9 +5,11 @@ description: "Layout and grouping for form controls: a labelled row or column of
 
 <!-- Generated from spec/components/field/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-field>` · status `stable` · version `0.1.0`
+Use `<sb-field>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Use the field wrapper to put the email label and its explanation next to a native input.
 
 <div class="live-demo">
 <sb-field style="max-width:320px">
@@ -52,7 +54,7 @@ The visible label of a field. Names a native control through aria-labelledby and
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | no stops of its own; moves between the controls inside |
 

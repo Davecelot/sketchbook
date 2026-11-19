@@ -5,9 +5,11 @@ description: "Related on/off controls in one row: pick exactly one, or turn seve
 
 <!-- Generated from spec/components/toggle-group/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-toggle-group>` · status `stable` · version `0.1.0`
+Use `<sb-toggle-group>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Turn on Bold and Italic together. Each formatting choice can stay active because the group allows multiple selections.
 
 <div class="live-demo">
 <sb-toggle-group aria-label="Text formatting" selection="multiple">
@@ -60,7 +62,7 @@ One toggle button of a sb-toggle-group. Takes variant, size and orientation from
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | enters the group on one item (the first pressed item, else the first enabled one) and leaves it |
 | `ArrowRight` | next item (ArrowLeft in RTL), wraps |

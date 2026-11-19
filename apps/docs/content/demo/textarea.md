@@ -5,19 +5,21 @@ description: "A multi-line text field with label, description and error built in
 
 <!-- Generated from spec/components/textarea/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-textarea>` · status `stable` · version `0.1.0`
+Use `<sb-textarea>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
 
+Enter a message with several lines. The label stays visible after the placeholder gives way to your text.
+
 <div class="live-demo">
 <div style="max-width:360px">
-  <sb-textarea label="Message" placeholder="Write something…"></sb-textarea>
+  <sb-textarea label="Message" placeholder="Write your message…"></sb-textarea>
 </div>
 </div>
 
 ```html
 <div style="max-width:360px">
-  <sb-textarea label="Message" placeholder="Write something…"></sb-textarea>
+  <sb-textarea label="Message" placeholder="Write your message…"></sb-textarea>
 </div>
 ```
 
@@ -48,7 +50,7 @@ Tag `<sb-textarea>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | move focus in and out |
 | `typing` | native multi-line text editing |

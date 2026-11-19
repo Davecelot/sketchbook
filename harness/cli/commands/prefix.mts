@@ -4,7 +4,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'prefix',
   group: 'project',
-  summary: 'Rename the element and CSS prefix everywhere (sources, contracts, tests, docs), rebuild, then check.',
+  summary: 'Change the element and CSS prefix across your project, then rebuild and check the outputs.',
   args: [{ name: 'new', required: true, description: 'Lowercase letters and digits, e.g. acme' }],
   options: {},
   examples: ['sketchbook prefix acme', 'sketchbook prefix acme --dry-run'],

@@ -1,10 +1,10 @@
 ---
 title: "Status"
-description: "Live counts of components, audits, kits and checks, read from the repository at build time."
+description: "See component maturity, audit coverage, and other counts from the latest Docs build."
 order: 55
 ---
 
-These counts are computed when the docs site is built, from the files named in the last column, so they cannot drift from the repository. Studies and their limits are on the [Evidence](/reference/evidence/) page.
+Sketchbook reads these counts from the sources listed in the table when it builds the Docs. See [Evidence](/reference/evidence/) for dated study results and what they measured.
 
 <!-- status:table -->
 

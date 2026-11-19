@@ -105,7 +105,7 @@ export const Page: StoryObj = {
       id: 'color',
       configHint: 'color',
       intro: html`<p>
-          Color has two layers. The <strong>foundation</strong> is a set of ramps, one per hue, each running from a near-white step to a near-black one;
+          Switch Mode in the toolbar and compare the primary, background, and border roles. Color has two layers. The <strong>foundation</strong> is a set of ramps, one per hue, each running from a near-white step to a near-black one;
           its values are generated from the brand inputs. The <strong>semantic</strong> layer names roles (background, primary, border, ring) and
           points each one at a ramp step, separately for every mode. Components only ever use semantic or component tokens.
         </p>

@@ -1,14 +1,12 @@
 ---
 title: "Overview"
-description: "Every harness action is a command: scriptable with --json, and previewable with --dry-run where it changes files."
+description: "Find the command for your task, with its options and examples."
 order: 0
 ---
 
-The `sketchbook` CLI is the deterministic half of the harness. Run `sketchbook <command>`, or `node harness/cli.mjs <command>`. This section is split by topic and generated from the command modules by `npm run generate`, so it matches the CLI as of the last build.
+Browse by task below, or run `npx sketchbook` in your project to explore commands in the terminal. Command names, flags, and examples here come from the CLI’s command definitions.
 
-In a terminal, run `npx sketchbook` without a command to explore the interactive menu. Enter a number to select an item, provide the requested values, and optionally review settings. Where available, examples show what to type. Mutating commands show a preview when supported; type `y` and press Enter to apply, or press Enter to cancel.
-
-Use `sketchbook help <command> --details` for the full command reference. Terminal views may summarize long results; add `--details` to show the full output. For scripts and agents, use `--json` for the structured response.
+Use `sketchbook help <command> --details` for the full command reference. For scripts and agents, use `--json` to read the structured response. When a command supports `--dry-run`, use it to preview changes.
 
 ```terminal
 sketchbook help <command>

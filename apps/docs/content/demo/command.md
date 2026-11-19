@@ -5,18 +5,20 @@ description: "A search field that filters a list of grouped actions or destinati
 
 <!-- Generated from spec/components/command/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-command>` · status `stable` · version `0.1.0`
+Use `<sb-command>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
 
+Type “account” to find Profile by keyword. Clear the search, then move through the results with the arrow keys and notice that Calculator is disabled.
+
 <div class="live-demo">
 <sb-command label="Search commands" style="display:block;width:450px;border:1px solid var(--sb-color-border);border-radius:var(--sb-radius-control)">
-  <sb-command-input placeholder="Type a command or search..."></sb-command-input>
+  <sb-command-input placeholder="Search commands…"></sb-command-input>
   <sb-command-list>
-    <sb-command-empty>No results found.</sb-command-empty>
+    <sb-command-empty>No matching commands.</sb-command-empty>
     <sb-command-group label="Suggestions">
       <sb-command-item>Calendar</sb-command-item>
-      <sb-command-item keywords="emoji picker">Search Emoji</sb-command-item>
+      <sb-command-item keywords="emoji picker">Search emoji</sb-command-item>
       <sb-command-item disabled>Calculator</sb-command-item>
     </sb-command-group>
     <sb-command-separator></sb-command-separator>
@@ -31,12 +33,12 @@ Tag `<sb-command>` · status `stable` · version `0.1.0`
 
 ```html
 <sb-command label="Search commands" style="display:block;width:450px;border:1px solid var(--sb-color-border);border-radius:var(--sb-radius-control)">
-  <sb-command-input placeholder="Type a command or search..."></sb-command-input>
+  <sb-command-input placeholder="Search commands…"></sb-command-input>
   <sb-command-list>
-    <sb-command-empty>No results found.</sb-command-empty>
+    <sb-command-empty>No matching commands.</sb-command-empty>
     <sb-command-group label="Suggestions">
       <sb-command-item>Calendar</sb-command-item>
-      <sb-command-item keywords="emoji picker">Search Emoji</sb-command-item>
+      <sb-command-item keywords="emoji picker">Search emoji</sb-command-item>
       <sb-command-item disabled>Calculator</sb-command-item>
     </sb-command-group>
     <sb-command-separator></sb-command-separator>
@@ -97,7 +99,7 @@ One option: text, optionally an icon before it and a shortcut hint after it.
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `ArrowDown` | next enabled visible item becomes active; stops at the last unless loop |
 | `ArrowUp` | previous enabled visible item becomes active; stops at the first unless loop |

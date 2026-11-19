@@ -5,9 +5,11 @@ description: "A small pill that labels or counts something, optionally a link."
 
 <!-- Generated from spec/components/badge/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-badge>` · status `stable` · version `0.1.0`
+Use `<sb-badge>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Compare the four variants. Use the quieter variants for information that should sit behind the main content.
 
 <div class="live-demo">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -37,7 +39,7 @@ Tag `<sb-badge>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | focuses a link badge |
 | `Enter` | follows the link |

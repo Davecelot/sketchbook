@@ -5,9 +5,11 @@ description: "Sets the reading direction, left-to-right or right-to-left, for ev
 
 <!-- Generated from spec/components/direction/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-direction>` · status `stable` · version `0.1.0`
+Use `<sb-direction>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Read the tabs from right to left. One appears on the right because the surrounding direction is set to RTL.
 
 <div class="live-demo">
 <sb-direction dir="rtl">

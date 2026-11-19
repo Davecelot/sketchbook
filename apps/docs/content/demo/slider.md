@@ -5,9 +5,11 @@ description: "A slider for picking a number, or a range with two thumbs, built o
 
 <!-- Generated from spec/components/slider/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-slider>` · status `stable` · version `0.1.0`
+Use `<sb-slider>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Focus Volume and use the arrow keys to change its value. The example starts at 40.
 
 <div class="live-demo">
 <div style="max-width:320px">
@@ -47,7 +49,7 @@ Tag `<sb-slider>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | move between thumbs and out |
 | `ArrowRight / ArrowUp` | increase by step |

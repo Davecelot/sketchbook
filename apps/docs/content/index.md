@@ -1,31 +1,27 @@
 ---
 title: "Sketchbook"
-description: "Build a design system from files you own. A CLI regenerates every output and checks keep them in step."
+description: "Start with a working design system. Make the tokens, components, and decisions your own."
 order: 0
 layout: home
 ---
 
 <div class="hero-actions">
-<sb-button variant="tertiary" href="/start/quickstart/">Quickstart</sb-button>
-<sb-button variant="tertiary" href="/concepts/how-it-works/">How it works</sb-button>
+<sb-button variant="tertiary" href="/start/quickstart/">Start a design system</sb-button>
+<sb-button variant="tertiary" href="/concepts/how-it-works/">See how it works</sb-button>
 </div>
 
-Create a design system with the published CLI. [Quickstart](/start/quickstart/) · [`@usesketchbook/cli` on npm](https://www.npmjs.com/package/@usesketchbook/cli)
+Choose how much to start with, from foundations alone to a working component library. Your team owns the source files. The Sketchbook CLI rebuilds the outputs and checks that they match.
 
 ## What you get
 
-- **A spec you own.** Foundations in `brand.config.json`, semantic tokens and component contracts in `spec/`. Every output is rebuilt from them.
-- **Checks that can fail.** <!-- stat:checks --> deterministic checks, including one maintainer-only check, with tests that show them failing on broken fixtures. The commit hook runs the standard checks.
-- **A component library as one output.** <!-- stat:components --> components in [the demo](/demo/), a starting point you can edit or replace.
-- **A CLI for all of it.** [Commands and options](/cli/overview/), generated from the code.
-- **Agent guidance.** [Compatibility](/concepts/agent-compatibility/) explains the available instructions and client-specific hooks.
-- **Honest numbers.** [Status](/reference/status/) is computed from the repository; [Evidence](/reference/evidence/) lists every study, including what did not work.
+- **Sources your team can change.** Set a brand, name your token roles, and write down how components should behave. [See what you edit](/concepts/how-it-works/#what-you-edit).
+- **Checks you can run as you work.** Find a broken alias or stale output before it reaches the rest of the system. [See what the checks cover](/concepts/checks/).
+- **A library you can try.** Explore <!-- stat:components --> components in the [live demo](/demo/). Keep the parts that fit your product and change the rest.
+- **Project guidance for coding tools.** Choose an [agent profile](/concepts/agent-compatibility/) when you want your client to load Sketchbook’s instructions or use a supported edit guard.
 
 ## Where to go next
 
-- [Start a design system](/start/quickstart/): create a project, set your brand, run your first check.
-- [Bring your tokens](/guides/import-tokens/): import DTCG, Tokens Studio or CSS variables as a reviewed proposal.
-- [Evidence](/reference/evidence/): the studies, benchmarks and tests behind the system, including what did not work.
-- [Add it to an app](/guides/adopt-in-app/): add the harness in its own folder, with one script in your package.json.
-- [Troubleshooting](/guides/troubleshooting/): what a failing check or a silent Claude layer means.
-- [Reference](/reference/): config files, contract format, checks, rules, glossary.
+- [Use Sketchbook in an existing app](/guides/adopt-in-app/)
+- [Bring your own tokens](/guides/import-tokens/)
+- [Look up a CLI command](/cli/overview/)
+- [See what has been tested](/reference/evidence/)

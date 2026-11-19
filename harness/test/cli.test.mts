@@ -173,8 +173,8 @@ test('L10 interactive: prompts with current values, dry run first, applies only 
   assert.match(required.text, /Required\./);
   assert.deepEqual(required.calls, [['prefix', 'acme', '--dry-run']]);
   const choices = await menu([groupIndex('tokens'), 'b', 'q']);
-  assert.match(choices.text, /1 {2}tokens\n {6}Change foundations/);
-  assert.match(choices.text, /2 {2}presets\n {6}List the standards catalog/);
+  assert.match(choices.text, /1 {2}tokens\n {6}Set foundation values/);
+  assert.match(choices.text, /2 {2}presets\n {6}Browse foundation presets/);
   const bad = await menu(['9', 'x', 'b', 'q']);
   assert.match(bad.text, /Type 1-/);
   assert.deepEqual(bad.calls, []);
@@ -185,6 +185,7 @@ test('L10 interactive: prompts with current values, dry run first, applies only 
   assert.match(defaultCancel.text, /Not applied/);
   const apply = await menu([groupIndex('design'), commandIndex('sync'), 'tokens', '', '', 'y', 'q']);
   assert.deepEqual(apply.calls, [['sync', 'tokens', '--dry-run'], ['sync', 'tokens']]);
+  assert.match(apply.text, /Preview changes[\s\S]*sketchbook sync tokens --dry-run[\s\S]*Apply these changes\?\n {2}sketchbook sync tokens\n/);
   const guided = await menu([groupIndex('tokens'), commandIndex('tokens'), 'set', '', 'typography.family Inter', '', 'n', 'q']);
   assert.match(guided.text, /Arguments for set: <key> <value>/);
   assert.match(guided.text, /Example to type: typography\.family Inter/);
@@ -246,10 +247,10 @@ test('project commands identify the nearest ancestor project without executing f
       assert.equal(result.code, 1);
       const fix = must(must(result.json, 'JSON envelope').errors[0], 'an error').fix ?? '';
       assert.ok(fix.includes(project), fix);
-      assert.match(fix, /Change directory to the project root/);
+      assert.match(fix, /Change directory to .*Sketchbook resolves file paths from the project root/s);
     }
     const human = cli(nested, 'status');
-    assert.match(human.err, /Change directory to the project root/);
+    assert.match(human.err, /Change directory to .*Sketchbook resolves file paths from the project root/s);
     assert.ok(human.err.includes(project));
     assert.equal((await readFile(join(project, 'harness.config.json'), 'utf8')), '{}');
   } finally { await rm(parent, { recursive: true, force: true }); }
@@ -269,7 +270,7 @@ test('L13 generate rebuilds every generated output from the spec (what a project
 });
 
 
-test('terminal presentation abbreviates lists without changing pipes or JSON', async () => {
+test('terminal presentation shows concise help and respects pipes, NO_COLOR, and JSON', async () => {
   const dir = await reference();
   const run = async (args: string[], human: boolean) => {
     let out = ''; let err = '';
@@ -279,6 +280,21 @@ test('terminal presentation abbreviates lists without changing pipes or JSON', a
   const help = await run(['help'], true);
   assert.match(help.out, /SKETCHBOOK/);
   assert.match(help.out, /help --details/);
+  const short = await run(['help', 'init'], true);
+  assert.match(short.out, /Usage[\s\S]*sketchbook init[\s\S]*Try:/);
+  assert.doesNotMatch(short.out, /\nOptions:/);
+  const detailed = await run(['help', 'init', '--details'], true);
+  assert.match(detailed.out, /Options:[\s\S]*--adopt[\s\S]*Examples:/);
+  const saved = process.env.NO_COLOR;
+  try {
+    process.env.NO_COLOR = '';
+    const noColor = await run(['help', 'init'], true);
+    assert.match(noColor.out, /SKETCHBOOK/);
+    assert.equal(noColor.out.includes('\x1b['), false);
+  } finally {
+    if (saved === undefined) delete process.env.NO_COLOR;
+    else process.env.NO_COLOR = saved;
+  }
   const brief = await run(['list'], true);
   const full = await run(['list', '--details'], true);
   assert.match(brief.out, /more\. Use sketchbook list --details/);
@@ -292,4 +308,5 @@ test('terminal presentation abbreviates lists without changing pipes or JSON', a
   assert.equal(error.code, 1);
   assert.match(error.err, /Unknown command/);
   assert.match(error.err, /Next/);
+  await rm(dir, { recursive: true });
 });

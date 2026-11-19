@@ -5,9 +5,11 @@ description: "Navigation between pages of a long list: a landmark holding page l
 
 <!-- Generated from spec/components/pagination/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-pagination>` · status `stable` · version `0.1.0`
+Use `<sb-pagination>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Page 2 is the current page. The surrounding page numbers and arrows show how readers can move through the list.
 
 <div class="live-demo">
 <sb-pagination label="pagination">
@@ -93,7 +95,7 @@ A gap standing for skipped pages.
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | moves through the links in order |
 | `Enter` | follows the focused link |

@@ -5,9 +5,11 @@ description: "A trail of links showing where the current page sits in a hierarch
 
 <!-- Generated from spec/components/breadcrumb/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-breadcrumb>` · status `stable` · version `0.1.0`
+Use `<sb-breadcrumb>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Follow the path from Home to Reports. Reports is the current page and appears as text.
 
 <div class="live-demo">
 <sb-breadcrumb label="Breadcrumb">
@@ -59,7 +61,7 @@ Stands for collapsed steps. Announced with a label so the gap is not silent.
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | moves through the links in order |
 | `Enter` | follows the focused link |

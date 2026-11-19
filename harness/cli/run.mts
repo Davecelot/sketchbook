@@ -17,10 +17,10 @@ import type { ChecksSummary, Command, CommandResult, Envelope, EnvelopeIssue, Is
 const HARNESS = fileURLToPath(new URL('../', import.meta.url));
 
 export const GLOBAL_OPTIONS = {
-  json: { type: 'boolean', description: 'Print one JSON envelope instead of human output' },
-  'dry-run': { type: 'boolean', description: 'Show what would change without writing (mutating commands that support it)' },
+  json: { type: 'boolean', description: 'Print a structured JSON result' },
+  'dry-run': { type: 'boolean', description: 'Preview file changes on supported commands' },
   help: { type: 'boolean', description: 'Show help for the command' },
-  details: { type: 'boolean', description: 'Show the full human-readable output' },
+  details: { type: 'boolean', description: 'Show the full terminal output' },
 } as const;
 
 const asError = (e: IssueLike): EnvelopeIssue => ({ file: e.file ?? null, msg: e.msg ?? show(e), fix: e.fix ?? null, ...(e.token ? { token: e.token } : {}), ...(e.id ? { check: e.id } : {}) });
@@ -65,7 +65,7 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
     const exitCode = r.exitCode ?? (errors.length ? 1 : 0);
     const envelope: Envelope = { ok: exitCode !== 1, command: cmdName, changed: r.changed ?? [], warnings: (r.warnings ?? []).map((w) => (typeof w === 'string' ? w : asError(w))), errors, next: r.next ?? null, ...(r.data !== undefined ? { data: r.data } : {}) };
     if (json) stdout(JSON.stringify(envelope, null, 2) + '\n');
-    else for (const e of errors) stderr(ui.enabled ? errorUi.error(e.msg, e.fix) : `${e.msg}${e.fix ? `\n  fix: ${e.fix}` : ''}\n`);
+    else for (const e of errors) stderr(ui.enabled ? errorUi.error(e.msg, e.fix, e.file) : `${e.msg}${e.fix ? `\n  fix: ${e.fix}` : ''}\n`);
     return exitCode;
   };
   const fail = (cmdName: string, msg: string, fix: string, file: string | null = null) => finish(cmdName, { errors: [{ file, msg, fix }], exitCode: 1 });
@@ -90,7 +90,7 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
   if (cmd.project !== false && !existsSync(join(root, 'harness.config.json'))) {
     const ancestor = ancestorProject(root);
     return fail(name, `Not a Sketchbook project (no harness.config.json in ${root}).`, ancestor
-      ? `Change directory to the project root ${ancestor} and retry; file paths are interpreted from that root.`
+      ? `Change directory to ${ancestor} and run the command again. Sketchbook resolves file paths from the project root.`
       : 'sketchbook init (in an empty folder, or --dir <new folder>) creates one; or cd into your design-system folder.');
   }
   if (values['dry-run'] && !cmd.dryRun) return fail(name, `${name} does not support --dry-run.`, `Run sketchbook help ${name}.`);

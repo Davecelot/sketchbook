@@ -125,7 +125,7 @@ const gallery = html`<main class="form-states">
 
 const meta: Meta = {
   title: 'Patterns/Form States',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Compare default, disabled, invalid, and read-only controls to check tokens, focus, and right-to-left layout.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => gallery,
 };
 export default meta;

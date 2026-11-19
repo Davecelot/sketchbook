@@ -1,10 +1,10 @@
 ---
 title: "Contract format"
-description: "Fields of a component contract, an abridged example, and the lifecycle statuses."
+description: "Look up the fields, names, and lifecycle statuses a component contract accepts."
 order: 20
 ---
 
-A contract is `spec/components/<name>/contract.json`, validated against `spec/schemas/contract.schema.json` (check C1). Check C3 compares the code to it.
+Start with `spec/components/<name>/contract.json` when you want to see what a component declares. Check C1 validates it against `spec/schemas/contract.schema.json`, and C3 compares the code with the contract.
 
 ## Top-level fields
 

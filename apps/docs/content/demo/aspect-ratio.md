@@ -5,9 +5,11 @@ description: "A box that keeps a fixed width-to-height ratio for the media or co
 
 <!-- Generated from spec/components/aspect-ratio/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-aspect-ratio>` · status `stable` · version `0.1.0`
+Use `<sb-aspect-ratio>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The frame keeps the image at 16:9. In the HTML, the ratio belongs to the frame and the image fills it.
 
 <div class="live-demo">
 <div style="width:20rem">

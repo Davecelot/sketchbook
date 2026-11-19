@@ -1,6 +1,6 @@
 # Form states
 
-Every form control in its default, disabled, invalid and read-only states on one page, also in right to left.
+Compare default, disabled, invalid, and read-only controls to check tokens, focus, and right-to-left layout.
 
 ## When to use
 To review a brand or token change: focus rings, border widths, contrast and spacing for all controls at once. It is a review page, not a product screen.

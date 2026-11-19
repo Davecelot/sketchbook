@@ -39,7 +39,7 @@ export const Page: StoryObj = {
       id: 'spacing',
       configHint: 'spacing',
       intro: html`<p>
-        Spacing is one scale of steps built on a base unit. Every gap, padding and margin in a component comes from it, which keeps layouts on a
+        Compare the raw steps with the gaps and insets you use in a layout. Spacing is one scale of steps built on a base unit. Every gap, padding and margin in a component comes from it, which keeps layouts on a
         shared rhythm. Foundation step names are multiples of the base unit (step 4 is four units); semantic tokens name the job instead: control
         padding, stack gaps, insets.
       </p>`,

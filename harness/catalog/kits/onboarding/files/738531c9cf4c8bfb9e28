@@ -1,6 +1,6 @@
 {
   "name": "Onboarding",
-  "summary": "First-run screens: a setup step with progress and choices, an empty workspace with next steps, and a setting-up wait state.",
+  "summary": "Guide someone through their first setup, then show what to do in an empty workspace.",
   "components": [
     "sb-button",
     "sb-card",

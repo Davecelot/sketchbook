@@ -5,9 +5,11 @@ description: "A placeholder for a view with nothing to show yet: optional media,
 
 <!-- Generated from spec/components/empty/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-empty>` · status `stable` · version `0.1.0`
+Use `<sb-empty>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The empty state names what’s missing and gives the reader two ways to begin, by creating a report or importing one.
 
 <div class="live-demo">
 <sb-empty>
@@ -16,7 +18,7 @@ Tag `<sb-empty>` · status `stable` · version `0.1.0`
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10.5 8 13l2 2.5" /><path d="m14 10.5 2 2.5-2 2.5" /><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z" /></svg>
     </sb-empty-media>
     <sb-empty-title>No reports yet</sb-empty-title>
-    <sb-empty-description>Reports you create will be listed here. Create the first one to begin.</sb-empty-description>
+    <sb-empty-description>Create a report or import one to see it here.</sb-empty-description>
   </sb-empty-header>
   <sb-empty-content>
     <sb-button>Create report</sb-button>
@@ -32,7 +34,7 @@ Tag `<sb-empty>` · status `stable` · version `0.1.0`
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10.5 8 13l2 2.5" /><path d="m14 10.5 2 2.5-2 2.5" /><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z" /></svg>
     </sb-empty-media>
     <sb-empty-title>No reports yet</sb-empty-title>
-    <sb-empty-description>Reports you create will be listed here. Create the first one to begin.</sb-empty-description>
+    <sb-empty-description>Create a report or import one to see it here.</sb-empty-description>
   </sb-empty-header>
   <sb-empty-content>
     <sb-button>Create report</sb-button>

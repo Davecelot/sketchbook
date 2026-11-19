@@ -5,25 +5,27 @@ description: "Styled text for headings, paragraphs, quotes, lists and inline emp
 
 <!-- Generated from spec/components/typography/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-typography>` · status `stable` · version `0.1.0`
+Use `<sb-typography>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Compare the heading, lead, body, and supporting note in one short passage.
 
 <div class="live-demo">
 <div style="max-width:32rem">
   <sb-typography kind="h2">Before you start</sb-typography>
-  <sb-typography kind="lead">One sentence that introduces what follows.</sb-typography>
-  <sb-typography kind="p">A short paragraph of body copy shows the line height and the measure of running text.</sb-typography>
-  <sb-typography kind="muted">Shown only to you.</sb-typography>
+  <sb-typography kind="lead">Give your team a project they can make their own.</sb-typography>
+  <sb-typography kind="p">Start with a project name. You can add your team and choose the components you want to share after setup.</sb-typography>
+  <sb-typography kind="muted">You can change the name any time.</sb-typography>
 </div>
 </div>
 
 ```html
 <div style="max-width:32rem">
   <sb-typography kind="h2">Before you start</sb-typography>
-  <sb-typography kind="lead">One sentence that introduces what follows.</sb-typography>
-  <sb-typography kind="p">A short paragraph of body copy shows the line height and the measure of running text.</sb-typography>
-  <sb-typography kind="muted">Shown only to you.</sb-typography>
+  <sb-typography kind="lead">Give your team a project they can make their own.</sb-typography>
+  <sb-typography kind="p">Start with a project name. You can add your team and choose the components you want to share after setup.</sb-typography>
+  <sb-typography kind="muted">You can change the name any time.</sb-typography>
 </div>
 ```
 

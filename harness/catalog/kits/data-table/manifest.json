@@ -1,7 +1,7 @@
 {
   "id": "data-table",
   "title": "Data table",
-  "summary": "A list page: title and main action, search with a slash shortcut, a status filter, a selectable table, pagination, and loading and empty states.",
+  "summary": "Help people find orders, narrow the list by status, and select the rows they want to act on.",
   "path": "src/patterns/data-table",
   "components": [
     "avatar",
@@ -38,11 +38,11 @@
     },
     {
       "path": "src/patterns/data-table/DataTable.stories.ts",
-      "hash": "36bac8f8e53119768b2e"
+      "hash": "aaf2d576ed0b53013ac3"
     },
     {
       "path": "src/patterns/data-table/README.md",
-      "hash": "1786ba4d3e0dba1d6a1f"
+      "hash": "ac8792b3aa3a43002c5e"
     },
     {
       "path": "src/patterns/data-table/data-table.css",
@@ -50,7 +50,7 @@
     },
     {
       "path": "src/patterns/data-table/pattern.json",
-      "hash": "b5d5d7f18347734138e0"
+      "hash": "35c832acd45c642705b1"
     }
   ]
 }

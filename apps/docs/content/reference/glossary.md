@@ -1,6 +1,6 @@
 ---
 title: "Glossary"
-description: "The terms Sketchbook uses, in one sentence each, with the page that explains them."
+description: "Look up a Sketchbook term and find where to use it."
 order: 60
 ---
 

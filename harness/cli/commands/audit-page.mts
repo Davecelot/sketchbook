@@ -7,7 +7,7 @@ import type { Command } from '../types.mjs';
 export default {
   name: 'audit-page',
   group: 'quality',
-  summary: 'Check a complete HTML page using this design system for a level-one heading and main landmark. This static check is not a full accessibility audit.',
+  summary: 'Check a page for a level-one heading and a main landmark. This checks page structure only.',
   args: [{ name: 'file', required: true, description: 'HTML file to check, relative to the current project' }],
   options: {},
   examples: ['sketchbook audit-page preview.html', 'sketchbook audit-page preview.html --json'],

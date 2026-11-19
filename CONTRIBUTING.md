@@ -1,5 +1,7 @@
 # Contributing to Sketchbook
 
+Start with the repository map to find the source you need. Before sharing a change, run the checks for the outputs it affects. Use the [content guidelines](./docs/content-guidelines.md) when writing copy that readers will see.
+
 Use Node.js 26.13.1 LTS and npm 12.2.3 for development and builds. If you use an older LTS line, use Node.js 24.22.3 or 22.23.5, or a newer security patch on that line. [Node.js security releases](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases)
 
 After selecting Node.js with your version manager, run `npm install --global npm@12.2.3`. Check `node -v` and `npm -v`, then run `npm ci` from the repository root.

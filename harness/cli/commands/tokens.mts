@@ -49,8 +49,6 @@ const watchOutOf = (diff: CssDiff, imp: { components: string[] }) => {
 // stage with the token checks, apply only when they pass, and propose an SB record only when a file changed.
 async function mutate<D extends object>(ctx: TokensContext, plan: MutatePlan<D>, next?: string): Promise<CommandResult> {
   const { root, dryRun, out, json, options } = ctx;
-  for (const s of plan.summary) out(s);
-  for (const w of plan.warnings) out(`warning: ${w}`);
   const stale = await staleLinks(root);
   if (stale.length && !options.yes) {
     return {
@@ -61,6 +59,9 @@ async function mutate<D extends object>(ctx: TokensContext, plan: MutatePlan<D>,
   }
   if (stale.length) out(`--yes: the brand links overwrite ${stale.length} hand-edited value(s): ${stale.join('; ')}`);
   const r = await runPlan(root, plan, { dryRun, check: (dir) => runChecks(dir, { only: TOKEN_CHECKS }) });
+  out(r.failed ? 'Token change stopped before writing files.' : dryRun ? `Preview: ${r.changed.length} files would change.` : r.changed.length ? `Updated ${r.changed.length} files.` : 'Your token files already match this change.');
+  for (const s of plan.summary) out(s);
+  for (const w of plan.warnings) out(`Warning: ${w}`);
   out(formatDiff(r.diff).join('\n'));
   const imp = r.failed ? { semantic: [], components: [] } : await impactOfDiff(root, r.diff);
   if (imp.semantic.length) out(`Impact: ${imp.semantic.length} semantic token(s) change value (${imp.semantic.slice(0, 8).join(', ')}${imp.semantic.length > 8 ? ', …' : ''}); components: ${imp.components.join(', ') || 'none'}.`);
@@ -81,15 +82,15 @@ async function mutate<D extends object>(ctx: TokensContext, plan: MutatePlan<D>,
     return { changed: [], warnings, errors: r.errors, exitCode: 1, data: { ...data, dryRun, applied: false, wouldChange: r.changed }, next: 'Fix the change (each error names its fix), then run it again.' };
   }
   if (dryRun) {
-    out(`(dry run: nothing written; ${r.changed.length} file(s) would change)`);
     return { changed: r.changed, warnings, data: { ...data, dryRun: true }, next: 'Run the same command without --dry-run to apply it.' };
   }
-  if (!r.changed.length) out('Nothing changed: the files already say this.');
   let decision = null;
   if (plan.decision && !options['no-record'] && r.changed.length) {
     decision = await proposeDecision(root, { section: 'Theme', title: plan.decision.title, context: 'PROPOSAL: what prompted the change (roast finding, brand, product need).', decision: plan.decision.decision, why: 'PROPOSAL: the trade-off accepted, with the standard\'s source link.', watchOut: watchOutOf(r.diff, imp) });
     out(`Proposed decision ${decision} in ${DECISIONS} (fill the PROPOSAL parts; set accepted when agreed).`);
   }
+  const followUp = next ?? 'Review the change in Storybook under Foundations.';
+  if (r.changed.length) out(`Next: ${followUp}`);
   return {
     changed: [...r.changed, ...(decision ? [DECISIONS] : [])], warnings, errors: [], exitCode: 0,
     data: { ...data, decision },
@@ -295,7 +296,7 @@ export const findSub = (name: string | undefined): TokensSubcommand | undefined 
 export default {
   name: 'tokens',
   group: 'tokens',
-  summary: 'Change foundations and semantic tokens through the harness: set, preset, presets, diff, impact, add, remove, rename, import, scratch, overrides.',
+  summary: 'Set foundation values, manage semantic tokens, or trace the impact of a change.',
   args: [
     { name: 'subcommand', required: true, description: SUBCOMMANDS.map((s) => s.name).join(' | ') },
     { name: 'args', required: false, variadic: true, description: 'The subcommand\'s arguments (see below)' },

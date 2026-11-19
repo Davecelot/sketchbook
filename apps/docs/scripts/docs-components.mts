@@ -51,8 +51,13 @@ function liveExample(contract: ComponentContract) {
 
 async function example(name: string, contract: ComponentContract) {
   try {
-    const html = (await readFile(`apps/docs/content/_examples/${name}.html`, 'utf8')).trim().replace(/\n\s*\n/g, '\n');
-    return ['<div class="live-demo">', html, '</div>', '', '```html', html, '```'].join('\n');
+    const source = (await readFile(`apps/docs/content/_examples/${name}.html`, 'utf8')).trim();
+    const note = source.match(/^<!-- Demo: (.+) -->\n/);
+    const html = source.slice(note?.[0].length ?? 0).trim().replace(/\n\s*\n/g, '\n');
+    return [
+      ...(note?.[1] ? [note[1], ''] : []),
+      '<div class="live-demo">', html, '</div>', '', '```html', html, '```'
+    ].join('\n');
   } catch {
     return ['<div class="live-demo">', liveExample(contract), '</div>'].join('\n');
   }
@@ -92,7 +97,7 @@ function page(contract: ComponentContract, exampleBlock: string, name: string) {
     '',
     `<!-- Generated from spec/components/${name}/contract.json by npm run docs:components. Do not edit by hand. -->`,
     '',
-    `Tag ${code(`<${contract.tag}>`)} · status ${code(contract.status)} · version ${code(contract.version)}`,
+    `Use ${code(`<${contract.tag}>`)} in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) ${code(contract.status)} · Version ${code(contract.version)}`,
     '',
     '## Example',
     '',
@@ -105,7 +110,7 @@ function page(contract: ComponentContract, exampleBlock: string, name: string) {
     ...(events.length ? ['## Events', '', table(['Name', 'Notes'], events), ''] : []),
     ...(subElements(contract).length ? ['## Parts', '', ...subElements(contract)] : []),
     ...(Object.keys(a11y.keyboard ?? {}).length
-      ? ['## Keyboard', '', table(['Key', 'Does'], Object.entries(a11y.keyboard ?? {}).map(([key, does]) => [code(key), does])), '']
+      ? ['## Keyboard', '', table(['Key', 'Action'], Object.entries(a11y.keyboard ?? {}).map(([key, does]) => [code(key), does])), '']
       : []),
     '## Accessibility',
     '',

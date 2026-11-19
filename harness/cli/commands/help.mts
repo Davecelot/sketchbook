@@ -11,7 +11,7 @@ const describe = (c: Command) => ({ name: c.name, group: c.group, summary: c.sum
 export default {
   name: 'help',
   group: 'meta',
-  summary: 'List commands, or show one command\'s arguments, options and examples.',
+  summary: 'Find a command or look up its usage, options, and examples.',
   args: [{ name: 'command', required: false, description: 'A command name' }],
   options: {},
   examples: ['sketchbook help', 'sketchbook help init'],
@@ -25,11 +25,11 @@ export default {
       const c = find(args[0]);
       if (!c) throw Object.assign(new Error(`Unknown command "${args[0]}".`), { fix: 'Run sketchbook help to list commands.' });
       if (human && !details) {
-        out(`${ui.section(c.name)}  ${c.mutates ? 'Changes files' : 'Read-only'}\n\n${c.summary}`);
+        out(`${c.summary}\n\n${ui.section('Usage')}\n  ${usage(c)}\n  ${c.mutates ? 'Changes files' : 'Read-only'}`);
         if (c.args.length) { out('\nArguments:'); for (const a of c.args) out(`  ${a.name}  ${a.description}${a.required ? '' : ' (optional)'}`); }
         if (c.subcommands) out(`\nSubcommands:  ${subcommandsOf(c).map((sc) => sc.name).join('  ·  ')}`);
         if (c.examples.length) out(`\nTry:  ${c.examples[0]}`);
-        out(`\n${ui.dim('Explore')}  sketchbook help ${c.name} --details\nDocumentation  ${DOCS_URL}`);
+        out(`\nMore options  sketchbook help ${c.name} --details\nDocumentation  ${DOCS_URL}`);
         return { data: { command: describe(c) } };
       }
       out(`${usage(c)}\n\n${c.summary}${c.mutates ? ' Changes files.' : ' Read-only.'}`);
@@ -42,12 +42,12 @@ export default {
       return { data: { command: describe(c) } };
     }
     if (human && !details) {
-      out('Your design system, from the terminal.\n');
+      out('Choose a command for the work you want to do.\n\nUsage  sketchbook <command> [arguments]\nTry    sketchbook status\n');
       for (const [g, label] of Object.entries(GROUPS)) {
         const list = commands().filter((c) => c.group === g);
         if (list.length) out(`${ui.section(label)}\n  ${list.map((c) => c.name).join('  ·  ')}\n`);
       }
-      out(`${ui.dim('Explore')}  sketchbook help <command>  ·  sketchbook help --details\nDocumentation  ${DOCS_URL}`);
+      out(`More help  sketchbook help <command>  ·  sketchbook help --details\nDocumentation  ${DOCS_URL}`);
       return { data: { commands: commands().map(describe) } };
     }
     out('sketchbook <command> [arguments] [--json] [--dry-run]\n');

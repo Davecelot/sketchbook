@@ -1,6 +1,6 @@
 # Sign in
 
-A centered card for signing in or creating an account. States: default, with error, loading, sign up.
+Help people sign in or create an account, with password visibility, single sign-on, and a place to explain errors.
 
 ## When to use
 The first screen of an app that asks for an email and a password. Use the Sign up story when the same page also creates accounts. Not for multi-step identity checks: chain the onboarding kit after it instead.

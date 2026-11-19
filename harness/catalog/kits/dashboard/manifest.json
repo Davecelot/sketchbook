@@ -1,7 +1,7 @@
 {
   "id": "dashboard",
   "title": "Dashboard",
-  "summary": "An overview page: a top bar, a page title with an action, view tabs, stat cards, a goal, a chart, recent activity and recent orders.",
+  "summary": "Give your team one place to check progress, review recent activity, and act on orders.",
   "path": "src/patterns/dashboard",
   "components": [
     "aspect-ratio",
@@ -34,11 +34,11 @@
     },
     {
       "path": "src/patterns/dashboard/Dashboard.stories.ts",
-      "hash": "11a5797c4c9189b59fbe"
+      "hash": "2239c4e4f1d873b03305"
     },
     {
       "path": "src/patterns/dashboard/README.md",
-      "hash": "864acc7ce20f541cf67c"
+      "hash": "567a658f80560e3945c6"
     },
     {
       "path": "src/patterns/dashboard/dashboard.css",
@@ -46,7 +46,7 @@
     },
     {
       "path": "src/patterns/dashboard/pattern.json",
-      "hash": "63cde4f28d1c141c401d"
+      "hash": "09d34e607ea6836480d1"
     }
   ]
 }

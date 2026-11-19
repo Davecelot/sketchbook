@@ -5,9 +5,11 @@ description: "A thin line that separates content, horizontal or vertical, decora
 
 <!-- Generated from spec/components/separator/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-separator>` · status `stable` · version `0.1.0`
+Use `<sb-separator>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The divider separates the account overview from notification settings.
 
 <div class="live-demo">
 <div style="max-width:20rem">

@@ -5,9 +5,11 @@ description: "The control people press to do one thing now: run an action, submi
 
 <!-- Generated from spec/components/button/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-button>` · status `stable` · version `0.1.0`
+Use `<sb-button>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Compare how the variants draw attention. Save changes is the primary action, while Delete uses the destructive variant to signal its consequence.
 
 <div class="live-demo">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -53,7 +55,7 @@ Tag `<sb-button>` · status `stable` · version `0.1.0`
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Enter` | activate |
 | `Space` | activate |

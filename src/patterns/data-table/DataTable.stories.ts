@@ -128,7 +128,7 @@ const page = (body: unknown) => html`<main class="data-table" @keydown=${slash}>
 
 const meta: Meta = {
   title: 'Patterns/Data Table',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Help people find orders, narrow the list by status, and select the rows they want to act on.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => page(html`<p role="status" class="data-table__hint">${shown(customers.length)}</p>${table(false)}${pages}`),
 };
 export default meta;

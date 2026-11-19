@@ -1,6 +1,6 @@
 {
   "name": "Sign in",
-  "summary": "Sign-in and sign-up pages: a centered card with email, a password that can be revealed, a remember-me choice, single sign-on and a form-level error.",
+  "summary": "Help people sign in or create an account, with password visibility, single sign-on, and a place to explain errors.",
   "components": [
     "sb-alert",
     "sb-alert-description",

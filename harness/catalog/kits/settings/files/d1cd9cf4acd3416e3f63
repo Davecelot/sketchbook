@@ -1,6 +1,6 @@
 {
   "name": "Settings",
-  "summary": "A preferences page split into tabs, each a card-wrapped form with selects, radios, switches, a slider and a save bar.",
+  "summary": "Group preferences by topic so people can find, change, and save them.",
   "components": [
     "sb-alert",
     "sb-alert-description",

@@ -1,6 +1,6 @@
 # Settings
 
-Preferences split into tabs; each tab is one form in a card with a save bar. States: default, notifications, saved.
+Group preferences by topic so people can find, change, and save them.
 
 ## When to use
 Account or workspace preferences with a few groups of options that are saved together per group. For a single long form, drop the tabs and stack the cards.

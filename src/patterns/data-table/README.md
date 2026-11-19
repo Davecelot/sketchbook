@@ -1,6 +1,6 @@
 # Data table
 
-A list page: title and main action, search, a status filter, a selectable table, pagination, and loading and empty states.
+Help people find orders, narrow the list by status, and select the rows they want to act on.
 
 ## When to use
 Any collection people search, filter and act on in bulk: customers, orders, files. For a handful of items use the Item list from the profile kit instead.

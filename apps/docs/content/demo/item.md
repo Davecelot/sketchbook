@@ -5,9 +5,11 @@ description: "A flexible row for a piece of content with optional media, title, 
 
 <!-- Generated from spec/components/item/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-item>` · status `stable` · version `0.1.0`
+Use `<sb-item>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+The Quarterly plan row groups its icon, title, last edit, and Open action so you can scan them together.
 
 <div class="live-demo">
 <sb-item style="width:420px">
@@ -55,7 +57,7 @@ Leading visual: an icon in a bordered tile, an image, or anything else.
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | focuses an item with href |
 | `Enter` | follows the link |

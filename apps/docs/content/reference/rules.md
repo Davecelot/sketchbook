@@ -1,10 +1,10 @@
 ---
 title: "Rules"
-description: "The rule files in .claude/rules/, what each enforces and whether enforcement is automatic."
+description: "See which Claude Code rules apply to a task and how their requirements are checked."
 order: 40
 ---
 
-Rules are short files in `.claude/rules/` that Claude follows. `spec-is-source`, `tokens-through-the-harness`, `comment-minimalism` and `no-ai-attribution` are always in context; the others carry `paths:` and load when Claude reads a matching file (components and their specs and stories, contracts, the form-control mixins, the Figma adapter and design docs), so a session that never touches them does not pay for them (SB-0114). They are harness-owned, so `sketchbook upgrade` replaces them.
+Find the project’s rules in `.claude/rules/`. Four load for every session: `spec-is-source`, `tokens-through-the-harness`, `comment-minimalism`, and `no-ai-attribution`. Rules with `paths:` load when Claude reads a matching file. Use the entries below to see which checks or hooks cover each rule.
 
 ## spec-is-source
 

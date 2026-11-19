@@ -1,10 +1,10 @@
 ---
 title: "Add a component"
-description: "Install a component from the catalog, or start a new one from a contract."
+description: "Install a catalog component as shipped or start your own with a contract."
 order: 30
 ---
 
-Use the catalog for a component as shipped. Design a new one when it is not in the catalog or you want to redo it: run `sketchbook add "<Name>" --blank`, then write its contract (see [Contracts](/concepts/contracts/)).
+Start with the catalog if it has what you need. To design a new component or replace the catalog design, run `sketchbook add "<Name>" --blank`, then [write its contract](/concepts/contracts/).
 
 ## Install from the catalog
 

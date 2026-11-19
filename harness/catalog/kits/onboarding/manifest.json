@@ -1,7 +1,7 @@
 {
   "id": "onboarding",
   "title": "Onboarding",
-  "summary": "First-run screens: a setup step with progress and choices, an empty workspace with next steps, and a setting-up wait state.",
+  "summary": "Guide someone through their first setup, then show what to do in an empty workspace.",
   "path": "src/patterns/onboarding",
   "components": [
     "button",
@@ -35,11 +35,11 @@
     },
     {
       "path": "src/patterns/onboarding/Onboarding.stories.ts",
-      "hash": "ce466020247ecf1ff5fe"
+      "hash": "b72445926f9763db6c4f"
     },
     {
       "path": "src/patterns/onboarding/README.md",
-      "hash": "322cf4dfc2ee0a035d85"
+      "hash": "c969943667ca18e8b0d3"
     },
     {
       "path": "src/patterns/onboarding/onboarding.css",
@@ -47,7 +47,7 @@
     },
     {
       "path": "src/patterns/onboarding/pattern.json",
-      "hash": "e669d75a65f4d15d8289"
+      "hash": "738531c9cf4c8bfb9e28"
     }
   ]
 }

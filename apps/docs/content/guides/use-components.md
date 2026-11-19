@@ -1,10 +1,10 @@
 ---
 title: "Use the components"
-description: "Load the tokens and the elements in a page, switch theme, and rename the prefix."
+description: "Put a component on a page, load its tokens, and use it with your app’s theme."
 order: 50
 ---
 
-The default components are native Web Components, so they work in plain HTML and in any framework. This page is for the app that uses them; to change what they look like, change [the foundations](/guides/foundations/).
+Use the library’s Web Components in plain HTML or alongside your framework. Start by loading the elements and their styles. To make them fit your brand, [change the foundations](/guides/foundations/).
 
 ## Add them to a page
 

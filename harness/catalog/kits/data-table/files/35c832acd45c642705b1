@@ -1,6 +1,6 @@
 {
   "name": "Data table",
-  "summary": "A list page: title and main action, search with a slash shortcut, a status filter, a selectable table, pagination, and loading and empty states.",
+  "summary": "Help people find orders, narrow the list by status, and select the rows they want to act on.",
   "components": [
     "sb-avatar",
     "sb-avatar-fallback",

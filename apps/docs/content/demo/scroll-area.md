@@ -5,9 +5,11 @@ description: "A region that scrolls its content natively, with themed thin scrol
 
 <!-- Generated from spec/components/scroll-area/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-scroll-area>` · status `stable` · version `0.1.0`
+Use `<sb-scroll-area>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Scroll through the list. The area keeps its height while the notes move inside it.
 
 <div class="live-demo">
 <sb-scroll-area label="Release notes" style="display:block;height:200px;width:240px">
@@ -57,7 +59,7 @@ Declares which axis the scroll area scrolls on. The scrollbar itself is native; 
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | focus the viewport while it can scroll |
 | `ArrowUp` | scroll up (native) |

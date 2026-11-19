@@ -1,6 +1,6 @@
 # Agent compatibility map
 
-Sketchbook's CLI, configuration, contracts, generators, Git hooks and deterministic checks run without an AI provider. The model used by an agent is separate from the agent application's instruction and tool interfaces; changing model names alone cannot port integrations. This map records integration targets, not a claim of feature parity or an exhaustive list of models.
+Use this map to check how your coding tool finds project guidance, which edit hooks it can run, and what has been verified. The CLI, contracts, generators, Git hooks, and checks run without an AI provider. Compatibility depends on the client’s tools and instruction interfaces as well as the model you choose.
 
 ## Install a profile
 

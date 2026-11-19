@@ -5,9 +5,11 @@ description: "Sections behind headings: people open only the parts they need, wh
 
 <!-- Generated from spec/components/accordion/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-accordion>` · status `stable` · version `0.1.0`
+Use `<sb-accordion>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Open Shipping, then Returns. The second section takes the place of the first because this accordion allows one open section at a time.
 
 <div class="live-demo">
 <sb-accordion selection="single" collapsible style="display:block;width:450px">
@@ -17,7 +19,7 @@ Tag `<sb-accordion>` · status `stable` · version `0.1.0`
   </sb-accordion-item>
   <sb-accordion-item value="item-2">
     <sb-accordion-trigger>Returns</sb-accordion-trigger>
-    <sb-accordion-content>Returns are accepted for a month.</sb-accordion-content>
+    <sb-accordion-content>You can return your order within 30 days.</sb-accordion-content>
   </sb-accordion-item>
   <sb-accordion-item value="item-3">
     <sb-accordion-trigger>Warranty</sb-accordion-trigger>
@@ -34,7 +36,7 @@ Tag `<sb-accordion>` · status `stable` · version `0.1.0`
   </sb-accordion-item>
   <sb-accordion-item value="item-2">
     <sb-accordion-trigger>Returns</sb-accordion-trigger>
-    <sb-accordion-content>Returns are accepted for a month.</sb-accordion-content>
+    <sb-accordion-content>You can return your order within 30 days.</sb-accordion-content>
   </sb-accordion-item>
   <sb-accordion-item value="item-3">
     <sb-accordion-trigger>Warranty</sb-accordion-trigger>
@@ -83,7 +85,7 @@ The heading and button that toggles its item, with a chevron.
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Enter` | toggle the focused item |
 | `Space` | toggle the focused item |

@@ -1,10 +1,10 @@
 ---
 title: "Accessibility"
-description: "The WCAG 2.2 AA bar, and the checks and tests that hold every component to it."
+description: "See how to check a component’s accessibility from contract through review."
 order: 45
 ---
 
-Every component is designed to WCAG 2.2 AA, and part of that is checked automatically. Accessibility is a non-negotiable of the process: a contract that omits it does not pass the checks, and a component cannot reach `stable` without an accessibility audit. Separator is the first to complete it and is `stable`; the others are `beta` (see [Evidence](/reference/evidence/)).
+Start with the component contract. It records the keyboard behavior, names, and states the component needs to meet Sketchbook’s WCAG 2.2 AA target. Automated checks cover part of that work, and reaching `stable` requires a signed accessibility audit. See [Status](/reference/status/) for current audit and lifecycle counts.
 
 ## The bar
 

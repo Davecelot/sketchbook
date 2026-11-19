@@ -1,7 +1,7 @@
 {
   "id": "from-codebase",
   "title": "From a codebase",
-  "for": "Teams with a product: audit its CSS and propose foundations from the values it repeats; the library and kits stay as they are.",
+  "for": "Audit your product CSS and review proposed foundations. The library and kits are included.",
   "foundations": null,
   "components": "all",
   "kits": "all",

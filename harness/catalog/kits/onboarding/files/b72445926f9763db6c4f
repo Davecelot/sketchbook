@@ -105,7 +105,7 @@ const settingUp = html`<main class="onboarding">
 
 const meta: Meta = {
   title: 'Patterns/Onboarding',
-  parameters: { layout: 'fullscreen', controls: { disable: true } },
+  parameters: { docs: { description: { component: 'Guide someone through their first setup, then show what to do in an empty workspace.' } }, layout: 'fullscreen', controls: { disable: true } },
   render: () => step,
 };
 export default meta;

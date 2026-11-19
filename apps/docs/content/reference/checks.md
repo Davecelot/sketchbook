@@ -1,10 +1,10 @@
 ---
 title: "Check list"
-description: "Every check Sketchbook runs, grouped by area."
+description: "Look up a check by ID and see what it verifies."
 order: 30
 ---
 
-Run them with `sketchbook check`; `--only <ids>` takes a comma-separated list. Maintainers of the system itself add `--maintainer`, which also requires the Storybook and docs site builds to be current (O1) and checks the documentation of every shipped component (the pre-push hook runs it). Exit codes: 0 pass, 1 at least one check failed, 2 pass with flagged overrides. Warnings never change the exit code.
+Run `sketchbook check` for the project checks or use `--only <ids>` with a comma-separated list to focus on specific IDs. Use `--maintainer` in the Sketchbook source repository to include the checks for shipped component documentation and current site and Storybook builds. [Read the exit codes](/concepts/checks/#run-the-checks).
 
 ## Tokens
 

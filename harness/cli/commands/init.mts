@@ -32,7 +32,7 @@ const densityOf = (density: BrandConfig['density']) => (density && typeof densit
 export default {
   name: 'init',
   group: 'project',
-  summary: 'In a new or empty folder: install the core harness and any selected agent integrations. In a project: add or repair integrations (--agent), pick a starting point (--start), or set the brand.',
+  summary: 'Set up a design system from a starter, or update the setup in an existing project. Choose --agent to add guidance for your coding tools.',
   args: [],
   options,
   examples: ['sketchbook init', 'sketchbook init --agent claude', 'sketchbook init --agent codex,trae --dry-run', 'sketchbook init --dir design-system --start library', 'sketchbook init --start library', 'sketchbook init --with forge', 'sketchbook init --start blank --yes', 'sketchbook init --start pick --components card,button', 'sketchbook init --start from-codebase --from "../app/**/*.css"', 'sketchbook init --primary "#2563EB" --font Inter --radius round', 'sketchbook init --density compact --dry-run'],
@@ -51,13 +51,13 @@ export default {
       for (const l of r.lines ?? []) out(l);
       if (r.exitCode === 1) return r;
       // Past the exitCode 1 return, data is the install summary; `in` only narrows the inferred union.
-      if (!dryRun && 'target' in r.data) { out(`\nSketchbook installed in ${r.data.target}. What it installed (docs/harness.md has the full list):`); for (const l of installedSummary(r.data.installed)) out(l); }
+      if (!dryRun && 'target' in r.data) { out(`\nCreated your design system in ${r.data.target}. See docs/harness.md in that folder for the installation details.`); for (const l of installedSummary(r.data.installed)) out(l); }
       for (const w of r.warnings ?? []) out(`warning: ${w.msg}${w.fix ? `\n  fix: ${w.fix}` : ''}`);
       if (r.claudeStep) out(`\nOptional setup for Claude Code: the Claude layer (skills, commands, rules, hooks) is staged in ${STAGED}/.\n  ${r.claudeStep.charAt(0).toUpperCase()}${r.claudeStep.slice(1)}.\n  Claude Code asks for approval to write into .claude/.`);
       if (r.next) out(`Next: ${r.next}`);
       return r;
     }
-    if (options.dir && target !== resolve(root)) throw Object.assign(new Error(`${options.dir} is already a Sketchbook project.`), { fix: `cd ${options.dir}, then run sketchbook init there.` });
+    if (options.dir && target !== resolve(root)) throw Object.assign(new Error(`${options.dir} is already a Sketchbook project.`), { fix: `cd ${options.dir}, then run sketchbook init again.` });
     for (const k of ['no-install', 'adopt', 'engine'] as const) if (options[k] !== undefined) throw Object.assign(new Error(`--${k} goes with a new project (a folder without harness.config.json).`), { fix: `Drop --${k}.` });
     const agentInstall = options.agent !== undefined || options.with !== undefined;
     const projectChange = Object.keys(opts).length || start || options.components || options.from || options.yes || options['detach-catalog'];
@@ -67,7 +67,7 @@ export default {
       if ('profiles' in r) out(`Agent profiles: ${r.profiles.join(', ') || 'none'}`);
       if (r.configChanged) out(`${dryRun ? 'Would record' : 'Recorded'} the selection in harness.config.json.`);
       if (r.added.length) out(`${dryRun ? 'Would restore' : 'Restored'} ${r.added.length} missing file(s):\n  ${r.added.join('\n  ')}`);
-      else if (!r.skipped.length) out('Nothing missing: every harness-owned and setup file is here.');
+      else if (!r.skipped.length) out('All expected setup files are present.');
       const { hooks } = r;
       if (hooks.length) out(`${dryRun ? 'Would add or update' : 'Added or updated'} ${hooks.length} Sketchbook hook(s) in settings.json (your own hooks and settings are kept):\n  ${hooks.join('\n  ')}`);
       if (r.edited.length) out(`Harness-owned files that differ from the installed engine (kept; sketchbook upgrade replaces them):\n  ${r.edited.join('\n  ')}`);

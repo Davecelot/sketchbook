@@ -4,7 +4,7 @@
     {
       "id": "sign-in",
       "title": "Sign in",
-      "summary": "Sign-in and sign-up pages: a centered card with email, a password that can be revealed, a remember-me choice, single sign-on and a form-level error.",
+      "summary": "Help people sign in or create an account, with password visibility, single sign-on, and a place to explain errors.",
       "path": "src/patterns/sign-in",
       "components": [
         "alert",
@@ -20,7 +20,7 @@
     {
       "id": "settings",
       "title": "Settings",
-      "summary": "A preferences page split into tabs, each a card-wrapped form with selects, radios, switches, a slider and a save bar.",
+      "summary": "Group preferences by topic so people can find, change, and save them.",
       "path": "src/patterns/settings",
       "components": [
         "alert",
@@ -40,7 +40,7 @@
     {
       "id": "data-table",
       "title": "Data table",
-      "summary": "A list page: title and main action, search with a slash shortcut, a status filter, a selectable table, pagination, and loading and empty states.",
+      "summary": "Help people find orders, narrow the list by status, and select the rows they want to act on.",
       "path": "src/patterns/data-table",
       "components": [
         "avatar",
@@ -61,7 +61,7 @@
     {
       "id": "dashboard",
       "title": "Dashboard",
-      "summary": "An overview page: a top bar, a page title with an action, view tabs, stat cards, a goal, a chart, recent activity and recent orders.",
+      "summary": "Give your team one place to check progress, review recent activity, and act on orders.",
       "path": "src/patterns/dashboard",
       "components": [
         "aspect-ratio",
@@ -82,7 +82,7 @@
     {
       "id": "profile",
       "title": "Profile",
-      "summary": "An account page: breadcrumb, the person with avatar and role, an editable public profile and a list of connected services.",
+      "summary": "Let people update their public profile and see which services are connected.",
       "path": "src/patterns/profile",
       "components": [
         "avatar",
@@ -99,7 +99,7 @@
     {
       "id": "docs-article",
       "title": "Docs article",
-      "summary": "A long-form documentation page: contents sidebar, breadcrumb, typography for prose, a diagram, a code sample, a callout, a collapsible, an FAQ and previous/next links.",
+      "summary": "Help readers follow a guide with a contents sidebar, diagram, code sample, and links to what comes next.",
       "path": "src/patterns/docs-article",
       "components": [
         "accordion",
@@ -118,7 +118,7 @@
     {
       "id": "onboarding",
       "title": "Onboarding",
-      "summary": "First-run screens: a setup step with progress and choices, an empty workspace with next steps, and a setting-up wait state.",
+      "summary": "Guide someone through their first setup, then show what to do in an empty workspace.",
       "path": "src/patterns/onboarding",
       "components": [
         "button",
@@ -136,7 +136,7 @@
     {
       "id": "form-states",
       "title": "Form states",
-      "summary": "A gallery of every form control in its default, disabled, invalid and read-only states, for checking tokens, focus rings and right to left in one place.",
+      "summary": "Compare default, disabled, invalid, and read-only controls to check tokens, focus, and right-to-left layout.",
       "path": "src/patterns/form-states",
       "components": [
         "checkbox",

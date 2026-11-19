@@ -47,7 +47,7 @@ export async function designState(root: string, config: HarnessConfigJson): Prom
 const status = {
   name: 'status',
   group: 'project',
-  summary: 'Show the prefix, brand summary, components by status, overrides and design sync state (read-only).',
+  summary: 'See your active brand, component counts, token overrides, and design sync status.',
   args: [],
   options: {},
   examples: ['sketchbook status', 'sketchbook status --json'],
@@ -72,9 +72,9 @@ const status = {
     };
     if (human) {
       const ui = presentation(true);
-      out(`${ui.section('Overview')}\n  ${data.brand.name}  ·  ${data.prefix}  ·  ${data.components.total} components\n`);
+      out(`${ui.section('Project')}\n  ${data.brand.name}  ·  ${data.prefix}  ·  ${data.components.total} components\n`);
       out(`${ui.section('Brand')}\n  Primary ${data.brand.primary}  ·  ${data.brand.font}  ·  ${data.brand.modes.join(' / ')}\n  Spacing ${show(data.brand.spacingBase)}px  ·  Radius ${data.brand.radiusLg}px  ·  ${data.brand.contrast}\n`);
-      out(`${ui.section('Health')}\n  ${Object.entries(byStatus).map(([s, n]) => `${n} ${s}`).join('  ·  ')}  ·  ${data.overrides} overrides\n  Design: ${design.tool ?? 'none'}${design.tool ? `  ·  tokens ${design.tokens}  ·  ${design.components.synced} synced${design.components.stale.length ? `  ·  stale: ${design.components.stale.join(', ')}` : ''}${design.patterns.total ? `  ·  ${design.patterns.checked}/${design.patterns.total} pattern docs checked` : ''}` : ''}`);
+      out(`${ui.section('Components and sync')}\n  ${Object.entries(byStatus).map(([s, n]) => `${n} ${s}`).join('  ·  ')}  ·  ${data.overrides} overrides\n  Design: ${design.tool ?? 'none'}${design.tool ? `  ·  tokens ${design.tokens}  ·  ${design.components.synced} synced${design.components.stale.length ? `  ·  stale: ${design.components.stale.join(', ')}` : ''}${design.patterns.total ? `  ·  ${design.patterns.checked}/${design.patterns.total} pattern docs checked` : ''}` : ''}`);
     } else {
     out(`Prefix: ${data.prefix}`);
     out(`Brand: ${data.brand.name} (primary ${data.brand.primary}, font ${data.brand.font}, modes ${data.brand.modes.join(', ')}, spacing ${show(data.brand.spacingBase)}px, radius ${data.brand.radiusLg}px, contrast ${data.brand.contrast})`);
@@ -82,7 +82,8 @@ const status = {
     out(`Overrides: ${data.overrides}${data.overrides ? ' (spec/tokens/overrides.json)' : ''}`);
     out(`Design: ${design.tool ?? 'none'}${design.tool ? `, tokens ${design.tokens}, ${design.components.synced} component(s) synced${design.components.stale.length ? `, stale: ${design.components.stale.join(', ')}` : ''}${design.patterns.total ? `, ${design.patterns.checked} of ${design.patterns.total} pattern docs checked` : ''}` : ''}`);
     }
-    const next = design.tokens === 'changed since last sync' || design.components.stale.length ? 'sketchbook sync tokens (or components <names>)' : 'sketchbook check';
+    const next = design.tokens === 'changed since last sync' || design.components.stale.length ? 'Run sketchbook sync tokens for token changes or sketchbook sync components <batch> for component changes.' : 'sketchbook check';
+    if (human) out(`\nNext: ${next === 'sketchbook check' ? 'Run sketchbook check to verify the project.' : next}`);
     return { data, next };
   },
 } satisfies Command;

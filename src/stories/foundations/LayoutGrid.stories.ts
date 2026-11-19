@@ -28,8 +28,8 @@ export const Page: StoryObj = {
     return foundationPage({
       id: 'layout-grid',
       intro: html`<p>
-        The layout grid divides a page into columns separated by gutters, with a margin on each side. Page sections and cards snap to whole
-        columns, so content lines up across a screen. Below is the grid at the width of this page; resize the window to see the columns flex.
+        Resize the Storybook preview to see how the columns and gutters adapt. The layout grid divides a page into columns separated by gutters, with a margin on each side. Page sections and cards snap to whole
+        columns, so content lines up across a screen.
       </p>`,
       samples: html`${STYLE}
         <section aria-labelledby="sbf-layout">

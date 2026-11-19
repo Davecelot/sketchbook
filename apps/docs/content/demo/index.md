@@ -1,13 +1,11 @@
 ---
 title: "Demo"
-description: "The default output of the harness, shown live. Each page is generated from a component's contract."
+description: "Try the components that come with the library starter."
 order: 0
 ---
 
-Sketchbook is the harness, not a component library. These pages show what the harness produces when you start from the `library` starting point: Web Components built from contracts and styled only with tokens. The UI follows shadcn/ui, while the component API uses Sketchbook's vocabulary. It is meant to be edited or replaced.
-
-The [example Figma file](/assets/Sketchbook.fig) is a downloadable reference snapshot of another possible output. Import it into Figma to explore it; see [Design file](/concepts/design-file/) to configure your own sync target.
+Pick a component to see it in use, copy its HTML, or look up its API. The library gives you a starting UI with Sketchbook’s component vocabulary and tokens. Use Storybook in your project to explore more states.
 
 <!-- demo:list -->
 
-> **Note** Storybook is still the place to explore every state of a component.
+You can also [download the example Figma file](/assets/Sketchbook.fig) to see how the design system looks in Figma. To sync your own project, follow the [design file guide](/concepts/design-file/).

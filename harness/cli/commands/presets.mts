@@ -6,7 +6,7 @@ import type { Command, CommandContext } from '../types.mjs';
 export default {
   name: 'presets',
   group: 'tokens',
-  summary: 'List the standards catalog: families, or one family\'s presets with sources (read-only).',
+  summary: 'Browse foundation presets by family, with their values and sources.',
   args: [{ name: 'family', required: false, description: 'A family id, e.g. spacing, typeScale, motion' }],
   options: {},
   examples: ['sketchbook presets', 'sketchbook presets motion'],

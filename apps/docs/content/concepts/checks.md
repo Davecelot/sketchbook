@@ -1,14 +1,14 @@
 ---
 title: "Checks"
-description: "Deterministic tests that reject a bad state, and the gates that order the work."
+description: "Check that your sources and outputs agree, and find out what to fix when they don’t."
 order: 40
 ---
 
-A check is a plain script that runs without AI and reads your spec, tokens or code. It passes or reports errors with a suggested fix. Together the checks keep sources, outputs and records in agreement. The full list is in the [check list](/reference/checks/).
+Run a check when you want to verify your spec, tokens, or code. Checks run the same way with or without an agent. A failure points to the source of the problem and suggests a fix. See the [check list](/reference/checks/) for everything Sketchbook checks.
 
 ## Run the checks
 
-<!-- illustration: gate | Every check runs; the exit code says whether the sources and outputs agree. -->
+<!-- illustration: gate | The exit code tells you whether to continue, fix a failure, or review a kept override. -->
 
 ```terminal
 sketchbook check
@@ -29,7 +29,7 @@ When the folder is its own git repository, `sketchbook init` points `core.hooksP
 
 ## Gates
 
-Two gates apply to a new component. Both are set in `harness.config.json` and written as rules in `.claude/rules/`, so the Claude layer and review enforce them, not a check.
+For new components, use the planning and test-first gates to review decisions before you build. Enable them in `harness.config.json`. Project review and the Claude Code rules carry them out.
 
 The planning gate (`features.planningGate`) puts the contract and `plan.md` first, then stops for approval before any code.
 

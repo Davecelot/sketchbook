@@ -4,8 +4,8 @@
 
 # Sketchbook
 
-**The harness for building a design system with coding agents.**<br />
-Sources of truth, generators, deterministic checks, gates and agent guidance make design-system work repeatable. A component library is one of its outputs.
+**Start with a working design system. Make it yours.**<br />
+Choose a starter, change the sources your team owns, and use the Sketchbook CLI to rebuild and check your work.
 
 <br />
 
@@ -37,7 +37,7 @@ Sketchbook gives your team a workflow for building and maintaining a design syst
 | **Agent guidance** | Portable project instructions and task workflows, plus the existing Claude Code rules, skills, commands and hooks. |
 | **Outputs** | Tokens, a Web Components library, 8 page templates, Storybook, a Figma file and docs. The default library follows [shadcn/ui](https://ui.shadcn.com) and is a starting point you can edit or replace. |
 
-Bring nothing, your brand, your tokens or an existing product. The process is the same.
+Bring your tokens or an existing app, or start with the library and change it as you go.
 
 ## Quick start
 
@@ -63,7 +63,7 @@ From the checkout root, run `npm ci` and then `npm run storybook` for the refere
 
 ## How it works
 
-Everything starts from a few files you own. The harness rebuilds every output from them, and checks stop anything that drifts.
+Edit the source that owns the change, then rebuild. If a check finds drift, its result points you back to what needs attention.
 
 ```mermaid
 flowchart LR
@@ -73,7 +73,7 @@ flowchart LR
   K -- pass --> O["Outputs<br/>CSS · components · Storybook · Figma · docs"]
 ```
 
-**A component goes through the same path every time.**
+Use this workflow to design a new component when the planning and test-first gates are enabled.
 
 1. **Contract.** `contract.json` and `contract.md` describe the API, tokens and accessibility. `npm run check` must pass.
 2. **Plan.** `plan.md` states scope, files, tokens, accessibility approach, test plan and open questions.
@@ -135,38 +135,22 @@ Dark mode follows `prefers-color-scheme`, or set `data-theme="dark"` on `<html>`
 
 | | |
 | --- | --- |
-| **A process, not a pile of files** | Contract, plan, approval, tests, checks and review, documented for contributors and agents. |
+| **Agree on the component before building** | Contract, plan, approval, tests, checks and review, documented for contributors and agents. |
 | **Agent guidance** | Shared instructions describe the process; client-specific hooks and deterministic checks provide additional safeguards. |
-| **Checked without AI** | 26 deterministic checks cost no model spend and can each fail. |
-| **One source, every output** | Code, Storybook, CSS variables and Figma stay in step because they come from the same files. |
+| **Run checks locally** | 26 deterministic checks cost no model spend and can each fail. |
+| **Rebuild from shared sources** | Code, Storybook, CSS variables and Figma stay in step because they come from the same files. |
 | **Every foundation is yours** | 19 foundation families with 63 cited presets, or your own values, in one config. |
 | **Start where you are** | Seven starters, from blank to an existing codebase. |
-| **Accessible by default** | WCAG 2.2 AA, axe in every component test, screen-reader views of the accessibility tree. |
-| **Safe to upgrade** | Team-owned files are never overwritten. `sketchbook upgrade` only touches what the engine owns. |
+| **Review accessibility as you build** | Contracts target WCAG 2.2 AA. Browser tests and accessibility audits cover different parts of that work. |
+| **Review before you upgrade** | Preview how `sketchbook upgrade` will update harness-owned files. |
 
 ## Evidence
 
-Sketchbook was tested the way it is used: with a real AI agent, real projects and real installs.
+In the November 2026 benchmark, 9 of 10 runs with project files alone produced a valid Switch contract, compared with 0 of 10 from an empty folder. The study used a small sample and Sketchbook’s own scoring scripts. [Benchmark results](./docs/research/value-benchmark/SUMMARY.md)
 
-**Does the harness make an agent follow your design system?** 252 headless Claude Code runs (Sonnet 5.5 and Opus 5.5) across five rounds, about $141 of API spend. The agent got the same tasks with and without the project's files, the CLI and the harness.
+The November 11, 2026 installation retest covered a new project, an adopted app, and a checkout. It recorded 168 passing harness tests and 100 passing component behavior tests in an initialized project. One Claude setup step was simulated. [Installation retest](./docs/research/cli-distribution-retest-2/README.md)
 
-Round 3, before the lighter Claude layer (out of 10 runs):
-
-| Task | Empty folder | Project files | + CLI + harness |
-| --- | --- | --- | --- |
-| Writes a valid component spec | 0 | 9 | 10 |
-| Uses design-system components | 0 | 9 | 10 |
-| Uses tokens only, no literal colors | 0 | 10 | 10 |
-| Finds a real extra defect in a QA review | 0 | 9 | 10 |
-
-- The CLI makes authoring **21–32% cheaper** than files alone, and writes the same 8 files every run (round 3).
-- Round 5 (SB-0114) cut the harness's always-on context and reran the full setup. Evidence-backed findings per QA report rose from **4.0 to 5.6** (Sonnet) and **5.2 to 6.2** (Opus) over the CLI-only setup, with QA cost **−7% / +13%** against it. Every task now sits within +19% of that setup. Before the cut, the same harness added +66–68% to QA cost. Round 5 also recalibrated the scorer, so its numbers are not directly comparable with round 3's 3.8 → 5.0.
-- A bare model matched it on whether the page works, keyboard use and the planted defects, so the harness's value is conformance and evidence, not raw capability.
-- **What this does not show:** no comparison with other design systems, one component and one page, 10 runs per setup, and scorers written by the project. Read gaps as direction. Full report: [docs/research/value-benchmark/SUMMARY.md](./docs/research/value-benchmark/SUMMARY.md).
-
-**Does it install and upgrade safely?** From a packed tarball in an empty folder, `init`, `status`, `doctor`, `check`, `add`, `remove`, `upgrade` and repair all pass, with 100 of 100 behavior tests and 168 harness tests passing. Adopting into an existing app changes one line of its `package.json`. A team's own `.claude/` settings survive the install. In a hand-run Claude Code session, the installed rules made Claude decline an edit to a generated file and a rewrite of an accepted decision, and name the supported route instead. [Retest report](./docs/research/cli-distribution-retest-2/README.md).
-
-**Does the output match its reference?** Each of the 38 components (35 core and 3 more) has a parity audit: a read-only comparison of its code and behavior spec against its own contract, which was drafted from shadcn/ui. [docs/parity-audits/](./docs/parity-audits/).
+Browse [Evidence](https://sketchbook-docs.vercel.app/reference/evidence/) for methods and limits. Use [Status](https://sketchbook-docs.vercel.app/reference/status/) for the current component and audit counts.
 
 ## What you can do with it
 

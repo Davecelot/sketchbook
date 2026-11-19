@@ -19,7 +19,7 @@ export const Page: StoryObj = {
       id: 'density',
       configHint: 'density',
       intro: html`<p>
-          Density sets how much room interactive elements take: the height of buttons, inputs and selects, and the sizes of fixed parts such as
+          Compare the same controls at each density. Density sets how much room interactive elements take: the height of buttons, inputs and selects, and the sizes of fixed parts such as
           switches and avatars. The foundation is a plain size scale; the semantic layer picks a step for each control size, and the density setting
           moves those picks together. Compact layouts fit more on screen, but pointer targets should stay at least 24px.
         </p>

@@ -5,9 +5,11 @@ description: "Switches between panels of related content, one visible at a time,
 
 <!-- Generated from spec/components/tabs/contract.json by npm run docs:components. Do not edit by hand. -->
 
-Tag `<sb-tabs>` · status `stable` · version `0.1.0`
+Use `<sb-tabs>` in HTML. [Lifecycle status](/reference/contract-format/#lifecycle-statuses) `stable` · Version `0.1.0`
 
 ## Example
+
+Select Activity or use the arrow keys from the tab list. The visible panel follows the selected tab.
 
 <div class="live-demo">
 <sb-tabs value="overview" style="display:block;width:400px">
@@ -82,7 +84,7 @@ The panel of one tab; only the selected panel is displayed.
 
 ## Keyboard
 
-| Key | Does |
+| Key | Action |
 | --- | --- |
 | `Tab` | enters the list on the selected tab, then moves to the selected panel |
 | `ArrowRight` | next enabled tab (previous in right-to-left); wraps |

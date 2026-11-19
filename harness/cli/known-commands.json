@@ -11,40 +11,40 @@
   ],
   "commands": {
     "init": {
-      "summary": "In a new or empty folder: install the core harness and any selected agent integrations. In a project: add or repair integrations (--agent), pick a starting point (--start), or set the brand."
+      "summary": "Set up a design system from a starter, or update the setup in an existing project. Choose --agent to add guidance for your coding tools."
     },
     "status": {
-      "summary": "Show the prefix, brand summary, components by status, overrides and design sync state (read-only)."
+      "summary": "See your active brand, component counts, token overrides, and design sync status."
     },
     "doctor": {
-      "summary": "Health report (read-only): starter, harness version, installed vs catalog components, kits, brands, overrides, design sync, failing checks, selected agent integrations and the commit gate. Exits like check (0 pass, 1 a check fails, 2 pass with overrides)."
+      "summary": "See what needs attention in your project. Review checks, installed files, agent profiles, and design sync. Uses the same exit codes as sketchbook check."
     },
     "upgrade": {
-      "summary": "Update harness-owned files. In a project that runs the engine from node_modules: from the installed engine (after npm update), no --from. Elsewhere: from a newer Sketchbook folder or git URL (harness-owned in both manifests); team-owned, shared, reclassified and protected files (the manifest itself, configs, package files) are listed, never touched; writing anything needs --yes (a dry run first shows what)."
+      "summary": "Update harness-owned files from the installed engine or a newer Sketchbook source. Preview the files with --dry-run. For a folder or Git URL, use --from. Updating from that source requires --yes when files would change."
     },
     "propagate": {
-      "summary": "Carry a Foundations or harness change to every output: rebuild the tokens and components, build the engine, sync the design file scripts (tokens and foundations), and record what the outputs were built from. --maintainer also builds Storybook and the docs site (maintainers only)."
+      "summary": "Rebuild outputs after a source change and record the build. Use --maintainer to include Storybook and the Docs site. Run the generated design scripts to carry the change into Figma."
     },
     "generate": {
-      "summary": "Rebuild every generated output from the spec: token CSS, component tokens, component styles, the barrel, brand CSS and the token interface (what npm run generate runs in a project)."
+      "summary": "Rebuild tokens, styles, and other generated outputs from your project sources. Run npm run generate in an initialized project for the same build."
     },
     "prefix": {
-      "summary": "Rename the element and CSS prefix everywhere (sources, contracts, tests, docs), rebuild, then check."
+      "summary": "Change the element and CSS prefix across your project, then rebuild and check the outputs."
     },
     "swap": {
-      "summary": "Replace an adapter (token build or design tool) without touching the spec, then rebuild and check."
+      "summary": "Change the tool that builds tokens or syncs your design file, then rebuild and check."
     },
     "add": {
-      "summary": "Install a component from the catalog (contract, code, stories, specs; dependencies first), or --blank to scaffold a new contract (status draft, proposed decision)."
+      "summary": "Install a catalog component with its dependencies, or start a new contract with --blank."
     },
     "remove": {
-      "summary": "Uninstall a component: refuses while another component or a kit needs it, and without --yes when it is team-made or customized; else removes its files, sets the registry to planned and rebuilds."
+      "summary": "Remove a component you no longer use. Review dependencies and local edits before removing it."
     },
     "list": {
-      "summary": "List catalog components (installed or available) with what each needs, plus template kits (read-only)."
+      "summary": "Browse installed and available components and see which dependencies they need."
     },
     "kits": {
-      "summary": "Template kits (harness/kits/index.json): list them, add one (its components come from the catalog first) or remove one (--yes when it was edited).",
+      "summary": "Browse template kits, install a kit with its components, or remove one.",
       "subcommands": [
         "list",
         "add",
@@ -52,7 +52,7 @@
       ]
     },
     "tokens": {
-      "summary": "Change foundations and semantic tokens through the harness: set, preset, presets, diff, impact, add, remove, rename, import, scratch, overrides.",
+      "summary": "Set foundation values, manage semantic tokens, or trace the impact of a change.",
       "subcommands": [
         "rebuild",
         "set",
@@ -69,10 +69,10 @@
       ]
     },
     "presets": {
-      "summary": "List the standards catalog: families, or one family's presets with sources (read-only)."
+      "summary": "Browse foundation presets by family, with their values and sources."
     },
     "brand": {
-      "summary": "Several brands over one semantic interface: brands/<name>.brand.json; add, list, use (copy into brand.config.json and regenerate) and build (tokens.<brand>.css for each).",
+      "summary": "Add, list, or switch brands that share the same semantic token names.",
       "subcommands": [
         "add",
         "list",
@@ -81,7 +81,7 @@
       ]
     },
     "icons": {
-      "summary": "The icons the system uses (spec/icons.json, Lucide): list them, add one or more from Lucide (--category) or remove them. The design adapters draw one component per icon (sketchbook sync icons).",
+      "summary": "List the icons in your project or add icons from Lucide.",
       "subcommands": [
         "list",
         "add",
@@ -89,7 +89,7 @@
       ]
     },
     "api": {
-      "summary": "The API vocabulary (spec/api.json): list every component prop, event and state against it (canonical, alias, extension), check that nothing is unregistered, explain one name, show the design-file axes and properties one component gets (figma), or the design-file practices Sketchbook adopted (practices, spec/figma-practices.json).",
+      "summary": "Look up component property, event, and state names in the shared API vocabulary.",
       "subcommands": [
         "list",
         "check",
@@ -99,16 +99,16 @@
       ]
     },
     "audit-css": {
-      "summary": "Audit an existing product's CSS: cluster its colors (OKLCH distance), font sizes, spacing, radii and shadows into a foundations proposal (generated/import/codebase.proposal.json)."
+      "summary": "Inspect an existing stylesheet to find recurring values and draft foundation choices."
     },
     "audit-page": {
-      "summary": "Check a complete HTML page using this design system for a level-one heading and main landmark. This static check is not a full accessibility audit."
+      "summary": "Check a page for a level-one heading and a main landmark. This checks page structure only."
     },
     "audit-decisions": {
-      "summary": "Compare the decision log with a trusted earlier copy or Git revision and report changes to settled entries. This read-only audit does not replace check X1."
+      "summary": "Compare settled decisions with a trusted earlier copy or Git revision. Run sketchbook check to validate the log."
     },
     "sync": {
-      "summary": "Write the Figma MCP (use_figma) scripts for the design file (tokens: variable collections, modes and styles), read the file back (\"sync verify\", then \"--ingest\"), record a push or a component stage with \"sync stamp\", list the progress of the component docs with \"sync progress\", or write the design realization of each contract from the library read-back with \"sync realize\".",
+      "summary": "Prepare scripts to update or verify your Figma file. Record sync progress after you run the scripts. Use verify to compare a read-back with the spec, stamp to record a push or stage, and realize to write design realizations.",
       "subcommands": [
         "tokens",
         "pages",
@@ -132,19 +132,19 @@
       ]
     },
     "docs": {
-      "summary": "Show a component's or a pattern's documentation, tool-neutral: the same doc a design file draws (variants and states grids, elements, anatomy, accessibility rules and source, tokens) as text, or its blueprint with --json for any design adapter."
+      "summary": "Read a component or kit’s variants, tokens, and accessibility guidance. Use --json for the design blueprint."
     },
     "check": {
-      "summary": "Run the deterministic checks (exit 0 pass, 1 fail, 2 pass with flagged overrides)."
+      "summary": "Check that your sources and outputs agree. Exit 0 means pass, 1 means a failure, and 2 means pass with flagged overrides."
     },
     "selftest": {
-      "summary": "Run the harness's own tests against the installed engine: they prove every check can still reject and that the CLI, starters and generators work (what npm run test:harness runs in a project)."
+      "summary": "Run the harness test suite to verify the tools that build and check your project."
     },
     "explain": {
-      "summary": "Explain a token, CSS variable, component, tag or decision from the spec."
+      "summary": "Trace a token to its source, find a component’s files, or look up a decision."
     },
     "help": {
-      "summary": "List commands, or show one command's arguments, options and examples."
+      "summary": "Find a command or look up its usage, options, and examples."
     }
   }
 }
