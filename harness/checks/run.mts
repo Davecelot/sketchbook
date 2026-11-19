@@ -97,7 +97,14 @@ export function formatHuman(report: Report, { verbose = false }: { verbose?: boo
   return lines;
 }
 
-const printHuman = (report: Report, opts: { verbose?: boolean }) => { for (const l of formatHuman(report, opts)) console.log(l); };
+const printHuman = (report: Report, opts: { verbose?: boolean }) => {
+  const tty = Boolean(process.stdout.isTTY);
+  const color = tty && !('NO_COLOR' in process.env);
+  for (const line of formatHuman(report, opts)) {
+    const formatted = tty ? line.replace(/^(pass|FAIL|flagged|All checks passed|Checks failed)/, (label) => color ? `\u001b[${label === 'FAIL' || label === 'Checks failed' ? '31' : '38;5;208'}m${label}\u001b[0m` : label) : line;
+    console.log(formatted);
+  }
+};
 
 if (isMain(import.meta.url)) {
   const args = process.argv.slice(2);

@@ -8,6 +8,7 @@ import { tokenPayload } from '../../lib/design/tokens.mjs';
 import { contractHash, mdOf } from '../../lib/design/components.mjs';
 import { loadContracts } from '../../lib/tokens.mjs';
 import { parseJson, show } from '../../lib/files.mjs';
+import { presentation } from '../presentation.mjs';
 import type { BrandConfig } from '../../../generated/types/brand-config.js';
 import type { HarnessConfigJson } from '../../../generated/types/harness-config.js';
 import type { ComponentRegistry } from '../../../generated/types/registry.js';
@@ -53,7 +54,7 @@ const status = {
   mutates: false,
   dryRun: false,
   // Narrower than CommandContext: the interactive menu runs it for its hints with no dispatch context.
-  async run({ root, out }: Pick<CommandContext, 'root' | 'args' | 'options' | 'out'>) {
+  async run({ root, out, human }: Pick<CommandContext, 'root' | 'args' | 'options' | 'out' | 'human'>) {
     const config = await readJson<HarnessConfigJson>(root, 'harness.config.json');
     const brand = await readJson<BrandConfig>(root, 'brand.config.json');
     const registry = await readJson<ComponentRegistry>(root, 'spec/registry.json');
@@ -69,11 +70,18 @@ const status = {
       overrides: overrides.length,
       design,
     };
+    if (human) {
+      const ui = presentation(true);
+      out(`${ui.section('Overview')}\n  ${data.brand.name}  ·  ${data.prefix}  ·  ${data.components.total} components\n`);
+      out(`${ui.section('Brand')}\n  Primary ${data.brand.primary}  ·  ${data.brand.font}  ·  ${data.brand.modes.join(' / ')}\n  Spacing ${show(data.brand.spacingBase)}px  ·  Radius ${data.brand.radiusLg}px  ·  ${data.brand.contrast}\n`);
+      out(`${ui.section('Health')}\n  ${Object.entries(byStatus).map(([s, n]) => `${n} ${s}`).join('  ·  ')}  ·  ${data.overrides} overrides\n  Design: ${design.tool ?? 'none'}${design.tool ? `  ·  tokens ${design.tokens}  ·  ${design.components.synced} synced${design.components.stale.length ? `  ·  stale: ${design.components.stale.join(', ')}` : ''}${design.patterns.total ? `  ·  ${design.patterns.checked}/${design.patterns.total} pattern docs checked` : ''}` : ''}`);
+    } else {
     out(`Prefix: ${data.prefix}`);
     out(`Brand: ${data.brand.name} (primary ${data.brand.primary}, font ${data.brand.font}, modes ${data.brand.modes.join(', ')}, spacing ${show(data.brand.spacingBase)}px, radius ${data.brand.radiusLg}px, contrast ${data.brand.contrast})`);
     out(`Components: ${data.components.total} (${Object.entries(byStatus).map(([s, n]) => `${n} ${s}`).join(', ')})`);
     out(`Overrides: ${data.overrides}${data.overrides ? ' (spec/tokens/overrides.json)' : ''}`);
     out(`Design: ${design.tool ?? 'none'}${design.tool ? `, tokens ${design.tokens}, ${design.components.synced} component(s) synced${design.components.stale.length ? `, stale: ${design.components.stale.join(', ')}` : ''}${design.patterns.total ? `, ${design.patterns.checked} of ${design.patterns.total} pattern docs checked` : ''}` : ''}`);
+    }
     const next = design.tokens === 'changed since last sync' || design.components.stale.length ? 'sketchbook sync tokens (or components <names>)' : 'sketchbook check';
     return { data, next };
   },

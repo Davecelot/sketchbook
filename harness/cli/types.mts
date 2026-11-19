@@ -60,6 +60,8 @@ export interface CommandContext<S extends OptionSpecs = OptionSpecs> {
   options: OptionValues<S>;
   json: boolean;
   dryRun: boolean;
+  human?: boolean;
+  details?: boolean;
   out: (line?: string) => void;
   checks: () => Promise<ChecksSummary>;
 }

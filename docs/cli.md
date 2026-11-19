@@ -6,7 +6,8 @@ Deterministic half of the harness. Run `sketchbook <command>` (or `node harness/
 
 ## Conventions
 
-- Bare `sketchbook` in a terminal opens an interactive menu built from this registry: pick a group and a command, answer prompts (current values shown), see the dry run, then confirm. Piped input or `--json` prints help instead.
+- Bare `sketchbook` in a terminal opens an interactive menu built from this registry: enter a number to pick a group and command, provide arguments, and optionally review settings. Mutating commands show a dry run where supported; type y and press Enter to confirm, or press Enter to cancel. Piped input or `--json` prints help instead.
+- `--details` shows full human-readable output where a terminal view is abbreviated.
 - `--json` on every command prints one envelope: `{ ok, command, changed[], warnings[], errors[{file, msg, fix}], next, data? }`.
 - Exit codes: 0 ok, 1 failed, 2 ok with flags (for example overrides kept in spec/tokens/overrides.json).
 - Read-only commands never write. Mutating commands say what they change; those marked "dry run" accept `--dry-run`.
@@ -17,6 +18,7 @@ Deterministic half of the harness. Run `sketchbook <command>` (or `node harness/
 | `--json` | Print one JSON envelope instead of human output |
 | `--dry-run` | Show what would change without writing (mutating commands that support it) |
 | `--help` | Show help for the command |
+| `--details` | Show the full human-readable output |
 
 ## Project
 

@@ -1,4 +1,5 @@
 import { catalogIndex, manifestOf, installedComponents, kitIndex, kitInstalled, requiresOf } from '../../commands/catalog.mjs';
+import { presentation } from '../presentation.mjs';
 import type { Command, OptionSpecs } from '../types.mjs';
 
 const options = {
@@ -16,7 +17,7 @@ export default {
   mutates: false,
   project: false,
   dryRun: false,
-  run({ root, options, out }) {
+  run({ root, options, out, human, details }) {
     const index = catalogIndex(root);
     const present = installedComponents(root);
     let rows = [...new Set([...index.components, ...present])].sort().map((name) => {
@@ -25,7 +26,10 @@ export default {
     });
     if (options.installed) rows = rows.filter((r) => r.installed);
     if (options.available) rows = rows.filter((r) => !r.installed && r.catalog);
-    for (const r of rows) out(`${r.installed ? '*' : ' '} ${r.name.padEnd(16)} ${r.catalog ? r.status : 'team-made'}${r.requires.length ? `  needs ${r.requires.join(', ')}` : ''}`);
+    const visible = human && !details ? rows.slice(0, 10) : rows;
+    if (human) out(`${presentation(true).section('Components')}  ${rows.length} total  ·  ${rows.filter((r) => r.installed).length} installed\n`);
+    for (const r of visible) out(`${r.installed ? '*' : ' '} ${r.name.padEnd(16)} ${r.catalog ? r.status : 'team-made'}${r.requires.length ? `  needs ${r.requires.join(', ')}` : ''}`);
+    if (visible.length < rows.length) out(`  … ${rows.length - visible.length} more. Use sketchbook list --details to see all.`);
     const kits = kitIndex(root).map((k) => ({ id: k.id, title: k.title, installed: kitInstalled(root, k), components: k.components }));
     if (!options.installed && !options.available && kits.length) { out('\nKits:'); for (const k of kits) out(`${k.installed ? '*' : ' '} ${k.id.padEnd(16)} ${k.title}`); }
     out('\n* = installed. sketchbook add <name> installs (with what it needs); sketchbook remove <name> uninstalls.');

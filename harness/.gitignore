@@ -141,6 +141,8 @@
 /cli/interactive.d.mts
 /cli/known.mjs
 /cli/known.d.mts
+/cli/presentation.mjs
+/cli/presentation.d.mts
 /cli/registry.mjs
 /cli/registry.d.mts
 /cli/run.mjs

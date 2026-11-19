@@ -8,6 +8,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { commands, find } from './registry.mjs';
 import help from './commands/help.mjs';
+import { presentation } from './presentation.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { errorMessage, show } from '../lib/files.mjs';
 import type { CheckIssue } from '../checks/types.mjs';
@@ -19,6 +20,7 @@ export const GLOBAL_OPTIONS = {
   json: { type: 'boolean', description: 'Print one JSON envelope instead of human output' },
   'dry-run': { type: 'boolean', description: 'Show what would change without writing (mutating commands that support it)' },
   help: { type: 'boolean', description: 'Show help for the command' },
+  details: { type: 'boolean', description: 'Show the full human-readable output' },
 } as const;
 
 const asError = (e: IssueLike): EnvelopeIssue => ({ file: e.file ?? null, msg: e.msg ?? show(e), fix: e.fix ?? null, ...(e.token ? { token: e.token } : {}), ...(e.id ? { check: e.id } : {}) });
@@ -35,6 +37,7 @@ export interface DispatchIO {
   root?: string;
   stdout?: (s: string) => unknown;
   stderr?: (s: string) => unknown;
+  human?: boolean;
 }
 
 // Commands retain their project-root working-directory contract. Only suggest an ancestor;
@@ -49,23 +52,26 @@ function ancestorProject(start: string): string | null {
   }
 }
 
-export async function dispatch(argv: string[], { root = process.cwd(), stdout = (s) => process.stdout.write(s), stderr = (s) => process.stderr.write(s) }: DispatchIO = {}): Promise<number> {
+export async function dispatch(argv: string[], { root = process.cwd(), stdout = (s) => process.stdout.write(s), stderr = (s) => process.stderr.write(s), human = Boolean(process.stdout.isTTY) }: DispatchIO = {}): Promise<number> {
   let [name, ...rest] = argv;
   const json = argv.includes('--json');
-  if (!name || name === '--help' || name === '-h' || (name === '--json' && rest.length === 0)) { name = 'help'; rest = json ? ['--json'] : []; }
-  const out = (line = '') => { if (!json) stdout(line + '\n'); };
+  if (!name || name === '--help' || name === '-h' || (name === '--json' && rest.length === 0)) { name = 'help'; rest = [...(json ? ['--json'] : []), ...(argv.includes('--details') ? ['--details'] : [])]; }
+  const ui = presentation(human && !json);
+  const errorUi = presentation(ui.enabled, ui.enabled && Boolean(process.stderr.isTTY) && !('NO_COLOR' in process.env));
+  const out = (line = '') => { if (!json) stdout((ui.enabled ? ui.line(line) : line) + '\n'); };
+  if (ui.enabled) stdout(ui.header(name));
   const finish = (cmdName: string, r: CommandResult): number => {
     const errors = (r.errors ?? []).map(asError);
     const exitCode = r.exitCode ?? (errors.length ? 1 : 0);
     const envelope: Envelope = { ok: exitCode !== 1, command: cmdName, changed: r.changed ?? [], warnings: (r.warnings ?? []).map((w) => (typeof w === 'string' ? w : asError(w))), errors, next: r.next ?? null, ...(r.data !== undefined ? { data: r.data } : {}) };
     if (json) stdout(JSON.stringify(envelope, null, 2) + '\n');
-    else for (const e of errors) stderr(`${e.msg}${e.fix ? `\n  fix: ${e.fix}` : ''}\n`);
+    else for (const e of errors) stderr(ui.enabled ? errorUi.error(e.msg, e.fix) : `${e.msg}${e.fix ? `\n  fix: ${e.fix}` : ''}\n`);
     return exitCode;
   };
   const fail = (cmdName: string, msg: string, fix: string, file: string | null = null) => finish(cmdName, { errors: [{ file, msg, fix }], exitCode: 1 });
 
   const cmd = find(name);
-  if (!cmd) return fail(name, `Unknown command "${name}". Commands: ${commands().map((c) => c.name).join(', ')}.`, 'Run sketchbook help to list commands.');
+  if (!cmd) return fail(name, ui.enabled ? `Unknown command "${name}".` : `Unknown command "${name}". Commands: ${commands().map((c) => c.name).join(', ')}.`, 'Run sketchbook help to list commands.');
   // Commands that take CSS variables as arguments (--sb-color-primary) keep them as positionals, not options.
   const known = new Set([...Object.keys(GLOBAL_OPTIONS), ...Object.keys(cmd.options)]);
   const MARK = '\u0000';
@@ -80,7 +86,7 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
   }
   const values: OptionValues = parsed.values;
   const positionals = parsed.positionals.map((p) => (p.startsWith(MARK) ? p.slice(1) : p));
-  if (values.help) return finish(name, help.run({ root, args: [name], options: {}, json, out }));
+  if (values.help) return finish(name, help.run({ root, args: [name], options: {}, json, out, human: ui.enabled, details: Boolean(values.details) }));
   if (cmd.project !== false && !existsSync(join(root, 'harness.config.json'))) {
     const ancestor = ancestorProject(root);
     return fail(name, `Not a Sketchbook project (no harness.config.json in ${root}).`, ancestor
@@ -91,7 +97,7 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
   const required = cmd.args.filter((a) => a.required).length;
   if (positionals.length < required) return fail(name, `Usage: ${usage(cmd)}`, `Run sketchbook help ${name}.`);
   try {
-    const r = await cmd.run({ root, args: positionals, options: values, json, dryRun: Boolean(values['dry-run']), out, checks: () => checks(root, json) });
+    const r = await cmd.run({ root, args: positionals, options: values, json, dryRun: Boolean(values['dry-run']), human: ui.enabled, details: Boolean(values.details), out, checks: () => checks(root, json) });
     return finish(name, r);
   } catch (e) {
     return fail(name, errorMessage(e), fixOf(e) ?? `Run sketchbook help ${name}.`);

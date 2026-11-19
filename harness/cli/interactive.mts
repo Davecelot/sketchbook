@@ -7,6 +7,7 @@ import { commands, GROUPS } from './registry.mjs';
 import { dispatch } from './run.mjs';
 import type { DispatchIO } from './run.mjs';
 import type { Command } from './types.mjs';
+import { DOCS_URL, presentation } from './presentation.mjs';
 
 type CurrentValues = Partial<Record<string, string>>;
 
@@ -39,62 +40,104 @@ export interface InteractiveIO {
   run?: (argv: string[], io: DispatchIO) => Promise<number>;
 }
 
-interface Choice<T> { label: string; value: T }
+interface Choice<T> { label: string; description?: string; value: T }
 
 export async function interactive({ root = process.cwd(), input = process.stdin, output = process.stdout, run = dispatch }: InteractiveIO = {}): Promise<number> {
   const write = (s: string) => output.write(s);
+  const ui = presentation(Boolean((output as { isTTY?: boolean }).isTTY));
   const lines = lineReader(input);
   const ask = async (q: string) => { write(q); const a = await lines.next(); if (a === null) throw new Quit(); return a.trim(); };
+  const heading = (title: string) => ui.enabled ? ui.section(title) : title;
+  const note = (value: string) => ui.enabled ? ui.dim(value) : value;
+  const line = (value: string) => ui.enabled ? ui.line(value) : value;
+  const brief = (value: string) => value.length > 130 ? `${value.slice(0, 127).replace(/\s+\S*$/, '')}…` : value;
   const choose = async <T,>(title: string, items: Choice<T>[], back: string): Promise<T | 'q' | 'b'> => {
-    write(`\n${title}\n`);
-    items.forEach((it, i) => write(`  ${String(i + 1).padStart(2)}) ${it.label}\n`));
-    write(`   ${back}\n`);
+    write(`\n${heading(title)}\n\n`);
+    items.forEach((it, i) => {
+      const number = String(i + 1).padStart(2);
+      if (it.description) {
+        write(`  ${ui.accent(number)}  ${ui.bold(it.label)}\n`);
+        write(line(`      ${it.description}`) + '\n\n');
+      } else write(line(`  ${number}  ${it.label}`) + '\n');
+    });
+    write(`\n  ${note(back)}\n`);
     for (;;) {
-      const a = await ask('> ');
+      const a = (await ask('  Enter a number and press Enter: ')).toLowerCase();
       if (a === 'q' || a === 'b') return a;
       const n = Number(a);
-      const item = Number.isInteger(n) && n >= 1 ? items[n - 1] : undefined;
+      const item = a && Number.isInteger(n) && n >= 1 ? items[n - 1] : undefined;
       if (item) return item.value;
-      write(`Type 1-${items.length}, ${back.split(')')[0]}.\n`);
+      write(`  Type 1-${items.length}, ${back.split(')')[0]}.\n`);
+    }
+  };
+  // Enter is always the safe default; unexpected input must never silently confirm or cancel.
+  const confirm = async (question: string, yesLabel: string, noLabel: string): Promise<boolean> => {
+    write(`\n${heading(question)}\n  y + Enter: ${yesLabel}\n  Enter or n + Enter: ${noLabel}\n`);
+    for (;;) {
+      const answer = (await ask('  Your choice [y/N]: ')).toLowerCase();
+      if (answer === 'y' || answer === 'yes') return true;
+      if (answer === '' || answer === 'n' || answer === 'no') return false;
+      write('  Please type y or n, then press Enter.\n');
     }
   };
   let last = 0;
   try {
-    write('sketchbook: pick what to do (q quits). Every choice runs a normal sketchbook command, shown before it runs.\n');
+    if (ui.enabled) write(ui.header('explore'));
+    write(`${line('  Explore your design system, one step at a time.')}\n  Choose a number and press Enter. Type q and press Enter to quit.\n`);
     for (;;) {
       const groups = Object.entries(GROUPS).map(([g, label]) => ({ g, label, list: commands().filter((c) => c.group === g) })).filter((x) => x.list.length);
-      const group = await choose('Groups:', groups.map((x) => ({ label: `${x.label.padEnd(12)} ${x.list.map((c) => c.name).join(', ')}`, value: x })), 'q) quit');
+      const group = await choose('Groups:', groups.map((x) => ({ label: `${x.label.padEnd(12)} ${x.list.length} ${x.list.length === 1 ? 'command' : 'commands'}`, value: x })), 'q) quit');
       if (group === 'q') break;
       if (group === 'b') continue;
-      const cmd = await choose<Command>(`${group.label}:`, group.list.map((c) => ({ label: `${c.name.padEnd(9)} ${c.summary}`, value: c })), 'b) back   q) quit');
+      const cmd = await choose<Command>(`${group.label}:`, group.list.map((c) => ({ label: c.name, description: brief(c.summary.split(/(?<=\.)\s/)[0] ?? c.summary), value: c })), 'b) back   q) quit');
       if (cmd === 'q') break;
       if (cmd === 'b') continue;
+      write(`\n${heading(cmd.name)}\n  ${line(brief(cmd.summary))}\n  ${note(`More: sketchbook help ${cmd.name} --details`)}\n  ${note(cmd.mutates ? (cmd.dryRun ? 'Changes files · a preview runs before confirmation' : 'Changes files · confirmation required') : 'Read-only · no files changed')}\n`);
+      write(`  Documentation: ${DOCS_URL}\n`);
       const current = await currentValues(root);
       const argv = [cmd.name];
       for (const a of cmd.args) {
+        const selected = cmd.subcommands?.find((sub) => typeof sub !== 'string' && sub.name === argv[1]);
+        const sub = typeof selected === 'object' ? selected : undefined;
+        const remainingUsage = sub?.usage.slice(`sketchbook ${cmd.name} ${sub.name}`.length).trim();
+        const required = a.required || Boolean(a.variadic && remainingUsage?.startsWith('<'));
+        // Only suggest literal examples: quoted arguments and flags need shell parsing, which this prompt does not perform.
+        const candidates = [...(sub?.examples ?? []), ...cmd.examples];
+        const example = candidates.map((e) => e.split(/\s+/)).find((parts) =>
+          parts[0] === 'sketchbook' && parts[1] === cmd.name &&
+          argv.slice(1).every((arg, i) => parts[i + 2] === arg) &&
+          parts.length > argv.length + 1 && parts.slice(argv.length + 1).every((part) => /^[a-zA-Z0-9_./:=@+-]+$/.test(part)));
+        const values = example?.slice(argv.length + 1);
+        const hint = values?.length ? (a.variadic ? values.join(' ') : values[0]) : undefined;
         for (;;) {
-          const v = await ask(`${a.name}${a.required ? '' : ' (optional)'}: ${a.description}\n> `);
-          if (!v && a.required) { write('Required.\n'); continue; }
+          const description = a.variadic && sub && remainingUsage ? `Arguments for ${sub.name}: ${remainingUsage}` : `${a.name}: ${brief(a.description)}`;
+          write(`\n${line(`  ${description}`)}\n`);
+          if (hint) write(`${line(`  Example to type: ${hint}`)}\n`);
+          const v = await ask(`  ${required ? 'Type a value and press Enter' : 'Type a value, or press Enter to skip'}: `);
+          if (!v && required) { write('Required.\n'); continue; }
           if (v) argv.push(...(a.variadic ? v.split(/\s+/) : [v]));
           break;
         }
       }
-      for (const [k, o] of Object.entries(cmd.options)) {
+      const configure = Object.keys(cmd.options).length > 0 && await confirm('Configure optional settings?', 'review options', 'use defaults');
+      if (configure) for (const [k, o] of Object.entries(cmd.options)) {
         const hint = current[k] !== undefined ? ` [current: ${current[k]}; Enter keeps it]` : ' [Enter skips]';
-        if (o.type === 'boolean') { if (/^y(es)?$/i.test(await ask(`--${k}: ${o.description}? (y/N)\n> `))) argv.push(`--${k}`); continue; }
-        const v = await ask(`--${k}: ${o.description}${hint}\n> `);
+        if (o.type === 'boolean') { if (await confirm(`--${k}: ${o.description}`, 'enable', 'leave off')) argv.push(`--${k}`); continue; }
+        const example = o.value && /^(?:https?:\/\/\S+|\d+(?:\.\d+)?)$/.test(o.value) ? `\n  Example to type: ${o.value}` : '';
+        const v = await ask(`\n  --${k}: ${brief(o.description)}${hint}${example}\n  Value: `);
         if (v) argv.push(`--${k}`, v);
       }
-      const shown = `sketchbook ${argv.map((x) => (/\s/.test(x) ? JSON.stringify(x) : x)).join(' ')}`;
+      // Display a shell-safe command for people who want to repeat it.
+      const shown = `sketchbook ${argv.map((x) => (/^[a-zA-Z0-9_./:=@+-]+$/.test(x) ? x : `'${x.replace(/'/g, `'\\''`)}'`)).join(' ')}`;
       if (cmd.mutates && cmd.dryRun) {
-        write(`\nDry run: ${shown} --dry-run\n`);
-        last = await run([...argv, '--dry-run'], { root, stdout: write, stderr: write });
+        write(`\n${heading('Preview · no files will be changed')}\n  ${shown} --dry-run\n\n`);
+        last = await run([...argv, '--dry-run'], { root, stdout: write, stderr: write, human: ui.enabled });
         if (last === 1) { write('The dry run failed; nothing was changed.\n'); continue; }
-        if (!/^y(es)?$/i.test(await ask('Apply these changes? (y/N)\n> '))) { write('Not applied.\n'); continue; }
-      } else if (cmd.mutates && !/^y(es)?$/i.test(await ask(`Run ${shown}? It changes files. (y/N)\n> `))) { write('Not run.\n'); continue; }
-      write(`\nRunning: ${shown}\n`);
-      last = await run(argv, { root, stdout: write, stderr: write });
-      write(`(exit ${last})\n`);
+        if (!await confirm('Apply these changes?', 'apply changes', 'cancel without applying')) { write(`\n  ${ui.warning('Not applied.')} No files were changed.\n`); continue; }
+      } else if (cmd.mutates && !await confirm(`Run ${shown}? This changes files.`, 'run command', 'cancel without running')) { write(`\n  ${ui.warning('Not run.')} No files were changed.\n`); continue; }
+      write(`\n${heading('Running')}\n  Running: ${shown}\n\n`);
+      last = await run(argv, { root, stdout: write, stderr: write, human: ui.enabled });
+      write(`\n${heading(last === 0 ? ui.success('Done') : ui.warning(last === 2 ? 'Done with notices' : 'Command failed'))}  ${note(`exit ${last}`)}\n`);
     }
   } catch (e) {
     if (!(e instanceof Quit)) throw e;

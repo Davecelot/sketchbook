@@ -10,6 +10,7 @@ import { Readable } from 'node:stream';
 import { commands, GROUPS } from '../cli/registry.mjs';
 import { cliDocs } from '../cli/docs.mjs';
 import { knownCommands } from '../cli/known.mjs';
+import { dispatch } from '../cli/run.mjs';
 import { interactive, wantsInteractive, type InteractiveIO } from '../cli/interactive.mjs';
 import { parseJson } from '../lib/files.mjs';
 import type { Envelope } from '../cli/types.mjs';
@@ -136,12 +137,12 @@ test('L8 known-commands.json is generated from the registry plus planned-command
 });
 
 // Scripted stdin for the interactive menu; `run` records argv instead of running commands unless real is set.
-async function menu(lines: string[], { real = false, root }: { real?: boolean; root?: string } = {}) {
+async function menu(lines: string[], { real = false, failDryRun = false, root }: { real?: boolean; failDryRun?: boolean; root?: string } = {}) {
   root ??= await reference();
   const calls: string[][] = [];
   let text = '';
   const output = { write: (s: string) => { text += s; } };
-  const run: InteractiveIO['run'] = real ? undefined : (argv, { stdout }) => { calls.push(argv); must(stdout, 'dispatch stdout')(`(ran ${argv.join(' ')})\n`); return Promise.resolve(0); };
+  const run: InteractiveIO['run'] = real ? undefined : (argv, { stdout }) => { calls.push(argv); must(stdout, 'dispatch stdout')(`(ran ${argv.join(' ')})\n`); return Promise.resolve(failDryRun && argv.includes('--dry-run') ? 1 : 0); };
   const code = await interactive({ root, input: Readable.from(lines.map((l) => `${l}\n`)), output, ...(run ? { run } : {}) });
   return { calls, text, code };
 }
@@ -162,18 +163,40 @@ test('L9 interactive: groups -> command -> read-only commands run at once', asyn
 test('L10 interactive: prompts with current values, dry run first, applies only on yes', async () => {
   const opts = Object.keys(must(commands().find((c) => c.name === 'init'), 'the init command').options);
   const answers = opts.map((k) => (k === 'font' ? 'Inter' : ''));
-  const no = await menu([groupIndex('project'), commandIndex('init'), ...answers, 'n', 'q']);
+  const no = await menu([groupIndex('project'), commandIndex('init'), 'y', ...answers, 'n', 'q']);
   assert.deepEqual(no.calls, [['init', '--font', 'Inter', '--dry-run']]);
   assert.match(no.text, /--primary: .*\[current: /);
   assert.match(no.text, /Not applied/);
-  const yes = await menu([groupIndex('design'), commandIndex('sync'), 'tokens', '', 'n', 'n', '', '', '', 'y', 'q']);
+  const yes = await menu([groupIndex('design'), commandIndex('sync'), 'tokens', '', '', 'y', 'q']);
   assert.deepEqual(yes.calls, [['sync', 'tokens', '--dry-run'], ['sync', 'tokens']]);
   const required = await menu([groupIndex('project'), commandIndex('prefix'), '', 'acme', 'n']);
   assert.match(required.text, /Required\./);
   assert.deepEqual(required.calls, [['prefix', 'acme', '--dry-run']]);
+  const choices = await menu([groupIndex('tokens'), 'b', 'q']);
+  assert.match(choices.text, /1 {2}tokens\n {6}Change foundations/);
+  assert.match(choices.text, /2 {2}presets\n {6}List the standards catalog/);
   const bad = await menu(['9', 'x', 'b', 'q']);
   assert.match(bad.text, /Type 1-/);
   assert.deepEqual(bad.calls, []);
+  const defaultCancel = await menu([groupIndex('design'), commandIndex('sync'), 'tokens', '', '', 'maybe', '', 'q']);
+  assert.deepEqual(defaultCancel.calls, [['sync', 'tokens', '--dry-run']]);
+  assert.match(defaultCancel.text, /Please type y or n/);
+  assert.match(defaultCancel.text, /Enter or n \+ Enter: cancel without applying/);
+  assert.match(defaultCancel.text, /Not applied/);
+  const apply = await menu([groupIndex('design'), commandIndex('sync'), 'tokens', '', '', 'y', 'q']);
+  assert.deepEqual(apply.calls, [['sync', 'tokens', '--dry-run'], ['sync', 'tokens']]);
+  const guided = await menu([groupIndex('tokens'), commandIndex('tokens'), 'set', '', 'typography.family Inter', '', 'n', 'q']);
+  assert.match(guided.text, /Arguments for set: <key> <value>/);
+  assert.match(guided.text, /Example to type: typography\.family Inter/);
+  assert.match(guided.text, /Required\./);
+  assert.match(guided.text, /Documentation: https:\/\/sketchbook-docs\.vercel\.app\//);
+  assert.deepEqual(guided.calls, [['tokens', 'set', 'typography.family', 'Inter', '--dry-run']]);
+  const quoted = await menu([groupIndex('tokens'), commandIndex('tokens'), 'set', 'color.primary #336699', '', '', 'q']);
+  assert.match(quoted.text, /sketchbook tokens set color\.primary '#336699' --dry-run/);
+  const failed = await menu([groupIndex('design'), commandIndex('sync'), 'tokens', '', '', 'q'], { failDryRun: true });
+  assert.deepEqual(failed.calls, [['sync', 'tokens', '--dry-run']]);
+  assert.match(failed.text, /dry run failed/);
+  assert.doesNotMatch(failed.text, /Apply these changes/);
 });
 
 test('L11 bare sketchbook without a terminal (or with --json) prints help instead of the menu', async () => {
@@ -243,4 +266,30 @@ test('L13 generate rebuilds every generated output from the spec (what a project
   assert.match(await readFile(join(dir, 'src/index.ts'), 'utf8'), /export \* from '\.\/components\/button\/index\.js'/);
   assert.deepEqual((await runChecks(dir, { only: ['G1'] })).results[0]?.errors, []);
   await rm(dir, { recursive: true });
+});
+
+
+test('terminal presentation abbreviates lists without changing pipes or JSON', async () => {
+  const dir = await reference();
+  const run = async (args: string[], human: boolean) => {
+    let out = ''; let err = '';
+    const code = await dispatch(args, { root: dir, human, stdout: (s) => { out += s; }, stderr: (s) => { err += s; } });
+    return { code, out, err };
+  };
+  const help = await run(['help'], true);
+  assert.match(help.out, /SKETCHBOOK/);
+  assert.match(help.out, /help --details/);
+  const brief = await run(['list'], true);
+  const full = await run(['list', '--details'], true);
+  assert.match(brief.out, /more\. Use sketchbook list --details/);
+  assert.doesNotMatch(full.out, /more\. Use sketchbook list --details/);
+  const plain = await run(['list'], false);
+  assert.equal(plain.out.includes('\x1b['), false);
+  assert.doesNotMatch(plain.out, /SKETCHBOOK/);
+  const json = await run(['list', '--json'], true);
+  envelope(parseJson<Envelope>(json.out), 'list');
+  const error = await run(['not-a-command'], true);
+  assert.equal(error.code, 1);
+  assert.match(error.err, /Unknown command/);
+  assert.match(error.err, /Next/);
 });
