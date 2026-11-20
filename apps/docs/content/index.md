@@ -12,6 +12,11 @@ layout: home
 
 Choose how much to start with, from foundations alone to a working component library. Your team owns the source files. The Sketchbook CLI rebuilds the outputs and checks that they match.
 
+<video class="intro-video" controls preload="none" playsinline poster="/assets/sketchbook-film-poster.jpg" aria-label="Introduction to Sketchbook">
+  <source src="/assets/sketchbook-film.mp4" type="video/mp4">
+  Your browser does not support video. <a href="/assets/sketchbook-film.mp4">Download the Sketchbook introduction</a>.
+</video>
+
 ## What you get
 
 - **Sources your team can change.** Set a brand, name your token roles, and write down how components should behave. [See what you edit](/concepts/how-it-works/#what-you-edit).

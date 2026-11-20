@@ -648,6 +648,15 @@ kbd {
   margin: 0 0 var(--sb-space-4);
 }
 
+.intro-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: var(--sb-space-6) 0;
+  border-radius: var(--sb-radius-lg);
+  background: var(--sb-color-muted);
+}
+
 .playground-controls {
   min-width: 0;
   padding: var(--sb-space-4);

@@ -522,6 +522,8 @@ await cp('apps/docs/content/_assets/docs.css', `${OUT}/assets/docs.css`);
 const tsc = createRequire(import.meta.url).resolve('typescript/bin/tsc');
 execFileSync(process.execPath, [tsc, '-p', 'apps/docs/tsconfig.browser.json'], { stdio: 'inherit' });
 await cp('apps/docs/content/_assets/Sketchbook.fig', `${OUT}/assets/Sketchbook.fig`);
+await cp('apps/docs/content/_assets/sketchbook-film.mp4', `${OUT}/assets/sketchbook-film.mp4`);
+await cp('apps/docs/content/_assets/sketchbook-film-poster.jpg', `${OUT}/assets/sketchbook-film-poster.jpg`);
 
 const sectionOf = (p: Page) => SECTIONS.find((s) => s.dir === p.dir)?.title ?? '';
 await writeFile(
