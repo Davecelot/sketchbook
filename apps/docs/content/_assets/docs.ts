@@ -236,76 +236,116 @@ addEventListener('resize', syncScrollRegions);
 
 const playground = document.querySelector('[data-playground]');
 if (playground) {
-  const color = requiredElement<HTMLElement & { value: string }>('[data-control="primary"]', playground);
-  const radius = requiredElement<HTMLElement & { value: number[] }>('[data-control="radius"]', playground);
+  type Select = HTMLElement & { value: string };
+  type Preset = { id: string; values: { height?: Record<string, number>; 'padding-x'?: Record<string, string>; gap?: Record<string, string>; base?: number; steps?: number[]; sizes?: Record<string, number>; ratio?: number } };
+  const controls = requiredElement<HTMLElement>('[data-presets]', playground);
+  const presets = JSON.parse(controls.dataset.presets ?? '{}') as Record<string, Preset[]>;
   const output = requiredElement('[data-output="radius"]', playground);
-  const RADIUS_SCALE = { sm: 0.75, md: 1, lg: 1.25, xl: 1.5 };
-  const token = (name: string) => getComputedStyle(root).getPropertyValue(name).trim();
-  const radiusValue = () => radius.value[0] ?? 8;
-
-  const luminance = (hex: string) => {
-    const channel = (i: number) => {
-      const value = parseInt(hex.slice(i, i + 2), 16) / 255;
-      return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-    };
-    return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
-  };
-  const readable = (hex: string) => {
-    const l = luminance(hex);
-    return (l + 0.05) / 0.05 >= 1.05 / (l + 0.05) ? token('--sb-color-black') : token('--sb-color-white');
-  };
-  const showRadius = () => {
-    const pixels = radiusValue();
+  const radius = requiredElement<HTMLElement & { value: number[] }>('[data-control="radius"]', playground);
+  const names = ['primary', 'density', 'spacing', 'font', 'typeScale'] as const;
+  const fields = Object.fromEntries(names.map((name) => [name, requiredElement<Select>(`[data-control="${name}"]`, playground)])) as Record<(typeof names)[number], Select>;
+  const defaults = Object.fromEntries(names.map((name) => [name, fields[name].getAttribute('value') ?? ''])) as Record<(typeof names)[number], string>;
+  const preset = (family: string, id: string) => presets[family]?.find((p) => p.id === id)?.values;
+  const key = 'sb-docs-playground-v2';
+  let applied: string[] = [];
+  const apply = () => {
+    const overrides: Record<string, string> = {};
+    const pixels = Math.max(0, Math.min(20, radius.value[0] ?? 8));
     output.textContent = `${pixels}px`;
     radius.setAttribute('aria-valuetext', `${pixels} pixels`);
-  };
-
-  const KEY = 'sb-docs-playground';
-  const persist = () => {
-    try {
-      localStorage.setItem(
-        KEY,
-        JSON.stringify({
-          primary: color.value,
-          primaryForeground: root.style.getPropertyValue('--sb-color-primary-foreground'),
-          radius: radius.value
-        })
-      );
-    } catch (e) {} // eslint-disable-line no-empty -- storage can be unavailable (private mode); the playground still works
-  };
-  const applyColor = () => {
-    root.style.setProperty('--sb-color-primary', color.value);
-    root.style.setProperty('--sb-color-primary-foreground', readable(color.value));
-    persist();
-  };
-  color.addEventListener('change', applyColor);
-  radius.addEventListener('input', () => {
-    showRadius();
-    for (const [name, factor] of Object.entries(RADIUS_SCALE)) {
-      root.style.setProperty(`--sb-radius-${name}`, `${Math.round(radiusValue() * factor)}px`);
+    const label = (name: (typeof names)[number]) => fields[name].querySelector<HTMLOptionElement>(`option[value="${fields[name].value}"]`)?.textContent ?? '';
+    requiredElement('[data-summary="appearance"]', playground).textContent = `Color & shape: ${label('primary')} · ${pixels}px`;
+    requiredElement('[data-summary="spacing"]', playground).textContent = `Spacing: ${label('density')} · ${label('spacing')}`;
+    requiredElement('[data-summary="typography"]', playground).textContent = `Type: ${label('font')} · ${label('typeScale')}`;
+    if (pixels !== 8) {
+      for (const [name, factor] of Object.entries({ sm: 0.75, md: 1, lg: 1.25, xl: 1.5 })) overrides[`--sb-radius-${name}`] = `${Math.round(pixels * factor)}px`;
     }
-    persist();
-  });
-  requiredElement('[data-reset]', playground).addEventListener('click', () => {
-    const touched = ['--sb-color-primary', '--sb-color-primary-foreground', ...Object.keys(RADIUS_SCALE).map((n) => `--sb-radius-${n}`)];
-    for (const property of touched) root.style.removeProperty(property);
-    radius.value = [8];
-    color.value = color.getAttribute('value') ?? '';
-    showRadius();
+    const color = fields.primary.value;
+    if (color !== defaults.primary && /^#[\da-f]{6}$/i.test(color)) {
+      const channels = [1, 3, 5].map((i) => {
+        const value = parseInt(color.slice(i, i + 2), 16) / 255;
+        return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+      });
+      const luminance = 0.2126 * (channels[0] ?? 0) + 0.7152 * (channels[1] ?? 0) + 0.0722 * (channels[2] ?? 0);
+      overrides['--sb-color-primary'] = color;
+      overrides['--sb-color-primary-foreground'] = luminance > 0.179 ? '#000' : '#fff';
+    }
+    const density = preset('density', fields.density.value);
+    const spacingPreset = preset('spacing', fields.spacing.value);
+    const spacing = spacingPreset?.base ?? 4;
+    const step = (value: string | undefined) => Number((value ?? '0').replace('-', '.')) * spacing;
+    if (fields.spacing.value !== defaults.spacing) {
+      for (const n of spacingPreset?.steps ?? []) overrides[`--sb-space-${String(n).replace('.', '-')}`] = `${n * spacing}px`;
+    }
+    if (fields.density.value !== defaults.density) {
+      for (const [name, value] of Object.entries(density?.height ?? {})) overrides[`--sb-size-control-${name}`] = `${value}px`;
+      for (const [name, value] of Object.entries(density?.['padding-x'] ?? {})) overrides[`--sb-space-control-padding-x-${name}`] = `${step(value)}px`;
+      for (const [name, value] of Object.entries(density?.gap ?? {})) overrides[`--sb-space-control-gap-${name}`] = `${step(value)}px`;
+    }
+    const fonts: Record<string, string> = { system: 'system-ui, sans-serif', serif: 'Georgia, serif', mono: 'ui-monospace, monospace' };
+    if (fields.font.value !== defaults.font) overrides['--sb-font-family-sans'] = fonts[fields.font.value] ?? 'system-ui, sans-serif';
+    const scale = preset('typeScale', fields.typeScale.value);
+    if (fields.typeScale.value !== defaults.typeScale) {
+      ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'].forEach((name, index) => {
+        const value = scale?.sizes?.[name] ?? Math.round((16 * (scale?.ratio ?? 1) ** (index - 2)) / 2) * 2;
+        overrides[`--sb-font-size-${name}`] = `${value}px`;
+      });
+    }
+    for (const name of applied) root.style.removeProperty(name);
+    for (const [name, value] of Object.entries(overrides)) root.style.setProperty(name, value);
+    applied = Object.keys(overrides);
+    return overrides;
+  };
+  const save = (overrides: Record<string, string>) => {
     try {
-      localStorage.removeItem(KEY);
-    } catch (e) {} // eslint-disable-line no-empty -- storage can be unavailable
-  });
+      localStorage.setItem(key, JSON.stringify({ ...Object.fromEntries(names.map((name) => [name, fields[name].value])), radius: radius.value[0], overrides }));
+    } catch (e) {} // eslint-disable-line no-empty -- storage may be unavailable
+  };
   try {
-    const saved: unknown = JSON.parse(localStorage.getItem(KEY) || 'null');
+    const saved: unknown = JSON.parse(localStorage.getItem(key) ?? localStorage.getItem('sb-docs-playground') ?? 'null');
     if (saved && typeof saved === 'object') {
-      if ('primary' in saved && typeof saved.primary === 'string') color.value = saved.primary;
+      const values = saved as Record<string, unknown>;
+      if (values.overrides && typeof values.overrides === 'object') applied = Object.keys(values.overrides);
+      for (const name of names) {
+        const value = values[name];
+        if (typeof value === 'string' && Array.from(fields[name].querySelectorAll('option')).some((option) => option.value === value)) fields[name].value = value;
+      }
       if ('radius' in saved) {
         const value: unknown = Array.isArray(saved.radius) ? saved.radius[0] : saved.radius;
-        const pixels = typeof value === 'string' ? Number(value) : value;
-        if (typeof pixels === 'number' && Number.isFinite(pixels)) radius.value = [pixels];
+        if (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 20) radius.value = [value];
       }
     }
-  } catch (e) {} // eslint-disable-line no-empty -- unreadable saved state: keep the defaults
-  showRadius();
+  } catch (e) {} // eslint-disable-line no-empty -- unreadable saved state: keep defaults
+  const groups = [...playground.querySelectorAll<HTMLDetailsElement>('.playground-control-group')];
+  for (const group of groups) {
+    group.addEventListener('toggle', () => {
+      if (group.open) for (const other of groups) if (other !== group) other.open = false;
+    });
+  }
+  document.addEventListener('click', (event) => {
+    if (event.target instanceof Node && !controls.querySelector('.playground-groups')?.contains(event.target)) {
+      for (const group of groups) group.open = false;
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const open = groups.find((group) => group.open);
+    if (!open) return;
+    open.open = false;
+    open.querySelector('summary')?.focus();
+  });
+  for (const name of names) fields[name].addEventListener('change', () => save(apply()));
+  radius.addEventListener('input', () => save(apply()));
+  requiredElement('[data-reset]', playground).addEventListener('click', () => {
+    for (const name of names) fields[name].value = defaults[name];
+    radius.value = [8];
+    apply();
+    try {
+      localStorage.removeItem(key);
+      localStorage.removeItem('sb-docs-playground');
+    } catch (e) {} // eslint-disable-line no-empty -- storage may be unavailable
+  });
+  const overrides = apply();
+  // Upgrade the previous preview-only settings so they also apply on other Demo pages.
+  if (Object.keys(overrides).length) save(overrides);
 }

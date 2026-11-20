@@ -272,8 +272,22 @@ async function tokenPanel() {
   const color = aliases('--sb-color-primary');
   const radius = aliases('--sb-radius-control');
   if (!color.length || !radius.length) throw new Error('docs token panel: no component aliases of the primary color or control radius in the light block of generated/css/tokens.css');
+  type Preset = { id: string; label: string; values: Record<string, unknown> };
+  const catalog = async (name: string) => parseJson<{ presets: Preset[] }>(await readFile(`harness/standards/${name}.json`, 'utf8'));
+  const [density, spacing, typeScale] = await Promise.all([catalog('density'), catalog('spacing'), catalog('typeScale')]);
+  const [paletteIcon, slidersIcon, typeIcon] = await Promise.all(
+    ['palette', 'sliders-horizontal', 'type'].map(async (name) =>
+      (await readFile(`node_modules/lucide-static/icons/${name}.svg`, 'utf8')).replace('<svg', '<svg aria-hidden="true" focusable="false"')
+    )
+  );
+  const select = (name: string, label: string, presets: Preset[], ids: string[], initial: string) =>
+    `<div class="playground-field"><sb-native-select label="${label}" size="small" data-control="${name}" value="${initial}">${presets.filter((p) => ids.includes(p.id)).map((p) => `<option value="${esc(p.id)}">${esc(p.label)}</option>`).join('')}</sb-native-select></div>`;
+  const presets = esc(JSON.stringify({ density: density.presets, spacing: spacing.presets, typeScale: typeScale.presets }));
   return `<div class="token-panel" data-playground>
-<div class="playground-controls">
+<div class="playground-controls" data-presets="${presets}">
+<div class="playground-controls-heading"><strong>Customize the Demo</strong><span>Saved in this browser</span></div>
+<div class="playground-groups" aria-label="Customization controls">
+<details class="playground-control-group"><summary aria-label="Color and shape" title="Color and shape">${paletteIcon}<span>Color &amp; shape</span></summary><div class="playground-fields"><strong>Color &amp; shape</strong>
 <div class="playground-field"><sb-native-select label="Primary color" size="small" data-control="primary" value="${brandPrimary}">
 <option value="${brandPrimary}">Brand</option>
 <option value="#0F766E">Teal</option>
@@ -282,12 +296,25 @@ async function tokenPanel() {
 <option value="#E11D48">Rose</option>
 </sb-native-select></div>
 <div class="playground-field playground-range"><sb-slider label="Radius" min="0" max="20" step="1" value="8" data-control="radius"></sb-slider><output data-output="radius">8px</output></div>
-<sb-button variant="ghost" size="small" data-reset>Reset</sb-button>
+</div></details>
+<details class="playground-control-group"><summary aria-label="Density and spacing" title="Density and spacing">${slidersIcon}<span>Density &amp; spacing</span></summary><div class="playground-fields"><strong>Density &amp; spacing</strong>
+${select('density', 'Density', density.presets, ['compact', 'comfortable', 'spacious'], 'comfortable')}
+${select('spacing', 'Spacing unit', spacing.presets, ['grid-2', 'grid-4', 'grid-8'], 'grid-4')}
+</div></details>
+<details class="playground-control-group"><summary aria-label="Typography" title="Typography">${typeIcon}<span>Typography</span></summary><div class="playground-fields"><strong>Typography</strong>
+<div class="playground-field"><sb-native-select label="Font family" size="small" data-control="font" value="system"><option value="system">System sans</option><option value="serif">System serif</option><option value="mono">System monospace</option></sb-native-select></div>
+${select('typeScale', 'Type scale', typeScale.presets, ['tailwind', 'minor-third', 'perfect-fourth'], 'tailwind')}
+</div></details>
 </div>
+<div class="playground-chips" aria-label="Current customization"><span class="playground-chip" data-summary="appearance"></span><span class="playground-chip" data-summary="spacing"></span><span class="playground-chip" data-summary="typography"></span></div>
+<div class="playground-footer"><span>Changes apply throughout the Demo.</span><sb-button variant="tertiary" size="small" data-reset>Reset</sb-button></div>
+</div>
+<details class="preview-tokens"><summary>See affected color and radius tokens</summary>
 <div class="token-groups">
 <section><h3><code>color.primary</code></h3><p>Shared by ${color.length} component tokens.</p>${list(color, (n) => `background: var(${n})`)}</section>
 <section><h3><code>radius.control</code></h3><p>Shared by ${radius.length} component tokens.</p>${list(radius, (n) => `border-radius: var(${n})`)}</section>
 </div>
+</details>
 </div>`;
 }
 
@@ -373,8 +400,6 @@ async function load() {
   return pages.sort((a, b) => rank(a) - rank(b) || a.order - b.order || a.title.localeCompare(b.title, 'en'));
 }
 
-const PLAYGROUND_HEAD = `<script>try{var p=JSON.parse(localStorage.getItem('sb-docs-playground')||'null');if(p){var r=document.documentElement.style;if(p.primary){r.setProperty('--sb-color-primary',p.primary);r.setProperty('--sb-color-primary-foreground',p.primaryForeground)}if(p.radius!=null){var s={sm:.75,md:1,lg:1.25,xl:1.5};for(var k in s)r.setProperty('--sb-radius-'+k,Math.round(p.radius*s[k])+'px')}}}catch(e){}</script>`;
-
 const icon = (d: string) =>
   `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const ICONS = {
@@ -434,7 +459,7 @@ function layout(pages: Page[], page: Page) {
 <link rel="icon" href="/assets/sketchbook-icon.png" type="image/png">
 <link rel="alternate" type="text/markdown" href="${page.url}index.md">
 <script>try{var t=localStorage.getItem('sb-docs-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-${page.tab === 'demo' ? PLAYGROUND_HEAD : ''}
+${page.tab === 'demo' ? `<script>try{var p=JSON.parse(localStorage.getItem('sb-docs-playground-v2')||'null');if(p&&p.overrides&&typeof p.overrides==='object')for(var k in p.overrides){var v=p.overrides[k];if(/^--sb-(color-primary(?:-foreground)?|radius-(?:sm|md|lg|xl)|space-(?:\\d+)(?:-\\d+)?|space-control-(?:padding-x|gap)-(?:xs|sm|default|lg|field)|size-control-(?:sm|default|lg)|font-family-sans|font-size-(?:xs|sm|base|lg|xl|2xl|3xl|4xl))$/.test(k)&&typeof v==='string'&&/^[\\w\\s.,#%-]+$/.test(v))document.documentElement.style.setProperty(k,v)}}catch(e){}</script>` : ''}
 <link rel="stylesheet" href="/assets/tokens.css">
 <link rel="stylesheet" href="/assets/docs.css">
 ${page.html.includes('<sb-') ? '<script src="/assets/sketchbook.js" defer></script>' : ''}

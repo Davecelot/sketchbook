@@ -4,7 +4,7 @@ description: "See how changing a shared token updates the components that use it
 order: 10
 ---
 
-Choose a primary color and watch the swatches update together. Then move the radius slider and compare the corners. These are real component tokens. The controls change CSS variables in your browser, and **Reset** brings the preview back to its starting values.
+Change color, radius, density, spacing, or typography, then explore the components in the Demo tab to see the effects. Your choices stay in this browser across Demo pages until you select **Reset**. They don't change your project or the Docs tab.
 
 <!-- tokens:preview -->
 
