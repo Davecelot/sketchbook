@@ -72,7 +72,7 @@
     "precheck": "npm run -s build:harness",
     "check": "node harness/checks/run.mjs",
     "check:maintainer": "node harness/checks/run.mjs --maintainer",
-    "verify": "npm run check && npm run test:harness && npm run typecheck && git diff --exit-code && npm run lint && node scripts/audit.mjs && npm run build-storybook && CI=true npm run test:component",
+    "verify": "npm run check && npm run test:harness && npm run typecheck && git diff --exit-code && npm run lint && npm audit --omit=dev --audit-level=high && npm run build-storybook && CI=true npm run test:component",
     "propagate": "node harness/cli.mjs propagate",
     "propagate:maintainer": "node harness/cli.mjs propagate --maintainer",
     "check:json": "node harness/checks/run.mjs --json",
