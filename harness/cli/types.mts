@@ -63,7 +63,7 @@ export interface CommandContext<S extends OptionSpecs = OptionSpecs> {
   human?: boolean;
   details?: boolean;
   out: (line?: string) => void;
-  checks: () => Promise<ChecksSummary>;
+  checks: (root?: string) => Promise<ChecksSummary>;
 }
 
 export interface CommandResult {

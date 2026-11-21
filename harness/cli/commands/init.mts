@@ -4,10 +4,13 @@ import { applyStarter, listStarters, planStarter, preflightStarter, refuseStaleL
 import { installAgents, bootstrap, EXTRAS, isProject, repair, STAGED } from '../../commands/bootstrap.mjs';
 import { AGENT_PROFILES, parseAgentProfiles } from '../../lib/agent-config.mjs';
 import { installedSummary } from '../../lib/installed.mjs';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { show } from '../../lib/files.mjs';
+import { changedFiles, conflicts, copyBack, snapshot } from '../../lib/stage.mjs';
 import type { BrandConfig } from '../../../generated/types/brand-config.js';
-import type { Command, IssueLike, OptionSpecs } from '../types.mjs';
+import type { Command, CommandResult, IssueLike, OptionSpecs } from '../types.mjs';
 
 const START_OPTIONS = {
   start: { type: 'string', value: 'starter', description: 'Starting point: blank | foundations | library (default) | library+kits | pick | import | from-codebase (harness/starters)' },
@@ -28,6 +31,9 @@ const options = { ...Object.fromEntries(Object.entries(INIT_OPTIONS).map(([k, de
 // A string radius or density (the v1 shape) has no .style or .preset: as before, the label falls back.
 const radiusOf = (radius: BrandConfig['radius']) => (radius && typeof radius === 'object' ? radius.style ?? radius.preset : undefined);
 const densityOf = (density: BrandConfig['density']) => (density && typeof density === 'object' ? density.preset ?? density : density);
+
+// Starter, prefix and brand inputs/outputs, plus the files the staged checks inspect.
+const STARTER_PATHS = ['src', 'spec', 'playwright', '.storybook', 'docs', 'README.md', 'CLAUDE.md', '.claude', '.agents', 'move-to-.claude', 'brands', 'brand.config.json', 'harness.config.json', 'generated', 'harness', 'scripts', 'package.json', 'AGENTS.md'];
 
 export default {
   name: 'init',
@@ -108,38 +114,60 @@ export default {
       if (changed.length && Object.keys(opts).length) out(`Would change: ${changed.join(', ')}`);
       return { changed, data };
     }
-    const changed: string[] = [];
-    const warnings: IssueLike[] = [];
-    const data: Record<string, unknown> = {};
-    let next = 'Review in Storybook (npm run storybook), then sketchbook sync tokens if a design file is connected.';
-    if (Object.keys(opts).length) {
-      const r = await init(root, opts);
-      const b = r.resolved;
-      if (r.renamed) out(`Prefix ${r.renamed.from} -> ${r.renamed.to}: ${r.renamed.replacements} replacement(s) in ${r.renamed.files.length} file(s).`);
-      out(`Brand "${r.brand.name}": primary ${b.color.primary}${r.anchors.primary ? ` (anchored at ${r.anchors.primary})` : ''}, radius ${radiusOf(r.brand.radius) ?? 'soft'}, density ${show(densityOf(r.brand.density) ?? 'comfortable')}, font ${r.brand.typography?.family ?? 'ui-sans-serif'}.`);
-      if (r.changed.length) out(`Semantic tokens re-pointed:\n  ${r.changed.join('\n  ')}`);
-      for (const m of r.missing) out(`Link not applied: ${m.msg}`);
-      warnings.push(...r.missing);
-      changed.push('brand.config.json', 'harness.config.json', 'spec/tokens/foundation/*', ...r.changed.map((x) => `spec/tokens/semantic/${x.split(':')[0]}.tokens.json`), 'generated/css/tokens.css');
-      data.brand = r.brand;
-      data.anchors = r.anchors;
-    }
-    if (start) {
-      const r = await applyStarter(root, start, { components: options.components, from: options.from, yes: options.yes, detachCatalog: options['detach-catalog'] });
-      if (r.warning) { out(r.warning); warnings.push({ file: 'harness.config.json', msg: r.warning, fix: 'Set catalog.source back to true if this repo is the catalog source.' }); }
-      out(`Starter ${start}: installed ${r.plan.components.install.length} component(s), removed ${r.plan.components.remove.length}; kits installed ${r.plan.kits.install.length}, removed ${r.plan.kits.remove.length}. Components now: ${r.plan.components.target.length}.`);
-      for (const l of r.lines) out(l);
-      changed.push(...r.changed);
-      data.starter = { id: start, components: r.plan.components.target, kits: r.plan.kits.target };
-      data.catalogSource = r.catalog.source;
-      next = r.next.join('; ');
-      if (r.actionExit) warnings.push({ file: null, msg: `the ${start} step exited ${r.actionExit}`, fix: r.next[0] });
-    }
-    out('Checks:');
-    const c = await checks();
-    return {
-      changed: [...new Set(changed)], warnings: [...warnings, ...c.warnings], errors: c.errors, exitCode: c.exitCode === 1 ? 1 : 0,
-      next: c.exitCode === 1 ? 'Fix the failing checks, then sketchbook check.' : next, data,
+    const apply = async (dir: string, out: (line?: string) => void): Promise<CommandResult> => {
+      const changed: string[] = [];
+      const warnings: IssueLike[] = [];
+      const data: Record<string, unknown> = {};
+      let next = 'Review in Storybook (npm run storybook), then sketchbook sync tokens if a design file is connected.';
+      if (brandChange) {
+        const r = await init(dir, opts);
+        const b = r.resolved;
+        if (r.renamed) out(`Prefix ${r.renamed.from} -> ${r.renamed.to}: ${r.renamed.replacements} replacement(s) in ${r.renamed.files.length} file(s).`);
+        out(`Brand "${r.brand.name}": primary ${b.color.primary}${r.anchors.primary ? ` (anchored at ${r.anchors.primary})` : ''}, radius ${radiusOf(r.brand.radius) ?? 'soft'}, density ${show(densityOf(r.brand.density) ?? 'comfortable')}, font ${r.brand.typography?.family ?? 'ui-sans-serif'}.`);
+        if (r.changed.length) out(`Semantic tokens re-pointed:\n  ${r.changed.join('\n  ')}`);
+        for (const m of r.missing) out(`Link not applied: ${m.msg}`);
+        warnings.push(...r.missing);
+        changed.push('brand.config.json', 'harness.config.json', 'spec/tokens/foundation/*', ...r.changed.map((x) => `spec/tokens/semantic/${x.split(':')[0]}.tokens.json`), 'generated/css/tokens.css');
+        data.brand = r.brand;
+        data.anchors = r.anchors;
+      }
+      if (start) {
+        const r = await applyStarter(dir, start, { components: options.components, from: options.from, inputRoot: root, yes: options.yes, detachCatalog: options['detach-catalog'] });
+        if (r.actionExit) return { changed: [], errors: [{ msg: r.lines.join('\n') || `The ${start} step exited ${r.actionExit}.`, fix: r.next[0] }], exitCode: 1 };
+        if (r.warning) { out(r.warning); warnings.push({ file: 'harness.config.json', msg: r.warning, fix: 'Set catalog.source back to true if this repo is the catalog source.' }); }
+        out(`Starter ${start}: installed ${r.plan.components.install.length} component(s), removed ${r.plan.components.remove.length}; kits installed ${r.plan.kits.install.length}, removed ${r.plan.kits.remove.length}. Components now: ${r.plan.components.target.length}.`);
+        for (const l of r.lines) out(l);
+        data.starter = { id: start, components: r.plan.components.target, kits: r.plan.kits.target };
+        data.catalogSource = r.catalog.source;
+        next = r.next.join('; ');
+      } else out('Checks:');
+      const c = await checks(dir);
+      return {
+        changed, warnings: [...warnings, ...c.warnings], errors: c.errors, exitCode: c.exitCode === 1 ? 1 : 0,
+        next: c.exitCode === 1 ? 'Fix the failing checks, then sketchbook check.' : next, data,
+      };
     };
+    if (!start) return apply(root, out);
+
+    const stage = mkdtempSync(join(tmpdir(), 'sketchbook-starter-'));
+    try {
+      const before = snapshot(root, STARTER_PATHS, stage);
+      const lines: string[] = [];
+      // Buffer success messages until the checked changes have been published.
+      const result = await apply(stage, (line = '') => { lines.push(line); });
+      if (result.exitCode === 1) {
+        out('Starter not applied. The project was not changed.');
+        return { ...result, changed: [] };
+      }
+      const after = snapshot(stage, STARTER_PATHS);
+      const changed = changedFiles(before, after);
+      const edited = conflicts(root, before, changed);
+      if (edited.length) throw Object.assign(new Error(`${edited.length} file(s) changed while the starter ran: ${edited.slice(0, 6).join(', ')}. Nothing was written.`), { fix: 'Save your edits, then rerun the starter.' });
+      copyBack(root, stage, before, after, changed);
+      for (const line of lines) out(line);
+      return { ...result, changed };
+    } finally {
+      rmSync(stage, { recursive: true, force: true });
+    }
   },
 } satisfies Command<typeof options>;

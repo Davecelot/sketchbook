@@ -4,7 +4,7 @@
 // installed from the catalog (dependencies first), the foundations patch is merged into brand.config.json, and the
 // starter is recorded in harness.config.json. Components the team made (not in the catalog) are never touched.
 import { readdirSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import type { HarnessConfigJson } from '../../generated/types/harness-config.js';
 import { harnessPath, readJsonSync, readJsonStrict, writeFileAtomic, HARNESS } from '../lib/files.mjs';
@@ -26,7 +26,7 @@ export interface StarterPlan {
   kits: { target: string[]; install: string[]; remove: string[] };
 }
 export interface CatalogSource { source: boolean; line?: string | null; warning?: string }
-export interface StarterOptions { components?: string; from?: string; yes?: boolean; detachCatalog?: boolean; dryRun?: boolean }
+export interface StarterOptions { components?: string; from?: string; inputRoot?: string; yes?: boolean; detachCatalog?: boolean; dryRun?: boolean }
 export interface StarterDryRun { plan: StarterPlan; catalog: CatalogSource; destructive: number; dryRun: true }
 export interface StarterResult { plan: StarterPlan; catalog: CatalogSource; changed: string[]; lines: string[]; warning: string | null; next: string[]; actionExit: number | null | undefined }
 interface StarterAction { lines: string[]; next: string[]; changed?: string[]; exitCode?: number | null }
@@ -84,17 +84,17 @@ export function planStarter(root: string, id: string, { components }: { componen
 }
 
 // Starter-specific step after the library is in place. Returns lines to print, files changed and next commands.
-function starterAction(root: string, id: string, from: string | undefined): StarterAction {
+function starterAction(root: string, id: string, from: string | undefined, inputRoot: string): StarterAction {
   if (id === 'import') {
     const hasTokens = existsSync(join(HARNESS, 'cli/commands/tokens.mjs'));
     if (!from) return { lines: ['Next: import your tokens into a proposal (nothing is applied until you approve it).'], next: ['sketchbook tokens import <file>'] };
     if (!hasTokens) return { lines: [`sketchbook tokens is not available in this harness yet; run it once it is: sketchbook tokens import ${from}`], next: [`sketchbook tokens import ${from}`] };
-    const r = spawnSync('node', [join(HARNESS, 'cli.mjs'), 'tokens', 'import', from], { cwd: root, encoding: 'utf8' });
-    return { lines: [r.stdout.trim(), r.stderr.trim()].filter(Boolean), next: ['Review the generated token proposal with sketchbook tokens import'], exitCode: r.status };
+    const r = spawnSync('node', [join(HARNESS, 'cli.mjs'), 'tokens', 'import', resolve(inputRoot, from)], { cwd: root, encoding: 'utf8' });
+    return { lines: [r.stdout?.trim(), r.stderr?.trim(), r.error?.message].filter((line): line is string => Boolean(line)), next: ['Review the generated token proposal with sketchbook tokens import'], exitCode: r.status ?? 1 };
   }
   if (id === 'from-codebase') {
     if (!from) return { lines: ['Next: audit your product\'s CSS into a foundations proposal.'], next: ['sketchbook audit-css <path|glob>'] };
-    const proposal = auditCss(root, [from]);
+    const proposal = auditCss(inputRoot, [from]);
     writeProposal(root, proposal);
     return { lines: [`CSS audit of ${proposal.sources.length} file(s) -> ${PROPOSAL}: ${proposal.colors.clusters.length} color cluster(s), ${proposal.fontSizes.length} font size(s), spacing base ${proposal.spacing.base}px.`], changed: [PROPOSAL], next: ['Review the CSS audit proposal and apply chosen foundation values with sketchbook tokens'] };
   }
@@ -133,7 +133,7 @@ export async function refuseStaleLinks(root: string, { yes = false }: { yes?: bo
 export async function applyStarter(root: string, id: string, options: StarterOptions & { dryRun: true }): Promise<StarterDryRun>;
 export async function applyStarter(root: string, id: string, options?: StarterOptions & { dryRun?: false }): Promise<StarterResult>;
 export async function applyStarter(root: string, id: string, options?: StarterOptions): Promise<StarterDryRun | StarterResult>;
-export async function applyStarter(root: string, id: string, { components, from, yes = false, detachCatalog = false, dryRun = false }: StarterOptions = {}): Promise<StarterDryRun | StarterResult> {
+export async function applyStarter(root: string, id: string, { components, from, inputRoot = root, yes = false, detachCatalog = false, dryRun = false }: StarterOptions = {}): Promise<StarterDryRun | StarterResult> {
   const plan = planStarter(root, id, { components });
   const destructive = plan.components.remove.length + plan.kits.remove.length;
   const catalog = catalogSourceAfter(root, { detachCatalog });
@@ -161,6 +161,6 @@ export async function applyStarter(root: string, id: string, { components, from,
   writeFileAtomic(join(root, 'harness.config.json'), serialize(config));
   changed.push('harness.config.json');
   await regenerate(root);
-  const action = starterAction(root, id, from);
+  const action = starterAction(root, id, from, inputRoot);
   return { plan, catalog, changed: [...new Set([...changed, ...(action.changed ?? [])])], lines: [...(catalog.line ? [catalog.line] : []), ...action.lines], warning: catalog.warning ?? null, next: [...action.next, ...plan.starter.next], actionExit: action.exitCode };
 }

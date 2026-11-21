@@ -41,9 +41,9 @@ export function readJsonStrict<T = unknown>(p: string): T | null {
 }
 
 // Temp file + rename on the same filesystem: a crash leaves the old file or the new one, never half of it.
-export function writeFileAtomic(p: string, data: string | Uint8Array): void {
+export function writeFileAtomic(p: string, data: string | Uint8Array, mode?: number): void {
   const tmp = `${p}.${process.pid}.tmp`;
-  writeFileSync(tmp, data);
+  writeFileSync(tmp, data, { mode });
   renameSync(tmp, p);
 }
 

@@ -110,6 +110,35 @@ test('S5 library has all 38 components and no kits; library+kits adds every kit'
   await rm(dir, { recursive: true });
 });
 
+test('a failed starter leaves both removals and brand changes unapplied', async (t) => {
+  const dir = await fixture();
+  t.after(() => rm(dir, { recursive: true }));
+  const source = 'src/components/button/Button.ts';
+  await appendFile(join(dir, source), '\n// An uncommitted team edit.\n');
+  const files = [source, 'brand.config.json', 'harness.config.json', 'spec/registry.json', 'generated/css/tokens.css', 'src/index.ts'];
+  const snapshot = () => Promise.all(files.map(async (file) => {
+    try { return hashOf(await readFile(join(dir, file))); } catch { return null; }
+  }));
+  const before = await snapshot();
+  const r = cliJson(dir, 'init', '--start', 'from-codebase', '--components', 'none', '--name', 'Not applied', '--from', 'missing.css', '--yes', '--detach-catalog', '--json');
+  assert.equal(r.code, 1, r.out + r.err);
+  assert.match(must(r.json.errors[0], 'the failure').msg, /missing\.css: no such file/);
+  assert.deepEqual(await snapshot(), before);
+  assert.deepEqual(r.json.changed, []);
+});
+
+test('a starter with failing staged checks does not change the catalog source', async (t) => {
+  const dir = await fixture();
+  t.after(() => rm(dir, { recursive: true }));
+  const before = await readFile(join(dir, 'harness.config.json'), 'utf8');
+  const r = cliJson(dir, 'init', '--start', 'blank', '--yes', '--json');
+  assert.equal(r.code, 1, r.out + r.err);
+  assert.ok(r.json.errors.some((e) => e.file?.startsWith('harness/catalog')), r.out + r.err);
+  assert.deepEqual(r.json.changed, []);
+  assert.equal(await readFile(join(dir, 'harness.config.json'), 'utf8'), before);
+  assert.equal((await components(dir)).length, 38);
+});
+
 test('S6 pick installs the chosen components and what they need, nothing else', async () => {
   const dir = await fixture();
   assert.equal(cli(dir, 'init', '--start', 'pick', '--yes', '--detach-catalog').code, 1, 'pick without --components fails');
