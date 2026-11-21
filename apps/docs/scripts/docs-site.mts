@@ -404,7 +404,10 @@ const icon = (d: string) =>
   `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const ICONS = {
   menu: icon('<path d="M4 6h16M4 12h16M4 18h16"/>'),
+  close: icon('<path d="M18 6 6 18M6 6l12 12"/>'),
   search: icon('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+  github: '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.06c-3.1.67-3.75-1.32-3.75-1.32-.5-1.29-1.23-1.63-1.23-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.7 1.15 1.7 1.15 1 1.7 2.6 1.21 3.23.93.1-.72.39-1.21.7-1.49-2.47-.28-5.07-1.24-5.07-5.49 0-1.21.43-2.2 1.14-2.98-.12-.28-.5-1.41.11-2.94 0 0 .93-.3 3.05 1.14a10.6 10.6 0 0 1 5.56 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.53.23 2.66.11 2.94.71.78 1.14 1.77 1.14 2.98 0 4.26-2.6 5.2-5.08 5.48.4.35.75 1.02.75 2.06v3.05c0 .3.2.65.76.54A11.1 11.1 0 0 0 12 .9Z"/></svg>',
+  npm: '<svg aria-hidden="true" width="24" height="18" viewBox="0 0 18 7" fill="currentColor"><path fill-rule="evenodd" d="M0 0h18v6H9v1H5V6H0V0Zm1 5h2V2h1v3h1V1H1v4Zm5-4v5h2V5h2V1H6Zm2 1h1v2H8V2Zm3-1v4h2V2h1v3h1V2h1v3h1V1h-6Z"/></svg>',
   theme: icon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
 };
 
@@ -468,12 +471,14 @@ ${page.html.includes('<sb-') ? '<script src="/assets/sketchbook.js" defer></scri
 <body>
 <a class="skip" href="#content">Skip to content</a>
 <header class="topbar">
-  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">${ICONS.menu}</button>
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="navigation-sheet" aria-haspopup="dialog">${ICONS.menu}</button>
   <a class="brand" href="/"><img src="/assets/sketchbook-icon.png" alt="" width="24" height="24"><span class="brand-name">Sketchbook</span></a>
   <nav class="tabs" aria-label="Site">${TABS.map(
     (tab) => `<a href="${tab.url}"${tab.id === page.tab ? ' aria-current="page"' : ''}>${tab.title}</a>`
   ).join('')}</nav>
   <button class="search-btn" type="button" aria-haspopup="dialog">${ICONS.search}<span>Search</span><kbd>⌘K</kbd></button>
+  <a class="icon-btn social-link" href="https://github.com/Davecelot/sketchbook" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">${ICONS.github}</a>
+  <a class="icon-btn social-link" href="https://www.npmjs.com/package/@usesketchbook/cli" target="_blank" rel="noopener noreferrer" aria-label="npm (opens in a new tab)">${ICONS.npm}</a>
   <button class="icon-btn theme-btn" type="button" aria-label="Switch theme">${ICONS.theme}</button>
 </header>
 <div class="layout${home ? ' layout-home' : ''}">
@@ -491,7 +496,9 @@ ${page.html}
   </main>
   ${toc}
 </div>
-<div class="backdrop" hidden></div>
+<dialog id="navigation-sheet" aria-labelledby="navigation-title">
+  <div class="navigation-sheet-header"><h2 id="navigation-title">Navigation</h2><button class="icon-btn navigation-close" type="button" aria-label="Close navigation">${ICONS.close}</button></div>
+</dialog>
 <dialog id="search" aria-label="Search documentation">
   <input id="q" type="search" placeholder="Search topics, commands, and components" aria-label="Search documentation" autocomplete="off">
   <ul id="results"></ul>

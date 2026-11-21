@@ -49,33 +49,31 @@ addEventListener('pagehide', () => {
 });
 
 const menuButton = requiredElement<HTMLButtonElement>('.menu-btn');
-const backdrop = requiredElement('.backdrop');
-const behindDrawer = ['main', '.toc', '.brand', '.tabs', '.search-btn', '.theme-btn'].map((selector) => requiredElement(selector));
-const setMenu = (open: boolean) => {
-  const wasOpen = sidebar.hasAttribute('data-open');
-  sidebar.toggleAttribute('data-open', open);
-  for (const element of behindDrawer) element.inert = open;
-  backdrop.hidden = !open;
-  menuButton.setAttribute('aria-expanded', String(open));
-  menuButton.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-  if (open) sidebar.querySelector('a')?.focus();
-  else if (wasOpen) menuButton.focus();
-};
-menuButton.addEventListener('click', () => setMenu(!sidebar.hasAttribute('data-open')));
-backdrop.addEventListener('click', () => setMenu(false));
-addEventListener('keydown', (event) => {
-  if (!sidebar.hasAttribute('data-open')) return;
-  if (event.key === 'Escape') setMenu(false);
-  if (event.key !== 'Tab') return;
-  const links = [...sidebar.querySelectorAll('a')].filter((link) => !link.closest('details:not([open])'));
-  const last = links.at(-1) ?? menuButton;
-  if (event.shiftKey && document.activeElement === menuButton) {
-    event.preventDefault();
-    last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    menuButton.focus();
-  }
+const navigationSheet = requiredElement<HTMLDialogElement>('#navigation-sheet');
+const navigationClose = requiredElement<HTMLButtonElement>('.navigation-close');
+const sidebarParent = sidebar.parentElement!;
+const sidebarNext = sidebar.nextSibling;
+const mobile = matchMedia('(max-width: 800px)');
+menuButton.addEventListener('click', () => {
+  navigationSheet.append(sidebar);
+  navigationSheet.showModal();
+  document.documentElement.classList.add('navigation-open');
+  menuButton.setAttribute('aria-expanded', 'true');
+  navigationClose.focus();
+  currentLink?.scrollIntoView({ block: 'nearest' });
+});
+navigationClose.addEventListener('click', () => navigationSheet.close());
+navigationSheet.addEventListener('click', (event) => {
+  if (event.target === navigationSheet) navigationSheet.close();
+});
+navigationSheet.addEventListener('close', () => {
+  sidebarParent.insertBefore(sidebar, sidebarNext);
+  document.documentElement.classList.remove('navigation-open');
+  menuButton.setAttribute('aria-expanded', 'false');
+  if (mobile.matches && !dialog.open) menuButton.focus();
+});
+mobile.addEventListener('change', () => {
+  if (!mobile.matches && navigationSheet.open) navigationSheet.close();
 });
 
 const dialog = requiredElement<HTMLDialogElement>('#search');
@@ -142,6 +140,8 @@ const render = async () => {
 };
 
 const openSearch = () => {
+  if (navigationSheet.open) navigationSheet.close();
+  if (dialog.open) return;
   dialog.showModal();
   input.select();
 };
