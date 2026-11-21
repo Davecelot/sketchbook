@@ -9,6 +9,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { show } from '../../lib/files.mjs';
 import { changedFiles, conflicts, copyBack, snapshot } from '../../lib/stage.mjs';
+import { formatHuman, runChecks } from '../../checks/run.mjs';
 import type { BrandConfig } from '../../../generated/types/brand-config.js';
 import type { Command, CommandResult, IssueLike, OptionSpecs } from '../types.mjs';
 
@@ -140,8 +141,26 @@ export default {
         data.starter = { id: start, components: r.plan.components.target, kits: r.plan.kits.target };
         data.catalogSource = r.catalog.source;
         next = r.next.join('; ');
-      } else out('Checks:');
-      const c = await checks(dir);
+        const report = await runChecks(dir);
+        // Propagation includes external outputs and is intentionally separate from applying the starter.
+        // G1 still validates local generation; standalone O1 still requires propagation afterward.
+        const propagation = report.results.find((check) => check.id === 'O1');
+        const pending = Boolean(propagation?.errors.length);
+        if (propagation && pending) {
+          propagation.warnings.push(...propagation.errors);
+          propagation.errors = [];
+        }
+        const errors = report.results.flatMap((check) => check.errors.map((issue) => ({ ...issue, id: check.id })));
+        report.ok = errors.length === 0;
+        report.exitCode = !report.ok ? 1 : report.overrides.length ? 2 : 0;
+        if (!json) for (const line of formatHuman(report)) out(line);
+        return {
+          changed, errors, warnings: [...warnings, ...report.results.flatMap((check) => check.warnings.map((issue) => ({ ...issue, id: check.id })))],
+          exitCode: report.ok ? 0 : 1, next: !report.ok ? 'Fix the failing checks, then rerun init.' : pending ? `Run sketchbook propagate; ${next}` : next, data,
+        };
+      }
+      out('Checks:');
+      const c = await checks();
       return {
         changed, warnings: [...warnings, ...c.warnings], errors: c.errors, exitCode: c.exitCode === 1 ? 1 : 0,
         next: c.exitCode === 1 ? 'Fix the failing checks, then sketchbook check.' : next, data,

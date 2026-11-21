@@ -245,6 +245,8 @@
 /lib/renames.d.mts
 /lib/schema.mjs
 /lib/schema.d.mts
+/lib/stage.mjs
+/lib/stage.d.mts
 /lib/tokens.mjs
 /lib/tokens.d.mts
 /standards/resolve.mjs

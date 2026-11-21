@@ -97,7 +97,7 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
   const required = cmd.args.filter((a) => a.required).length;
   if (positionals.length < required) return fail(name, `Usage: ${usage(cmd)}`, `Run sketchbook help ${name}.`);
   try {
-    const r = await cmd.run({ root, args: positionals, options: values, json, dryRun: Boolean(values['dry-run']), human: ui.enabled, details: Boolean(values.details), out, checks: (dir = root) => checks(dir, json) });
+    const r = await cmd.run({ root, args: positionals, options: values, json, dryRun: Boolean(values['dry-run']), human: ui.enabled, details: Boolean(values.details), out, checks: () => checks(root, json) });
     return finish(name, r);
   } catch (e) {
     return fail(name, errorMessage(e), fixOf(e) ?? `Run sketchbook help ${name}.`);

@@ -9,6 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { fixture, edit, readJson, failing, errorsOf, reference, must, sourceRepoOnly, checkoutOnly, ROOT } from './helpers.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { hashOf, parseJson } from '../lib/files.mjs';
+import { inputsHash, writeRecord } from '../lib/propagation.mjs';
 import { snapshotComponent, buildCatalog, catalogIndex } from '../commands/catalog.mjs';
 import { auditCss } from '../commands/audit-css.mjs';
 import { mergePatch } from '../commands/start.mjs';
@@ -137,6 +138,18 @@ test('a starter with failing staged checks does not change the catalog source', 
   assert.deepEqual(r.json.changed, []);
   assert.equal(await readFile(join(dir, 'harness.config.json'), 'utf8'), before);
   assert.equal((await components(dir)).length, 38);
+});
+
+test('a starter can change previously propagated inputs and tells the user to propagate again', async (t) => {
+  const dir = await fixture();
+  t.after(() => rm(dir, { recursive: true }));
+  await writeRecord(dir, { inputsHash: await inputsHash(dir) });
+  const r = cliJson(dir, 'init', '--start', 'blank', '--yes', '--detach-catalog', '--json');
+  assert.equal(r.code, 0, r.out);
+  assert.ok(r.json.warnings.some((w) => typeof w !== 'string' && w.check === 'O1'));
+  assert.match(must(r.json.next, 'next step'), /sketchbook propagate/);
+  assert.deepEqual(await components(dir), []);
+  assert.deepEqual(failing(await runChecks(dir, { only: ['O1'] })), ['O1']);
 });
 
 test('S6 pick installs the chosen components and what they need, nothing else', async () => {
