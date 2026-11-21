@@ -40,7 +40,8 @@ const OUT = 'site-dist';
 const { version } = parseJson<{ version: string }>(await readFile('package.json', 'utf8'));
 const TABS = [
   { id: 'docs', title: 'Docs', url: '/' },
-  { id: 'demo', title: 'Demo', url: '/demo/' }
+  { id: 'demo', title: 'Demo', url: '/demo/' },
+  { id: 'changelog', title: 'Changelog', url: '/changelog/' }
 ];
 const SECTIONS = [
   { dir: '', title: '', tab: 'docs' },
@@ -50,7 +51,8 @@ const SECTIONS = [
   { dir: 'cli', title: 'CLI', tab: 'docs' },
   { dir: 'reference', title: 'Reference', tab: 'docs' },
   { dir: 'playground', title: 'Playground', tab: 'demo' },
-  { dir: 'demo', title: 'Components', tab: 'demo' }
+  { dir: 'demo', title: 'Components', tab: 'demo' },
+  { dir: 'changelog', title: 'Changelog', tab: 'changelog' }
 ];
 const CLI_TOPICS: Record<string, Topic> = {
   Project: {
@@ -102,7 +104,9 @@ function parse(raw: string): { meta: Meta; body: string } {
 }
 
 const md = new MarkdownIt({ html: true });
-md.core.ruler.push('toc', (state) => {
+// Release notes come from GitHub, not from trusted, hand-authored site content.
+const releaseMd = new MarkdownIt({ html: false });
+const collectHeadings: Parameters<typeof md.core.ruler.push>[1] = (state) => {
   const used = new Set<string>();
   const toc: TocEntry[] = [];
   state.env.toc = toc;
@@ -119,7 +123,9 @@ md.core.ruler.push('toc', (state) => {
     token.attrSet('id', id);
     if (level >= 2 && level <= 3) toc.push({ level, id, text });
   });
-});
+};
+md.core.ruler.push('toc', collectHeadings);
+releaseMd.core.ruler.push('toc', collectHeadings);
 md.core.ruler.push('callout', (state) => {
   const { tokens } = state;
   for (let i = 0; i < tokens.length; i++) {
@@ -378,7 +384,7 @@ async function load() {
     const h1 = body.match(/^\s*# (.+)\n/);
     const content = body.replace(/^\s*# .+\n/, '').replace(/^Source of truth:.*\n?/gm, '').trim();
     const env: { toc?: TocEntry[] } = {};
-    const html = md.render(content, env);
+    const html = (dir === 'changelog' ? releaseMd : md).render(content, env);
     const title = meta.title ?? h1?.[1] ?? url;
     const section = SECTIONS.find((s) => s.dir === dir);
     if (!section) throw new Error(`apps/docs/content/${dir}: no SECTIONS entry for this folder`);
@@ -392,7 +398,7 @@ async function load() {
       description: meta.description ?? '',
       markdown: content,
       html,
-      toc: env.toc ?? [],
+      toc: (env.toc ?? []).filter((entry) => dir !== 'changelog' || (entry.level === 2 && /^v\d+\.\d+\.\d+/.test(entry.text))),
       text: html.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim()
     };
   });
@@ -412,6 +418,15 @@ const ICONS = {
 };
 
 function nav(pages: Page[], page: Page) {
+  if (page.tab === 'changelog') {
+    return `<div class="nav-group" role="group" aria-labelledby="nav-release-resources">
+      <p class="nav-heading" id="nav-release-resources">Release resources</p>
+      <ul>
+        <li><a href="https://github.com/Davecelot/sketchbook/releases">All GitHub releases</a></li>
+        <li><a href="https://www.npmjs.com/package/@usesketchbook/cli?activeTab=versions">All npm versions</a></li>
+      </ul>
+    </div>`;
+  }
   return SECTIONS.filter((section) => section.title && section.tab === page.tab)
     .map((section) => {
       const index = `/${section.dir}/`;
@@ -482,7 +497,7 @@ ${page.html.includes('<sb-') ? '<script src="/assets/sketchbook.js" defer></scri
   <button class="icon-btn theme-btn" type="button" aria-label="Switch theme">${ICONS.theme}</button>
 </header>
 <div class="layout${home ? ' layout-home' : ''}">
-  <nav id="sidebar" class="sidebar" aria-label="${page.tab === 'demo' ? 'Demo' : 'Documentation'}">
+  <nav id="sidebar" class="sidebar" aria-label="${page.tab === 'changelog' ? 'Changelog' : page.tab === 'demo' ? 'Demo' : 'Documentation'}">
 ${nav(pages, page)}
   </nav>
   <script>try{var n=document.getElementById('sidebar'),s=sessionStorage.getItem('sb-docs-nav');if(s)n.scrollTop=+s}catch(e){}</script>

@@ -9,3 +9,4 @@ Start with the public Docs when you want to use Sketchbook. Use the repository g
 - [Decisions](../spec/decisions/DECISIONS.md) and [simplicity debt](./simplicity-debt.md) for tradeoffs behind the design system.
 - [Accessibility audits](./a11y-audits/), [parity audits](./parity-audits/), and [research](./research/) for the evidence behind Sketchbook.
 - [Contributor guide](../CONTRIBUTING.md) for the repository map and verification commands. Public site sources live in [`apps/docs/`](../apps/docs/).
+- [Release runbook](./releasing.md) for maintainers updating the public changelog.
