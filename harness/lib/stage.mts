@@ -99,7 +99,7 @@ export function copyBack(root: string, stage: string, before: Snapshot, after: S
     for (const restore of undo.reverse()) {
       try { restore(); } catch (failure) { failures.push(failure); }
     }
-    if (failures.length) throw new AggregateError([error, ...failures], `Could not publish the staged changes, and rollback was incomplete: ${String(error)}. Review git status before retrying.`);
+    if (failures.length) throw new AggregateError(failures, `Could not publish the staged changes, and rollback was incomplete: ${String(error)}. Review git status before retrying.`, { cause: error });
     throw error;
   }
 }
