@@ -1123,7 +1123,8 @@
         "contract:accordion",
         "contract:collapsible",
         "contract:progress",
-        "contract:sidebar"
+        "contract:sidebar",
+        "specs"
       ]
     },
     "motion.duration.slow": {
@@ -1331,6 +1332,7 @@
         "contract:toggle",
         "contract:toggle-group",
         "patterns",
+        "specs",
         "stories"
       ]
     },
@@ -1343,6 +1345,7 @@
         "contract:table",
         "contract:toggle",
         "contract:toggle-group",
+        "specs",
         "stories"
       ]
     },
@@ -1357,6 +1360,7 @@
         "contract:sidebar",
         "contract:toggle",
         "contract:toggle-group",
+        "specs",
         "stories"
       ]
     },
@@ -1375,7 +1379,8 @@
         "contract:button",
         "contract:collapsible",
         "contract:slider",
-        "design-docs"
+        "design-docs",
+        "specs"
       ]
     },
     "size.dialog.max-width": {
