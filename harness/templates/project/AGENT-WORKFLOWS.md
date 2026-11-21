@@ -20,7 +20,7 @@ For a catalog component wanted as shipped, use `npx sketchbook add <name> --dry-
 
 ## Task routing
 
-When the project includes the Claude Code integration, the named skills below provide detailed workflows. Read the matching skill when available; use the local agent's own capabilities and permissions to perform its steps.
+For contracts and implementation, use the shared `contract-author` and `component-builder` Agent Skills. If your client cannot load them natively, read their `SKILL.md` files under `.agents/skills/`. In the Sketchbook source checkout those same files live at the repository root. The other named skills below provide additional guidance when the project includes the Claude Code integration. Use the local agent's own capabilities and permissions to perform the steps.
 
 | Task | Existing skill |
 | --- | --- |
@@ -48,6 +48,6 @@ The staged or installed `commands/` directory also contains the original instruc
 
 ## Detailed guidance and existing workflows
 
-When the Claude Code integration is selected, its Sketchbook material is available under `move-to-.claude/` while staged, or `.claude/` after installation. Read the relevant rule in `rules/` and skill in `skills/<name>/SKILL.md` for detailed requirements. For example: `contract-first`, `planning-gate`, `test-first`, `form-associated-controls`, `spec-is-source`, `tokens-through-the-harness`, and `figma-fidelity` are rule files; `contract-author`, `component-builder`, `playwright-worker`, `a11y-checker`, `foundations`, `kits`, `design-figma`, `review-rangers`, and `security-guardian` are skills. The other skills and command descriptions are listed in `docs/harness.md`.
+When the Claude Code integration is selected, its Sketchbook material is available under `move-to-.claude/` while staged, or `.claude/` after installation. Read the relevant rule in `rules/` and skill in `skills/<name>/SKILL.md` for detailed requirements. For example: `contract-first`, `planning-gate`, `test-first`, `form-associated-controls`, `spec-is-source`, `tokens-through-the-harness`, and `figma-fidelity` are rule files; `contract-author`, `component-builder`, `playwright-worker`, `a11y-checker`, `foundations`, `kits`, `design-figma`, `review-rangers`, and `security-guardian` are skills. In a project created by `sketchbook init`, `docs/harness.md` lists the initial installation; later changes may not be reflected. In the Sketchbook source checkout, inspect `.claude/skills/` and `.claude/commands/` instead. Use `sketchbook doctor` for current project setup.
 
 These files may contain Claude-specific tool names, model aliases, hooks, slash commands, and delegation instructions. Translate the underlying task into capabilities actually available in the current agent; do not claim that a hook or independent review ran when it did not. If delegation is unavailable or unauthorized, perform the applicable steps directly and report any unmet independent-review requirement. Rules and skills are guidance, while the deterministic CLI checks and configured Git hooks provide tool-independent verification.

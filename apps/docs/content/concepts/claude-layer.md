@@ -7,7 +7,7 @@ order: 50
 Choose the Claude Code profile when you want Claude to work from your project’s component, token, and design-file workflows. Follow [Install it](#install-it) to activate the profile.
 
 - **Slash commands** start a workflow. The available commands include `/start`, `/init`, `/tour`, `/foundations`, `/import-tokens`, `/roast-foundations`, `/kits`, `/add`, `/check`, `/explain`, `/sync`, `/swap`. They live in `.claude/commands/`.
-- **Skills** hold the procedure for one kind of task, in `.claude/skills/<skill>/`.
+- **Skills** hold the procedure for one kind of task, in `.claude/skills/<skill>/`. The `contract-author` and `component-builder` wrappers use the same shared `.agents/skills/` workflows as other profiles.
 - **Briefs** describe roles for subagents and live with the relevant skill in `.claude/skills/<skill>/agents/`.
 - **Rules** describe project requirements such as contract-first and test-first. Rules with `paths:` load for matching files.
 - **Hooks** in `.claude/settings.json` run scripts on events. Two guards block Claude's edits to generated outputs and to accepted decision records. The hammock hooks inject the decision ladder once per session, track the mode, and audit component edits; they advise and never block an edit (see [Hooks and modes](#hooks-and-modes)). Each hook is TypeScript compiled to `.mjs` and runs through `.claude/hooks/run.mjs`; in a fresh clone of Sketchbook the first hook builds them once. If a guard's script is missing, the guard blocks the edit and names the fix.

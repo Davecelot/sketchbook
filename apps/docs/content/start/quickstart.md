@@ -27,7 +27,7 @@ These steps use [the published CLI](https://www.npmjs.com/package/@usesketchbook
    npm exec --yes --package=@usesketchbook/cli -- sketchbook init --start library
    ```
 
-4. **See what you installed.** Run `status` from the project folder for an overview. Open `docs/harness.md` for the list of installed files.
+4. **See what you installed.** Run `status` from the project folder for an overview. Open `docs/harness.md` for the initial installation inventory; it does not automatically reflect later changes. Run `npx sketchbook doctor` to inspect the current setup.
 
    ```terminal
    npx sketchbook status
@@ -41,7 +41,7 @@ These steps use [the published CLI](https://www.npmjs.com/package/@usesketchbook
 
 ## Choose agent integrations
 
-The commands above create a core-only project. To set up Claude Code during install, append `--agent claude` to both `init` commands. To add it later, run `npx sketchbook init --agent claude` from the project and follow [Claude Code activation](/concepts/claude-layer/). For multiple clients, pass a comma-separated list such as `--agent codex,trae`.
+The commands above create a core-only project. To install the shared component skills and your client's setup, append `--agent <profile>` to both `init` commands or add it later with `npx sketchbook init --agent <profile>`. For multiple clients, pass a comma-separated list such as `--agent codex,trae`. The `claude` profile also needs [Claude Code activation](/concepts/claude-layer/).
 
 See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile). Run `npx sketchbook doctor` to inspect your project's setup.
 

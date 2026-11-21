@@ -2,10 +2,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile, spawnSync } from 'node:child_process';
-import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { promisify } from 'node:util';
 import { ROOT } from './helpers.mjs';
 
@@ -39,34 +39,33 @@ test('installed Copilot CLI loads instructions and hooks from the tested workspa
     });
   });
   try {
-    await mkdir(join(project, '.github/hooks'), { recursive: true });
-    for (const folder of ['node_modules', 'generated', 'src']) await mkdir(join(project, folder));
-    await mkdir(join(project, 'spec/decisions'), { recursive: true });
+    assert.equal(spawnSync('git', ['init', '-q', repo]).status, 0);
+    await exec(process.execPath, [join(ROOT, 'harness/cli.mjs'), 'init', '--adopt', '--start', 'blank', '--agent', 'copilot', '--no-install'], { cwd: repo });
+    const { name } = JSON.parse(await readFile(join(ROOT, 'package.json'), 'utf8')) as { name: string };
+    const engine = join(project, 'node_modules', name);
+    await mkdir(dirname(engine), { recursive: true });
+    await symlink(ROOT, engine, 'dir');
     const decisions = '# Decisions\n\n### SB-0001 · 2026-01-01 · Example\n**Status:** accepted\n**Decision:** Keep it.\n';
     const decisionFile = join(project, 'spec/decisions/DECISIONS.md');
     await writeFile(decisionFile, decisions);
     await mkdir(join(repo, '.github/hooks'), { recursive: true });
-    await symlink(ROOT, join(project, 'node_modules/sketchbook'), 'dir');
-    await cp(join(ROOT, 'harness/templates/project/.github/hooks/sketchbook-guard.mjs'), join(project, '.github/hooks/sketchbook-guard.mjs'));
-    await cp(join(ROOT, 'harness/templates/project/.github/hooks/sketchbook.json'), join(project, '.github/hooks/sketchbook.json'));
-    await cp(join(ROOT, 'harness/templates/project/.github/copilot-instructions.md'), join(project, '.github/copilot-instructions.md'));
-    await cp(join(ROOT, 'harness/templates/project/AGENTS.md'), join(project, 'AGENTS.md'));
     const docs = await readFile(join(ROOT, 'docs/agent-compatibility.md'), 'utf8');
     const section = docs.split('## Copilot repository hooks for an adopted app')[1]?.split('## Model-family test targets')[0] ?? '';
     const config = /```json\n([\s\S]*?)\n```/.exec(section)?.[1];
     assert.ok(config);
     await writeFile(join(repo, '.github/hooks/sketchbook.json'), config);
-    assert.equal(spawnSync('git', ['init', '-q', repo]).status, 0);
     await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
     const address = server.address();
     assert.ok(address && typeof address !== 'string');
     const env = { ...process.env };
     for (const key of Object.keys(env)) if (/^(GITHUB_|GH_|COPILOT_|OPENAI_|ANTHROPIC_)|_PROXY$/i.test(key)) delete env[key];
     Object.assign(env, { COPILOT_HOME: join(repo, 'copilot-home'), GH_CONFIG_DIR: join(repo, 'gh-config'), COPILOT_PROVIDER_BASE_URL: `http://127.0.0.1:${address.port}/v1`, COPILOT_MODEL: 'gpt-4.1', COPILOT_PROVIDER_TYPE: 'openai', NO_COLOR: '1' });
+    const foundSkills = await exec('copilot', ['skill', 'list', '--json'], { cwd: project, env, timeout: 10000 });
+    for (const skill of ['contract-author', 'component-builder']) assert.match(foundSkills.stdout, new RegExp(`"${skill}"`));
     const run = async (file: string, operation = 'create', cwd = repo) => {
       const target = join(project, file);
       tool = operation;
-      toolArgs = operation === 'bash' ? { command: 'node node_modules/sketchbook/harness/cli.mjs help --json' } : operation === 'edit' ? { path: target, old_str: 'Keep it.', new_str: 'Changed.' } : { path: target, file_text: 'test content' };
+      toolArgs = operation === 'bash' ? { command: `node ${JSON.stringify(join(engine, 'harness/cli.mjs'))} help --json` } : operation === 'edit' ? { path: target, old_str: 'Keep it.', new_str: 'Changed.' } : { path: target, file_text: 'test content' };
       requests = 0; firstRequest = ''; toolResponse = '';
       const result = await exec('copilot', ['--trust-folder', '--disable-builtin-mcps', '--disable-client-telemetry', '--allow-all-tools', '--allow-all-paths', '--log-dir', join(repo, 'logs'), '--stream', 'off', '-p', 'Create the requested test file.'], { cwd, env, timeout: 25000 });
       assert.ok(requests >= 2, 'the local mock model received the tool result');

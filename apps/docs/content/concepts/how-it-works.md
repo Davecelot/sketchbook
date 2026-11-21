@@ -15,7 +15,7 @@ When a check fails, follow the loop back to the file that owns the change.
 1. **Edit the source.** Change a brand setting, a semantic token, a contract or a decision.
 2. **Rebuild.** Generators write the foundation tokens, CSS and component styles.
 3. **Run the checks.** `sketchbook check` verifies the sources are valid and the outputs match them.
-4. **Pass the gates.** A new component stops at the planning gate and is built test-first.
+4. **Follow the gates.** The [planning and test-first gates](/concepts/checks/#gates) are enabled by default and configurable. Follow the same gates with any agent or without one.
 5. **Read the outputs.** Storybook, the design file and the docs show the result.
 
 ```terminal

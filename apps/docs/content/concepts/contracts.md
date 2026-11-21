@@ -28,23 +28,25 @@ The evidence each status needs is in [Lifecycle statuses](/reference/contract-fo
 
 ## Workflow
 
-1. Scaffold the contract. The name must already be in `spec/registry.json`.
+Use the shared `contract-author` and `component-builder` skills when working with an agent. If your client doesn't load skills natively, it can read their `SKILL.md` files under `.agents/skills/`. The workflow below also works without an agent. See [Agent compatibility](/concepts/agent-compatibility/) for installation and discovery.
+
+1. Register a new name in `spec/registry.json` if needed. Preview the scaffold, then run the command without `--dry-run`.
 
    ```terminal
-   sketchbook add "<Name>" --blank
+   sketchbook add "<Name>" --blank --dry-run
    ```
 
-2. Fill `contract.json` and `contract.md` with the `contract-author` skill. Anything the sources do not confirm is marked `"proposal": true`.
+2. Fill `contract.json` and `contract.md` from the project's design and applicable accessibility references. Mark unconfirmed details as proposals, using `"proposal": true` where the schema supports it.
 3. Run the checks until they pass.
 
    ```terminal
    sketchbook check
    ```
 
-4. Write `plan.md`, then stop at the planning gate. Write no tests or code until the plan is approved. Record the answers in the contract's `openQuestions` and in the plan.
-5. Build test-first with the `component-builder` skill: write the story and behavior spec, see the tests fail, then write the smallest code that passes.
+4. If the planning gate is enabled, complete `plan.md` and stop for approval before writing tests or implementation. Record answers in the contract's `openQuestions` and in the plan.
+5. If test-first is enabled, write the story and behavior spec and confirm the tests fail as intended before implementing. Verify against the contract, then review before promoting the component.
 
-In Claude Code, `/add <Name>` runs this flow and stops at the planning gate. The gates are described in [Checks](/concepts/checks/).
+The gates are described in [Checks](/concepts/checks/). Claude Code's `/add <Name>` is a native entry point for scaffolding and contract planning, not a prerequisite.
 
 ## Next steps
 
@@ -53,4 +55,4 @@ In Claude Code, `/add <Name>` runs this flow and stops at the planning gate. The
 - [Contract format](/reference/contract-format/)
 - [API vocabulary](/concepts/api-vocabulary/): the names a contract may use
 
-Source of truth: `CLAUDE.md`, `harness.config.json`, `spec/schemas/contract.schema.json`, `spec/schemas/registry.schema.json`, `harness/checks/r1-registry.mts`, `.claude/rules/contract-first.md`, `.claude/rules/planning-gate.md`, `.claude/rules/test-first.md`, `.claude/skills/contract-author/SKILL.md`, `.claude/skills/component-builder/SKILL.md`
+Source of truth: `harness.config.json`, `spec/schemas/contract.schema.json`, `spec/schemas/registry.schema.json`, `harness/checks/r1-registry.mts`, `.agents/skills/contract-author/SKILL.md`, `.agents/skills/component-builder/SKILL.md`

@@ -22,7 +22,7 @@ Run the following commands from your app directory. npm fetches `@usesketchbook/
 
    The command creates a core-only project. Append `--agent trae` to select TRAE or use a comma-separated list to set up several clients. See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile). `--no-install` skips dependency and Chromium setup.
 
-3. **Open the design-system folder in your agent.** For Claude Code, add `--agent claude` during adoption and follow the [activation steps](/concepts/claude-layer/) from that folder. Client setup files live inside the design-system folder.
+3. **Open the design-system folder.** Run the CLI there. If you use an agent, open the same folder as its workspace so it can find the [shared skills and client instructions](/concepts/agent-compatibility/). If you selected Claude Code, follow its [activation steps](/concepts/claude-layer/).
 
 ## Repair
 

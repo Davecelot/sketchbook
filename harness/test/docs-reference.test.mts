@@ -80,4 +80,22 @@ test('the project getting-started guide uses the installed CLI and matches its s
   assert.equal(template, source);
   assert.doesNotMatch(template, /node harness\/cli\.mjs/);
   assert.match(template, /npx sketchbook explain/);
+  assert.match(template, /snapshot does not automatically reflect later changes/);
+  assert.match(template, /core-only project includes neither integration/);
+  assert.match(template, /selected a shared agent profile/);
+  assert.match(template, /selected and activated the Claude integration/);
+});
+
+test('checkout and project guidance distinguish the initial inventory from current setup', sourceRepoOnly, async () => {
+  const checkout = await readFile(`${ROOT}AGENTS.md`, 'utf8');
+  const workflow = await readFile(`${ROOT}harness/templates/project/AGENT-WORKFLOWS.md`, 'utf8');
+  const quickstart = await readFile(`${ROOT}apps/docs/content/start/quickstart.md`, 'utf8');
+  assert.match(checkout, /docs\/README\.md.*checkout documentation/);
+  assert.match(checkout, /project created by `sketchbook init`[^.]*`docs\/harness\.md`/);
+  assert.match(workflow, /source checkout, inspect `\.claude\/skills\/` and `\.claude\/commands\/`/);
+  assert.match(quickstart, /initial installation inventory; it does not automatically reflect later changes/);
+  for (const file of ['CLAUDE.md', 'harness/templates/CLAUDE.md']) {
+    const text = await readFile(`${ROOT}${file}`, 'utf8');
+    assert.match(text, /`--dry-run` where supported/);
+  }
 });

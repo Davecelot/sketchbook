@@ -44,7 +44,7 @@ export default {
       };
     }
     const r = await scaffold(root, display, { dryRun });
-    const next = 'Draft the contract with the contract-author skill, then npm run check, then fill plan.md and stop for approval.';
+    const next = 'Draft the contract from the design and accessibility references, then run npm run check. If the planning gate is enabled, fill plan.md and stop for approval before implementation.';
     if (dryRun) out(`Would scaffold spec/components/${r.name}/ (${r.tag}) and write:\n  ${r.files.join('\n  ')}`);
     else out(`Scaffolded spec/components/${r.name}/ (${r.tag}); registry status -> draft; proposed decision ${r.decision}.\nNext: ${next}`);
     return { changed: r.files, next, data: { name: r.name, component: r.component, tag: r.tag, decision: r.decision, scaffold: true } };

@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, realpath, rename, rm, symlink, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -11,7 +11,7 @@ import { ROOT } from './helpers.mjs';
 
 const exec = promisify(execFile);
 
-test('Claude Code sends the project instructions to its model', { skip: process.env.SKETCHBOOK_TEST_CLAUDE_LIVE !== '1', timeout: 30000 }, async () => {
+test('Claude Code advertises native wrappers installed by Sketchbook alongside its project instructions', { skip: process.env.SKETCHBOOK_TEST_CLAUDE_LIVE !== '1', timeout: 30000 }, async () => {
   const dir = await mkdtemp(join(tmpdir(), 'sketchbook-claude-live-'));
   let request = '';
   const server = createServer((req, res) => {
@@ -35,8 +35,11 @@ test('Claude Code sends the project instructions to its model', { skip: process.
     });
   });
   try {
+    await exec(process.execPath, [join(ROOT, 'harness/cli.mjs'), 'init', '--start', 'blank', '--agent', 'claude', '--no-install'], { cwd: dir });
     await mkdir(join(dir, 'config'));
-    await cp(join(ROOT, 'harness/templates/CLAUDE.md'), join(dir, 'CLAUDE.md'));
+    // Activate only the skill directories here. The separate hook test activates the edit hooks.
+    await mkdir(join(dir, '.claude'));
+    await rename(join(dir, 'move-to-.claude/skills'), join(dir, '.claude/skills'));
     await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
     const address = server.address();
     assert.ok(address && typeof address !== 'string');
@@ -47,6 +50,8 @@ test('Claude Code sends the project instructions to its model', { skip: process.
     assert.match(result.stdout, /OK/);
     assert.match(request, /initial installation inventory/);
     assert.match(request, /docs\/harness\.md/);
+    assert.match(request, /Draft, resync, or validate a component contract using the shared Sketchbook/);
+    assert.match(request, /Build a component from its approved contract using the shared Sketchbook/);
   } finally {
     if (server.listening) await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
     await rm(dir, { recursive: true, force: true });

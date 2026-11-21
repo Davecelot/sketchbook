@@ -8,25 +8,27 @@ Plain `sketchbook init` creates a core-only project. Pass `--agent claude`, or a
 
 | `--agent` profile | Project files |
 | --- | --- |
-| `claude` | `CLAUDE.md` and the staged skills, commands, rules, hooks, and activation guide under `move-to-.claude/` |
-| `codex` | Shared guidance, `.agents/skills/sketchbook/SKILL.md`, `.codex/hooks.json`, and `.codex/sketchbook-guard.mjs` |
+| `claude` | Shared component skills, `CLAUDE.md`, and the staged native wrappers, skills, commands, rules, hooks and activation guide under `move-to-.claude/` |
+| `codex` | Shared guidance, `.codex/hooks.json`, and `.codex/sketchbook-guard.mjs` |
 | `gemini` | Shared guidance, `GEMINI.md`, `.gemini/settings.json`, and `.gemini/sketchbook-guard.mjs` |
-| `copilot` | Shared guidance, `.agents/skills/sketchbook/SKILL.md`, `.github/copilot-instructions.md`, `.github/hooks/sketchbook.json`, and `.github/hooks/sketchbook-guard.mjs` |
+| `copilot` | Shared guidance, `.github/copilot-instructions.md`, `.github/hooks/sketchbook.json`, and `.github/hooks/sketchbook-guard.mjs` |
 | `trae` | Shared guidance and `.trae/rules/sketchbook.md` |
 | `jetbrains` | Shared guidance and `.aiassistant/rules/sketchbook.md` for AI Assistant chat |
 | `generic` | Shared guidance for clients that read `AGENTS.md`, such as Cursor, OpenCode, Windsurf, Kiro, and Antigravity |
 
-Shared guidance consists of `AGENTS.md` and `AGENT-WORKFLOWS.md`. Multiple profiles reuse those files.
+Every selected profile installs the [standard Agent Skills](https://agentskills.io/specification) `contract-author` and `component-builder` under `.agents/skills/`. Profiles other than Claude also install `AGENTS.md`, `AGENT-WORKFLOWS.md`, and the `sketchbook` routing skill. These files are shared between profiles, not installed once per client. Clients without native skill loading can read the Markdown directly. Core-only init installs neither agent set.
+
+For an existing setup, update the CLI and run `sketchbook init --dry-run` to preview missing files. Run `sketchbook init` to add them without overwriting shared team files. Use `sketchbook upgrade` to refresh harness-owned Claude wrappers. Where shared files differ, review and merge deliberately. For a legacy upgrade using `--from`, review the reported protected shared files and use the updated installed engine's `init` to add missing skills.
 
 ## Client and hook coverage
 
 | Agent / client | Instruction entry point | Current Sketchbook coverage and validation gap |
 | --- | --- | --- |
 | Antigravity IDE | `AGENTS.md` | Shared instructions and CLI; open the design-system folder as a workspace and verify discovery |
-| Claude Code | `CLAUDE.md`, `.claude/` | Existing staged skills, commands, rules and hooks; preserve the established integration |
-| OpenCode | `AGENTS.md` | Shared instructions and CLI; project configuration can be disabled; verify discovery |
+| Claude Code | `CLAUDE.md`, `.claude/` | Native wrappers use the same shared component skills; commands, rules and hooks remain separate |
+| OpenCode | `AGENTS.md`, `.agents/skills/` | Shared instructions and native skill activation tested in standalone and adopted scopes; project configuration can be disabled |
 | Cursor | `AGENTS.md` | Shared instructions and CLI; selected Claude-format hooks can be imported when enabled; verify version and behavior |
-| GitHub Copilot | `.github/copilot-instructions.md`; `AGENTS.md` in supported features | Repository instructions and a CLI/cloud create/edit guard adapter; verify client and hook activation |
+| GitHub Copilot | `.github/copilot-instructions.md`, `.agents/skills/`; `AGENTS.md` in supported features | Create/edit guard tested in CLI; cloud discovery and enforcement not verified |
 | Gemini CLI | `GEMINI.md` | Shared instructions and BeforeTool adapter for supported edits; verify hook trust and activation |
 | Codex | `AGENTS.md`, `.agents/skills/` | Shared instructions, task-routing skill and native patch guard for generated files; verify skill and hook discovery |
 | Windsurf | `AGENTS.md` | Shared instructions and CLI; verify directory scope and discovery |
@@ -45,13 +47,31 @@ The same CLI, contracts, generators and checks run for every client, so test eac
 | Native hooks | The underlying generated-file and decision policies are shared where adapters use them. | Test each adapter's event format, registration, permissions and failure handling; Codex's patch guard covers a smaller scope. |
 | Agent and model behavior | CLI results and deterministic checks can be reused across clients and model families. | Test instruction-following and tool use only for representative combinations; record the exact versions and do not infer model compliance from a mock. |
 
+### Shared skill discovery by host
+
+Model providers do not determine project discovery on their own. A model can use a skill when its host loads the instructions or when the model can read the file. Check the specific client, surface, version, workspace scope and policy.
+
+| Host | Documented project convention | Sketchbook evidence for the shared component skills |
+| --- | --- | --- |
+| Anthropic Claude Code | [`.claude/skills/`](https://code.claude.com/docs/en/skills); remote surfaces have separate rules | CLI advertises the installed native wrappers; packaged tests verify both link to the same shared files. |
+| OpenAI Codex | [`.agents/skills/`](https://developers.openai.com/codex/build-skills) for local project discovery | Files installed; prior client tests covered guidance and guards, not activation of the two new skills. |
+| GitHub Copilot | [`.agents/skills/` and other project roots](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) depending on surface | CLI discovery tested separately from hooks; IDE and cloud discovery not verified here. |
+| Google Gemini CLI | [`.agents/skills/` or `.gemini/skills/`](https://geminicli.com/docs/cli/skills/) | Files installed; prior client tests covered hooks, not activation of these skills. Check [Google's transition to Antigravity CLI](https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli) separately. |
+| OpenCode | [`.agents/skills/` and native or compatibility locations](https://opencode.ai/docs/skills/) | Discovery and activation exercised with a mock model in standalone and adopted projects. |
+| Google Antigravity | [Workspace `.agents/` discovery](https://antigravity.google/docs/customization-discovery/) | Open the design-system workspace. Native loading not verified in the IDE or CLI. |
+| Cursor | [`.agents/skills/` or `.cursor/skills/`](https://cursor.com/docs/skills) | Native loading not verified here. |
+| Windsurf / Devin Desktop | [`.agents/skills/` and compatibility paths](https://docs.windsurf.com/windsurf/cascade/skills) | Native loading not verified here; check the installed client version. |
+| TRAE | [`.trae/skills/` or enabled `.agents/skills/`](https://docs.trae.ai/ide/skills) | Native loading not verified; enable shared skill discovery if your edition requires it. |
+| JetBrains AI Assistant | [Project `.agents/skills/` for supported agents](https://www.jetbrains.com/help/ai-assistant/agent-skills.html) | Native loading not verified here; AI Assistant chat rules are separate. |
+| AWS Kiro | [Workspace `.kiro/skills/`](https://kiro.dev/docs/skills/) | The `generic` profile does not write native Kiro skill files. Use the shared files directly. |
+
 ## Focused checks for the remaining IDEs
 
 Use a disposable initialized project, or the design-system folder of an adopted test app. Record the client version, selected agent or chat mode, workspace folder and trust settings. Start a new session after changing rules. Inspect the client's rule or context display when available; an answer that merely mentions Sketchbook is not proof that instructions were automatically loaded. If the client cannot show that evidence, record discovery as unverified rather than repeating the full CLI suite.
 
 | Client | Distinct check |
 | --- | --- |
-| Antigravity | Add the nested design-system folder as a workspace and inspect Customizations for its instructions and skill. The app-root-only scope is documented separately below. |
+| Antigravity | Add the nested design-system folder as a workspace and inspect Customizations for its instructions. Verify skill loading separately; use direct file reading if it isn't confirmed. |
 | Cursor | Check `AGENTS.md` in the project or nested scope being used; verify any optional Claude-hook import separately. |
 | Windsurf | Check whether the workspace-root or directory-scoped `AGENTS.md` applies to the file being edited. |
 | Kiro | Check `AGENTS.md` steering for the selected environment and agent; custom agents may have their own resource configuration. |
@@ -128,6 +148,20 @@ The harness does not call a model API or select a model. These are candidate fam
 | MiniMax | MiniMax | Hosted and compatible client configurations |
 
 The same deterministic CLI and project files are the contract for all families. Test representative component, token, accessibility and review tasks against that contract; evaluate tool use and instruction adherence separately from model availability. Do not hardcode version aliases or silently substitute one provider's models for another's.
+
+### Repeatable workflow comparison
+
+Use the same disposable blank project, starting state and prompts for each client/model pair. Compare at least two models in the same client where possible. Keep a core-only run as the baseline. For an adopted app, repeat discovery from both the app root and the design-system folder. Keep hook coverage separate: a client that lacks a hook can still reach the same checked result by running the CLI explicitly.
+
+| Task | Pass criteria |
+| --- | --- |
+| Install a catalog component | Previews with `sketchbook add button --dry-run`, verifies that the preview did not write files, installs the catalog component, and runs `sketchbook check`. |
+| Change a foundation | Previews `sketchbook tokens set color.primary "#0F766E" --dry-run`, applies through the CLI without hand-editing generated files, and runs `sketchbook check`. |
+| Propose a new component | Previews `sketchbook add badge --blank --dry-run`, drafts the contract from the supplied requirements and applicable accessibility references, runs `sketchbook check`, completes `plan.md`, and asks for approval without writing tests or implementation when the planning gate is enabled. |
+
+Record the client and exact version, provider and model identifier, project scope, trust settings, loaded instructions, tested hooks, and task outcome. Score instruction discovery, hook behavior, and workflow outcome separately as **pass**, **fail**, or **not tested**. Note when success required repeating the prompt or supplying guidance manually. Only a run using the actual model can establish whether it followed the workflow; use a disposable project with no private content for hosted runs.
+
+The core-only bootstrap test covers the CLI operations and scaffold boundary, not contract quality or an agent's decision to stop. On 2026-11-21, Claude Code 2.1.329 advertised both native wrappers, Copilot CLI 1.0.103 listed both shared skills from an adopted project, and OpenCode 2.3.2 loaded the contract-author workflow in a standalone project and component-builder in an adopted one. These checks used local test fixtures and, for session tests, mock model responses. Codex and Gemini adapter tests passed without rerunning their real-client suites. The real-model workflow comparison has not yet been run.
 
 ## JetBrains AI Assistant chat
 

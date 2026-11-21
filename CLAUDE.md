@@ -1,7 +1,6 @@
 # Sketchbook
 
-Index only. Facts live in the files linked here; do not repeat them.
-Sketchbook is the first draft of a design system: teams bring their own brand and way of working; the default (UI and theme following shadcn/ui; the component API speaks `spec/api.json`, SB-0122) is a starting point to edit or redo. Component creation follows the contract-first standard. See `harness.config.json` (`ui`, `process`, `features`).
+Sketchbook is an editable first draft of a design system. See `harness.config.json` for UI, process and feature settings, and `spec/api.json` for the component API. Components are contract-first.
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repository map and [docs/README.md](./docs/README.md) for documentation.
 
 ## Source of truth (edit these)
@@ -20,13 +19,13 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repository map and [docs/README
 - A `.mjs` listed in `harness/.gitignore` or `scripts/.gitignore` is the compiled output of the `.mts` beside it: edit the `.mts`, then `npm run build:harness` (SB-0119).
 
 ## Commands
-- `sketchbook <cmd>` (`npm run sketchbook -- <cmd>`, which builds first; `npx sketchbook` or `node harness/cli.mjs` after `npm run build:harness`): `sketchbook help [cmd]` lists commands and options (reference `docs/cli.md`, generated; allowed names `harness/cli/known-commands.json`); `--json` and `--dry-run` everywhere.
-- Most used: `check` (exit 0 pass, 1 fail, 2 pass with overrides; `--verbose` lists every check), `generate`, `tokens …`, `add|remove|list`, `kits …`, `docs <component>`, `sync …` (Figma), `init` (new project, SB-0099; template `harness/templates/project/`), `doctor`, `upgrade` (ownership in `harness/manifest.json`), `prefix <new>` (SB-0017).
-- `npm run verify` (the full gate before a merge; no GitHub CI, SB-0120), `npm run test:harness` (proves each check can reject), `npm run typecheck`, `npm run storybook`, `npm run test:component`.
+- `npm run sketchbook -- help [command]` builds the CLI and lists commands or options. See `docs/cli.md`; use `--json` for structured output and `--dry-run` where supported.
+- Use `check` to validate, `generate` to rebuild and `doctor` to inspect setup. `check` exits 0 on pass, 1 on failure and 2 on pass with overrides.
+- `npm run verify` is the pre-merge gate. For focused work, use `npm run test:harness`, `npm run typecheck`, `npm run storybook` or `npm run test:component`.
 
 ## Claude layer
 - Commands, skills and their agent briefs (`.claude/skills/<skill>/agents/`) follow `forge-me-a-skill` (SB-0073). Rules in `.claude/rules/`; task-specific ones load by `paths:`. Always-on context has a budget (check H1, SB-0114).
 - Token layers: component -> semantic -> foundation, one step only (check T2). Shipped docs are in English.
 
 ## Status
-38 components (35 Tier 1, 3 Tier 2): all 38 stable (reviews in docs/parity-audits/, docs/a11y-audits/). Figma file synced via `/sync` (variables and styles; docs per `docs/design-docs/progress.md`). White-label guarded by check W1.
+Run `npm run sketchbook -- status` for component status. See `docs/design-docs/progress.md` for Figma sync progress and `docs/README.md` for audit links.

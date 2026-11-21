@@ -55,7 +55,7 @@ Run `npx sketchbook` in a terminal to explore the interactive menu. Choose a num
 
 `init` adds the CLI as a dev dependency of the design-system project. For an existing app, add `--adopt` to `init` and run it from the app directory. To bring your own tokens, use `--start import --from <tokens file>`. See the [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/) for all seven starters and the [upgrade guide](https://sketchbook-docs.vercel.app/guides/adopt-in-app/#upgrade) for updating the CLI and harness.
 
-Plain `init` creates a core-only project and writes its initial inventory to `docs/harness.md`. Add `--agent claude` to stage Claude Code, or `--agent codex,trae` to install both selected integrations. The same flag adds profiles to an existing project. Run `npx sketchbook doctor` to inspect your setup. [Agent compatibility guide](./docs/agent-compatibility.md)
+Plain `init` creates a core-only project and writes its initial inventory to `docs/harness.md`. Add `--agent <profile>` to install the shared `contract-author` and `component-builder` skills and your client's setup. For example, `--agent claude` stages Claude Code, and `--agent codex,trae` selects both integrations. The same flag adds profiles to an existing project. Run `npx sketchbook doctor` to inspect your setup, then confirm what your client loaded. [Agent compatibility guide](./docs/agent-compatibility.md)
 
 ## Work on this repository
 

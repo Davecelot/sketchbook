@@ -21,7 +21,7 @@ import { installed, installedMarkdown } from '../lib/installed.mjs';
 import { hookScript, readClaudeSettings } from '../lib/claude-layer.mjs';
 import type { HookEntry, HookCommand } from '../lib/claude-layer.mjs';
 import { emptyLog, inheritDecisions } from '../lib/decisions.mjs';
-import { AGENT_ENGINE_FILES, agentFileState, claudeDestination, hasClaudeLayer, isAgentFile, profileFiles, renderAgentSetup, selectedAgentProfiles, STAGED } from '../lib/agent-config.mjs';
+import { AGENT_ENGINE_FILES, agentFileState, claudeDestination, hasClaudeLayer, isAgentFile, profileFiles, renderAgentSetup, selectedAgentProfiles, STAGED, WORKFLOW_SKILLS } from '../lib/agent-config.mjs';
 import type { AgentProfile } from '../lib/agent-config.mjs';
 
 export { STAGED };
@@ -136,7 +136,8 @@ export function syncHarness(root: string, {
     for (const file of files.filter((file) => !isEngine(file) && !isAgentFile(file))) copy(join(ENGINE, file), file, { owned: true });
   }
   for (const file of profileFiles(profiles)) {
-    const source = file === 'CLAUDE.md' ? join(HARNESS, 'templates', file) : join(TEMPLATE, file);
+    const source = file === 'CLAUDE.md' ? join(HARNESS, 'templates', file)
+      : join(WORKFLOW_SKILLS.includes(file) ? ENGINE : TEMPLATE, file);
     copy(source, file, { agent: true });
   }
   if (profiles.includes('claude')) {
@@ -250,7 +251,7 @@ export const engineSpec = (given?: string, cwd = process.cwd()): string => {
 function projectPackage(name: string, spec: string) {
   const engine = enginePkg();
   const omit = (o: Record<string, string> | undefined, keys: string[]): Record<string, string> => Object.fromEntries(Object.entries(o ?? {}).filter(([k]) => !keys.includes(k)));
-  const files = (engine.files ?? []).filter((p) => !/^(harness|scripts|\.claude|\.githooks|docs|spec)(\/|$)/.test(p));
+  const files = (engine.files ?? []).filter((p) => !/^(harness|scripts|\.agents|\.claude|\.githooks|docs|spec)(\/|$)/.test(p));
   // The engine's peers (lit) are what the project's components import: the project depends on them, at the engine's pins.
   const peers = Object.keys(engine.peerDependencies ?? {});
   const pinnedPeers = Object.fromEntries(peers.map((k) => [k, engine.devDependencies?.[k] ?? engine.peerDependencies?.[k]]));

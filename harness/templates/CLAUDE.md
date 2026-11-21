@@ -16,7 +16,7 @@ This design system started from Sketchbook: the default (UI and theme following 
 - `generated/**`, `src/components/*/*.styles.ts`, `src/index.ts` (`npm run generate`).
 
 ## Commands
-- `sketchbook` is the engine's CLI, installed in `node_modules` (a devDependency): run it as `npm run sketchbook -- <command>` (or `npx sketchbook <command>`). `sketchbook help <cmd>` for options (reference `docs/cli.md`); `--json` and `--dry-run` on commands.
+- `sketchbook` is the engine's CLI, installed in `node_modules` (a devDependency): run it as `npm run sketchbook -- <command>` (or `npx sketchbook <command>`). `sketchbook help <cmd>` for options (reference `docs/cli.md`); `--json` is available on every command, and `--dry-run` where supported.
 - `sketchbook status`, `doctor`, `check`; `sketchbook add|remove|list`, `sketchbook kits list|add|remove`; `sketchbook tokens …`; `sketchbook explain <thing>`; `sketchbook generate` rebuilds the outputs.
 - `sketchbook init` again puts back what is missing and never overwrites. `npm update` brings a newer engine; `sketchbook upgrade` then refreshes the harness-owned files here (the Claude layer, the commit hook, `docs/cli.md`, the schemas); yours are never touched.
 - `npm run check`: deterministic checks (exit 0 pass, 1 fail, 2 pass with overrides); it also runs before every commit (`.githooks/pre-commit`).

@@ -45,6 +45,8 @@
     ".trae/rules/sketchbook.md",
     ".aiassistant/rules/sketchbook.md",
     ".agents/skills/sketchbook/SKILL.md",
+    ".agents/skills/contract-author/SKILL.md",
+    ".agents/skills/component-builder/SKILL.md",
     "AGENT-WORKFLOWS.md",
     ".codex/hooks.json",
     ".codex/sketchbook-guard.mjs",

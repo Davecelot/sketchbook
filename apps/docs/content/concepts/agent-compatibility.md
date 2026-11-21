@@ -4,7 +4,7 @@ description: "Choose an agent profile and check what your coding tool loads."
 order: 55
 ---
 
-Start with the Sketchbook CLI and checks. Add an agent profile when you want your coding tool to use the project’s instructions or run a supported edit guard.
+Start with the Sketchbook CLI and checks. No AI model or coding tool is required. Add a profile when you want your tool to load project instructions or run a supported edit guard. Profiles do not select a model or change the core quality checks.
 
 ## Install a profile
 
@@ -18,15 +18,17 @@ npx sketchbook init --agent codex --dry-run
 
 | `--agent` profile | Project files |
 | --- | --- |
-| `claude` | `CLAUDE.md` and the staged skills, commands, rules, hooks, and activation guide under `move-to-.claude/` |
-| `codex` | Shared guidance, `.agents/skills/sketchbook/SKILL.md`, `.codex/hooks.json`, and `.codex/sketchbook-guard.mjs` |
+| `claude` | Shared component skills, `CLAUDE.md`, and native wrappers, commands, rules, hooks and activation guide staged under `move-to-.claude/` |
+| `codex` | Shared guidance, `.codex/hooks.json`, and `.codex/sketchbook-guard.mjs` |
 | `gemini` | Shared guidance, `GEMINI.md`, `.gemini/settings.json`, and `.gemini/sketchbook-guard.mjs` |
-| `copilot` | Shared guidance, `.agents/skills/sketchbook/SKILL.md`, `.github/copilot-instructions.md`, `.github/hooks/sketchbook.json`, and `.github/hooks/sketchbook-guard.mjs` |
+| `copilot` | Shared guidance, `.github/copilot-instructions.md`, `.github/hooks/sketchbook.json`, and `.github/hooks/sketchbook-guard.mjs` |
 | `trae` | Shared guidance and `.trae/rules/sketchbook.md` |
 | `jetbrains` | Shared guidance and `.aiassistant/rules/sketchbook.md` for AI Assistant chat |
 | `generic` | Shared guidance for clients that read `AGENTS.md`, such as Cursor, OpenCode, Windsurf, Kiro, and Antigravity |
 
-Shared guidance consists of `AGENTS.md` and `AGENT-WORKFLOWS.md`. Multiple profiles reuse those files.
+Every selected profile installs the shared `contract-author` and `component-builder` skills under `.agents/skills/`. For profiles other than Claude, shared guidance adds `AGENTS.md`, `AGENT-WORKFLOWS.md`, and the `sketchbook` routing skill. Multiple profiles reuse the same files. Clients without native skill discovery can read the shared files directly. The other task-specific Claude skills have not yet been migrated to this shared format.
+
+Already set up? After updating the CLI, preview `npx sketchbook init --dry-run`, then run `npx sketchbook init` to add missing files for your selected profiles without replacing existing shared instructions. Use `upgrade` to refresh harness-owned Claude wrappers.
 
 ## Client and hook coverage
 
@@ -34,9 +36,9 @@ Shared guidance consists of `AGENTS.md` and `AGENT-WORKFLOWS.md`. Multiple profi
 | --- | --- | --- |
 | Antigravity IDE | `AGENTS.md` | Shared instructions; open the design-system folder as a workspace and run checks explicitly |
 | Claude Code | `CLAUDE.md` and the optional staged `.claude/` layer | Existing skills, rules, commands and hooks after installation |
-| OpenCode | `AGENTS.md` | Project guidance. Enable project configuration. |
+| OpenCode | `AGENTS.md` and `.agents/skills/` | Project guidance and skill loading. Enable project configuration. |
 | Cursor | `AGENTS.md` | Selected Claude-format hooks can be imported when enabled; verify your version |
-| GitHub Copilot | `.github/copilot-instructions.md` | CLI/cloud adapter for recognized native `create` and `edit` calls when the repository hook and engine are available |
+| GitHub Copilot | `.github/copilot-instructions.md` and `.agents/skills/` | Tested in Copilot CLI for recognized native `create` and `edit` calls. Cloud discovery and enforcement are not verified. |
 | Gemini CLI | `GEMINI.md` | BeforeTool adapter for `write_file` and `replace`, subject to hook trust and the installed engine |
 | Codex | `AGENTS.md` and `.agents/skills/sketchbook/SKILL.md` | Native `apply_patch` guard for generated paths when supported and trusted; other edit paths and decision changes need separate checks |
 | Windsurf | `AGENTS.md` | Project guidance. Check directory scope. |
@@ -56,12 +58,23 @@ Shared guidance consists of `AGENTS.md` and `AGENT-WORKFLOWS.md`. Multiple profi
 | Codex or Gemini CLI | Review your client’s workspace and hook trust settings. |
 | Copilot cloud or a repository-root session | Review the repository-root configuration alongside your existing hooks. See the [Copilot root-hook example](https://github.com/Davecelot/sketchbook/blob/main/docs/agent-compatibility.md#copilot-repository-hooks-for-an-adopted-app). |
 | JetBrains AI Assistant chat | In **Settings → Tools → AI Assistant → Rules**, set the Sketchbook rule to **Always**. Confirm it appears in the response attachments. |
-| Antigravity | Add the nested design-system folder as a workspace folder and check the Customizations panel for its instructions and skill. |
-| TRAE | Check workspace trust and rule import settings for your edition. If rules are missing, check the combined size limit for that edition. |
+| Antigravity | Add the nested design-system folder as a workspace folder and check whether its shared instructions loaded. If native skill discovery isn't confirmed for your version, have the agent read the shared `SKILL.md` files directly. |
+| TRAE | Check workspace trust and rule import settings for your edition. Enable `.agents/skills/` discovery if required, or have the agent read the files directly. |
+| Kiro | The generic profile does not write `.kiro/skills/`. Have the agent read the shared files directly. |
 
 ## Run checks directly
 
 Hook coverage depends on the client, trust settings, and edit tool. Shell edits fall outside these adapters. Run `npx sketchbook check` directly for a project check in any client. Use `npx sketchbook audit-page <file.html>` for a quick heading and main-landmark check, or `npx sketchbook audit-decisions --git-ref <revision>` to compare settled decisions with a revision from before the change.
+
+Use the same CLI workflows to [install or design a component](/guides/add-component/) or [change foundations](/guides/foundations/) in any client. `doctor` inspects files and registrations; it cannot tell whether a client loaded them or a model followed them.
+
+## What has been verified
+
+| Evidence | What it establishes |
+| --- | --- |
+| Core-only workflow tests | Component install, foundation change, and scaffolding up to the planning gate work without an agent profile. |
+| Real client tests with local mock responses | Selected behaviors in Claude Code, Codex CLI, Gemini CLI, Copilot CLI, and OpenCode. See the detailed map for which tests verify shared skills, which verify existing client integrations, and which were only run on earlier versions. These do not establish hosted-model behavior, IDE behavior, or Copilot cloud hook discovery. |
+| Documentation or configuration inspection | Cursor, Antigravity, Windsurf, Kiro, TRAE, and JetBrains have guidance paths, but end-to-end workflows have not been verified here. |
 
 Read the [agent compatibility map](https://github.com/Davecelot/sketchbook/blob/main/docs/agent-compatibility.md) for client versions, validation results, and steps to repeat the tests.
 

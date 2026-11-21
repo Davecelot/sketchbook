@@ -29,9 +29,9 @@ When the folder is its own git repository, `sketchbook init` points `core.hooksP
 
 ## Gates
 
-For new components, use the planning and test-first gates to review decisions before you build. Enable them in `harness.config.json`. Project review and the Claude Code rules carry them out.
+Planning and test-first are enabled by default and configurable in `harness.config.json`. Follow the enabled gates regardless of client or model. These are workflow requirements: a passing CLI check does not prove that someone approved a plan or saw a test fail before implementation.
 
-The planning gate (`features.planningGate`) puts the contract and `plan.md` first, then stops for approval before any code.
+The planning gate (`features.planningGate`) puts the contract and `plan.md` first, then stops for approval before writing tests or implementation.
 
 Test-first (`features.testFirst`) writes tests from the contract and sees them fail before the code exists.
 

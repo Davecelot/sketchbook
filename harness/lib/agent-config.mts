@@ -3,14 +3,14 @@ import { join } from 'node:path';
 import { readJsonSync } from './files.mjs';
 
 export const STAGED = 'move-to-.claude';
-const SHARED = ['AGENTS.md', 'AGENT-WORKFLOWS.md'];
-const SKILL = '.agents/skills/sketchbook/SKILL.md';
+export const WORKFLOW_SKILLS = ['.agents/skills/contract-author/SKILL.md', '.agents/skills/component-builder/SKILL.md'];
+const SHARED = ['AGENTS.md', 'AGENT-WORKFLOWS.md', '.agents/skills/sketchbook/SKILL.md', ...WORKFLOW_SKILLS];
 
 const PROFILE_FILES = {
-  claude: ['CLAUDE.md'],
-  codex: [...SHARED, SKILL, '.codex/hooks.json', '.codex/sketchbook-guard.mjs'],
+  claude: ['CLAUDE.md', ...WORKFLOW_SKILLS],
+  codex: [...SHARED, '.codex/hooks.json', '.codex/sketchbook-guard.mjs'],
   gemini: [...SHARED, 'GEMINI.md', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs'],
-  copilot: [...SHARED, SKILL, '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs'],
+  copilot: [...SHARED, '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs'],
   trae: [...SHARED, '.trae/rules/sketchbook.md'],
   jetbrains: [...SHARED, '.aiassistant/rules/sketchbook.md'],
   generic: SHARED,
@@ -73,7 +73,8 @@ export function selectedAgentProfiles(root: string): AgentProfile[] {
   if (found('.codex/hooks.json', /sketchbook-guard/) || found('.codex/sketchbook-guard.mjs', /sketchbook/i)) profiles.push('codex');
   if (found('GEMINI.md', /Sketchbook project instructions/) || found('.gemini/settings.json', /sketchbook-guard|harness\/agent\/gemini-guard/)
     || found('.gemini/sketchbook-guard.mjs', /gemini-guard/)) profiles.push('gemini');
-  if (found('.github/copilot-instructions.md', /AGENT-WORKFLOWS\.md/) || found('.github/hooks/sketchbook.json', /sketchbook-guard/)
+  // The source checkout links to the template, not an installed root-level workflow.
+  if (found('.github/copilot-instructions.md', /(?:^|[^/\w-])(?:\.\.?\/)?AGENT-WORKFLOWS\.md\b/) || found('.github/hooks/sketchbook.json', /sketchbook-guard/)
     || found('.github/hooks/sketchbook-guard.mjs', /sketchbook/i)) profiles.push('copilot');
   if (found('.trae/rules/sketchbook.md', /AGENT-WORKFLOWS\.md/)) profiles.push('trae');
   if (found('.aiassistant/rules/sketchbook.md', /AGENT-WORKFLOWS\.md/)) profiles.push('jetbrains');

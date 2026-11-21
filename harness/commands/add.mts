@@ -51,7 +51,7 @@ export async function add(root: string, displayName: string, { dryRun = false }:
     accessibility: { role: 'PROPOSAL', accessibleNameSource: 'PROPOSAL', keyboard: {}, aria: [], contrast: [] },
     tokens: {},
     realizations: { web: { status: 'not-started', files: [], spec: `playwright/tests/${name}/${name}.behavior.spec.ts`, coverage: [], drift: [] }, design: { status: 'not-started', coverage: [], drift: [] } },
-    openQuestions: [{ id: 'Q0', question: 'Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?', status: 'open' }],
+    openQuestions: [{ id: 'Q0', question: 'Is the contract grounded in the design reference and applicable WAI-ARIA guidance?', status: 'open' }],
     decisions: [],
   };
   const md = `---\ncomponent: ${component}\nstatus: draft\nversion: 0.1.0\nplatforms: [web, design]\ndependsOn: []\nlast_updated: ${today()}\nsource: shadcn/ui ${entry.name} (UI and API), harness process\n---\n\n# ${component}\n\n> PROPOSAL. Typed spec: [contract.json](./contract.json).\n\n## 1. Purpose\n\n## 2. Anatomy\n\n## 3. Props / API\n\n## 4. Variant matrix\n\n## 5. Roles and color\n\n## 6. States\n\n## 7. Dimensions and layout\n\n## 8. Typography\n\n## 9. Accessibility\n\n## 10. Usage\n### Behavior\n### Composition\n### Choosing the props\n### Do / Don't\n\n## Realizations\n### Figma\nNot started.\n### Web\nNot started.\n### Coverage\nNone yet.\n### Known drift\nNone.\n\n## Open questions\n\n## Spec for agents\nBuild from contract.json only. CSS uses only --${config.prefix}-${name}-* variables (check T4). Tests first (rule test-first).\n`;

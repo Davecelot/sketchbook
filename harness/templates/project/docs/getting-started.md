@@ -2,7 +2,7 @@
 
 Start in your design-system folder. Run `npx sketchbook status` to see your brand and components, then follow the steps below to make and preview your first change. To create a project, follow the [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/).
 
-Open `docs/harness.md` to see what init installed. If you selected an agent profile, run `npx sketchbook doctor` to inspect the files on disk, then confirm what your client loaded. [Agent compatibility](https://sketchbook-docs.vercel.app/concepts/agent-compatibility/)
+In a project created by `sketchbook init`, open `docs/harness.md` to see what init installed; this snapshot does not automatically reflect later changes. Run `npx sketchbook status` and `npx sketchbook doctor` for the current project and setup. If you selected an agent profile, confirm what your client loaded. [Agent compatibility](https://sketchbook-docs.vercel.app/concepts/agent-compatibility/)
 
 ## 1. What you are editing
 | You edit | It controls | Sketchbook generates |
@@ -51,7 +51,7 @@ npx sketchbook explain SB-0009
 ```
 
 ## 6. Add or change a component
-`npx sketchbook add <name>` installs a reference component from the catalog; `npx sketchbook kits` manages page templates. To design a new one, follow `AGENT-WORKFLOWS.md` or use `/add <Name>` in Claude Code; start with the contract and follow the project’s enabled planning and test-first gates.
+`npx sketchbook add <name>` installs a reference component from the catalog; `npx sketchbook kits` manages page templates. To design a new component, start with the contract and follow the project’s enabled planning and test-first gates. If you selected an agent profile, use `contract-author` and `component-builder` under `.agents/skills/`. If you selected a shared agent profile, `AGENT-WORKFLOWS.md` covers other workflows; if you selected and activated the Claude integration, you can also use `/add <Name>` in Claude Code. A core-only project includes neither integration; use `npx sketchbook init --agent <profile>` to add one, or follow the [component guide](https://sketchbook-docs.vercel.app/guides/add-component/) without an agent.
 
 ## 7. Keep the design file in step
 

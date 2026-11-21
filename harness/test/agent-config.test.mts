@@ -4,9 +4,27 @@ import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promis
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { renderAgentSetup } from '../lib/agent-config.mjs';
+import { renderAgentSetup, selectedAgentProfiles } from '../lib/agent-config.mjs';
 import { nativeHookStatus } from '../lib/agent-diagnostics.mjs';
 import { packedFiles, ROOT, sourceRepoOnly } from './helpers.mjs';
+
+test('a checkout Copilot entry point is not mistaken for an installed project profile', sourceRepoOnly, async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'sketchbook-agent-profile-'));
+  try {
+    await mkdir(join(dir, '.github/hooks'), { recursive: true });
+    const name = '.github/copilot-instructions.md';
+    await writeFile(join(dir, name), await readFile(join(ROOT, name)));
+    assert.deepEqual(selectedAgentProfiles(dir), []);
+    const template = join(ROOT, 'harness/templates/project', name);
+    await writeFile(join(dir, name), await readFile(template));
+    assert.deepEqual(selectedAgentProfiles(dir), ['copilot']);
+    await writeFile(join(dir, name), await readFile(join(ROOT, name)));
+    await writeFile(join(dir, '.github/hooks/sketchbook.json'), await readFile(join(ROOT, 'harness/templates/project/.github/hooks/sketchbook.json')));
+    assert.deepEqual(selectedAgentProfiles(dir), ['copilot']);
+    await writeFile(join(dir, 'harness.config.json'), JSON.stringify({ agentProfiles: [] }));
+    assert.deepEqual(selectedAgentProfiles(dir), []);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+});
 
 test('native agent adapters use a renamed scoped engine and retain their edit protections', sourceRepoOnly, async () => {
   const dir = await mkdtemp(join(tmpdir(), 'sketchbook-renamed-agent-'));

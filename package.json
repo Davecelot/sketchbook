@@ -42,6 +42,8 @@
     "THIRD_PARTY_NOTICES.md",
     "harness",
     "scripts",
+    ".agents/skills/contract-author",
+    ".agents/skills/component-builder",
     ".claude/skills",
     ".claude/commands",
     ".claude/rules",

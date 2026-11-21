@@ -35,6 +35,14 @@ Start with the catalog if it has what you need. To design a new component or rep
 
 In Claude Code, `/add <Component Name>` runs the dry run, shows the result, then installs.
 
+## Design a new component
+
+You can do this in a core-only project, with any coding agent or without one.
+
+1. Add a `planned` entry to `spec/registry.json` if the name is not already there. Preview with `sketchbook add "<Name>" --blank --dry-run`, then run it without `--dry-run` to create the contract and plan.
+2. [Draft the contract](/concepts/contracts/) from your design and applicable accessibility references. Use `spec/api.json` for canonical API names. Run `sketchbook check`.
+3. If `features.planningGate` is enabled in `harness.config.json`, complete `spec/components/<name>/plan.md` and request approval before writing tests or implementation. After approval, follow the project's test-first setting.
+
 ## Remove a component
 
 `remove` refuses while another component or a kit needs it, and refuses a team-made or customized component without `--yes`. Otherwise it removes the files, sets the registry status to `planned` and rebuilds.

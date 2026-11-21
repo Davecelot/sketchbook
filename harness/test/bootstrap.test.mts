@@ -565,8 +565,9 @@ void realTest('B16 a fresh library+kits project lints and typechecks with no err
 pkgTest('portable instructions are restored only when missing and preserve team edits', async () => {
   const { dir } = await created('blank', '--agent', ALL_PROFILES);
   const file = join(dir, 'AGENTS.md');
+  const portable = [...new Set(Object.entries(PROFILE_PATHS).filter(([profile]) => profile !== 'claude').flatMap(([, paths]) => paths))].filter((path) => path !== 'AGENTS.md');
   assert.match(await readFile(join(dir, '.aiassistant/rules/sketchbook.md'), 'utf8'), /^---\napply: always\n---\n/);
-  for (const path of ['.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']) {
+  for (const path of portable) {
     const target = join(dir, path);
     await writeFile(target, 'Team instructions\n');
   }
@@ -578,7 +579,7 @@ pkgTest('portable instructions are restored only when missing and preserve team 
   assert.equal(custom?.['AGENTS.md'], 'not-detected');
   assert.equal(custom?.['.github/copilot-instructions.md'], 'not-detected');
   assert.match(run(dir, 'doctor').out, /Review preserved team instructions/);
-  for (const path of ['.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']) {
+  for (const path of portable) {
     const target = join(dir, path);
     assert.equal(await readFile(target, 'utf8'), 'Team instructions\n');
     await rm(target);
@@ -593,7 +594,7 @@ pkgTest('portable instructions are restored only when missing and preserve team 
   assert.match(await readFile(file, 'utf8'), /contract-first/);
   assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.agentInstructionReferences['AGENTS.md'], 'referenced');
   assert.match(await readFile(join(dir, '.aiassistant/rules/sketchbook.md'), 'utf8'), /^---\napply: always\n---\n/);
-  for (const path of ['.trae/rules/sketchbook.md', '.aiassistant/rules/sketchbook.md', '.agents/skills/sketchbook/SKILL.md', 'AGENT-WORKFLOWS.md', 'GEMINI.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs']) assert.ok(existsSync(join(dir, path)), path);
+  for (const path of portable) assert.ok(existsSync(join(dir, path)), path);
   await rm(dir, { recursive: true, force: true });
 });
 
@@ -665,12 +666,13 @@ pkgTest('the staged layer can be backed up to verify the installed copy and rest
   } finally { await rm(dir, { recursive: true, force: true }); }
 });
 
-const SHARED_GUIDANCE = ['AGENTS.md', 'AGENT-WORKFLOWS.md'];
+const PORTABLE_WORKFLOWS = ['.agents/skills/contract-author/SKILL.md', '.agents/skills/component-builder/SKILL.md'] as const;
+const SHARED_GUIDANCE = ['AGENTS.md', 'AGENT-WORKFLOWS.md', '.agents/skills/sketchbook/SKILL.md', ...PORTABLE_WORKFLOWS];
 const PROFILE_PATHS = {
-  claude: ['CLAUDE.md', 'move-to-.claude/INSTALL.md', 'move-to-.claude/settings.json', 'move-to-.claude/skills/contract-author/SKILL.md'],
-  codex: [...SHARED_GUIDANCE, '.agents/skills/sketchbook/SKILL.md', '.codex/hooks.json', '.codex/sketchbook-guard.mjs'],
+  claude: ['CLAUDE.md', ...PORTABLE_WORKFLOWS, 'move-to-.claude/INSTALL.md', 'move-to-.claude/settings.json', 'move-to-.claude/skills/contract-author/SKILL.md'],
+  codex: [...SHARED_GUIDANCE, '.codex/hooks.json', '.codex/sketchbook-guard.mjs'],
   gemini: [...SHARED_GUIDANCE, 'GEMINI.md', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs'],
-  copilot: [...SHARED_GUIDANCE, '.agents/skills/sketchbook/SKILL.md', '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs'],
+  copilot: [...SHARED_GUIDANCE, '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs'],
   trae: [...SHARED_GUIDANCE, '.trae/rules/sketchbook.md'],
   jetbrains: [...SHARED_GUIDANCE, '.aiassistant/rules/sketchbook.md'],
   generic: SHARED_GUIDANCE,
@@ -698,10 +700,28 @@ void realTest('the packed CLI installs only the selected agent files', checkoutO
       assert.deepEqual((await readJson<HarnessConfigJson>(dir, 'harness.config.json')).agentProfiles, profiles);
       const expected = new Set(profiles.flatMap((profile) => PROFILE_PATHS[profile]));
       for (const path of paths) assert.equal(existsSync(join(dir, path)), expected.has(path), `${target}: ${path}`);
+      if (profiles.length) {
+        for (const path of PORTABLE_WORKFLOWS) assert.deepEqual(await readFile(join(dir, path)), await readFile(join(ROOT, path)));
+        const consumer = await readJson<PackageJson>(dir, 'package.json');
+        assert.ok(!(consumer.files as string[]).some((file) => file.startsWith('.agents/')), 'the consumer library does not publish project instructions');
+      }
+      if (profiles.includes('claude')) {
+        for (const name of ['contract-author', 'component-builder']) {
+          const wrapper = join(dir, 'move-to-.claude/skills', name);
+          const source = await readFile(join(wrapper, 'SKILL.md'), 'utf8');
+          const path = must(/\]\(([^)]*\.agents\/skills\/[^)]*\/SKILL\.md)\)/.exec(source)?.[1], name);
+          assert.ok(existsSync(join(wrapper, path)), `${name} wrapper resolves in the installed project`);
+        }
+      }
       const expectedRoots = [...new Set([...expected].map((file) => file.split('/')[0]))].sort();
       assert.deepEqual(ls(dir).filter((name) => rootEntries.has(name)), expectedRoots, target);
       assert.ok(!existsSync(join(dir, '.claude')), target);
       assert.ok(existsSync(join(dir, '.githooks/pre-commit')), target);
+      const inventory = await readFile(join(dir, 'docs/harness.md'), 'utf8');
+      assert.match(inventory, /Later changes are not reflected automatically/);
+      assert.match(inventory, /sketchbook doctor/);
+      const guide = await readFile(join(dir, 'docs/getting-started.md'), 'utf8');
+      assert.match(guide, /core-only project includes neither integration/);
       assert.equal(parseJson<{ data: InitData }>(result.stdout).data.checks.exitCode, 0);
       if (!selection || selection === 'claude') assert.deepEqual(failing(await runChecks(dir)), []);
       if (!selection) {
@@ -713,6 +733,40 @@ void realTest('the packed CLI installs only the selected agent files', checkoutO
       }
     }
   } finally { await rm(temp, { recursive: true, force: true }); }
+});
+
+pkgTest('a core-only project can install a component, change a foundation, and reach the planning gate', async () => {
+  const { dir } = await created('blank');
+  try {
+    const cli = (...args: string[]) => {
+      const result = run(dir, ...args, '--json');
+      assert.equal(result.code, 0, result.out + result.err);
+      return must(result.json, args.join(' '));
+    };
+    const button = join(dir, 'spec/components/button/contract.json');
+    cli('add', 'button', '--dry-run');
+    assert.ok(!existsSync(button));
+    cli('add', 'button');
+    assert.ok(existsSync(button));
+
+    const brand = join(dir, 'brand.config.json');
+    const initial = await readFile(brand, 'utf8');
+    cli('tokens', 'set', 'color.primary', '#0F766E', '--dry-run');
+    assert.equal(await readFile(brand, 'utf8'), initial);
+    cli('tokens', 'set', 'color.primary', '#0F766E');
+    assert.match(await readFile(brand, 'utf8'), /#0F766E/i);
+
+    const badge = join(dir, 'spec/components/badge');
+    cli('add', 'badge', '--blank', '--dry-run');
+    assert.ok(!existsSync(badge));
+    const scaffold = cli('add', 'badge', '--blank');
+    assert.match(scaffold.next ?? '', /planning gate.*stop for approval/);
+    assert.doesNotMatch(scaffold.next ?? '', /skill|Claude/i);
+    assert.match(await readFile(join(badge, 'plan.md'), 'utf8'), /Tests and code start only after approval/);
+    assert.ok(!existsSync(join(dir, 'src/components/badge')));
+    assert.ok(!existsSync(join(dir, 'playwright/tests/badge')));
+    cli('check');
+  } finally { await rm(dir, { recursive: true, force: true }); }
 });
 
 pkgTest('adds profiles to an existing project, previews the same writes, and repairs only selected integrations', async () => {
@@ -733,7 +787,7 @@ pkgTest('adds profiles to an existing project, previews the same writes, and rep
     assert.ok(!existsSync(join(dir, '.trae')));
     const addition = must(run<{ repair: { preserved: string[] } }>(dir, 'init', '--agent', 'trae,trae', '--json').json, 'profile addition');
     assert.deepEqual(addition.changed, preview.changed);
-    assert.deepEqual(addition.changed.sort(), ['.trae/rules/sketchbook.md', 'AGENT-WORKFLOWS.md', 'harness.config.json']);
+    assert.deepEqual(addition.changed.sort(), ['.agents/skills/sketchbook/SKILL.md', ...PORTABLE_WORKFLOWS, '.trae/rules/sketchbook.md', 'AGENT-WORKFLOWS.md', 'harness.config.json'].sort());
     assert.deepEqual(addition.data.repair.preserved, ['AGENTS.md']);
     assert.equal(await readFile(teamGuide, 'utf8'), 'Team guide');
     assert.deepEqual(run(dir, 'init', '--agent', 'trae', '--json').json?.changed, []);
@@ -742,7 +796,14 @@ pkgTest('adds profiles to an existing project, previews the same writes, and rep
     assert.equal(run<DoctorData>(dir, 'doctor', '--json').json?.data.agentInstructions['.trae/rules/sketchbook.md'], false);
     assert.deepEqual(run(dir, 'init', '--json').json?.changed, ['.trae/rules/sketchbook.md']);
     assert.equal(run(dir, 'upgrade', '--json').code, 0);
-    for (const file of ['CLAUDE.md', 'move-to-.claude', 'GEMINI.md', '.codex', '.agents', '.github', '.aiassistant']) assert.ok(!existsSync(join(dir, file)), file);
+    for (const file of ['CLAUDE.md', 'move-to-.claude', 'GEMINI.md', '.codex', '.github', '.aiassistant']) assert.ok(!existsSync(join(dir, file)), file);
+    const [keptSkill, missingSkill] = PORTABLE_WORKFLOWS;
+    await appendFile(join(dir, keptSkill), '\nOur team note.\n');
+    await rm(join(dir, missingSkill));
+    const repaired = must(run<{ repair: { preserved: string[] } }>(dir, 'init', '--json').json, 'shared skill repair');
+    assert.deepEqual(repaired.changed, [missingSkill]);
+    assert.ok(repaired.data.repair.preserved.includes(keptSkill));
+    assert.match(await readFile(join(dir, keptSkill), 'utf8'), /Our team note/);
     assert.equal(run(dir, 'init', '--agent', 'generic', '--with', 'forge', '--json').code, 0);
     assert.deepEqual((await readJson<HarnessConfigJson>(dir, 'harness.config.json')).agentProfiles, ['trae', 'generic', 'claude']);
     assert.ok(existsSync(join(dir, 'move-to-.claude/skills/forge-me-a-skill/SKILL.md')));

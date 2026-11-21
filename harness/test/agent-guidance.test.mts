@@ -3,6 +3,23 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { ROOT, sourceRepoOnly } from './helpers.mjs';
+import { frontmatter } from '../lib/claude-layer.mjs';
+
+test('shared component skills use standard frontmatter and Claude wrappers lead to the same source', sourceRepoOnly, async () => {
+  for (const name of ['contract-author', 'component-builder']) {
+    const path = `.agents/skills/${name}/SKILL.md`;
+    const source = await readFile(join(ROOT, path), 'utf8');
+    const data = frontmatter(source);
+    assert.deepEqual(Object.keys(data ?? {}).sort(), ['description', 'name']);
+    assert.equal(data?.name, name);
+    const description = data?.description;
+    assert.ok(typeof description === 'string' && description.length > 0 && description.length <= 400);
+    assert.match(source, /features\.planningGate/);
+    assert.doesNotMatch(source, /\.claude\/|`Agent`|haiku|sonnet|opus/);
+    const wrapper = await readFile(join(ROOT, '.claude/skills', name, 'SKILL.md'), 'utf8');
+    assert.ok(wrapper.includes(`(../../../${path})`));
+  }
+});
 
 // Keep the portable routing map in sync with the workflows shipped in the Claude layer.
 test('portable guidance names every shipped skill and slash workflow', sourceRepoOnly, async () => {
