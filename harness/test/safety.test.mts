@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { fixture, edit, readJson, failing, errorsOf, must, ROOT, sourceRepoOnly, checkoutOnly } from './helpers.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { hashOf, parseJson } from '../lib/files.mjs';
-import { buildCatalog, catalogIndex } from '../commands/catalog.mjs';
+import { buildCatalog, catalogIndex, removeComponents, removeKits } from '../commands/catalog.mjs';
 import { applyRenames, renameSteps } from '../lib/renames.mjs';
 import { runGenerator } from '../generators/foundation.mjs';
 import type { Envelope } from '../cli/types.mjs';
@@ -310,6 +310,26 @@ test('S30b tokens rename and catalog installs share one set of text rules (parit
   assert.equal(renameJsonText('["color.primary", "{color.primary}"]', map), '["color.main", "{color.main}"]');
   assert.equal(renameCodeText('var(--sb-color-primary)', map, 'sb'), 'var(--sb-color-main)');
   await rm(dir, { recursive: true });
+});
+
+test('reinstalling a source catalog unit preserves a reused semantic token name', async (t) => {
+  const dir = await fixture();
+  t.after(() => rm(dir, { recursive: true }));
+  await removeKits(dir, ['data-table', 'dashboard', 'profile'], { yes: true, rebuild: false });
+  const rename = cliJson(dir, 'tokens', 'rename', 'color.primary', 'color.main', '--json');
+  assert.equal(rename.code, 0, rename.out);
+  for (const mode of ['light', 'dark']) {
+    await edit<{ color: Record<string, unknown> }>(dir, `spec/tokens/semantic/${mode}.tokens.json`, (doc) => {
+      doc.color.primary = doc.color.main;
+    });
+  }
+  const contract = 'spec/components/badge/contract.json';
+  await edit<{ tokens: Record<string, string> }>(dir, contract, (doc) => { doc.tokens['badge.default.bg'] = '{color.primary}'; });
+  buildCatalog(dir);
+  await removeComponents(dir, ['badge'], { yes: true });
+  const add = cliJson(dir, 'add', 'badge', '--json');
+  assert.equal((await readJson<{ tokens: Record<string, string> }>(dir, contract)).tokens['badge.default.bg'], '{color.primary}');
+  assert.equal(add.code, 0, add.out);
 });
 
 type HarnessManifest = { harness: string[]; team: string[]; shared: string[] };

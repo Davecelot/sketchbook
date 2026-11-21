@@ -274,8 +274,13 @@ export function dependentsOf(root: string, name: string, except: Set<string> = n
 const componentRoots = (name: string): string[] => [`spec/components/${name}/`, `src/components/${name}/`, `playwright/tests/${name}/`, `${PARITY_AUDITS}/${name}-`, `${A11Y_AUDITS}/${name}-`];
 const kitRoots = (kit: Kit): string[] => [`${kit.path}/`, 'playwright/tests/patterns/'];
 
-// What installing needs to know about the project: its prefix and the token renames to carry into old files.
-const installContext = (root: string): InstallContext => ({ prefix: readConfig(root).prefix, renames: readRenames(root), paths: semanticPaths(root) });
+// The local source catalog is rebuilt when tokens are renamed; replay only on a downstream or fallback catalog.
+function installContext(root: string): InstallContext {
+  const config = readConfig(root);
+  const localSource = config.catalog?.source === true && catalogDir(root) === join(root, 'harness/catalog');
+  const renames = localSource ? [] : readRenames(root);
+  return { prefix: config.prefix, renames, paths: renames.length ? semanticPaths(root) : [] };
+}
 
 // A unit's files as they would be written here: every path checked, every blob checked against its hash, then the
 // prefix and the recorded token renames applied. Pure read; throws before anything is written.
