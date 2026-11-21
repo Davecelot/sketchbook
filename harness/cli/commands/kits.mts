@@ -1,4 +1,4 @@
-import { kitIndex, kitInstalled, kitManifestOf, installKits, removeKits, readConfig } from '../../commands/catalog.mjs';
+import { kitIndex, kitInstalled, kitManifestOf, installKits, removeKits, readConfig, catalogDrift } from '../../commands/catalog.mjs';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readProgress } from '../../lib/design/sync.mjs';
@@ -50,13 +50,18 @@ export default {
     }
     out('installed' in r ? `Kits added: ${r.installed.join(', ') || 'none (already installed)'}${r.components.length ? `; components installed first: ${r.components.join(', ')}` : ''}.` : `Kits removed: ${r.removed.join(', ')}; interface and barrel rebuilt. Their components stay (sketchbook remove <name> to drop one).`);
     const report = await runChecks(root, { only: KIT_CHECKS });
+    const restore = 'removed' in r && readConfig(root).catalog?.source === true ? r.removed.filter((id) => kitManifestOf(root, id)) : [];
+    const g1 = report.results.find((x) => x.id === 'G1');
+    if (restore.length && g1) {
+      // Recheck just the catalog portion with these restore copies allowed. Keep other G1 errors unchanged.
+      g1.errors = [...g1.errors.filter((e) => e.file !== 'harness/catalog' && !e.file?.startsWith('harness/catalog/')), ...catalogDrift(root, restore).errors];
+    }
     const errors = report.results.flatMap((x) => x.errors.map((e: CheckIssue) => ({ ...e, id: x.id })));
     out(`Checks: ${report.results.map((x) => `${x.errors.length ? 'FAIL' : 'pass'} ${x.id}`).join(', ')}`);
-    // In the catalog's source repo G1 keeps the catalog equal to the repo, so a removed kit is still catalogued until
-    // catalog:build (not run here: it would drop the only copy kits add restores from). See docs/simplicity-debt.md.
-    const source = readConfig(root).catalog?.source === true;
-    const removedNext = source && errors.some((e) => e.id === 'G1') ? `This repo is the catalog source: npm run catalog:build to drop ${ids.join(', ')} from the catalog too (G1 then passes), or sketchbook kits add ${ids.join(' ')} to put it back.` : 'sketchbook check';
+    const note = restore.length ? `Kept a catalog restore copy for ${restore.join(', ')}. Full G1 still reports the mismatch.` : null;
+    if (note) out(`warning: ${note}`);
+    const removedNext = restore.length ? `Run sketchbook kits add ${restore.join(' ')} to restore, or npm run catalog:build to drop the catalog ${restore.length === 1 ? 'copy' : 'copies'}.` : 'sketchbook check';
     if (!errors.length && action === 'add') out('Next: Run npm run storybook and open the kit under Patterns.');
-    return { changed: r.changed, errors, exitCode: errors.length ? 1 : 0, next: action === 'add' ? 'npm run storybook (Patterns/<Kit>), then sketchbook check.' : removedNext, data: r };
+    return { changed: r.changed, errors, warnings: note ? [note] : [], exitCode: errors.length ? 1 : 0, next: action === 'add' ? 'npm run storybook (Patterns/<Kit>), then sketchbook check.' : removedNext, data: r };
   },
 } satisfies Command<typeof options>;

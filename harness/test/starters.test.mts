@@ -241,6 +241,24 @@ test('S12 kits list, remove and add against harness/kits/index.json; remove refu
   await rm(dir, { recursive: true });
 });
 
+test('source kit removal keeps a restore copy without hiding unrelated catalog drift', async (t) => {
+  const dir = await fixture();
+  t.after(() => rm(dir, { recursive: true }));
+  buildCatalog(dir);
+  const removed = cliJson(dir, 'kits', 'remove', 'sign-in', '--json');
+  assert.equal(removed.code, 0, removed.out);
+  assert.ok(removed.json.warnings.some((w) => /restore copy/.test(typeof w === 'string' ? w : w.msg)));
+  assert.ok(await exists(join(dir, 'harness/catalog/kits/sign-in/manifest.json')));
+  assert.deepEqual(failing(await runChecks(dir, { only: ['G1'] })), ['G1']);
+  const restored = cliJson(dir, 'kits', 'add', 'sign-in', '--json');
+  assert.equal(restored.code, 0, restored.out);
+  assert.deepEqual(failing(await runChecks(dir, { only: ['G1'] })), []);
+  await appendFile(join(dir, 'src/components/badge/Badge.ts'), '\n// Unrelated catalog drift.\n');
+  const drift = cliJson(dir, 'kits', 'remove', 'sign-in', '--json');
+  assert.equal(drift.code, 1, drift.out);
+  assert.deepEqual(drift.json.errors.map((e) => e.file), ['harness/catalog/badge/manifest.json']);
+});
+
 test('S13 a starter foundations patch merges into brand.config.json', async () => {
   assert.deepEqual(mergePatch({ a: 1, b: { c: 2, d: 3 }, e: [1] }, { b: { c: 5, d: null }, e: [2], f: 'x' }), { a: 1, b: { c: 5 }, e: [2], f: 'x' });
   const dir = await fixture();

@@ -191,16 +191,16 @@ const subdirs = (dir: string): string[] => { try { return readdirSync(dir, { wit
 
 // Check G1 (catalog part): in the catalog's source repo the catalog equals a fresh catalog:build — same prefix, same
 // index, a unit for every eligible component and installed kit and none for anything else, every blob matching its hash.
-export function catalogDrift(root: string): { errors: CatalogDrift[]; info?: { note: string }[] } {
+export function catalogDrift(root: string, retainedKits: string[] = []): { errors: CatalogDrift[]; info?: { note: string }[] } {
   const config = readConfig(root);
   if (config.catalog?.source !== true) return { errors: [], info: [{ note: 'catalog not tracked here (harness.config.json catalog.source is not true): components are the team\'s' }] };
   // A project without component sources (a partial copy, or before any install) has nothing to compare.
   if (!existsSync(join(root, 'src/components'))) return { errors: [], info: [{ note: 'no src/components here: catalog freshness not compared' }] };
   const fix = 'Run npm run catalog:build (the catalog follows the repo it is built from).';
-  try { return { errors: driftErrors(root, config, fix) }; } catch (e) { return { errors: [{ file: 'harness/catalog', msg: errorMessage(e), fix: fixOf(e) ?? fix }] }; }
+  try { return { errors: driftErrors(root, config, fix, retainedKits) }; } catch (e) { return { errors: [{ file: 'harness/catalog', msg: errorMessage(e), fix: fixOf(e) ?? fix }] }; }
 }
 
-function driftErrors(root: string, config: HarnessConfigJson, fix: string): CatalogDrift[] {
+function driftErrors(root: string, config: HarnessConfigJson, fix: string, retainedKits: string[]): CatalogDrift[] {
   const dir = catalogDir(root);
   const indexFile = 'harness/catalog/index.json';
   const index = readJsonSync<CatalogIndex>(join(dir, 'index.json'));
@@ -210,10 +210,13 @@ function driftErrors(root: string, config: HarnessConfigJson, fix: string): Cata
   const cs = contracts(root);
   const registry = readRegistry(root);
   const components = eligibleComponents(root, cs, registry);
-  const kits = kitIndex(root).filter((k) => kitInstalled(root, k));
-  if (readFileSync(join(dir, 'index.json'), 'utf8') !== indexText(config.prefix, components, kits.map((k) => k.id))) errors.push({ file: indexFile, msg: 'index differs from the eligible components and installed kits of the repo', fix });
+  const knownKits = kitIndex(root);
+  const kits = knownKits.filter((k) => kitInstalled(root, k));
+  // A kit removed by the current command may retain its catalog copy for undo. Plain G1 passes no retained kits.
+  const expectedKits = knownKits.filter((k) => kits.includes(k) || retainedKits.includes(k.id));
+  if (readFileSync(join(dir, 'index.json'), 'utf8') !== indexText(config.prefix, components, expectedKits.map((k) => k.id))) errors.push({ file: indexFile, msg: 'index differs from the eligible components and installed kits of the repo', fix });
   for (const d of subdirs(dir).filter((d) => d !== 'kits' && !components.includes(d))) errors.push({ file: `harness/catalog/${d}`, msg: 'catalogued, but the repo has no eligible component of that name (removed, or status below beta)', fix });
-  for (const d of subdirs(join(dir, 'kits')).filter((d) => !kits.some((k) => k.id === d))) errors.push({ file: `harness/catalog/kits/${d}`, msg: 'catalogued, but the kit is not installed in the repo', fix });
+  for (const d of subdirs(join(dir, 'kits')).filter((d) => !expectedKits.some((k) => k.id === d))) errors.push({ file: `harness/catalog/kits/${d}`, msg: 'catalogued, but the kit is not installed in the repo', fix });
   const compare = (file: string, unitDir: string, snap: Unit<ComponentManifest | KitManifest>): void => {
     const stored = ((): string | null => { try { return readFileSync(join(unitDir, 'manifest.json'), 'utf8'); } catch { return null; } })();
     if (stored === null) { errors.push({ file, msg: 'not in the catalog', fix }); return; }
