@@ -18,7 +18,15 @@ export default defineConfig({
     baseURL: `http://localhost:${port}`,
     trace: 'on-first-retry',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'chromium-alt-brand',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /(?:accordion|button|collapsible)\.behavior\.spec\.ts$/,
+      grep: /sizes match the contract heights|height animates with the motion token/,
+    },
+  ],
   webServer: {
     command: isCI ? `npx http-server ../storybook-static -p ${port} -s` : 'npm run storybook -- --ci',
     url: `http://localhost:${port}`,
