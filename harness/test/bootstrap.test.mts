@@ -179,12 +179,16 @@ pkgTest('B3 init --dir creates the project in a new folder inside an existing re
 });
 
 pkgTest('B4 a failing init leaves the folder exactly as it was', async () => {
-  const dir = await empty();
-  const r = run(dir, 'init', '--start', 'pick', '--components', 'not-a-thing', '--no-install', '--json');
-  assert.equal(r.code, 1);
-  assert.deepEqual(ls(dir), []);
-  assert.deepEqual(ls(join(dir, '..')).filter((f) => f.startsWith('.sketchbook-init-')), [], 'no stage left behind');
-  await rm(dir, { recursive: true, force: true });
+  const parent = await empty();
+  const dir = join(parent, 'project');
+  try {
+    await mkdir(dir);
+    const r = run(dir, 'init', '--start', 'pick', '--components', 'not-a-thing', '--no-install', '--json');
+    assert.equal(r.code, 1);
+    assert.deepEqual(ls(dir), []);
+    // Init stages next to its target; inspect a private parent, not the shared system temp folder.
+    assert.deepEqual(ls(parent), ['project'], 'no stage left behind');
+  } finally { await rm(parent, { recursive: true, force: true }); }
 });
 
 pkgTest('B5 init --dry-run in an empty folder runs the same build and checks, reports them, and writes nothing', async () => {
