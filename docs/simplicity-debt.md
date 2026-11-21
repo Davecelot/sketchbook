@@ -1,6 +1,12 @@
 # Simplicity debt
 
-Shortcuts taken on purpose, and when to revisit them (harness format).
+Open verification, deliberate tradeoffs, and work already closed. A tradeoff is not work owed unless its revisit condition is met.
+
+## Open verification
+
+- **Claude hooks in adopted projects (SB-0099).** Starting Claude Code in the design-system folder remains the supported setup. [Claude Code documents](https://code.claude.com/docs/en/permissions) that `/cd` can activate destination hooks while `CLAUDE_PROJECT_DIR` still points at the starting project. Sketchbook's guards use that variable. Before recommending `/cd` from an app root, verify that a generated-file edit and a settled-decision edit are guarded at the intended paths in an adopted project.
+
+## Deliberate tradeoffs
 
 | Date | File | Simplification | Why | Revisit when |
 | --- | --- | --- | --- | --- |
@@ -9,9 +15,8 @@ Shortcuts taken on purpose, and when to revisit them (harness format).
 | 2026-11-09 | harness/commands/upgrade.mts | The upstream harness/manifest.json is never written; its glob differences are only listed for a hand merge (SB-0070) | Ownership rules must not come from the side being installed | Upstream manifests change often enough that hand merges are a burden |
 | 2026-11-08 | harness/commands/brand.mts | `brand use --yes` clears overrides instead of saving them per brand (SB-0062) | Brand files share the brand.config schema, which has no overrides | Teams need overrides on several brands |
 | 2026-11-11 | harness/templates/move-to-claude-INSTALL.md | The Claude layer is installed by Claude following a written procedure, not by a CLI command (SB-0099) | Merging into a team's existing .claude/ (their own skills, hooks, permissions) needs judgment and questions a script cannot ask | Installs go wrong in practice, or the merge rules turn out to be mechanical |
-| 2026-11-11 | harness/commands/bootstrap.mts | `init --adopt` keeps the design system in its own folder: in an app repository its hooks fire only in a Claude Code session started in that folder (SB-0099) | Claude Code reads settings and hooks only from the folder a session starts in | Claude Code loads a subfolder's settings, or teams need the hooks from the app root |
-| 2026-11-14 | harness/cli/commands | No `sketchbook brief` orientation command (SB-0114) | With the Claude layer installed, round 4 showed agents read the spec files directly and rarely call orientation commands; a new command is surface without measured savings | Benchmark round 5 shows orientation calls (help, status, list, docs) still a large share of UI or QA runs |
-| 2026-11-14 | .claude/settings.json | Long test and Playwright output is not capped by a setting or a hook (SB-0114) | The output-cap setting name could not be confirmed against the Claude Code docs; an unknown settings key is worse than none | A run shows test output dominating its tokens, or the setting is confirmed |
+| 2026-11-14 | harness/cli/commands | No `sketchbook brief` orientation command (SB-0114) | Agents read the specs directly, and [round 5](research/value-benchmark/ROUND5.md) met the context target without a new command | A benchmark shows orientation calls (help, status, list, docs) taking a large share of UI or QA runs |
+| 2026-11-14 | .claude/settings.json | No Sketchbook-specific output limit for test runs (SB-0114) | Claude Code already limits its inline output and documents [`bashOutputMaxChars`](https://code.claude.com/docs/en/settings-reference#bashoutputmaxchars) for local tuning | A measured run shows test output dominating context; preserve failure diagnostics if tuning it |
 | 2026-11-16 | eslint.config.js | `eslint.config` stays JavaScript (`// @ts-check`, type-checked by `tsconfig.tools.json`) while the other configs are TypeScript (SB-0119) | ESLint 10 loads a `.ts` config only through jiti or the unstable `unstable_native_nodejs_ts_config` flag, even on a Node that strips types | ESLint loads TypeScript configs natively by default, then convert it to `eslint.config.ts` |
 
 ## Closed
