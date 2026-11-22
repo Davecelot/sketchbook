@@ -19,6 +19,8 @@ test('Codex discovers project guidance and skill from a nested design-system wor
     await writeFile(join(repo, 'AGENTS.md'), 'HOST_PROJECT_GUIDANCE: preserve the app.\n');
     await cp(join(ROOT, 'harness/templates/project/AGENTS.md'), join(project, 'AGENTS.md'));
     await cp(join(ROOT, 'harness/templates/project/.agents/skills/sketchbook/SKILL.md'), join(project, '.agents/skills/sketchbook/SKILL.md'));
+    const catalog = spawnSync(process.execPath, [join(ROOT, 'harness/cli.mjs'), 'harness', 'add', 'hammock', 'review-rangers'], { cwd: project, encoding: 'utf8' });
+    assert.equal(catalog.status, 0, catalog.stdout + catalog.stderr);
     const env: NodeJS.ProcessEnv = { ...process.env, CODEX_HOME: config };
     for (const key of Object.keys(env)) if (/^(OPENAI_|ANTHROPIC_|GH_|GITHUB_)/i.test(key)) delete env[key];
     const inspect = (cwd: string) => {
@@ -35,5 +37,8 @@ test('Codex discovers project guidance and skill from a nested design-system wor
     assert.match(nested, /This project uses the Sketchbook CLI and a contract-first design system/);
     assert.match(nested, /Work on a Sketchbook design-system project/);
     assert.match(nested, /sketchbook\/SKILL\.md/);
+    assert.match(nested, /hammock\/SKILL\.md/);
+    assert.match(nested, /review-rangers\/SKILL\.md/);
+    assert.doesNotMatch(parent, /hammock\/SKILL\.md|review-rangers\/SKILL\.md/);
   } finally { await rm(temp, { recursive: true, force: true }); }
 });

@@ -91,4 +91,4 @@ A pattern doc is drawn from `src/patterns/<id>/pattern.json` (`docs/design-docs/
 3. Look at both screenshots at the same width. Fix the layout when the difference is the layout, record a library gap with `sketchbook sync stamp note` when it is not, and fix the library in place only.
 4. `sketchbook sync compare --ingest <dir>` writes `docs/design-docs/parity.md`; `sync stamp doc|checked <id>`.
 
-Rule and the failures behind it: `.claude/rules/figma-fidelity.md`.
+Rule and the failures behind it: `rule:figma-fidelity`.

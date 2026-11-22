@@ -14,7 +14,7 @@ test('OpenCode discovers and loads portable skills in standalone and adopted pro
   const project = join(repo, 'design-system');
   const standalone = join(temp, 'standalone');
   let requests: string[] = [];
-  let action: 'bash' | 'contract-author' | 'component-builder' | null = null;
+  let action: 'bash' | 'contract-author' | 'component-builder' | 'hammock' | 'review-rangers' | null = null;
   let clientOutput = '';
   let sentTool = false;
   const server = createServer((req, res) => {
@@ -89,6 +89,10 @@ test('OpenCode discovers and loads portable skills in standalone and adopted pro
     assert.match(standaloneInput, /Ask for explicit approval before any tests or implementation/);
     action = 'component-builder';
     assert.match(await run(project), /confirm failure for the intended behavior/);
+    action = 'hammock';
+    assert.match(await run(standalone), /\.sketchbook\/hammock\.json/);
+    action = 'review-rangers';
+    assert.match(await run(project), /independent verdict not assessed/);
     action = 'bash';
     await run(project);
     assert.ok(sentTool, 'the mock provider requested the shell tool');

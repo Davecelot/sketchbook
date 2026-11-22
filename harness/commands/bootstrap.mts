@@ -23,6 +23,8 @@ import type { HookEntry, HookCommand } from '../lib/claude-layer.mjs';
 import { emptyLog, inheritDecisions } from '../lib/decisions.mjs';
 import { AGENT_ENGINE_FILES, agentFileState, claudeDestination, hasClaudeLayer, isAgentFile, profileFiles, renderAgentSetup, selectedAgentProfiles, STAGED, WORKFLOW_SKILLS } from '../lib/agent-config.mjs';
 import type { AgentProfile } from '../lib/agent-config.mjs';
+import { matchesLegacyCatalogFile, recommendedCatalogFiles } from '../lib/agent-catalog.mjs';
+import { catalogProjections } from '../lib/agent-render.mjs';
 
 export { STAGED };
 
@@ -99,6 +101,7 @@ function claudeFiles(files: string[], manifest: HarnessManifest, extras: string[
 
 export function expectedAgentFiles(root: string, profiles: AgentProfile[]): Set<string> {
   const expected = profileFiles(profiles);
+  for (const { path } of recommendedCatalogFiles(profiles)) expected.add(path);
   if (profiles.includes('claude')) {
     const { files, manifest } = harnessFiles();
     const base = claudeDestination(root);
@@ -115,7 +118,7 @@ export function syncHarness(root: string, {
 }: { all?: boolean; dryRun?: boolean; agentsOnly?: boolean; profiles?: AgentProfile[]; extras?: string[] } = {}): SyncResult {
   const out: SyncResult = { added: [], updated: [], edited: [], hooks: [], skipped: [], preserved: [] };
   const { files, manifest } = harnessFiles();
-  function copy(source: string, dest: string, { owned = false, agent = false } = {}) {
+  function copy(source: string, dest: string, { owned = false, agent = false, catalog = false } = {}) {
     const abs = join(root, dest);
     const state = agent ? agentFileState(root, dest) : existsSync(abs) ? 'file' : 'missing';
     if (state === 'blocked') { out.skipped.push(dest); return; }
@@ -123,8 +126,9 @@ export function syncHarness(root: string, {
     const src = AGENT_ENGINE_FILES.some((file) => file === dest) ? Buffer.from(renderAgentSetup(dest, template.toString('utf8'), enginePkg().name)) : template;
     if (state === 'missing') out.added.push(dest);
     else {
-      if (readFileSync(abs).equals(src)) return;
-      if (!owned) { out.preserved.push(dest); return; }
+      const current = readFileSync(abs);
+      if (current.equals(src)) return;
+      if (catalog ? !matchesLegacyCatalogFile(dest, current) : !owned) { out.preserved.push(dest); return; }
       (all ? out.updated : out.edited).push(dest);
     }
     if (dryRun || (state === 'file' && !all)) return;
@@ -140,11 +144,13 @@ export function syncHarness(root: string, {
       : join(WORKFLOW_SKILLS.includes(file) ? ENGINE : TEMPLATE, file);
     copy(source, file, { agent: true });
   }
+  for (const { source, path } of recommendedCatalogFiles(profiles)) copy(join(ENGINE, source), path, { agent: true, catalog: true });
   if (profiles.includes('claude')) {
     const base = claudeDestination(root);
     const knownLayer = hasClaudeLayer(root, base);
+    const projected = new Set(catalogProjections().map(({ path }) => path));
     for (const file of claudeFiles(files, manifest, extras)) {
-      copy(join(ENGINE, file), file.replace(/^\.claude/, base), { agent: true, owned: true });
+      copy(join(ENGINE, file), file.replace(/^\.claude/, base), { agent: true, owned: true, catalog: projected.has(file) || WORKFLOW_SKILLS.includes(file.replace(/^\.claude/, '.agents')) || file.includes('/hooks/') });
     }
     if (base === STAGED) copy(join(HARNESS, 'templates/move-to-claude-INSTALL.md'), `${base}/INSTALL.md`, { agent: true });
     const settings = `${base}/settings.json`;

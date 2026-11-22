@@ -56,6 +56,7 @@ export interface ChecksSummary {
 
 export interface CommandContext<S extends OptionSpecs = OptionSpecs> {
   root: string;
+  expectedHarnessPlan?: string;
   args: string[];
   options: OptionValues<S>;
   json: boolean;

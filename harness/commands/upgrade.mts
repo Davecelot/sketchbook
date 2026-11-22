@@ -14,6 +14,7 @@ import type { FixError } from './catalog.mjs';
 import { walk, readJsonSync, readJsonStrict, writeFileAtomic, globToRegExp } from '../lib/files.mjs';
 
 import { agentFileState, claudeDestination, isAgentFile, isClaudeLayerFile, profileFiles, selectedAgentProfiles, STAGED } from '../lib/agent-config.mjs';
+import { matchesLegacyCatalogFile } from '../lib/agent-catalog.mjs';
 
 export interface HarnessManifest { version?: string; harness: string[]; team: string[]; shared?: string[]; ignore?: string[]; optional?: Record<string, string[]> }
 export type Ownership = 'harness' | 'team' | 'shared' | 'other' | 'ignore';
@@ -95,6 +96,12 @@ export function compareTrees(root: string, source: string, local: HarnessManifes
       if (!claudeFile || f === `${STAGED}/INSTALL.md`) {
         const shared = read(join(source, f));
         if (shared && !shared.equals(read(join(root, f)) ?? Buffer.alloc(0))) out.protected.push(f);
+        continue;
+      }
+      const current = read(join(root, f));
+      const next = read(join(source, f));
+      if (current && next && !current.equals(next) && !matchesLegacyCatalogFile(f, current)) {
+        out.protected.push(f);
         continue;
       }
     }

@@ -20,12 +20,12 @@ Open the [shared contract-author skill](../../../.agents/skills/contract-author/
 
 ## Critical patterns
 
-For an authorized delegated run, use the `Agent` tool with the model and tools declared by each brief. Run the [extractor](agents/extractor.md), [drafter](agents/drafter.md), and [validator](agents/validator.md) in sequence, passing each phase's evidence and outputs to the next. Apply the project's configured gate from the shared workflow.
+Use the delegation and evidence rules in the shared skill. This wrapper does not choose a model or change permissions.
 
 ## Decision tree
 
 - Small prose correction: follow the shared skill's direct edit-and-check path.
-- Full draft, re-sync or backfill: run the phases above if authorized; otherwise follow the shared workflow directly and disclose the self-check.
+- Full draft, re-sync or backfill: follow the shared workflow and disclose the self-check if no independent validation ran.
 - Implementation parity review: use the component-builder skill instead.
 
 ## Commands
@@ -35,4 +35,3 @@ Use `npm run check` to validate the contract before requesting any required plan
 ## Resources
 
 - [Shared contract-author skill](../../../.agents/skills/contract-author/SKILL.md)
-- [Claude role briefs](agents/)

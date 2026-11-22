@@ -2,7 +2,6 @@
 name: extractor
 description: Gathers a component's real data from shadcn/ui, the APG, the registry and existing code into structured findings; writes no contract files.
 tools: Read, Grep, Glob, WebFetch
-model: haiku
 ---
 
 # Extractor

@@ -2,7 +2,6 @@
 name: validator
 description: Runs npm run check on the drafted contract, fixes violations and checks it against the extractor's source quotes.
 tools: Read, Edit, Bash, Grep, Glob
-model: sonnet
 ---
 
 # Validator

@@ -9,12 +9,10 @@ description: >
   onboarding with the library+kits starter.
 metadata:
   author: sketchbook
-  version: '1.2.0'
-  changelog: >
-    Points to the hammock ladder instead of the removed always-hammock rule
-    (SB-0114); affects the kits workflow wording only.
-  auto-invoke: Adding, adapting or removing a template kit (a page or block in src/patterns/<kit>/)
-  allowed-tools: [Read, Edit, Write, Glob, Grep, Bash]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Kits

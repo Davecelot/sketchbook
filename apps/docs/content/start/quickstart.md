@@ -41,9 +41,9 @@ These steps use [the published CLI](https://www.npmjs.com/package/@usesketchbook
 
 ## Choose agent integrations
 
-The commands above create a core-only project. To install the shared component skills and your client's setup, append `--agent <profile>` to both `init` commands or add it later with `npx sketchbook init --agent <profile>`. For multiple clients, pass a comma-separated list such as `--agent codex,trae`. The `claude` profile also needs [Claude Code activation](/concepts/claude-layer/).
+The commands above create a core-only project. To install the recommended workflows and your client's setup, append `--agent <profile>` to both `init` commands or add it later with `npx sketchbook init --agent <profile>`. For multiple clients, pass a comma-separated list such as `--agent codex,trae`. The `claude` profile also needs [Claude Code activation](/concepts/claude-layer/).
 
-See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile). Run `npx sketchbook doctor` to inspect your project's setup.
+See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile), or pick individual items from the [harness catalog](/harness/). Run `npx sketchbook doctor` to inspect your project's setup.
 
 ## Commands you will use
 

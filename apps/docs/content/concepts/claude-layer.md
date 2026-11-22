@@ -4,10 +4,10 @@ description: "Set up Claude Code to use your project’s workflows and edit guar
 order: 50
 ---
 
-Choose the Claude Code profile when you want Claude to work from your project’s component, token, and design-file workflows. Follow [Install it](#install-it) to activate the profile.
+Choose this profile for Claude Code’s native commands, discovery, and edit guards. The workflows themselves are shared: use the [harness catalog](/harness/) if you only want to install individual workflows. Follow [Install it](#install-it) to activate the profile.
 
 - **Slash commands** start a workflow. The available commands include `/start`, `/init`, `/tour`, `/foundations`, `/import-tokens`, `/roast-foundations`, `/kits`, `/add`, `/check`, `/explain`, `/sync`, `/swap`. They live in `.claude/commands/`.
-- **Skills** hold the procedure for one kind of task, in `.claude/skills/<skill>/`. The `contract-author` and `component-builder` wrappers use the same shared `.agents/skills/` workflows as other profiles.
+- **Skills** in `.claude/skills/<skill>/` use the same catalog content as other clients. The `contract-author` and `component-builder` wrappers point directly to the installed `.agents/skills/` files.
 - **Briefs** describe roles for subagents and live with the relevant skill in `.claude/skills/<skill>/agents/`.
 - **Rules** describe project requirements such as contract-first and test-first. Rules with `paths:` load for matching files.
 - **Hooks** in `.claude/settings.json` run scripts on events. Two guards block Claude's edits to generated outputs and to accepted decision records. The hammock hooks inject the decision ladder once per session, track the mode, and audit component edits; they advise and never block an edit (see [Hooks and modes](#hooks-and-modes)). Each hook is TypeScript compiled to `.mjs` and runs through `.claude/hooks/run.mjs`; in a fresh clone of Sketchbook the first hook builds them once. If a guard's script is missing, the guard blocks the edit and names the fix.
@@ -39,7 +39,7 @@ Choose the Claude Code profile when you want Claude to work from your project’
 | PostToolUse (Edit, Write, MultiEdit) | `page-outline` | A written `.html` page that uses `sb-*` elements needs an `<h1>` and a `<main>`; on a miss it tells the agent the fix (SB-0117). A static check, not axe |
 | Stop | hammock stop gate | Safety net if an audit is still owed |
 
-Hammock mode is `lite`, `full` (default), `ultra` or `off`. Switch it with `/hammock <mode>`; `off` skips the ladder, and non-negotiables such as accessibility and the contract still apply.
+Hammock mode is `lite`, `full` (default), `ultra` or `off`. Switch it with `/hammock <mode>`, or set a [project-wide default](/harness/#hammock-configuration); `off` skips the ladder, and non-negotiables such as accessibility and the contract still apply.
 
 ## Install it
 
@@ -49,7 +49,7 @@ Run `sketchbook init --agent claude` when creating a project or from an existing
 Install the Claude layer from move-to-.claude/ (follow move-to-.claude/INSTALL.md).
 ```
 
-Claude copies the files, merges the hook settings, runs `check --only H1` and `doctor`, then deletes `move-to-.claude/`. Check H1 verifies that every skill, brief and command loads, and that what the layer puts in context in every session stays within its byte budget (`harness.config.json` `contextBudget`, SB-0114).
+Claude copies the files, merges the hook settings, runs `check --only H1` and `doctor`, then removes the staged copy after verification. H1 checks the installed files and context budget (`harness.config.json` `contextBudget`, SB-0114). Confirm discovery and hook activation in the client.
 
 > **Warning** Claude Code reads settings and hooks only from the folder where a session starts. If the design system is a folder inside an app, start Claude Code in that folder.
 
@@ -59,4 +59,4 @@ Claude copies the files, merges the hook settings, runs `check --only H1` and `d
 - [Adopt in an app](/guides/adopt-in-app/)
 - [Checks](/concepts/checks/)
 
-Source of truth: `CLAUDE.md`, `.claude/settings.json`, `.claude/rules/`, `.claude/commands/`, `.claude/skills/*/SKILL.md`, `harness/checks/h1-claude-layer.mts`
+Source of truth: `harness/templates/agent-catalog/`, `harness/templates/claude-catalog-metadata.json`, `.claude/settings.json`, `harness/checks/h1-claude-layer.mts`

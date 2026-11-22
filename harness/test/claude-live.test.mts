@@ -52,6 +52,9 @@ test('Claude Code advertises native wrappers installed by Sketchbook alongside i
     assert.match(request, /docs\/harness\.md/);
     assert.match(request, /Draft, resync, or validate a component contract using the shared Sketchbook/);
     assert.match(request, /Build a component from its approved contract using the shared Sketchbook/);
+    // Claude may omit descriptions after the discovery budget is spent, but still lists each skill by ID.
+    assert.match(request, /- review-rangers(?:\\n|:)/);
+    assert.match(request, /- onboarding(?:\\n|:)/);
   } finally {
     if (server.listening) await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
     await rm(dir, { recursive: true, force: true });

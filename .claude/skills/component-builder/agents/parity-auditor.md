@@ -2,7 +2,6 @@
 name: parity-auditor
 description: Audits a component's Web Component implementation against its canonical contract, producing a structured aspect-by-aspect diff and action plan. Use when a component exists in code and you need to verify it still matches spec/components/<name>/contract.md.
 tools: Read, Bash, Grep, Glob
-model: sonnet
 ---
 
 # Parity auditor

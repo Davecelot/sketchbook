@@ -20,7 +20,7 @@ Open the [shared component-builder skill](../../../.agents/skills/component-buil
 
 ## Critical patterns
 
-Use the local Claude rules and skills for task details when available, especially form-associated controls, browser testing, and Web Component conventions. For authorized independent parity review, launch the [parity-auditor](agents/parity-auditor.md) with the model and tools declared by the brief. Pass the component name and review the evidence in its report. Use the `a11y-checker` workflow for the separate audit before stable.
+Use the review criteria and role brief in the shared skill. This wrapper does not choose a model or change permissions. Use the `a11y-checker` workflow for the separate audit before stable.
 
 ## Decision tree
 
@@ -35,4 +35,3 @@ Use the build and verification commands in the shared workflow. Use `npm run tes
 ## Resources
 
 - [Shared component-builder skill](../../../.agents/skills/component-builder/SKILL.md)
-- [Claude parity-auditor brief](agents/parity-auditor.md)

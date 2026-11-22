@@ -92,7 +92,7 @@ test('checkout and project guidance distinguish the initial inventory from curre
   const quickstart = await readFile(`${ROOT}apps/docs/content/start/quickstart.md`, 'utf8');
   assert.match(checkout, /docs\/README\.md.*checkout documentation/);
   assert.match(checkout, /project created by `sketchbook init`[^.]*`docs\/harness\.md`/);
-  assert.match(workflow, /source checkout, inspect `\.claude\/skills\/` and `\.claude\/commands\/`/);
+  assert.match(workflow, /source checkout, inspect `harness\/templates\/agent-catalog\/`/);
   assert.match(quickstart, /initial installation inventory; it does not automatically reflect later changes/);
   for (const file of ['CLAUDE.md', 'harness/templates/CLAUDE.md']) {
     const text = await readFile(`${ROOT}${file}`, 'utf8');

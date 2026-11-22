@@ -11,6 +11,7 @@ import type { HarnessConfigJson } from '../../../generated/types/harness-config.
 import { alwaysOnContext } from '../../lib/claude-layer.mjs';
 import { expectedAgentFiles } from '../../commands/bootstrap.mjs';
 import { agentFileState, hasClaudeLayer, selectedAgentProfiles, STAGED } from '../../lib/agent-config.mjs';
+import { catalogPresence } from '../../lib/agent-catalog.mjs';
 import { codexSubdirectoryAdapterMatches, codexSubdirectoryLauncher, copilotRepositoryHookLocation, instructionReferences, nativeHookStatus } from '../../lib/agent-diagnostics.mjs';
 import { designState } from './status.mjs';
 import type { Command } from '../types.mjs';
@@ -58,6 +59,7 @@ export default {
       agentProfiles: profiles,
       // File presence is not proof that a particular client loaded or followed its instructions.
       agentInstructions: Object.fromEntries([...expected].map((file) => [file, agentFileState(root, file) === 'file'])),
+      harnessCatalog: catalogPresence(root),
       agentInstructionReferences: instructionReferences(root, expected),
       nativeHooks: Object.fromEntries(nativeProfiles.map((profile) => [profile, hookStatus?.[profile]])),
       codexSubdirectoryLauncher: profiles.includes('codex') ? codexSubdirectoryLauncher(root) : null,
@@ -81,6 +83,7 @@ export default {
     const missingInstructions = Object.entries(data.agentInstructions).filter(([, present]) => !present).map(([file]) => file);
     if (!profiles.length) out('Agent integrations: core only.');
     else out(`Agent setup (${profiles.join(', ')}): ${missingInstructions.length ? `missing ${missingInstructions.join(', ')} (sketchbook init can restore missing setup files when paths are available)` : 'all selected files present'}; confirm what your client loaded before relying on these files`);
+    if (data.harnessCatalog.length) out(`Catalog files (presence only): ${data.harnessCatalog.map(({ id, complete }) => complete ? id : `${id} (incomplete)`).join(', ')}. Confirm activation in your client.`);
     const reviewInstructions = Object.entries(data.agentInstructionReferences).filter(([, status]) => status === 'not-detected').map(([file]) => file);
     if (reviewInstructions.length) out(`Agent instruction references not detected: ${reviewInstructions.join(', ')}. Review preserved team instructions for the shared workflow; a textual check cannot determine whether equivalent guidance is present or loaded.`);
     const scriptState = (present: boolean, matches: boolean | null) => !present ? 'not found' : matches === false ? 'present, differs from current template' : 'present';

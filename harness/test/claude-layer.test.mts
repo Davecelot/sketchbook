@@ -40,13 +40,16 @@ test('the skill standard guard rejects a skill that breaks it', () => {
   }
 });
 
-test('the always-on context guards reject a long description and a brief with no model (SB-0114)', () => {
+test('the always-on context guards reject long descriptions and invalid explicit legacy models (SB-0114)', () => {
   const long = `---\nname: demo\ndescription: ${'x'.repeat(DESCRIPTION_MAX)} Trigger: when asked.\n---\n`;
   assert.ok(skillProblems('demo', long).some((p) => p.includes(`at most ${DESCRIPTION_MAX}`)));
   const dir = mkdtempSync(join(tmpdir(), 'sb-h1-'));
   try {
     mkdirSync(join(dir, '.claude/skills/demo/agents'), { recursive: true });
-    writeFileSync(join(dir, '.claude/skills/demo/agents/probe.md'), '---\nname: probe\ndescription: Probes.\ntools: Read\n---\n');
+    const brief = join(dir, '.claude/skills/demo/agents/probe.md');
+    writeFileSync(brief, '---\nname: probe\ndescription: Probes.\ntools: Read\n---\n');
+    assert.deepEqual(claudeLayerProblems(dir).frontmatter, []);
+    writeFileSync(brief, '---\nname: probe\ndescription: Probes.\ntools: Read\nmodel: unknown-legacy-alias\n---\n');
     assert.ok(claudeLayerProblems(dir).frontmatter.some((p) => p.includes('model must be one of')));
   } finally {
     rmSync(dir, { recursive: true, force: true });

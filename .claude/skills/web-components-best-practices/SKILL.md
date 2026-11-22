@@ -8,12 +8,10 @@ description: >
   shared state.
 metadata:
   author: sketchbook
-  version: '1.4.0'
-  changelog: >
-    Shorter description (at most 400 characters); descriptions are in
-    context every session (SB-0114); affects context cost only.
-  auto-invoke: Writing, reviewing, or refactoring Web Components (custom elements)
-  allowed-tools: [Read, Edit, Write, Glob, Grep, Bash]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Web Components Best Practices
@@ -62,7 +60,7 @@ written.
 
 This skill governs **how** to write a custom element once you're writing
 one. It does not replace the
-[`contract-first`](../../rules/contract-first.md) rule: a new
+`rule:contract-first`: a new
 component under `src/components/<name>` still needs a
 `spec/components/<name>/contract.json` before implementation begins.
 

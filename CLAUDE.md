@@ -11,6 +11,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repository map and [docs/README
 - `spec/registry.json`: components and lifecycle status. `spec/tokens/contrast.json`: system contrast pairs. `src/patterns/<kit>/`: template kits (team-owned once added).
 - `spec/design-docs.json` + `docs/design-docs/`: how a design file documents itself (doc shell, pages, theme axes); the markdown is the tool-agnostic view, the JSON is what the design adapters render (check D3, T7).
 - `spec/decisions/DECISIONS.md`: design-system decisions. `docs/simplicity-debt.md`: deliberate shortcuts. `docs/research/`: standards and starting-point research.
+- `harness/templates/agent-catalog/`: shared AI workflows, rules, role briefs, commands, settings templates and supporting files. `harness/templates/claude-catalog-metadata.json` supplies native adapter metadata. Rebuild client projections with `npm run build:harness` rather than editing the rendered copies.
 
 ## Outputs (never edit by hand; rebuild)
 - `spec/tokens/interface.json` (what components depend on; `npm run generate`; rename tokens only via `sketchbook tokens rename`).
