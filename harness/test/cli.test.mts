@@ -247,9 +247,15 @@ test('Harness opens from the first level; keyboard selection survives filter and
   await ui.press('down');
   await ui.press('return');
   assert.match(ui.view(), /› \[ \] Skill\s+Accessibility Checker/);
+  assert.match(ui.view(), /Tab Details/);
   assert.doesNotMatch(ui.view(), /Sketchbook essentials/);
   await ui.type('hammock');
   assert.doesNotMatch(ui.view(), /Hammock Default Mode|Integration references/);
+  await ui.press('tab');
+  assert.match(ui.view(), /Item details[\s\S]*Hammock/);
+  await ui.press('escape');
+  assert.match(ui.view(), /Filter: hammock/);
+  assert.match(ui.view(), /0 selected/);
   await ui.press('space', ' ');
   assert.match(ui.view(), /› \[x\] Skill\s+Hammock/);
   assert.match(ui.view(), /Think through changes/);
@@ -276,6 +282,20 @@ test('Harness opens from the first level; keyboard selection survives filter and
   assert.equal(await ui.done, 0);
 });
 
+test('Harness custom picker keeps the details shortcut visible at the minimum terminal size', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'sketchbook-harness-compact-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const ui = picker(root, 'harness', 31, 14);
+  await ui.press('down');
+  await ui.press('return');
+  const listing = ui.frames.at(-1) ?? [];
+  assert.ok(listing.length <= 14);
+  assert.match(listing.join('\n'), /› \[ \] Skill/);
+  assert.match(listing.join('\n'), /Tab\s+Details/);
+  await ui.press('c', '\x03', true);
+  assert.equal(await ui.done, 130);
+});
+
 test('Harness recommended is a separate path and installs complete modules without a checklist', async (t) => {
   const root = await mkdtemp(join(tmpdir(), 'sketchbook-harness-preset-'));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -294,6 +314,7 @@ test('Harness recommended is a separate path and installs complete modules witho
   assert.match(ui.view(), /Enter Install/);
   await ui.press('return');
   assert.match(ui.view(), /Installed \d+ files/);
+  assert.match(ui.view(), /Next steps[\s\S]*open this folder in your coding tool[\s\S]*SKILL\.md under \.agents\/skills\//i);
   assert.ok(existsSync(join(root, '.sketchbook/hammock.json')));
   assert.ok(existsSync(join(root, '.agents/skills/review-rangers/assets/committee-member-template.md')));
   assert.equal(existsSync(join(root, '.claude')), false);
@@ -328,6 +349,8 @@ test('Harness preview blocks conflicts; Tab and Enter install only the repaired 
   assert.match(ui.view(), /› Install selected/);
   await ui.press('return');
   assert.match(ui.view(), /Installed 1 file\./);
+  assert.match(ui.view(), /read the installed guidance under\s+\.agents\/sketchbook\//i);
+  assert.doesNotMatch(ui.view(), /check that it discovers the skills/i);
   assert.equal(await readFile(join(skill, 'SKILL.md'), 'utf8'), 'Team-owned skill.\n');
   assert.ok(existsSync(join(root, '.agents/sketchbook/commands/check.md')));
   await ui.press('return');

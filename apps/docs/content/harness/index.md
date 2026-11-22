@@ -17,8 +17,8 @@ If you only need one workflow, [find a skill by task](/harness/skills/). If you 
 If Sketchbook isn’t installed in your project, use `npm exec --package=@usesketchbook/cli -- sketchbook` in place of `npx sketchbook` in the commands on this page.
 
 1. From the folder where you want the files, run `npx sketchbook harness` in a terminal.
-2. Choose **Install recommended** to preview the four skills, or **Customize installation** to pick items. In the checklist, use **↑ / ↓** to move, **Space** to select, and **Enter** to preview. Typing filters the list without clearing your selections. Press **Esc** to clear the filter or go back.
-3. Review the destination, changes, and any conflicts. **Back** is selected by default. To install, use **Tab** to select the install action, then press **Enter**. If the plan changes, review and confirm the new preview. The result lists the files written.
+2. Choose **Install recommended** to preview the four skills, or **Customize installation** to pick items. In the checklist, use **↑ / ↓** to move, **Space** to select, **Tab** to see item details, and **Enter** to preview. Typing filters the list without clearing your selections. Press **Esc** to clear the filter or go back.
+3. Review the destination, changes, and any conflicts. **Back** is selected by default. To install, use **Tab** to select the install action, then press **Enter**. If the plan changes, review and confirm the new preview. The result lists the files written and how to use them in your coding tool.
 
 ## Use explicit commands
 

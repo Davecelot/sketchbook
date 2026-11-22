@@ -2,17 +2,18 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile, spawnSync } from 'node:child_process';
-import { cp, mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ROOT } from './helpers.mjs';
 
-test('OpenCode discovers and loads portable skills in standalone and adopted projects', { skip: process.env.SKETCHBOOK_TEST_OPENCODE_LIVE !== '1', timeout: 90000 }, async () => {
+test('OpenCode discovers and loads portable skills in catalog-only, standalone and adopted projects', { skip: process.env.SKETCHBOOK_TEST_OPENCODE_LIVE !== '1', timeout: 90000 }, async () => {
   const temp = await mkdtemp(join(tmpdir(), 'sketchbook-opencode-live-'));
   const repo = join(temp, 'app');
   const project = join(repo, 'design-system');
   const standalone = join(temp, 'standalone');
+  const catalogOnly = join(temp, 'catalog-only');
   let requests: string[] = [];
   let action: 'bash' | 'contract-author' | 'component-builder' | 'hammock' | 'review-rangers' | null = null;
   let clientOutput = '';
@@ -47,11 +48,16 @@ test('OpenCode discovers and loads portable skills in standalone and adopted pro
     }
     await mkdir(join(project, 'node_modules'));
     await symlink(ROOT, join(project, 'node_modules/sketchbook'), 'dir');
+    await mkdir(catalogOnly);
+    const add = spawnSync(process.execPath, [join(ROOT, 'harness/cli.mjs'), 'harness', 'add', 'recommended'], { cwd: catalogOnly, encoding: 'utf8' });
+    assert.equal(add.status, 0, add.stdout + add.stderr);
+    assert.deepEqual((await readdir(catalogOnly)).sort(), ['.agents', '.sketchbook']);
     await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
     const address = server.address();
     assert.ok(address && typeof address !== 'string');
     await writeFile(join(repo, 'opencode.json'), JSON.stringify({ model: 'mock/local', providers: { mock: { name: 'Local mock', package: '@opencode/ai/providers/openai-compatible', settings: { baseURL: `http://127.0.0.1:${address.port}/v1`, apiKey: 'local-test' }, models: { local: { name: 'Local test', capabilities: { tools: true, input: ['text'], output: ['text'] }, limit: { context: 32768, output: 4096 } } } } } }));
     await cp(join(repo, 'opencode.json'), join(standalone, 'opencode.json'));
+    await cp(join(repo, 'opencode.json'), join(catalogOnly, 'opencode.json'));
     const env: NodeJS.ProcessEnv = { ...process.env };
     for (const key of Object.keys(env)) if (/^(OPENAI_|ANTHROPIC_|GH_|GITHUB_|OPENCODE_|GOOGLE_)|_PROXY$/i.test(key)) delete env[key];
     for (const name of ['CONFIG', 'DATA', 'CACHE', 'STATE']) {
@@ -59,6 +65,8 @@ test('OpenCode discovers and loads portable skills in standalone and adopted pro
       await mkdir(dir);
       env[`XDG_${name}_HOME`] = dir;
     }
+    env.HOME = join(temp, 'home');
+    await mkdir(env.HOME);
     Object.assign(env, { OPENCODE_DISABLE_CLAUDE_CODE: '1', OPENCODE_DISABLE_MODELS_FETCH: '1', OPENCODE_DISABLE_AUTOUPDATE: '1', HTTP_PROXY: 'http://127.0.0.1:9', HTTPS_PROXY: 'http://127.0.0.1:9', NO_PROXY: '127.0.0.1,localhost' });
     const binary = process.env.SKETCHBOOK_TEST_OPENCODE_BIN || 'opencode';
     const run = async (cwd: string) => {
@@ -93,6 +101,13 @@ test('OpenCode discovers and loads portable skills in standalone and adopted pro
     assert.match(await run(standalone), /\.sketchbook\/hammock\.json/);
     action = 'review-rangers';
     assert.match(await run(project), /independent verdict not assessed/);
+    action = 'contract-author';
+    const catalogInput = await run(catalogOnly);
+    assert.ok(sentTool, 'the mock provider requested activation in the catalog-only workspace');
+    assert.doesNotMatch(catalogInput, /HOST_PROJECT_GUIDANCE|This project uses the Sketchbook CLI and a contract-first design system/);
+    for (const description of [/Draft, resync, or validate a Sketchbook component contract/, /Implement a Sketchbook Web Component/,
+      /Apply a decision ladder/, /Multi-perspective review by a committee of independent lenses/]) assert.match(catalogInput, description);
+    assert.match(catalogInput, /Ask for explicit approval before any tests or implementation/);
     action = 'bash';
     await run(project);
     assert.ok(sentTool, 'the mock provider requested the shell tool');

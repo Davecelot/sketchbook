@@ -126,15 +126,16 @@ export async function harnessPicker(root: string, input: PickerInput, output: Pi
       const list = matches();
       focus = Math.max(0, Math.min(focus, list.length - 1));
       const focused = list[focus];
-      const footer = wrap('↑ ↓ Move   Space Select   Enter Preview   Esc Clear or back', width).map(note);
+      const footer = wrap('↑ ↓ Move   Space Select   Tab Details   Enter Preview   Esc Clear/back', width).map(note);
       const count = filter ? (list.length === 1 ? 'match' : 'matches') : (list.length === 1 ? 'item' : 'items');
       const caption = `${selected.size} selected · ${list.length} ${count}`;
       const entryDetail = (entry: typeof entries[number]) => [
         ...wrap(entry.summary, width), ...wrap(moduleContents(entry), width),
       ];
       const longest = Math.max(1, ...entries.map((entry) => entryDetail(entry).length));
-      const reserve = Math.min(longest, Math.max(2, height - header.length - footer.length - 7));
-      const visible = Math.max(1, height - header.length - footer.length - reserve - 5);
+      const available = height - header.length - footer.length - 5;
+      const reserve = Math.min(longest, Math.max(1, available - 2));
+      const visible = Math.max(1, available - reserve);
       top = Math.max(0, Math.min(top, list.length - visible, focus));
       if (focus >= top + visible) top = focus - visible + 1;
       const rows = list.slice(top, top + visible).map((entry, index) => {
@@ -144,9 +145,8 @@ export async function harnessPicker(root: string, input: PickerInput, output: Pi
       });
       if (!rows.length) rows.push('No matching items.');
       const detail = focused ? entryDetail(focused) : [];
-      // The detail area stays fixed while the list moves. Its continuation remains available.
+      // The detail area stays fixed while the list moves. Tab opens the full description.
       const showDetail = detail.slice(0, reserve);
-      if (detail.length > reserve) showDetail[reserve - 1] = 'Tab for full description.';
       frame([...header,
         filter ? clipCatalogLine(`Filter: ${filter}`, width) : note('Type to filter…'),
         clipCatalogLine(`${caption}${list.length > visible ? ` · ${top + 1}–${Math.min(list.length, top + visible)} shown` : ''}`, width), '',
@@ -192,8 +192,15 @@ export async function harnessPicker(root: string, input: PickerInput, output: Pi
       choices = ['› Back to catalog'];
     } else {
       header.push(ui.bold('Install result'));
-      if (result?.ok) body.push(`Installed ${result.changed.length} ${result.changed.length === 1 ? 'file' : 'files'}.`, ...result.changed);
-      else body.push(...(result?.errors.flatMap(({ msg, fix }) => fix ? [msg, fix] : [msg]) ?? ['Installation did not complete.']));
+      if (result?.ok) {
+        const files = (result.data as Preview | undefined)?.files ?? [];
+        const skills = files.some(({ path }) => path.startsWith('.agents/skills/') && path.endsWith('/SKILL.md'));
+        body.push(`Installed ${result.changed.length} ${result.changed.length === 1 ? 'file' : 'files'}.`, 'Next steps',
+          skills
+            ? 'Open this folder in your coding tool and check that it discovers the skills. If not, ask it to read the relevant SKILL.md under .agents/skills/.'
+            : 'Read the installed guidance under .agents/sketchbook/; it does not run automatically.',
+          '', ...result.changed);
+      } else body.push(...(result?.errors.flatMap(({ msg, fix }) => fix ? [msg, fix] : [msg]) ?? ['Installation did not complete.']));
       for (const warning of result?.warnings ?? []) body.push(typeof warning === 'string' ? warning : warning.msg);
       choices = [returnTo === 'start' ? '› Back to install options' : '› Back to catalog'];
     }
