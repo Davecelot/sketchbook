@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import MarkdownIt from 'markdown-it';
 import { parseJson } from '../../../harness/lib/files.mjs';
+import { catalogAvailability, harnessCatalog } from '../../../harness/lib/agent-catalog.mjs';
 import type { BrandConfig } from '../../../generated/types/brand-config.js';
 import type { ComponentRegistry } from '../../../generated/types/registry.js';
 
@@ -48,6 +49,7 @@ const SECTIONS = [
   { dir: 'start', title: 'Start', tab: 'docs' },
   { dir: 'concepts', title: 'Concepts', tab: 'docs' },
   { dir: 'guides', title: 'Guides', tab: 'docs' },
+  { dir: 'harness', title: 'Agent harness', tab: 'docs' },
   { dir: 'cli', title: 'CLI', tab: 'docs' },
   { dir: 'reference', title: 'Reference', tab: 'docs' },
   { dir: 'playground', title: 'Playground', tab: 'demo' },
@@ -340,6 +342,11 @@ async function load() {
   };
   const cli = cliSource(await readFile('docs/cli.md', 'utf8'));
   const n = await stats();
+  const harnessTable = [
+    '| Item ID | Type | Selective install | What it does |',
+    '| --- | --- | --- | --- |',
+    ...harnessCatalog().filter((entry) => !entry.partOf).map((entry) => `| \`${entry.id}\` | ${entry.kind} | ${catalogAvailability(entry, 'generic') === 'reference only' ? 'Reference' : 'Portable'} | ${entry.summary.replaceAll('|', '\\|')} |`),
+  ].join('\n');
   const isStat = (key: string): key is keyof Stats => key in n;
   const sources: Source[] = [];
   for (const rel of await mdFiles('apps/docs/content')) {
@@ -353,6 +360,7 @@ async function load() {
       body: body
         .replace('<!-- cli:commands -->', cli.table)
         .replace('<!-- cli:conventions -->', cli.conventions)
+        .replace('<!-- harness:catalog -->', () => harnessTable)
         .replace('<!-- tokens:preview -->', panel)
         .replace('<!-- status:table -->', statusTable(n))
         .replace(/<!-- stat:(\w+) -->/g, (_, key: string) => {

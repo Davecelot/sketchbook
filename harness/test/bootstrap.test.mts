@@ -20,7 +20,7 @@ import type { ComponentContract } from '../../generated/types/contract.js';
 import type { HarnessConfigJson } from '../../generated/types/harness-config.js';
 
 // The parts of each command's --json `data` these tests read.
-interface InitData { checks: { exitCode: number }; installed?: unknown; repair: { hooks: unknown[]; added: string[]; edited: string[]; skipped: string[] } }
+interface InitData { checks: { exitCode: number }; installed?: unknown; repair: { hooks: unknown[]; added: string[]; edited: string[]; skipped: string[]; preserved: string[] } }
 interface DoctorData { codexSubdirectoryAdapterMatches: boolean | null; codexSubdirectoryLauncher: boolean | null; copilotRepositoryHookLocation: string; gitHook: string; claude: string; agentInstructions: Record<string, boolean>; agentInstructionReferences: Record<string, string>; nativeHooks: { codex: { registration: string; scriptPresent: boolean }; gemini: { registration: string; enginePresent: boolean }; copilot: { registration: string; scriptPresent: boolean; enginePresent: boolean } } }
 interface UpgradeData { hooks: unknown[]; added: string[]; updated: string[] }
 type PackageJson = Record<string, unknown> & { name: string; scripts: Record<string, string>; dependencies: Record<string, string>; devDependencies: Record<string, string>; imports: Record<string, string> };
@@ -352,7 +352,7 @@ pkgTest('B10 init again in a project restores what is missing, reports what was 
     assert.ok(existsSync(join(dir, f)), f);
     assert.ok(r.json?.data.repair.added.includes(f), f);
   }
-  assert.deepEqual(r.json?.data.repair.edited, ['move-to-.claude/commands/add.md']);
+  assert.deepEqual(r.json?.data.repair.preserved, ['move-to-.claude/commands/add.md']);
   assert.match(await readFile(join(dir, 'move-to-.claude/commands/add.md'), 'utf8'), /Team note\./);
   await rm(dir, { recursive: true, force: true });
 });
@@ -671,9 +671,19 @@ pkgTest('the staged layer can be backed up to verify the installed copy and rest
 });
 
 const PORTABLE_WORKFLOWS = ['.agents/skills/contract-author/SKILL.md', '.agents/skills/component-builder/SKILL.md'] as const;
-const SHARED_GUIDANCE = ['AGENTS.md', 'AGENT-WORKFLOWS.md', '.agents/skills/sketchbook/SKILL.md', ...PORTABLE_WORKFLOWS];
+const RECOMMENDED_ADDONS = [
+  '.sketchbook/hammock.json',
+  ...['contract-first', 'form-associated-controls', 'planning-gate', 'spec-is-source', 'test-first', 'tokens-through-the-harness'].map((name) => `.agents/sketchbook/rules/${name}.md`),
+  '.agents/skills/contract-author/agents/extractor.md', '.agents/skills/contract-author/agents/drafter.md', '.agents/skills/contract-author/agents/validator.md',
+  '.agents/skills/component-builder/agents/parity-auditor.md',
+  '.agents/skills/hammock/SKILL.md', '.agents/skills/hammock/assets/DECISION-LADDER.md',
+  '.agents/skills/hammock/assets/DEBT-LOG-TEMPLATE.md', '.agents/skills/hammock/scripts/audit-simplicity.sh',
+  '.agents/skills/review-rangers/SKILL.md', '.agents/skills/review-rangers/assets/committee-member-template.md',
+  '.agents/skills/review-rangers/assets/safety-guard-template.md', '.agents/skills/review-rangers/assets/mender-template.md',
+];
+const SHARED_GUIDANCE = ['AGENTS.md', 'AGENT-WORKFLOWS.md', '.agents/skills/sketchbook/SKILL.md', ...PORTABLE_WORKFLOWS, ...RECOMMENDED_ADDONS];
 const PROFILE_PATHS = {
-  claude: ['CLAUDE.md', ...PORTABLE_WORKFLOWS, 'move-to-.claude/INSTALL.md', 'move-to-.claude/settings.json', 'move-to-.claude/skills/contract-author/SKILL.md'],
+  claude: ['CLAUDE.md', ...PORTABLE_WORKFLOWS, ...RECOMMENDED_ADDONS, 'move-to-.claude/INSTALL.md', 'move-to-.claude/settings.json', 'move-to-.claude/skills/contract-author/SKILL.md'],
   codex: [...SHARED_GUIDANCE, '.codex/hooks.json', '.codex/sketchbook-guard.mjs'],
   gemini: [...SHARED_GUIDANCE, 'GEMINI.md', '.gemini/settings.json', '.gemini/sketchbook-guard.mjs'],
   copilot: [...SHARED_GUIDANCE, '.github/copilot-instructions.md', '.github/hooks/sketchbook.json', '.github/hooks/sketchbook-guard.mjs'],
@@ -791,7 +801,7 @@ pkgTest('adds profiles to an existing project, previews the same writes, and rep
     assert.ok(!existsSync(join(dir, '.trae')));
     const addition = must(run<{ repair: { preserved: string[] } }>(dir, 'init', '--agent', 'trae,trae', '--json').json, 'profile addition');
     assert.deepEqual(addition.changed, preview.changed);
-    assert.deepEqual(addition.changed.sort(), ['.agents/skills/sketchbook/SKILL.md', ...PORTABLE_WORKFLOWS, '.trae/rules/sketchbook.md', 'AGENT-WORKFLOWS.md', 'harness.config.json'].sort());
+    assert.deepEqual(addition.changed.sort(), [...SHARED_GUIDANCE.filter((path) => path !== 'AGENTS.md'), '.trae/rules/sketchbook.md', 'harness.config.json'].sort());
     assert.deepEqual(addition.data.repair.preserved, ['AGENTS.md']);
     assert.equal(await readFile(teamGuide, 'utf8'), 'Team guide');
     assert.deepEqual(run(dir, 'init', '--agent', 'trae', '--json').json?.changed, []);

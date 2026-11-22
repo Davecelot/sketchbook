@@ -37,9 +37,10 @@ Short on purpose. If it's long, nobody reads it before pushing.
 ## Reviewing a PR (maintainers)
 
 - [ ] Run `security-guardian` (or
-      `bash .claude/skills/security-guardian/scripts/security-scan.sh --branch`)
+      `bash .agents/skills/security-guardian/scripts/security-scan.sh --branch`)
       against the branch before approving.
-- [ ] Any change to `.claude/settings*.json`, `.claude/hooks/`,
+- [ ] Any change to agent settings, permissions or hooks (for example
+      `.claude/settings*.json`, `.opencode/`, `.codex/`),
       `.githooks/`, `.github/workflows/` or the project template's
       `.claude/settings.json` gets read in full: these control what tools,
       permissions and gates agents, git and CI have. A one-line diff here can

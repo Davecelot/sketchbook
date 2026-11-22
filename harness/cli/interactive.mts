@@ -8,6 +8,8 @@ import { dispatch } from './run.mjs';
 import type { DispatchIO } from './run.mjs';
 import type { Command } from './types.mjs';
 import { DOCS_URL, presentation } from './presentation.mjs';
+import { harnessPicker } from './harness-picker.mjs';
+import type { PickerInput, PickerOutput } from './harness-picker.mjs';
 
 type CurrentValues = Partial<Record<string, string>>;
 
@@ -35,18 +37,19 @@ function lineReader(input: NodeJS.ReadableStream) {
 
 export interface InteractiveIO {
   root?: string;
-  input?: NodeJS.ReadableStream;
-  output?: { write: (s: string) => unknown };
+  input?: PickerInput;
+  output?: PickerOutput;
   run?: (argv: string[], io: DispatchIO) => Promise<number>;
+  start?: 'home' | 'harness';
 }
 
 interface Choice<T> { label: string; description?: string; value: T }
 
-export async function interactive({ root = process.cwd(), input = process.stdin, output = process.stdout, run = dispatch }: InteractiveIO = {}): Promise<number> {
+export async function interactive({ root = process.cwd(), input = process.stdin, output = process.stdout, run = dispatch, start = 'home' }: InteractiveIO = {}): Promise<number> {
   const write = (s: string) => output.write(s);
   const ui = presentation(Boolean((output as { isTTY?: boolean }).isTTY));
-  const lines = lineReader(input);
-  const ask = async (q: string) => { write(q); const a = await lines.next(); if (a === null) throw new Quit(); return a.trim(); };
+  let lines: ReturnType<typeof lineReader> | undefined;
+  const ask = async (q: string) => { lines ??= lineReader(input); write(q); const a = await lines.next(); if (a === null) throw new Quit(); return a.trim(); };
   const heading = (title: string) => ui.enabled ? ui.section(title) : title;
   const note = (value: string) => ui.enabled ? ui.dim(value) : value;
   const line = (value: string) => ui.enabled ? ui.line(value) : value;
@@ -81,14 +84,26 @@ export async function interactive({ root = process.cwd(), input = process.stdin,
     }
   };
   let last = 0;
+  const browseHarness = async () => {
+    lines?.close();
+    lines = undefined;
+    const result = await harnessPicker(root, input, output, run);
+    last = result.code;
+    return result.back;
+  };
   try {
+    if (start === 'harness') { await browseHarness(); return last; }
     if (ui.enabled) write(ui.header('explore'));
     write(`${line('  Choose what you want to do in your design system.')}\n  Choose a number and press Enter. Type q and press Enter to quit.\n`);
     for (;;) {
-      const groups = Object.entries(GROUPS).map(([g, label]) => ({ g, label, list: commands().filter((c) => c.group === g) })).filter((x) => x.list.length);
-      const group = await choose('Groups:', groups.map((x) => ({ label: `${x.label.padEnd(12)} ${x.list.length} ${x.list.length === 1 ? 'command' : 'commands'}`, value: x })), 'q) quit');
+      const groups = Object.entries(GROUPS).map(([g, label]) => ({ g, label, list: commands().filter((c) => c.group === g && c.name !== 'harness') })).filter((x) => x.list.length);
+      const group = await choose<(typeof groups)[number] | 'harness'>('Groups:', [
+        { label: 'Harness      Browse and install workflows', value: 'harness' },
+        ...groups.map((x) => ({ label: `${x.label.padEnd(12)} ${x.list.length} ${x.list.length === 1 ? 'command' : 'commands'}`, value: x })),
+      ], 'q) quit');
       if (group === 'q') break;
       if (group === 'b') continue;
+      if (group === 'harness') { if (!(await browseHarness())) break; continue; }
       const cmd = await choose<Command>(`${group.label}:`, group.list.map((c) => ({ label: c.name, description: brief(c.summary.split(/(?<=\.)\s/)[0] ?? c.summary), value: c })), 'b) back   q) quit');
       if (cmd === 'q') break;
       if (cmd === 'b') continue;
@@ -142,7 +157,7 @@ export async function interactive({ root = process.cwd(), input = process.stdin,
   } catch (e) {
     if (!(e instanceof Quit)) throw e;
   } finally {
-    lines.close();
+    lines?.close();
   }
   write('Bye.\n');
   return last;
@@ -152,5 +167,6 @@ class Quit extends Error {}
 
 interface TtyEnds { stdin?: { isTTY?: boolean }; stdout?: { isTTY?: boolean } }
 
-// Bare `sketchbook`: the menu only when both ends are a terminal and --json was not asked for.
-export const wantsInteractive = (argv: string[], { stdin = process.stdin, stdout = process.stdout }: TtyEnds = {}): boolean => argv.length === 0 && Boolean(stdin.isTTY && stdout.isTTY);
+// Bare entry points only. Explicit subcommands and flags never ask for input.
+export const wantsInteractive = (argv: string[], { stdin = process.stdin, stdout = process.stdout }: TtyEnds = {}): boolean =>
+  (argv.length === 0 || (argv.length === 1 && argv[0] === 'harness')) && Boolean(stdin.isTTY && stdout.isTTY);

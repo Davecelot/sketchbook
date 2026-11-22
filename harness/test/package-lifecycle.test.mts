@@ -24,7 +24,9 @@ test('npm pack runs prepack and emits parseable JSON', { skip: process.env.SKETC
     const result = await exec('npm', ['pack', '--json', '--pack-destination', artifacts], { cwd: source, env, timeout: 90000, maxBuffer: 64 * 1024 * 1024 });
     const packed = parsePackedPackage(result.stdout);
     assert.ok(packed.filename.endsWith('.tgz'));
-    for (const file of ['dist/index.js', 'harness/cli.mjs', 'harness/templates/project/.codex/hooks.json', 'docs/agent-compatibility.md']) {
+    for (const file of ['dist/index.js', 'harness/cli.mjs', 'harness/templates/project/.codex/hooks.json', 'docs/agent-compatibility.md',
+      'harness/templates/agent-catalog/hammock/SKILL.md', 'harness/templates/agent-catalog/hammock/default-mode.example.json',
+      '.claude/skills/hammock/scripts/audit-simplicity.sh', '.claude/skills/review-rangers/assets/committee-member-template.md']) {
       assert.ok(packed.files.some((entry) => entry.path === file), `${file} was not packed`);
     }
     if (process.env.SKETCHBOOK_TEST_LIFECYCLE_INSTALL === '1') {
@@ -37,6 +39,10 @@ test('npm pack runs prepack and emits parseable JSON', { skip: process.env.SKETC
       await exec('npm', ['install', '--offline', '--no-audit', '--no-fund', '--save-dev', tarball], { cwd: consumer, env: installEnv, timeout: 60000, maxBuffer: 64 * 1024 * 1024 });
       const help = await exec('npx', ['--no-install', 'sketchbook', 'help', '--json'], { cwd: consumer, env: installEnv, timeout: 30000 });
       assert.equal((JSON.parse(help.stdout) as { command: string }).command, 'help');
+      const selective = await exec('npx', ['--no-install', 'sketchbook', 'harness', 'add', 'recommended', '--agent', 'opencode', '--json'], { cwd: consumer, env: installEnv, timeout: 30000 });
+      assert.equal((JSON.parse(selective.stdout) as { ok: boolean }).ok, true);
+      assert.match(await readFile(join(consumer, '.agents/skills/review-rangers/SKILL.md'), 'utf8'), /independent verdict not assessed/);
+      assert.match(await readFile(join(consumer, '.sketchbook/hammock.json'), 'utf8'), /"defaultMode": null/);
       const init = await exec('npx', ['--no-install', 'sketchbook', 'init', '--dir', 'design system', '--start', 'blank', '--agent', 'codex,gemini,copilot', '--no-install', '--engine', relative(consumer, tarball), '--json'], { cwd: consumer, env: installEnv, timeout: 90000, maxBuffer: 64 * 1024 * 1024 });
       assert.equal((JSON.parse(init.stdout) as { ok: boolean }).ok, true);
       const project = join(consumer, 'design system');
@@ -45,6 +51,7 @@ test('npm pack runs prepack and emits parseable JSON', { skip: process.env.SKETC
       assert.match(await readFile(join(project, 'AGENT-WORKFLOWS.md'), 'utf8'), /Sketchbook workflows for coding agents/);
       assert.match(await readFile(join(project, '.github/copilot-instructions.md'), 'utf8'), /AGENTS\.md/);
       assert.match(await readFile(join(project, '.codex/hooks.json'), 'utf8'), /sketchbook-guard/);
+      assert.match(await readFile(join(project, '.agents/skills/hammock/SKILL.md'), 'utf8'), /decision ladder/);
       if (process.env.SKETCHBOOK_TEST_LIFECYCLE_PROJECT_INSTALL === '1') {
         await exec('npm', ['install', '--offline', '--no-audit', '--no-fund'], { cwd: project, env: installEnv, timeout: 120000, maxBuffer: 64 * 1024 * 1024 });
         const installed = JSON.parse(await readFile(join(project, 'node_modules', name, 'package.json'), 'utf8')) as { name: string };

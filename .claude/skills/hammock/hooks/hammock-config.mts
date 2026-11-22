@@ -2,12 +2,13 @@
 // hammock — shared configuration resolver
 //
 // Resolution order for default mode:
-//   1. HAMMOCK_DEFAULT_MODE environment variable
-//   2. Config file defaultMode field:
+//   1. Project .sketchbook/hammock.json defaultMode
+//   2. HAMMOCK_DEFAULT_MODE environment variable
+//   3. Legacy user config defaultMode field:
 //      - $XDG_CONFIG_HOME/hammock/config.json (any platform, if set)
 //      - ~/.config/hammock/config.json (macOS / Linux fallback)
 //      - %APPDATA%\hammock\config.json (Windows fallback)
-//   3. 'full'
+//   4. 'full'
 //
 // Adapted from ponytail's hooks/ponytail-config.js
 // (https://github.com/DietrichGebert/ponytail), stripped of the
@@ -67,20 +68,20 @@ export function getProjectDir(): string {
 }
 
 export function getDefaultMode(): string {
+  const readMode = (file: string) => {
+    try {
+      const config = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '')) as { defaultMode?: unknown } | null;
+      return normalizeMode(config?.defaultMode);
+    } catch {
+      return null;
+    }
+  };
+  const local = readMode(path.join(getProjectDir(), '.sketchbook', 'hammock.json'));
+  if (local) return local;
   const envMode = process.env.HAMMOCK_DEFAULT_MODE;
   if (envMode && RUNTIME_MODES.includes(envMode.toLowerCase())) {
     return envMode.toLowerCase();
   }
 
-  try {
-    const configPath = getConfigPath();
-    const config = JSON.parse(fs.readFileSync(configPath, 'utf8').replace(/^\uFEFF/, '')) as { defaultMode?: string };
-    if (config.defaultMode && RUNTIME_MODES.includes(config.defaultMode.toLowerCase())) {
-      return config.defaultMode.toLowerCase();
-    }
-  } catch {
-    // Config file doesn't exist or is invalid — fall through
-  }
-
-  return DEFAULT_MODE;
+  return readMode(getConfigPath()) ?? DEFAULT_MODE;
 }

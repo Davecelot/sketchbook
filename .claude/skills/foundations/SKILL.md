@@ -9,12 +9,10 @@ description: >
   T6 or F1 failure, or "why is this value like this".
 metadata:
   author: sketchbook
-  version: '2.2.0'
-  changelog: >
-    Shorter description; the critic and mapper briefs declare their model
-    and are launched with it (SB-0114); affects roast and import runs.
-  auto-invoke: Creating, changing, importing, restarting or roasting the design system's foundations
-  allowed-tools: [Read, Edit, Write, Glob, Grep, Bash, Agent]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Foundations
@@ -46,7 +44,7 @@ Do not use this skill for:
 - **Foundation tokens** (`spec/tokens/foundation/*`) are generated from it. Never edit them by hand: an edit there is kept, but as a flagged *override* (see Overrides), not as a decision.
 - **Brand links** (`spec/tokens/brand-links.json`) say which semantic tokens follow which foundation (for example `color.primary` follows the brand ramp). They are applied on every regenerate.
 - **Semantic tokens** (`spec/tokens/semantic/*`) are the meaning layer (`color.primary`, `space.control.gap`, `motion.duration.fast`). They belong to the team. Components only ever see this layer, so the set of semantic tokens components depend on is the **interface** (`spec/tokens/interface.json`): change values freely, but rename only with `sketchbook tokens rename`.
-- Rule: `.claude/rules/tokens-through-the-harness.md`.
+- Rule: `rule:tokens-through-the-harness`.
 
 ### 2. Before any mode
 
@@ -61,7 +59,7 @@ Each mutating `sketchbook tokens` call that changes a file proposes its own SB d
 
 ### 3. Roles run from this skill's agents/ folder
 
-The `foundations-critic` and `token-mapper` briefs live in `agents/`. Launch one with the `Agent` tool as a general-purpose agent, with the brief's `model`, whose prompt is the brief's contents plus its inputs. The agent stays within the `tools` the brief declares (no platform allowlist enforces it).
+The `foundations-critic` and `token-mapper` briefs live in `agents/`. Use them directly or give them and the specified inputs to a separate reviewer with authorization. Follow the brief’s limits regardless of what tools are available. Disclose when a critique is not independent.
 
 ### 4. Overrides (the generator keeps hand edits)
 
@@ -136,7 +134,7 @@ For beginners. One question at a time; never a form.
 Bring tokens that already exist: DTCG JSON (a file or a folder of sets) or Tokens Studio export, or a CSS file with custom properties.
 
 1. `sketchbook tokens import <file> --from dtcg|css`. It writes `generated/import/<name>.proposal.json`: the parsed tokens and a proposed mapping onto the semantic interface. Nothing else changes.
-2. For names the importer could not map, launch the brief [agents/token-mapper.md](agents/token-mapper.md) with the `Agent` tool (general-purpose; prompt = the brief's contents plus the proposal path). It writes only a proposal file under `generated/import/`.
+2. For names the importer could not map, follow the [token-mapper brief](agents/token-mapper.md) using the proposal path. It writes only a proposal file under `generated/import/`.
 3. Review with the person, in this order: unmapped interface tokens (components would lose a value), imported tokens with no home (offer `sketchbook tokens add` or drop), contrast of mapped color pairs, and anything that looks like a raw value where a scale exists.
 4. Apply only after they agree: `sketchbook tokens import apply generated/import/<name>.proposal.json --dry-run`, then for real.
 5. Read [references/semantic-naming.md](references/semantic-naming.md) when names don't line up.
@@ -154,7 +152,7 @@ Start the foundations from zero while keeping every component working.
 
 Challenge the current foundations against the standards, with evidence, risks and a recommendation.
 
-1. Launch the brief [agents/foundations-critic.md](agents/foundations-critic.md) with the `Agent` tool (general-purpose; prompt = the brief's contents plus its inputs) with no conversation history (an unanchored read): give it only the area (or "all") and today's date. It reads brand.config, the semantic tokens, the references and the checks, and writes `docs/foundations-reviews/<YYYY-MM-DD>.md`.
+1. Follow the [foundations-critic brief](agents/foundations-critic.md) with the area (or "all") and today's date. For an independent critique, pass only those inputs to the reviewer. Read brand.config, the semantic tokens, the references and the checks, then write `docs/foundations-reviews/<YYYY-MM-DD>.md`.
 2. While it runs, do not form your own verdict; when it returns, read the report.
 3. Present the top findings to the person: what, evidence (file, value, the standard and its source), risk (who gets hurt and how), recommendation (a command). Separate "breaks accessibility" from "a taste call".
 4. Offer to fix the ones they accept through `guided`/`preset`/`expert`. Disagreeing with a finding is fine: record why in the decision record.
@@ -212,5 +210,5 @@ npm run storybook                                  # Foundations/<Page>
 - `agents/foundations-critic.md`: fresh-context, read-only roast; launched by roast mode and `/roast-foundations`.
 - `agents/token-mapper.md`: maps imported names onto the semantic interface and writes a proposal only; launched by import mode and `/import-tokens`.
 - `references/*.md`: one per area (table under Decision tree); read the one you need.
-- `.claude/rules/tokens-through-the-harness.md`: the rule behind every mode.
+- `rule:tokens-through-the-harness`: the rule behind every mode.
 - `spec/schemas/brand-config.schema.json`: shape of `brand.config.json`.

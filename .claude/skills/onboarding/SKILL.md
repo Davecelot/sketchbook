@@ -8,12 +8,10 @@ description: >
   asks what commands exist or what to run next ("I'm lost").
 metadata:
   author: sketchbook
-  version: '2.3.0'
-  changelog: >
-    Shorter description (at most 400 characters); descriptions are in
-    context every session (SB-0114); affects context cost only.
-  auto-invoke: A new person asks how Sketchbook works, where to start or what commands exist, or runs /start, /init or /tour
-  allowed-tools: [Read, Glob, Grep, Bash]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Onboarding
@@ -53,11 +51,11 @@ Ask who they are first, then where they start. Each question carries a recommend
 ### 3. Explaining things
 
 - `sketchbook explain <thing>` for any token, CSS variable, component, tag or decision; translate the answer into plain words.
-- Point to files instead of repeating them: `CLAUDE.md` is the map; `docs/getting-started.md` is the short walkthrough.
+- Point to files instead of repeating them: `AGENTS.md` and the project work instructions are the map; `docs/getting-started.md` is the short walkthrough.
 
 ### 5. The command tour
 
-Two surfaces: slash commands (what Claude does for you, in `.claude/commands/`) and the `sketchbook` CLI (what the project runs, from `harness/cli/known-commands.json`). Whenever someone asks what commands exist, in a question or with `/tour`, answer with the purpose beside every name, in plain words, one line each, never a bare list of names. Use the two tables below as the wording, and say how to see the options (`sketchbook help <cmd>`).
+Two surfaces: named workflows (`sketchbook harness list`, optionally invoked through a client's slash commands) and the `sketchbook` CLI. Whenever someone asks what commands exist, explain the purpose beside every name in plain words. Use the examples below and `sketchbook help <cmd>` for current options.
 
 | Slash command | What it does |
 | --- | --- |
@@ -164,7 +162,7 @@ npm run storybook                             # see the components
 
 ## Resources
 
-- `CLAUDE.md`: the map of the repo.
+- `AGENTS.md` or the project’s instructions: the map of the repo.
 - `docs/getting-started.md`: the short walkthrough.
 - `foundations` skill: next step for most starters.
 - `kits` skill: pages and blocks once components exist.

@@ -6,8 +6,10 @@ import { existsSync } from 'node:fs';
 import { copyFile, mkdtemp, mkdir, realpath, writeFile, rm, symlink, utimes } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { ROOT, sourceRepoOnly } from './helpers.mjs';
+import { dispatch } from '../cli/run.mjs';
 
 const hook = (name: string, dir: string, call: unknown) => spawnSync('node', [join(ROOT, '.claude/hooks', name)], { input: JSON.stringify(call), env: { ...process.env, CLAUDE_PROJECT_DIR: dir }, encoding: 'utf8' });
 
@@ -123,6 +125,40 @@ test('H-O1 page-outline: a written sb-* page needs a level-1 heading and a main 
 // settings.json runs every hook through .claude/hooks/run.mjs (SB-0119): the hooks are compiled from .mts, so a fresh
 // clone has none until the launcher builds them, and an install without them must fail loudly, not pass silently.
 const launch = (dir: string, name: string, input: string, project = dir) => spawnSync('node', [join(dir, '.claude/hooks/run.mjs'), name], { input, cwd: project, env: { ...process.env, CLAUDE_PROJECT_DIR: project }, encoding: 'utf8' });
+
+test('native Hammock startup uses the shared project default before legacy configuration', async (t) => {
+  const dir = await mkdtemp(join(tmpdir(), 'sketchbook-hammock-config-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  await mkdir(join(dir, '.sketchbook'));
+  await writeFile(join(dir, '.sketchbook/hammock.json'), '{"defaultMode":"ultra"}');
+  const result = spawnSync(process.execPath, [join(ROOT, '.claude/skills/hammock/hooks/hammock-activate.mjs')], {
+    cwd: dir, env: { ...process.env, CLAUDE_PROJECT_DIR: dir, HAMMOCK_DEFAULT_MODE: 'lite' }, encoding: 'utf8',
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /level: ultra/);
+});
+
+test('installing Hammock does not override legacy environment or user defaults', async (t) => {
+  const dir = await mkdtemp(join(tmpdir(), 'sketchbook-hammock-inherit-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const xdg = join(dir, 'xdg');
+  const user = join(xdg, 'hammock');
+  await mkdir(user, { recursive: true });
+  await writeFile(join(user, 'config.json'), '{"defaultMode":"lite"}');
+  const module = pathToFileURL(join(ROOT, '.claude/skills/hammock/hooks/hammock-config.mjs')).href;
+  const mode = (envMode: string) => {
+    const result = spawnSync(process.execPath, ['--input-type=module', '-e', `import { getDefaultMode } from ${JSON.stringify(module)}; console.log(getDefaultMode());`], {
+      cwd: dir, env: { ...process.env, CLAUDE_PROJECT_DIR: dir, XDG_CONFIG_HOME: xdg, HAMMOCK_DEFAULT_MODE: envMode }, encoding: 'utf8',
+    });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stdout.trim();
+  };
+  assert.deepEqual([mode('off'), mode('')], ['off', 'lite']);
+  assert.equal(await dispatch(['harness', 'add', 'hammock'], { root: dir, stdout: () => {} }), 0);
+  assert.deepEqual([mode('off'), mode('')], ['off', 'lite']);
+  await rm(join(user, 'config.json'));
+  assert.equal(mode(''), 'full');
+});
 
 test('H-L1 the launcher runs a compiled hook with its stdin intact', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'sketchbook-hook-'));

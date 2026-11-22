@@ -102,6 +102,10 @@ export function compile(root) {
 // Compared as real paths: a URL built from argv by hand misses a path with a space (%20) or a symlink.
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const written = writeIgnoreFiles(ROOT);
-  if (written.length) compile(ROOT);
+  if (written.length) {
+    compile(ROOT);
+    const render = path.join(ROOT, 'scripts/build-agent-catalog.mjs');
+    if (existsSync(render)) execFileSync(process.execPath, [render], { cwd: ROOT, stdio: 'inherit' });
+  }
   console.log(`[build:harness] ${SOURCE_ROOTS.reduce((n, b) => n + compiledOutputs(ROOT, b).filter((f) => f.endsWith('.mjs')).length, 0)} module(s) compiled in place`);
 }

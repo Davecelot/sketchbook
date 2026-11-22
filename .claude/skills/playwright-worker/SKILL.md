@@ -8,14 +8,10 @@ description: >
   QA of its rendered states.
 metadata:
   author: sketchbook
-  version: '1.5.0'
-  changelog: >
-    Shorter description (at most 400 characters); descriptions are in
-    context every session (SB-0114); affects context cost only.
-  auto-invoke: >
-    Creating, updating, or running Playwright tests for a Web Component, or
-    doing interactive browser QA of a component's rendered states
-  allowed-tools: [Read, Edit, Write, Grep, Bash]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Playwright Worker

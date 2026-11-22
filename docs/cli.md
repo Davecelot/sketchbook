@@ -69,6 +69,37 @@ Examples:
 - `sketchbook init --primary "#2563EB" --font Inter --radius round`
 - `sketchbook init --density compact --dry-run`
 
+### harness
+
+Browse and install skills, rules, commands, agent briefs, and settings.
+
+```
+sketchbook harness [action] [item...] [--agent <client>] [--dry-run] [--json]
+```
+
+Changes files; supports `--dry-run`.
+
+| Argument | Meaning |
+| --- | --- |
+| `action` (optional) | list (default) | show | add |
+| `item` (optional) | Skill, bundle or qualified item ID, e.g. hammock or config:hammock/default-mode |
+
+| Option | Meaning |
+| --- | --- |
+| `--agent` | Show discovery and activation guidance for claude, codex, gemini, copilot, trae, jetbrains, generic, opencode, cursor, windsurf, antigravity, kiro (default: generic) |
+
+| Subcommand | What it does |
+| --- | --- |
+| `sketchbook harness list` | Browse the same catalog from any project. Read-only. |
+| `sketchbook harness show <item>` | See item contents, dependencies, and client activation guidance. Read-only. |
+| `sketchbook harness add <item...> [--dry-run]` | Copy only the items you request without overwriting project files or activating hooks. |
+
+Examples:
+
+- `sketchbook harness list`
+- `sketchbook harness show hammock --agent opencode`
+- `sketchbook harness add hammock --agent opencode --dry-run`
+
 ### status
 
 See your active brand, component counts, token overrides, and design sync status.

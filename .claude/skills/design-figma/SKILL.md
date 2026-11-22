@@ -8,12 +8,10 @@ description: >
   file", or after tokens or contracts change.
 metadata:
   author: sketchbook
-  version: '1.3.0'
-  changelog: >
-    Shorter description and a pointer to the figma-fidelity rule, which now
-    loads by paths: (SB-0114); affects context cost and Figma pattern work.
-  auto-invoke: Syncing tokens, docs or components to Figma, or checking the Figma file against the spec
-  allowed-tools: [Read, Write, Bash, mcp__plugin_figma_figma__create_session, mcp__plugin_figma_figma__use_figma, mcp__plugin_figma_figma__get_metadata, mcp__plugin_figma_figma__get_screenshot]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # design-figma
@@ -61,7 +59,7 @@ Pages, page order and deleting nodes are the person's file: say what will change
 
 ### 5. Good output is the method, not our file
 
-The person may bring their own file or start from an empty one, so never treat the reference Figma file as the target. A good output is built from the spec through the adapter and proven by read-back: generate, paste exactly, verify, screenshot, stamp. Every review remark is fixed at its source (spec, recipe or runtime), written in the ASCII spec, guarded by a test, regenerated, then applied, and the whole defect class is checked across the file. The method, the quality bar reviews have set (no cropped examples, concentric corners on containers, no repo paths in a shared file, no sync status in the Guide, pages named by role) and worked examples are in `references/working-method.md`: read it before the first Figma job of a session. Patterns and components also follow `.claude/rules/figma-fidelity.md` (Storybook is the reference; compare before stamping `checked`).
+The person may bring their own file or start from an empty one, so never treat the reference Figma file as the target. A good output is built from the spec through the adapter and proven by read-back: generate, paste exactly, verify, screenshot, stamp. Every review remark is fixed at its source (spec, recipe or runtime), written in the ASCII spec, guarded by a test, regenerated, then applied, and the whole defect class is checked across the file. Read [the working method](references/working-method.md) before the first Figma job of a session. Patterns and components also follow `rule:figma-fidelity` (Storybook is the reference; compare before stamping `checked`).
 
 ---
 

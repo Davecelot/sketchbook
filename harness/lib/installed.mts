@@ -4,6 +4,8 @@ import { existsSync, readFileSync, readdirSync, type Dirent } from 'node:fs';
 import { join } from 'node:path';
 import { frontmatter, hookScript } from './claude-layer.mjs';
 import { ENGINE, parseJson } from './files.mjs';
+import { recommendedCatalogFiles } from './agent-catalog.mjs';
+import { selectedAgentProfiles } from './agent-config.mjs';
 import type { HarnessConfigJson } from '../../generated/types/harness-config.js';
 import { CHECKS } from '../checks/run.mjs';
 import { commands } from '../cli/registry.mjs';
@@ -64,6 +66,8 @@ export function installed(root: string): Installed {
     ['.agents/skills/sketchbook/SKILL.md', 'Portable Agent Skill routes Sketchbook tasks to the project workflows.'],
     ['.agents/skills/contract-author/SKILL.md', 'Shared workflow for drafting and validating a component contract.'],
     ['.agents/skills/component-builder/SKILL.md', 'Shared workflow for implementing, testing and reviewing a component.'],
+    ['.agents/skills/hammock/SKILL.md', 'Shared decision ladder and manual simplicity audit.'],
+    ['.agents/skills/review-rangers/SKILL.md', 'Shared multi-perspective review workflow and briefs.'],
     ['CLAUDE.md', 'Claude Code project instructions and the design-system index.'],
     ['AGENTS.md', 'Shared project instructions for coding agents; see AGENT-WORKFLOWS.md for task guidance.'],
     ['AGENT-WORKFLOWS.md', 'Provider-neutral component, token, kit and design workflows, with references to detailed guidance.'],
@@ -85,6 +89,9 @@ export function installed(root: string): Installed {
     ['move-to-.claude/INSTALL.md', 'How Claude installs the staged Claude layer into .claude/: open Claude Code here and ask it to follow this file.'],
   ];
   const setup: InstalledItem[] = files.filter(([p]) => existsSync(join(root, p))).map(([name, what]) => ({ name, what }));
+  for (const { path } of recommendedCatalogFiles(selectedAgentProfiles(root))) {
+    if (!path.endsWith('/SKILL.md') && existsSync(join(root, path))) setup.push({ name: path, what: 'Supporting file for a shared Agent Skill.' });
+  }
   const enginePkg = parseJson<PackageJson>(read(join(ENGINE, 'package.json')) ?? '{}');
   const engine = enginePkg.name;
   const pkg = parseJson<PackageJson>(read(join(root, 'package.json')) ?? '{}');

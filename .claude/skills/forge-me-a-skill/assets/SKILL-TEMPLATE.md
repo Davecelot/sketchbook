@@ -3,12 +3,6 @@ name: {skill-name}
 description: >
   {What the skill does}. Trigger: {explicit condition that should make an
   agent load this skill}.
-metadata:
-  author: sketchbook
-  version: '0.1.0'
-  changelog: 'Initial skill; {why it matters}; {what it affects}'
-  auto-invoke: '{explicit trigger condition}'
-  allowed-tools: [{tools this skill actually uses}]
 ---
 
 # {Skill title}

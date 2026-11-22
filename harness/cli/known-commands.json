@@ -13,6 +13,14 @@
     "init": {
       "summary": "Set up a design system from a starter, or update the setup in an existing project. Choose --agent to add guidance for your coding tools."
     },
+    "harness": {
+      "summary": "Browse and install skills, rules, commands, agent briefs, and settings.",
+      "subcommands": [
+        "list",
+        "show",
+        "add"
+      ]
+    },
     "status": {
       "summary": "See your active brand, component counts, token overrides, and design sync status."
     },

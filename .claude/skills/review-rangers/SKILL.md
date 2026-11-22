@@ -9,14 +9,10 @@ description: >
   decisions or pull requests.
 metadata:
   author: sketchbook
-  version: '0.4.0'
-  changelog: >
-    Verdict rules and confidence tiers cover the 2-member committee (both
-    flag: LOW; one flags: split, MEDIUM), and the 8-finding cap is in the
-    member template, which is what members receive; a routine review no
-    longer has an undefined verdict (SB-0114); affects every review run.
-  auto-invoke: 'Requesting a multi-perspective code, contract, or spec review'
-  allowed-tools: [Read, Grep, Glob, Bash, Edit, Write]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Review Rangers
@@ -47,6 +43,11 @@ Do not use this skill for:
 ### 1. Core workflow
 
 1. Identify the target (code, contract, decision, artifact) and its domain.
+   Only use independent reviewers if the client supports delegation and the
+   user and applicable project policy authorize it. People can also run the
+   briefs independently. Otherwise use the lenses yourself and report a
+   single-reviewer advisory: **independent verdict not assessed**. Do not
+   claim an independent vote, safety guard, or approval.
 2. Determine committee size by risk: 2 members for a routine change in one
    component, contract or skill; 3 for a new component or a change across
    components; 5 only for high-risk or cross-domain targets (security, form
@@ -58,7 +59,7 @@ Do not use this skill for:
 5. Spawn 1 safety guard. It evaluates the target from an authoritative
    expert position.
 6. Run the committee and safety guard in parallel: each is a general-purpose
-   agent launched with the `Agent` tool, its prompt filled from
+   independent reviewer, given a brief filled from
    `assets/committee-member-template.md` or `assets/safety-guard-template.md`.
 7. Collect all outputs.
 8. Synthesize a structured verdict following the Synthesis Rules.
@@ -131,9 +132,8 @@ two committee members.
 - Pass only the target artifact and the member's assigned lens as context.
   Name the target by path and line range; never paste file contents into the
   prompt.
-- Launch members with `model: sonnet`; a mechanical lens (contract/token
-  compliance, naming) may use `model: haiku`. Keep the parent's model for the
-  safety guard only on high-risk targets.
+- Define the evidence and scope each reviewer needs. Do not select or assume a
+  model; use the available, authorized review capabilities.
 - Ask each member for at most 8 findings in the template's format (about
   1.5k tokens); synthesis needs ranked findings, not narration.
 - Do not share intermediate findings between members before synthesis.
@@ -229,11 +229,8 @@ unresolvable.
 
 After the verdict is emitted and the tier is below HIGH, the orchestrator
 MUST pause at a **human-in-the-loop checkpoint**: present the findings and
-ask the person to approve firing The Mender. **This checkpoint is
-auto-skipped only in auto-mode** (when the caller declares
-unattended/autonomous operation). In interactive mode, no file is changed
-without this go-ahead — preserving the "asking for a review never silently
-mutates my code" guarantee.
+ask the person to approve firing The Mender. A request for review is not
+permission to change files.
 
 ### Loop Protocol
 
@@ -241,7 +238,7 @@ mutates my code" guarantee.
 1. Committee + Safety Guard emit tier (HIGH | MEDIUM | LOW | VETO).
 2. If HIGH → emit final report. Done.
 3. If a CRITICAL-STOP condition applies → STOP, escalate to human (no auto-fix). Done.
-4. HITL checkpoint: approve firing The Mender? (auto-skipped in auto-mode)
+4. HITL checkpoint: approve firing The Mender?
 5. The Mender remediates the open findings, then leaves the tree GREEN (see its contract below).
 6. Orchestrator re-invokes the committee + safety guard on the changed target.
 7. Tier improved to HIGH? → final report.

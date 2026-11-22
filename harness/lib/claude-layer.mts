@@ -171,7 +171,7 @@ export function claudeLayerProblems(root: string, known: KnownCommands | null = 
       else {
         if (!fm.description) out.frontmatter.push(`${rel}: no description`);
         if (isBrief && !fm.tools) out.frontmatter.push(`${rel}: no tools (the brief's declared tool contract)`);
-        if (isBrief && !BRIEF_MODELS.includes(str(fm.model) ?? '')) out.frontmatter.push(`${rel}: model must be one of ${BRIEF_MODELS.join(', ')} (the launching skill passes it to the Agent tool)`);
+        if (isBrief && fm.model && !BRIEF_MODELS.includes(str(fm.model) ?? '')) out.frontmatter.push(`${rel}: model must be one of ${BRIEF_MODELS.join(', ')} when a legacy brief declares one`);
         const expected = isSkill ? basename(dirname(file)) : basename(file, '.md');
         if (isCommand) { if (fm.name && fm.name !== expected) out.frontmatter.push(`${rel}: name "${str(fm.name)}" is not "${expected}"`); }
         else if (fm.name !== expected) out.frontmatter.push(`${rel}: name "${str(fm.name) ?? ''}" must be "${expected}"`);

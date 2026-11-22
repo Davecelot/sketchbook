@@ -5,15 +5,13 @@ description: >
   integrity, sensitive files) with a GO / REVIEW NEEDED report; never
   blocks. Trigger: before committing or pushing, adding or upgrading a
   dependency, a PR touching package files, `.env*`, CI, git hooks or
-  `.claude/`, or "is this safe to commit / merge / publish?".
+  agent settings, or "is this safe to commit / merge / publish?".
 metadata:
   author: sketchbook
-  version: '1.1.0'
-  changelog: >
-    Shorter description (at most 400 characters); descriptions are in
-    context every session (SB-0114); affects context cost only.
-  auto-invoke: Before a commit or push, or before adding or upgrading a dependency
-  allowed-tools: [Bash, Read, Glob, Grep]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Security Guardian
@@ -26,7 +24,7 @@ Use this skill when:
 - Adding, upgrading, or reviewing a dependency in `package.json` or
   `package-lock.json`.
 - Reviewing a PR that touches dependency manifests, `.env*` files, CI
-  config, git hooks, or anything under `.claude/` (agent/tool permissions).
+   config, git hooks, or agent skill, hook, or permission changes.
 - Someone asks "is this safe to commit / merge / publish?"
 
 Do NOT use this skill for:
@@ -92,8 +90,8 @@ Classify each changed path:
 | File pattern                                                                                                                                  | Gate bucket       |
 | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
 | `package.json`, `package-lock.json`                                                                                                           | js-deps           |
-| `.env*`, `.npmrc`, `**/*.pem`, `**/*.key`, `.claude/settings*.json`, `harness/templates/project/.claude/settings.json`                        | secrets-sensitive |
-| `.github/workflows/**`, `.gitlab-ci.yml`, `Dockerfile`, `.githooks/**`, `.claude/hooks/**`, `.claude/**` (permissions/tools/hooks/skills)    | ci-config         |
+| `.env*`, `.npmrc`, `**/*.pem`, `**/*.key`, and agent or tool configuration that can contain credentials                                      | secrets-sensitive |
+| CI, Git hooks, or agent instructions, skills, and configuration (for example `.agents/`, `.claude/`, `.codex/`, `.opencode/`, and `.github/hooks/`) | ci-config         |
 | everything else                                                                                                                               | secret-scan only  |
 
 If bucket `js-deps` is empty, skip the dependency audit gate and report
@@ -202,8 +200,8 @@ npm ci --dry-run                                             # fails if the lock
 git diff --stat package-lock.json                            # size of any lockfile diff
 
 # Helper script (gates 1-4 end-to-end, advisory, always exits 0)
-bash .claude/skills/security-guardian/scripts/security-scan.sh            # staged
-bash .claude/skills/security-guardian/scripts/security-scan.sh --branch   # branch vs. default
+bash .agents/skills/security-guardian/scripts/security-scan.sh            # staged
+bash .agents/skills/security-guardian/scripts/security-scan.sh --branch   # branch vs. default
 ```
 
 ---
@@ -211,5 +209,5 @@ bash .claude/skills/security-guardian/scripts/security-scan.sh --branch   # bran
 ## Resources
 
 - [`assets/SECURE-CONTRIBUTING-CHECKLIST.md`](assets/SECURE-CONTRIBUTING-CHECKLIST.md): the short contributor and reviewer checklist this skill enforces (dependencies, secrets, rendering, reviews). Point people at it; a checklist nobody reads protects no one.
-- [`scripts/security-scan.sh`](scripts/security-scan.sh): advisory, exit-0 script running gates 1–4.
+- [`scripts/security-scan.sh`](scripts/security-scan.sh): advisory, exit-0 script running gates 1–4. For a native projection, run the script beside the skill from the project root instead.
 - `review-rangers`: code-level security review (XSS, unsafe HTML, credential exposure in components).

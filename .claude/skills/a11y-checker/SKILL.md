@@ -8,12 +8,10 @@ description: >
   component, fixing an a11y finding, or auditing before stable.
 metadata:
   author: sketchbook
-  version: '1.5.0'
-  changelog: >
-    Shorter description; the a11y-auditor brief declares its model and is
-    launched with it (SB-0114); affects audit runs.
-  auto-invoke: Writing, reviewing, or auditing a Web Component for accessibility
-  allowed-tools: [Read, Edit, Write, Glob, Grep, Bash, Agent]
+  version: "1.0.0"
+  changelog: Rendered from the shared workflow
+  auto-invoke: See description
+  allowed-tools: Governed by the client and user
 ---
 
 # Accessibility Checker (WCAG 2.2)
@@ -42,7 +40,7 @@ A component's `accessibility` object in
 `spec/components/<name>/contract.json` (schema:
 `spec/schemas/contract.schema.json`) is authoritative for that component:
 read it before auditing (contract-first). Form controls also follow
-`.claude/rules/form-associated-controls.md`.
+the catalog rule `rule:form-associated-controls`.
 
 ---
 
@@ -268,10 +266,11 @@ write another one.
 
 ## Audit mode (before stable)
 
-Launch [`agents/a11y-auditor.md`](agents/a11y-auditor.md) with the `Agent`
-tool: a general-purpose agent with the brief's `model`, no conversation history, prompt = the brief
-plus the component name and today's date. It may only read and run tests
-(its declared `tools`); it never edits source, contracts, tests or tokens.
+Give the [audit brief](agents/a11y-auditor.md), component name, and date to
+an independent person or an authorized reviewer with fresh context. If
+neither is available, use the brief as a self-check and leave the independent
+audit pending. The reviewer may read and run tests; it never edits source,
+contracts, tests or tokens.
 It writes `docs/a11y-audits/<name>-<YYYY-MM-DD>.md` ending in
 `Verdict: ready` or `Verdict: not ready`. Check R1 reads that line; a
 person who reviewed the component adds `Approved-by: <name>` below it
@@ -298,4 +297,4 @@ npm run check                                      # T6 contrast, R1 audit verdi
 - `playwright/helpers/a11y.ts`: `axeViolations`, `axNodes`, `expectScreenReaderView`.
 - `.storybook/main.ts`, `.storybook/preview.ts`: the a11y addon and its `test: 'error'` mode.
 - `spec/decisions/DECISIONS.md` SB-0009: what crosses shadow boundaries.
-- `.claude/rules/form-associated-controls.md`: form control semantics.
+- `rule:form-associated-controls`: form control semantics.

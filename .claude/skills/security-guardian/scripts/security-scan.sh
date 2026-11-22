@@ -1,6 +1,6 @@
 #!/bin/bash
 # Advisory only: always exits 0. Not wired into any git hook.
-# Usage: bash .claude/skills/security-guardian/scripts/security-scan.sh [--branch]
+# Usage: bash .agents/skills/security-guardian/scripts/security-scan.sh [--branch]
 #   (no flag)  -> scope = staged files (pre-commit style)
 #   --branch   -> scope = current branch vs. the default branch (pre-push/PR style)
 
@@ -104,7 +104,7 @@ fi
 echo ""
 
 # --- Gate 4: Sensitive/CI-config file review ---
-SENSITIVE=$(echo "$CHANGED_FILES" | grep -E '(^|/)\.env|(^|/)\.npmrc$|\.pem$|\.key$|(^|/)\.claude/|^harness/templates/project/\.claude/settings|^\.github/workflows/|^\.gitlab-ci\.yml$|(^|/)Dockerfile$|^\.githooks/' || true)
+SENSITIVE=$(echo "$CHANGED_FILES" | grep -E '(^|/)\.env|(^|/)\.npmrc$|\.pem$|\.key$|(^|/)\.(agents|claude|codex|gemini|opencode|cursor|windsurf|trae|kiro|aiassistant)/|(^|/)opencode\.jsonc?$|(^|/)(AGENTS|GEMINI|CLAUDE)\.md$|(^|/)\.github/(workflows/|hooks/|copilot-instructions\.md$)|^\.gitlab-ci\.yml$|(^|/)Dockerfile$|^\.githooks/' || true)
 echo "Gate 4: Sensitive/CI-config files touched"
 if [ -n "$SENSITIVE" ]; then
   echo -e "  ${YELLOW}Manual review recommended for:${NC}"

@@ -15,5 +15,5 @@ const main = (() => { try { return realpathSync(process.argv[1] ?? '') === fileU
 if (main) {
   const argv = process.argv.slice(2);
   // exitCode, not exit(): long --json output on a pipe must flush (SB-0049).
-  (wantsInteractive(argv) ? interactive() : dispatch(argv)).then((code) => { process.exitCode = code; }, (e: unknown) => { console.error(errorMessage(e)); process.exitCode = 1; });
+  (wantsInteractive(argv) ? interactive({ start: argv[0] === 'harness' ? 'harness' : 'home' }) : dispatch(argv)).then((code) => { process.exitCode = code; }, (e: unknown) => { console.error(errorMessage(e)); process.exitCode = 1; });
 }

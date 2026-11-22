@@ -105,6 +105,8 @@
 /cli/commands/explain.d.mts
 /cli/commands/generate.mjs
 /cli/commands/generate.d.mts
+/cli/commands/harness.mjs
+/cli/commands/harness.d.mts
 /cli/commands/help.mjs
 /cli/commands/help.d.mts
 /cli/commands/icons.mjs
@@ -137,6 +139,10 @@
 /cli/commands/upgrade.d.mts
 /cli/docs.mjs
 /cli/docs.d.mts
+/cli/harness-picker.mjs
+/cli/harness-picker.d.mts
+/cli/harness-view.mjs
+/cli/harness-view.d.mts
 /cli/interactive.mjs
 /cli/interactive.d.mts
 /cli/known.mjs
@@ -181,10 +187,14 @@
 /generators/links.d.mts
 /generators/overrides.mjs
 /generators/overrides.d.mts
+/lib/agent-catalog.mjs
+/lib/agent-catalog.d.mts
 /lib/agent-config.mjs
 /lib/agent-config.d.mts
 /lib/agent-diagnostics.mjs
 /lib/agent-diagnostics.d.mts
+/lib/agent-render.mjs
+/lib/agent-render.d.mts
 /lib/api.mjs
 /lib/api.d.mts
 /lib/audits.mjs
@@ -251,6 +261,8 @@
 /lib/tokens.d.mts
 /standards/resolve.mjs
 /standards/resolve.d.mts
+/test/agent-catalog.test.mjs
+/test/agent-catalog.test.d.mts
 /test/agent-config.test.mjs
 /test/agent-config.test.d.mts
 /test/agent-diagnostics.test.mjs

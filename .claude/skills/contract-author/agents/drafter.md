@@ -2,7 +2,6 @@
 name: drafter
 description: Writes contract.md and contract.json from the extractor's findings.
 tools: Read, Write, Edit, Grep, Glob
-model: sonnet
 ---
 
 # Drafter
