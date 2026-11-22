@@ -4,7 +4,7 @@ description: "Set up Claude Code to use your project’s workflows and edit guar
 order: 50
 ---
 
-Choose this profile for Claude Code’s native commands, discovery, and edit guards. The workflows themselves are shared: use the [harness catalog](/harness/) if you only want to install individual workflows. Follow [Install it](#install-it) to activate the profile.
+Choose the `claude` agent profile when you want Claude Code to discover Sketchbook skills, run slash commands, or guard edits. To install an individual workflow without those integrations, [choose a skill](/harness/skills/). To enable the native integration, follow the [activation steps](#install-it).
 
 - **Slash commands** start a workflow. The available commands include `/start`, `/init`, `/tour`, `/foundations`, `/import-tokens`, `/roast-foundations`, `/kits`, `/add`, `/check`, `/explain`, `/sync`, `/swap`. They live in `.claude/commands/`.
 - **Skills** in `.claude/skills/<skill>/` use the same catalog content as other clients. The `contract-author` and `component-builder` wrappers point directly to the installed `.agents/skills/` files.
@@ -39,7 +39,7 @@ Choose this profile for Claude Code’s native commands, discovery, and edit gua
 | PostToolUse (Edit, Write, MultiEdit) | `page-outline` | A written `.html` page that uses `sb-*` elements needs an `<h1>` and a `<main>`; on a miss it tells the agent the fix (SB-0117). A static check, not axe |
 | Stop | hammock stop gate | Safety net if an audit is still owed |
 
-Hammock mode is `lite`, `full` (default), `ultra` or `off`. Switch it with `/hammock <mode>`, or set a [project-wide default](/harness/#hammock-configuration); `off` skips the ladder, and non-negotiables such as accessibility and the contract still apply.
+Switch Hammock mode for the session with `/hammock <mode>`, or set a [project default](/harness/#hammock-configuration). Choose `lite`, `full`, `ultra`, or `off`. If you haven’t set a preference, Hammock uses `full`. Use `off` to skip the decision ladder; required checks still apply.
 
 ## Install it
 

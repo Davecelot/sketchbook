@@ -19,7 +19,7 @@ Sketchbook v0.5.0 adds a portable catalog of agent workflows. Install what you n
 - The installer keeps existing project settings and doesn't activate hooks. A changed install plan requires a fresh confirmation, and a failed install rolls back its own writes without discarding concurrent edits.
 - Client profiles still control discovery and optional automation. Claude Code retains its staged native integration. Use `harness list`, `show`, and `add` with `--json` for scripts.
 
-To update an existing project, run `npm install -D @usesketchbook/cli@0.5.0`, then preview changes with `npx sketchbook upgrade --dry-run`. For a new project, follow the [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/). See the [Harness catalog](https://sketchbook-docs.vercel.app/harness/) for install options and Hammock configuration.
+To update an existing project, run `npm install -D @usesketchbook/cli@0.5.0` from your design-system folder. Preview changes with `npx sketchbook upgrade --dry-run`. If the preview looks right, apply it with `npx sketchbook upgrade --yes`, then run `npx sketchbook check` to verify the project. See the [upgrade guide](https://sketchbook-docs.vercel.app/guides/adopt-in-app/#upgrade) for details. For a new project, follow the [Quickstart](https://sketchbook-docs.vercel.app/start/quickstart/). See the [Harness catalog](https://sketchbook-docs.vercel.app/harness/) for install options and Hammock configuration.
 
 ## v0.4.1
 

@@ -4,7 +4,8 @@ import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import MarkdownIt from 'markdown-it';
 import { parseJson } from '../../../harness/lib/files.mjs';
-import { catalogAvailability, harnessCatalog } from '../../../harness/lib/agent-catalog.mjs';
+import { harnessCatalog } from '../../../harness/lib/agent-catalog.mjs';
+import { catalogRows } from '../../../harness/cli/harness-view.mjs';
 import type { BrandConfig } from '../../../generated/types/brand-config.js';
 import type { ComponentRegistry } from '../../../generated/types/registry.js';
 
@@ -49,7 +50,7 @@ const SECTIONS = [
   { dir: 'start', title: 'Start', tab: 'docs' },
   { dir: 'concepts', title: 'Concepts', tab: 'docs' },
   { dir: 'guides', title: 'Guides', tab: 'docs' },
-  { dir: 'harness', title: 'Agent harness', tab: 'docs' },
+  { dir: 'harness', title: 'Agent harness', tab: 'docs', listIndex: true },
   { dir: 'cli', title: 'CLI', tab: 'docs' },
   { dir: 'reference', title: 'Reference', tab: 'docs' },
   { dir: 'playground', title: 'Playground', tab: 'demo' },
@@ -89,6 +90,12 @@ const CLI_TOPICS: Record<string, Topic> = {
   }
 };
 const CALLOUTS = new Set(['note', 'tip', 'warning']);
+const HARNESS_SKILL_GROUPS = {
+  'get-started': ['onboarding', 'sketchbook', 'forge-me-a-skill'],
+  'build-components': ['contract-author', 'component-builder', 'web-components-best-practices', 'kits'],
+  'tokens-and-figma': ['foundations', 'design-figma'],
+  'review-changes': ['hammock', 'review-rangers', 'a11y-checker', 'playwright-worker', 'security-guardian'],
+};
 
 const esc = (s: unknown) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const slug = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
@@ -342,11 +349,28 @@ async function load() {
   };
   const cli = cliSource(await readFile('docs/cli.md', 'utf8'));
   const n = await stats();
-  const harnessTable = [
-    '| Item ID | Type | Selective install | What it does |',
-    '| --- | --- | --- | --- |',
-    ...harnessCatalog().filter((entry) => !entry.partOf).map((entry) => `| \`${entry.id}\` | ${entry.kind} | ${catalogAvailability(entry, 'generic') === 'reference only' ? 'Reference' : 'Portable'} | ${entry.summary.replaceAll('|', '\\|')} |`),
-  ].join('\n');
+  const catalog = catalogRows(harnessCatalog()).filter(({ partOf }) => !partOf);
+  const skills = new Map(catalog.filter(({ kind }) => kind === 'skill').map((skill) => [skill.id, skill]));
+  const grouped = Object.values(HARNESS_SKILL_GROUPS).flat();
+  if (grouped.length !== skills.size || new Set(grouped).size !== skills.size || grouped.some((id) => !skills.has(id))) {
+    throw new Error('The Docs skills page must list every public harness skill exactly once.');
+  }
+  const itemList = (rows: typeof catalog, descriptions = false) =>
+    rows.map(({ id, summary }) => `- \`${id}\`${descriptions ? ` — ${summary}` : ''}`).join('\n');
+  const skillList = (ids: string[]) => itemList(ids.map((id) => {
+    const skill = skills.get(id);
+    if (!skill) throw new Error(`Unknown Docs skill "${id}"`);
+    return skill;
+  }), true);
+  const recommended = catalog.find(({ id }) => id === 'recommended')?.members ?? [];
+  const harnessLists = new Map([
+    ...Object.entries(HARNESS_SKILL_GROUPS).map(([group, ids]): [string, string] => [group, skillList(ids)]),
+    ['recommended', skillList(recommended)],
+    ['rules', itemList(catalog.filter(({ kind, integration }) => kind === 'rule' && !integration), true)],
+    ['workflows', itemList(catalog.filter(({ kind, integration }) => kind === 'command' && !integration))],
+    ['hooks', itemList(catalog.filter(({ kind, integration }) => kind === 'hook' && integration))],
+    ['client-files', itemList(catalog.filter(({ kind, integration }) => kind !== 'hook' && integration))],
+  ]);
   const isStat = (key: string): key is keyof Stats => key in n;
   const sources: Source[] = [];
   for (const rel of await mdFiles('apps/docs/content')) {
@@ -360,7 +384,11 @@ async function load() {
       body: body
         .replace('<!-- cli:commands -->', cli.table)
         .replace('<!-- cli:conventions -->', cli.conventions)
-        .replace('<!-- harness:catalog -->', () => harnessTable)
+        .replace(/<!-- harness:([\w-]+) -->/g, (_, list: string) => {
+          const items = harnessLists.get(list);
+          if (!items) throw new Error(`apps/docs/content/${rel}: empty or unknown harness list "${list}"`);
+          return items;
+        })
         .replace('<!-- tokens:preview -->', panel)
         .replace('<!-- status:table -->', statusTable(n))
         .replace(/<!-- stat:(\w+) -->/g, (_, key: string) => {
@@ -438,7 +466,7 @@ function nav(pages: Page[], page: Page) {
   return SECTIONS.filter((section) => section.title && section.tab === page.tab)
     .map((section) => {
       const index = `/${section.dir}/`;
-      const items = pages.filter((p) => p.dir === section.dir && p.url !== index);
+      const items = pages.filter((p) => p.dir === section.dir && (section.listIndex || p.url !== index));
       const list = `<ul>${items
         .map((p) => `<li><a href="${p.url}"${p.url === page.url ? ' aria-current="page"' : ''}>${esc(p.title)}</a></li>`)
         .join('')}</ul>`;

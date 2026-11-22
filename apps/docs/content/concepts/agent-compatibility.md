@@ -26,7 +26,7 @@ npx sketchbook init --agent codex --dry-run
 | `jetbrains` | Shared guidance and `.aiassistant/rules/sketchbook.md` for AI Assistant chat |
 | `generic` | Shared guidance for clients that read `AGENTS.md`, such as Cursor, OpenCode, Windsurf, Kiro, and Antigravity |
 
-Every profile installs the same `contract-author`, `component-builder`, `hammock`, and `review-rangers` workflows. Claude Code also gets the staged native integration. Other profiles add `AGENTS.md`, `AGENT-WORKFLOWS.md`, and the `sketchbook` routing skill. Multiple profiles reuse the shared files. Clients without native skill discovery can read them directly. Use the [harness catalog](/harness/) to install any individual workflow without selecting a profile.
+Every profile installs the [recommended skills](/harness/) under `.agents/skills/`. Claude Code also gets the staged native integration. Other profiles add `AGENTS.md`, `AGENT-WORKFLOWS.md`, and the `sketchbook` skill, which helps your tool find the right workflow. Multiple profiles reuse the shared files. If your tool doesn’t discover skills automatically, have it read the installed `SKILL.md` directly. You can also [choose an individual skill](/harness/skills/) without adding a profile.
 
 Already set up? After updating the CLI, preview `npx sketchbook init --dry-run`, then run `npx sketchbook init` to add missing files for your selected profiles without replacing existing shared instructions. Use `upgrade` to refresh harness-owned Claude wrappers.
 

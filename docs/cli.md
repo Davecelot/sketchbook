@@ -6,7 +6,8 @@ Use the Sketchbook CLI to set up your project, change its sources, and verify th
 
 ## Conventions
 
-- Bare `sketchbook` in a terminal opens an interactive menu built from this registry: enter a number to pick a group and command, provide arguments, and optionally review settings. Mutating commands show a dry run where supported; type y and press Enter to confirm, or press Enter to cancel. Piped input or `--json` prints help instead.
+- Run `sketchbook` in a terminal to choose a group and command. Commands that change files show a preview where supported. Type `y` and press Enter to confirm, or press Enter to cancel. Without an interactive terminal, bare `sketchbook` prints help.
+- Run `sketchbook harness` in a terminal to preview the recommended skills or pick individual items. Without an interactive terminal, it lists the catalog instead.
 - `--details` shows full human-readable output where a terminal view is abbreviated.
 - `--json` on every command prints one envelope: `{ ok, command, changed[], warnings[], errors[{file, msg, fix}], next, data? }`.
 - Exit codes: 0 ok, 1 failed, 2 ok with flags (for example overrides kept in spec/tokens/overrides.json).
@@ -71,7 +72,7 @@ Examples:
 
 ### harness
 
-Browse and install skills, rules, commands, agent briefs, and settings.
+Find and install agent skills, rules, and named workflows.
 
 ```
 sketchbook harness [action] [item...] [--agent <client>] [--dry-run] [--json]
@@ -81,8 +82,8 @@ Changes files; supports `--dry-run`.
 
 | Argument | Meaning |
 | --- | --- |
-| `action` (optional) | list (default) | show | add |
-| `item` (optional) | Skill, bundle or qualified item ID, e.g. hammock or config:hammock/default-mode |
+| `action` (optional) | `list` (default outside the interactive picker), `show`, or `add` |
+| `item` (optional) | An ID from `sketchbook harness list`, such as `recommended`, `hammock`, or `rule:contract-first` |
 
 | Option | Meaning |
 | --- | --- |
@@ -90,9 +91,9 @@ Changes files; supports `--dry-run`.
 
 | Subcommand | What it does |
 | --- | --- |
-| `sketchbook harness list` | Browse the same catalog from any project. Read-only. |
-| `sketchbook harness show <item>` | See item contents, dependencies, and client activation guidance. Read-only. |
-| `sketchbook harness add <item...> [--dry-run]` | Copy only the items you request without overwriting project files or activating hooks. |
+| `sketchbook harness list [--details]` | Find item IDs. Use `--details` to include integration references. Read-only. |
+| `sketchbook harness show <item>` | See the item’s files, dependencies, and setup steps for your client. Read-only. |
+| `sketchbook harness add <item...> [--dry-run]` | Install the items you select and their dependencies without activating hooks. Preview new files, updates, and conflicts with `--dry-run`. |
 
 Examples:
 

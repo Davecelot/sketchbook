@@ -41,9 +41,9 @@ These steps use [the published CLI](https://www.npmjs.com/package/@usesketchbook
 
 ## Choose agent integrations
 
-The commands above create a core-only project. To install the recommended workflows and your client's setup, append `--agent <profile>` to both `init` commands or add it later with `npx sketchbook init --agent <profile>`. For multiple clients, pass a comma-separated list such as `--agent codex,trae`. The `claude` profile also needs [Claude Code activation](/concepts/claude-layer/).
+The commands above create a project that works without an agent. If you want your coding tool to load project guidance, [choose an agent profile](/concepts/agent-compatibility/#install-a-profile). Append `--agent <profile>` to both `init` commands to install the recommended skills and client setup, or add the profile later with `npx sketchbook init --agent <profile>`. For multiple clients, pass a comma-separated list such as `--agent codex,trae`. For the `claude` profile, also follow [Claude Code activation](/concepts/claude-layer/#install-it).
 
-See [available profiles and their files](/concepts/agent-compatibility/#install-a-profile), or pick individual items from the [harness catalog](/harness/). Run `npx sketchbook doctor` to inspect your project's setup.
+If you only need a skill or rule, [browse the harness catalog](/harness/) instead. Run `npx sketchbook doctor` to see what’s on disk, then [confirm what your tool loaded](/concepts/agent-compatibility/#confirm-your-client-loaded-it).
 
 ## Commands you will use
 
@@ -72,7 +72,7 @@ In both `init` commands, pass the starter you need to `--start`.
 
 For example, replace `--start library` with `--start pick --components card,button` to start with two components.
 
-> **Warning** Commit or stash first when you run a starter in an existing project. It can remove components, and git is the undo.
+> **Warning** Preview `npx sketchbook init --start <starter> --dry-run` before changing starters in an existing project. A successful change can remove components or kits. Commit or stash first so you can undo it with Git.
 
 ## Next steps
 

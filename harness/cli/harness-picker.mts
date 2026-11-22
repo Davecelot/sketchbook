@@ -115,9 +115,9 @@ export async function harnessPicker(root: string, input: PickerInput, output: Pi
       const gap = height >= 18 ? [''] : [];
       frame([...header, ...gap, ui.bold('How do you want to install?'), ...gap,
         customize ? '  Install recommended' : ui.accent('› Install recommended'),
-        ...wrap('Four complete modules. No picking required.', width),
+        ...wrap('Preview four skills for drafting, building, and reviewing components.', width),
         ...gap, customize ? ui.accent('› Customize installation') : '  Customize installation',
-        ...wrap('Pick modules, commands, and rules.', width),
+        ...wrap('Choose skills, named workflows, and rules to preview.', width),
         ...gap, ...wrap('↑ ↓ Choose   Enter Continue   Esc Back', width).map(note),
       ]);
       return { visible: 2, scrollMax: 0 };
@@ -171,6 +171,7 @@ export async function harnessPicker(root: string, input: PickerInput, output: Pi
       else if (errors.length) body.push(...errors.map(({ msg }) => msg), '');
       const included = preset ? recommended : [...selected];
       body.push(preset ? 'Recommended modules' : 'Selected', ...included.map((id) => entries.find((entry) => entry.id === id)?.title ?? id), '');
+      if (canInstall()) body.push(`Command: sketchbook ${argv().join(' ')}`, '');
       if (location.length > 3) body.push('Full destination', target, '');
       const deps = plan?.dependencies.filter((id) => !included.includes(id)) ?? [];
       if (deps.length) body.push('Also required', ...deps, '');
@@ -197,7 +198,7 @@ export async function harnessPicker(root: string, input: PickerInput, output: Pi
       choices = [returnTo === 'start' ? '› Back to install options' : '› Back to catalog'];
     }
     const all = body.flatMap((text) => text ? wrap(text, width) : ['']);
-    const footer = wrap(canInstall() && mode === 'preview' ? '↑ ↓ Scroll   Tab Choose   Enter Confirm   Esc Back' : '↑ ↓ Scroll   Enter Return   Esc Back', width).map(note);
+    const footer = wrap(canInstall() && mode === 'preview' ? `↑ ↓ Scroll   Tab Choose   Enter ${install ? 'Install' : 'Go back'}   Esc Back` : '↑ ↓ Scroll   Enter Return   Esc Back', width).map(note);
     const visible = Math.max(1, height - header.length - footer.length - choices.length - 3);
     const scrollMax = Math.max(0, all.length - visible);
     detailsTop = Math.min(detailsTop, scrollMax);

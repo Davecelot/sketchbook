@@ -4,7 +4,7 @@ This runbook is for maintainers. Contributors don’t need to update the public 
 
 ## Update the public changelog
 
-1. Write the release notes in [GitHub Releases](https://github.com/Davecelot/sketchbook/releases), with links to relevant guides or migration steps. GitHub Releases is the source of truth for the notes.
+1. Write the notes in [GitHub Releases](https://github.com/Davecelot/sketchbook/releases). Follow the [content guidelines](./content-guidelines.md): lead with what changes for readers, link to any migration steps, and qualify claims with their limits or evidence. GitHub Releases is the source of truth for the notes.
 2. Once the GitHub release and its matching [npm package version](https://www.npmjs.com/package/@usesketchbook/cli?activeTab=versions) are both public, run these commands from the repository root:
 
    ```sh

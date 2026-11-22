@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { harnessCatalog } from '../../../harness/lib/agent-catalog.mjs';
 
 test('mobile navigation is a scrollable modal and restores focus', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
@@ -60,4 +61,50 @@ test('desktop keeps the sidebar and links', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Open navigation' })).toBeHidden();
   await expect(page.getByRole('link', { name: 'GitHub (opens in a new tab)' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'npm (opens in a new tab)' })).toBeVisible();
+});
+
+for (const width of [1280, 375]) {
+  test(`Agent harness pages are discoverable at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/');
+    const trigger = page.getByRole('button', { name: 'Open navigation' });
+    const mobile = width < 768;
+    const section = page.getByRole('group', { name: 'Agent harness', exact: true });
+    for (const [name, path] of [
+      ['Harness catalog', '/harness/'],
+      ['Skills', '/harness/skills/'],
+      ['Harness reference', '/harness/reference/'],
+    ] as const) {
+      if (mobile) await trigger.click();
+      const link = section.getByRole('link', { name, exact: true });
+      await expect(link).toHaveAttribute('href', path);
+      await link.click();
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page.getByRole('heading', { name, level: 1, exact: true })).toBeVisible();
+      if (mobile) await trigger.click();
+      await expect(link).toHaveAttribute('aria-current', 'page');
+      if (mobile) await page.keyboard.press('Escape');
+    }
+  });
+}
+
+test('Harness catalog keeps existing section links', async ({ page }) => {
+  for (const id of ['browse-in-a-terminal', 'use-explicit-commands', 'what-gets-installed',
+    'hammock-configuration', 'updating-an-existing-installation', 'catalog-items']) {
+    await page.goto(`/harness/#${id}`);
+    await expect(page.locator(`#${id}`)).toBeVisible();
+  }
+});
+
+test('skills are grouped by task and kept separate from integration references', async ({ page }) => {
+  await page.goto('/harness/skills/');
+  const content = page.getByRole('main');
+  await expect(content.getByRole('heading', { name: 'Build components and pages' })).toBeVisible();
+  const skills = harnessCatalog().filter(({ kind, partOf }) => kind === 'skill' && !partOf).map(({ id }) => id);
+  expect((await content.locator('li > code').allTextContents()).sort()).toEqual(skills.sort());
+  await expect(content.getByRole('table')).toHaveCount(0);
+  await expect(content.getByText('hook:guard-generated', { exact: true })).toHaveCount(0);
+  await page.goto('/harness/reference/');
+  await expect(content.getByRole('heading', { name: 'Integration references' })).toBeVisible();
+  await expect(content.getByText('hook:guard-generated', { exact: true })).toBeVisible();
 });

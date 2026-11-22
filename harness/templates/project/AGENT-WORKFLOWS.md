@@ -20,7 +20,7 @@ For a catalog component wanted as shipped, use `npx sketchbook add <name> --dry-
 
 ## Task routing
 
-For contracts, implementation, simplicity, and structured review, use `contract-author`, `component-builder`, `hammock`, and `review-rangers`. If your client cannot load them natively, read the installed `SKILL.md` files under `.agents/skills/`. The other workflows below are installable individually. Run `npx sketchbook harness list` to browse and `npx sketchbook harness show <item>` to preview the workflow and its dependencies. Use the local agent's own capabilities and permissions to perform the steps.
+Use `contract-author` for contracts, `component-builder` for implementation, `hammock` for complexity, and `review-rangers` for structured review. If your client doesn’t discover skills automatically, read the installed `SKILL.md` files under `.agents/skills/`. To find another skill, run `npx sketchbook harness list`. Run `npx sketchbook harness show <item>` to inspect its files and dependencies, then `npx sketchbook harness add <item> --dry-run` to preview new files, updates, and conflicts. Follow the workflow within your client’s capabilities and permissions.
 
 | Task | Existing skill |
 | --- | --- |

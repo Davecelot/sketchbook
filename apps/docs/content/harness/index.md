@@ -1,49 +1,55 @@
 ---
 title: "Harness catalog"
-description: "Install Sketchbook’s portable skills, rules, review briefs, and project settings without choosing a model."
+description: "Install the recommended agent workflows or pick the skills and project guidance you need."
 order: 10
 ---
 
-Pick an individual workflow or install the `recommended` bundle. You can browse or add items in a project that hasn’t run `sketchbook init`. Some workflows still need a Sketchbook design-system project, Git, or Bash to run their checks.
+The Sketchbook harness reads your design-system sources, generates outputs, and runs checks. Its agent catalog gives your coding tool workflows for those tasks. You can browse and install them without choosing a model or running `sketchbook init` first. Some skills still need a Sketchbook project or tools such as Git and Bash to run.
+
+Start with the `recommended` bundle if you want to draft, build, and review components:
+
+<!-- harness:recommended -->
+
+If you only need one workflow, [find a skill by task](/harness/skills/). If you want your coding tool to discover skills or run supported hooks, [choose an agent profile](/concepts/agent-compatibility/) instead. The Claude profile also needs [Claude Code activation](/concepts/claude-layer/#install-it).
 
 ## Browse in a terminal
 
-Run `npx sketchbook` and choose **Harness** from the first menu, or use `npx sketchbook harness` directly. **Install recommended** previews the default set without asking you to pick items. **Customize installation** opens a checklist where each row identifies its type before its name.
+If Sketchbook isn’t installed in your project, use `npm exec --package=@usesketchbook/cli -- sketchbook` in place of `npx sketchbook` in the commands on this page.
 
-In the checklist, move with **↑ / ↓**, select with **Space**, and preview with **Enter**. Type to filter; **Esc** clears the filter or goes back. Selected items stay checked even when hidden by a filter. In the preview, use **Tab** to choose the install action, then press **Enter**. Back is the default. If the install plan changes, you’ll see a fresh preview and must confirm again. Integration references are not in the checklist; use `harness list --details` to find them.
+1. From the folder where you want the files, run `npx sketchbook harness` in a terminal.
+2. Choose **Install recommended** to preview the four skills, or **Customize installation** to pick items. In the checklist, use **↑ / ↓** to move, **Space** to select, and **Enter** to preview. Typing filters the list without clearing your selections. Press **Esc** to clear the filter or go back.
+3. Review the destination, changes, and any conflicts. **Back** is selected by default. To install, use **Tab** to select the install action, then press **Enter**. If the plan changes, review and confirm the new preview. The result lists the files written.
 
 ## Use explicit commands
 
-```terminal
-npx sketchbook harness list
-npx sketchbook harness show hammock
-npx sketchbook harness add hammock --dry-run
-npx sketchbook harness add hammock
-```
+Explicit subcommands don’t prompt.
 
-`list` prints a compact index. Add `--details` to include integration references or `--json` for the full machine-readable catalog. Explicit subcommands never prompt.
-
-If you don’t have Sketchbook installed, run the same commands with `npm exec --package=@usesketchbook/cli -- sketchbook` instead of `npx sketchbook`.
+1. Run `npx sketchbook harness list` to find an item ID. Add `--details` to include integration references or `--json` for the machine-readable catalog.
+2. Run `npx sketchbook harness show hammock` to inspect the skill’s files and dependencies.
+3. Run `npx sketchbook harness add hammock --dry-run` to see what would change. Replace `hammock` with `recommended` to preview the bundle.
+4. If the preview looks right, run the same command without `--dry-run`. Check the reported paths to verify what was written.
 
 ## What gets installed
 
-- **Skills are complete modules.** The workflow and its briefs, scripts, and resources go under `.agents/skills/`; the module supplies any project settings it needs without overwriting yours. `--agent` changes the activation guidance, not the workflow.
-- **Rules and named workflows** go under `.agents/sketchbook/`. Ask your client to read them or use them directly. Rules don’t become automatic merely because they’re on disk. Review briefs work for people or authorized delegates; installing one doesn’t grant permissions.
-- **Client integration references** go under `docs/sketchbook-harness/`. These examples are for inspection, not active hook registrations. If you want native automation, follow the instructions for your client’s profile.
-- **Existing files** are kept unless they exactly match a known, unedited earlier release. Preview with `--dry-run`. Conflicts block selective installs before any writes; no command changes tool permissions or home-directory configuration. Run `sketchbook doctor` in a Sketchbook project to see what’s on disk, not whether a client loaded it.
+- **Skills** go under `.agents/skills/`, with their briefs, scripts, and supporting files. A skill can add missing project settings without replacing your settings. On `harness show` and `harness add`, `--agent` changes the client guidance, not the files installed.
+- **Rules and named workflows** go under `.agents/sketchbook/`. Ask your client to read them or use them directly. They don’t run automatically, and installing a review brief doesn’t grant permission to delegate.
+- **Integration references** go under `docs/sketchbook-harness/`. They’re examples, not active hook registrations.
 
-Plain `init` remains core-only. `init --agent <profile>` installs the same recommended workflows for every profile, plus client guidance. Claude Code keeps its [staged native integration](/concepts/claude-layer/), including the same Hammock workflow with automatic reminders and audits after activation. Review Rangers can use independent delegates when the client and user allow them; otherwise it reports a single-reviewer advisory.
+The installer can refresh an exact copy from a known earlier release. If a conflicting file is in the way, it stops before writing anything. It doesn’t change tool permissions or settings in your home directory.
+
+In a Sketchbook project, run `npx sketchbook doctor` to check which files are present. Then check in your coding tool that it loaded the skill. If your tool doesn’t discover skills automatically, open the installed `SKILL.md` directly.
 
 ### Hammock configuration
 
-Install `hammock` to get `.sketchbook/hammock.json` if it is missing. The shipped `defaultMode` is `null`: Claude Code hooks keep using existing environment or user defaults, and Hammock falls back to `full` when no preference is set. Set `defaultMode` to `off`, `lite`, `full`, or `ultra` to override it for this project. A mode requested in the conversation applies to that run. To run the audit yourself, use `bash .agents/skills/hammock/scripts/audit-simplicity.sh` from the design-system root; add `--diff` for changed component files.
+Installing `hammock` adds `.sketchbook/hammock.json` if it’s missing. The shipped `defaultMode` is `null`: Claude Code hooks use existing environment or user defaults, and Hammock falls back to `full` if no preference is set. Set `defaultMode` to `off`, `lite`, `full`, or `ultra` for this project. A mode you request in the conversation applies to that run.
 
-Older config and brief IDs still work with `harness show`, which points to the owning module. Passing those IDs alone to `harness add` is refused so scripts don’t unexpectedly install a larger module.
+To run the audit yourself, you need Bash and Git. From the design-system root, run `bash .agents/skills/hammock/scripts/audit-simplicity.sh`. Add `--diff` to audit changed component files.
 
 ### Updating an existing installation
 
-Preview `sketchbook upgrade --dry-run` after updating the CLI. Exact matches to the old shipped files can be refreshed; customized instructions, hooks, and settings stay in place. Compare preserved files with the canonical catalog before adopting the new version. For a selective installation, use `sketchbook harness add <item> --dry-run` instead.
+After updating the CLI, run `npx sketchbook upgrade --dry-run` to preview updates to a Sketchbook project. Review which files would change before running it without `--dry-run`. Customized instructions, hooks, and settings stay in place. If you installed individual catalog items, preview their updates with `npx sketchbook harness add <item> --dry-run` instead.
 
 ## Catalog items
 
-<!-- harness:catalog -->
+- [Skills](/harness/skills/) — Find a workflow for the task you’re working on.
+- [Harness reference](/harness/reference/) — Look up IDs for project guidance and integration examples.

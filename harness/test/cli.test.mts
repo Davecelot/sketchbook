@@ -283,12 +283,15 @@ test('Harness recommended is a separate path and installs complete modules witho
   await ui.press('return');
   assert.match(ui.view(), /Recommended install preview[\s\S]*Recommended modules[\s\S]*Contract Author[\s\S]*Hammock[\s\S]*Review Rangers/);
   assert.match(ui.view(), /› Back to install options/);
+  assert.match(ui.view(), /Command: sketchbook harness add recommended/);
+  assert.match(ui.view(), /Enter Go back/);
   assert.doesNotMatch(ui.view(), /\[ \]/);
   await ui.press('return');
   assert.equal(existsSync(join(root, '.agents')), false);
   await ui.press('return');
   await ui.press('tab');
   assert.match(ui.view(), /› Install recommended/);
+  assert.match(ui.view(), /Enter Install/);
   await ui.press('return');
   assert.match(ui.view(), /Installed \d+ files/);
   assert.ok(existsSync(join(root, '.sketchbook/hammock.json')));

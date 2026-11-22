@@ -14,7 +14,7 @@
       "summary": "Set up a design system from a starter, or update the setup in an existing project. Choose --agent to add guidance for your coding tools."
     },
     "harness": {
-      "summary": "Browse and install skills, rules, commands, agent briefs, and settings.",
+      "summary": "Find and install agent skills, rules, and named workflows.",
       "subcommands": [
         "list",
         "show",

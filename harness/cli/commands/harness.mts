@@ -9,15 +9,15 @@ const options = {
 export default {
   name: 'harness',
   group: 'project',
-  summary: 'Browse and install skills, rules, commands, agent briefs, and settings.',
+  summary: 'Find and install agent skills, rules, and named workflows.',
   subcommands: [
-    { name: 'list', usage: 'sketchbook harness list', summary: 'Browse the same catalog from any project.', mutates: false, examples: [] },
-    { name: 'show', usage: 'sketchbook harness show <item>', summary: 'See item contents, dependencies, and client activation guidance.', mutates: false, examples: [] },
-    { name: 'add', usage: 'sketchbook harness add <item...> [--dry-run]', summary: 'Copy only the items you request without overwriting project files or activating hooks.', mutates: true, examples: [] },
+    { name: 'list', usage: 'sketchbook harness list [--details]', summary: 'Find item IDs. Use `--details` to include integration references.', mutates: false, examples: [] },
+    { name: 'show', usage: 'sketchbook harness show <item>', summary: 'See the item’s files, dependencies, and setup steps for your client.', mutates: false, examples: [] },
+    { name: 'add', usage: 'sketchbook harness add <item...> [--dry-run]', summary: 'Install the items you select and their dependencies without activating hooks. Preview new files, updates, and conflicts with `--dry-run`.', mutates: true, examples: [] },
   ],
   args: [
-    { name: 'action', required: false, description: 'list (default) | show | add' },
-    { name: 'item', required: false, variadic: true, description: 'Skill, bundle or qualified item ID, e.g. hammock or config:hammock/default-mode' },
+    { name: 'action', required: false, description: '`list` (default outside the interactive picker), `show`, or `add`' },
+    { name: 'item', required: false, variadic: true, description: 'An ID from `sketchbook harness list`, such as `recommended`, `hammock`, or `rule:contract-first`' },
   ],
   options,
   project: false,
