@@ -1,6 +1,6 @@
 {
   "inputsHash": "2f3cd172743b224dea98fdccee6b4917f1c856006896befc4389b4995a0410be",
-  "at": "2026-11-22T13:21:42.404Z",
+  "at": "2026-11-22T13:22:27.296Z",
   "maintainer": {
     "storybook": {
       "file": "storybook-static/index.html",
@@ -9,7 +9,7 @@
     "docs": {
       "file": "site-dist/index.html",
       "hash": "8f1887783734733e3fb4bf4cd88d12fa3368b9b0333ce8dd6daa60322791aece",
-      "inputs": "f5c938a8170d5ff2fb25c4f3e6efbb37aaabddf15b5426b28ceef59d23154491"
+      "inputs": "a0ed61f404be145c3bf842f8ebe42e683b248442d0ad7eb7e2b53b495a970a64"
     }
   }
 }
