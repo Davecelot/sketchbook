@@ -35,6 +35,39 @@ test('mobile navigation is a scrollable modal and restores focus', async ({ page
   await expect(page.locator('#sidebar')).toBeVisible();
 });
 
+test.describe('mobile navigation touch targets', () => {
+  test.use({ hasTouch: true, isMobile: true });
+
+  for (const viewport of [{ width: 320, height: 568 }, { width: 667, height: 375 }]) {
+    test(`last link is tappable near the sheet edge at ${viewport.width}×${viewport.height}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto('/');
+      await page.getByRole('button', { name: 'Open navigation' }).tap();
+      const sheet = page.getByRole('dialog', { name: 'Navigation' });
+      const nav = sheet.locator('#sidebar');
+      const lastLink = nav.getByRole('link').last();
+      await nav.evaluate((el) => { el.scrollTop = el.scrollHeight; });
+      await expect(lastLink).toBeInViewport({ ratio: 1 });
+      const href = await lastLink.getAttribute('href');
+      expect(href).toBeTruthy();
+
+      // Tap near the sheet edge, not the center of whatever width the link happens to have.
+      const { x, y, height } = await lastLink.evaluate((link) => {
+        const dialog = link.closest('dialog')!;
+        const nav = link.closest('#sidebar')!;
+        const row = link.getBoundingClientRect();
+        const inset = parseFloat(getComputedStyle(nav).paddingRight);
+        const border = parseFloat(getComputedStyle(dialog).borderRightWidth);
+        const scrollbar = nav.offsetWidth - nav.clientWidth;
+        return { x: dialog.getBoundingClientRect().right - border - scrollbar - inset - 4, y: row.top + row.height / 2, height: row.height };
+      });
+      expect(height).toBeGreaterThanOrEqual(44);
+      await page.touchscreen.tap(x, y);
+      await expect(page).toHaveURL(new URL(href!, page.url()).href);
+    });
+  }
+});
+
 test('mobile header links fit and search remains a dialog', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await page.goto('/');
