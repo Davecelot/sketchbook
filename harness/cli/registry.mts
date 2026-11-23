@@ -5,6 +5,8 @@ import status from './commands/status.mjs';
 import prefix from './commands/prefix.mjs';
 import swap from './commands/swap.mjs';
 import add from './commands/add.mjs';
+import approve from './commands/approve.mjs';
+import evidence from './commands/evidence.mjs';
 import presets from './commands/presets.mjs';
 import sync from './commands/sync.mjs';
 import docs from './commands/docs.mjs';
@@ -29,7 +31,7 @@ import selftest from './commands/selftest.mjs';
 import propagate from './commands/propagate.mjs';
 import type { Command, GroupId, SubcommandInfo } from './types.mjs';
 
-const ALL: Command[] = [init, harness, status, doctor, upgrade, propagate, generate, prefix, swap, add, remove, list, kits, tokens, presets, brand, icons, api, auditCss, auditPage, auditDecisions, sync, docs, check, selftest, explain, help];
+const ALL: Command[] = [init, harness, status, doctor, upgrade, propagate, generate, prefix, swap, add, approve, remove, list, kits, tokens, presets, brand, icons, api, auditCss, auditPage, auditDecisions, evidence, sync, docs, check, selftest, explain, help];
 export const GROUPS: Record<GroupId, string> = { project: 'Project', components: 'Components', tokens: 'Tokens', design: 'Design file', quality: 'Quality', meta: 'Help' };
 
 export const commands = (): Command[] => ALL;

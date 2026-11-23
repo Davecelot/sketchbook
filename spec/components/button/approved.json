@@ -1,0 +1,470 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "Default slot text. Host aria-label is forwarded to the inner control. aria-labelledby and aria-describedby are not forwarded: ID references do not resolve across shadow roots (SB-0009).",
+      "announcements": [],
+      "aria": [
+        "loading: aria-busy=\"true\" and aria-disabled=\"true\"; stays focusable (fix over native disabled)",
+        "disabled: native disabled; as a link, role=\"link\" without href and aria-disabled=\"true\"",
+        "disabled wins over loading: no spinner, not busy",
+        "icons and spinner are aria-hidden",
+        "host.click() activates the inner control and is ignored while disabled or loading"
+      ],
+      "contrast": [
+        {
+          "bg": "button.default.bg",
+          "fg": "button.default.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "button.destructive.bg",
+          "fg": "button.destructive.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "button.secondary.bg",
+          "fg": "button.secondary.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "button.outline.bg",
+          "fg": "button.outline.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "button.outline.bg-hover",
+          "fg": "button.outline.fg-hover",
+          "kind": "text"
+        },
+        {
+          "bg": "button.ghost.bg-hover",
+          "fg": "button.ghost.fg-hover",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "button.link.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "button.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible only; 3px solid ring in button.focus-ring.color.",
+      "formAssociation": {
+        "note": "ElementInternals: submit calls form.requestSubmit(), reset calls form.reset(); name and value are submitted.",
+        "value": true
+      },
+      "keyboard": {
+        "Enter": "activate",
+        "Space": "activate",
+        "Tab": "move focus in and out, also while loading"
+      },
+      "missingNameWarning": "Dev-only console warning, once per element, when there is no text and no aria-label (always relevant for icon sizes).",
+      "native": "button",
+      "role": "button",
+      "targetSize": "At least 24x24px in every size (WCAG 2.5.8); the smallest (tiny, icon-tiny) is 24px.",
+      "wcag": [
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.7",
+        "2.4.11",
+        "2.5.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Set href so it renders a real link",
+          "pattern": "Button without href that navigates on click",
+          "why": "Breaks open-in-new-tab and link semantics"
+        },
+        {
+          "alternative": "Set aria-label on sb-button",
+          "pattern": "Icon size without aria-label",
+          "why": "The button has no accessible name"
+        },
+        {
+          "alternative": "One primary, others tertiary or secondary",
+          "pattern": "Two primary buttons in one view",
+          "why": "Removes the hierarchy"
+        },
+        {
+          "alternative": "Keep it enabled and validate on submit, or explain next to it",
+          "pattern": "Disabled button with no explanation",
+          "why": "People can't learn what is missing"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "button",
+        "action",
+        "submit",
+        "cta",
+        "icon button"
+      ],
+      "useCases": [
+        {
+          "use": "variant=primary, once per view",
+          "when": "The main action of a view or dialog"
+        },
+        {
+          "use": "variant=tertiary or secondary",
+          "when": "An alternative or cancel next to the main action"
+        },
+        {
+          "use": "variant=ghost",
+          "when": "Low-emphasis actions in toolbars or dense rows"
+        },
+        {
+          "use": "variant=destructive, with confirmation if irreversible",
+          "when": "Delete, remove, revoke"
+        },
+        {
+          "use": "size=icon (or icon-small, icon-large) with aria-label",
+          "when": "An action with only an icon"
+        },
+        {
+          "use": "type=submit inside the <form>",
+          "when": "Submitting a form"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "button",
+        "notes": "Native <button> in the shadow root; receives focus and keyboard input.",
+        "parent": null,
+        "part": "button",
+        "role": "control"
+      },
+      {
+        "controlledBy": "leadingIcon",
+        "name": "icon-start",
+        "optional": true,
+        "parent": "button",
+        "part": "leading-icon",
+        "role": "icon"
+      },
+      {
+        "component": "sb-spinner",
+        "controlledBy": "loading",
+        "name": "spinner",
+        "notes": "sb-spinner, decorative; takes the leading-icon position while loading.",
+        "optional": true,
+        "parent": "button",
+        "part": "spinner",
+        "role": "icon"
+      },
+      {
+        "controlledBy": "label",
+        "name": "label",
+        "parent": "button",
+        "part": "label",
+        "role": "text"
+      },
+      {
+        "controlledBy": "trailingIcon",
+        "name": "icon-end",
+        "optional": true,
+        "parent": "button",
+        "part": "trailing-icon",
+        "role": "icon"
+      }
+    ],
+    "component": "Button",
+    "content": {
+      "default": {
+        "multiple": false,
+        "notes": "Short verb phrase in sentence case. With icon sizes, the default slot holds the icon and aria-label names it.",
+        "required": true
+      },
+      "leading-icon": {
+        "component": "svg or icon element",
+        "multiple": false,
+        "notes": "Decorative; Button sets aria-hidden. Uses the icon-size token; padding switches to padding-x-icon.",
+        "required": false
+      },
+      "trailing-icon": {
+        "component": "svg or icon element",
+        "multiple": false,
+        "notes": "Decorative; Button sets aria-hidden.",
+        "required": false
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-005",
+      "D-011",
+      "D-016",
+      "D-024",
+      "D-025",
+      "D-027",
+      "SB-0006",
+      "SB-0115"
+    ],
+    "dependsOn": [
+      "Spinner"
+    ],
+    "events": {
+      "click": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": true,
+        "note": "Pointer, Enter or Space. Cancelled while disabled or loading."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "size=icon | icon-tiny | icon-small | icon-large on Button, named with aria-label (forwarded). No separate Icon Button.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Icon-only buttons: label prop on Button, or a separate component?",
+        "status": "answered"
+      },
+      {
+        "answer": "Spinner before the visible label, dimmed, with the a11y fixes: stays focusable, aria-busy, aria-disabled.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Loading: keep the label with a spinner, or replace it?",
+        "status": "answered"
+      },
+      {
+        "answer": "Sizes: medium, tiny, small, large, icon, icon-tiny, icon-small, icon-large (SB-0006).",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Sizes?",
+        "status": "answered"
+      },
+      {
+        "answer": "Yes (SB-0006): href renders <a part=\"button\">; links keep link semantics.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Should Button render a link when it navigates? Add an href prop that renders a native <a> with button styling?",
+        "recommendation": "Yes: href renders <a part=\"button\">, keeps link semantics, ignores type/name/value.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "disabled": {
+        "default": false,
+        "note": "Native disabled: dimmed, not interactive, out of the tab order. With href, the link loses its href. Wins over loading.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "note": "Renders a native link styled as a button. type, name and value are ignored; disabled removes the href. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115).",
+        "type": "text"
+      },
+      "label": {
+        "note": "Default slot: visible text and accessible name.",
+        "type": "slot"
+      },
+      "leadingIcon": {
+        "attribute": "slot=leading-icon",
+        "note": "Optional leading icon (16px), decorative.",
+        "type": "instanceSwap"
+      },
+      "loading": {
+        "default": false,
+        "note": "Harness addition: spinner before the label, dimmed; stays focusable with aria-busy and aria-disabled.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "name": {
+        "default": null,
+        "note": "Submitted with the form when type is submit.",
+        "type": "text"
+      },
+      "size": {
+        "default": "medium",
+        "note": "24/32/36/40px high (tiny/small/medium/large); icon sizes are square and need aria-label.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "medium",
+          "tiny",
+          "small",
+          "large",
+          "icon",
+          "icon-tiny",
+          "icon-small",
+          "icon-large"
+        ]
+      },
+      "trailingIcon": {
+        "attribute": "slot=trailing-icon",
+        "note": "Optional trailing icon (16px), decorative.",
+        "type": "instanceSwap"
+      },
+      "type": {
+        "default": "button",
+        "note": "Form behavior. Defaults to button so it never submits by accident.",
+        "type": "variant",
+        "values": [
+          "button",
+          "submit",
+          "reset"
+        ]
+      },
+      "value": {
+        "default": null,
+        "note": "Submitted with name when type is submit.",
+        "type": "text"
+      },
+      "variant": {
+        "default": "primary",
+        "note": "Emphasis level. One primary per view.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "primary",
+          "destructive",
+          "tertiary",
+          "secondary",
+          "ghost",
+          "link"
+        ]
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "button.disabled-opacity"
+        ],
+        "trigger": "disabled attribute"
+      },
+      "focus-visible": {
+        "note": "3px solid ring so it reaches 3:1 (the visual reference uses a translucent ring; see drift).",
+        "tokens": [
+          "button.focus-ring.color",
+          "button.focus-ring.width"
+        ],
+        "trigger": "keyboard focus"
+      },
+      "hover": {
+        "note": "primary, destructive and secondary darken by mixing their background (90%, 90%, 80%).",
+        "tokens": [
+          "button.outline.bg-hover",
+          "button.outline.fg-hover",
+          "button.ghost.bg-hover",
+          "button.ghost.fg-hover"
+        ],
+        "trigger": "pointer over an enabled button"
+      },
+      "loading": {
+        "note": "Looks disabled with a spinner; remains focusable.",
+        "tokens": [
+          "button.disabled-opacity"
+        ],
+        "trigger": "loading attribute"
+      }
+    },
+    "summary": "The control people press to do one thing now: run an action, submit or reset its form, or, with href, open a link styled as a button.",
+    "tag": "sb-button",
+    "tokens": {
+      "button.border-width": "{border-width.default}",
+      "button.default.bg": "{color.primary}",
+      "button.default.fg": "{color.primary-foreground}",
+      "button.destructive.bg": "{color.destructive}",
+      "button.destructive.fg": "{color.destructive-foreground}",
+      "button.disabled-opacity": "{opacity.disabled}",
+      "button.focus-ring.color": "{color.ring}",
+      "button.focus-ring.width": "{focus.ring.width}",
+      "button.font-family": "{font.family.body}",
+      "button.font-size": "{font.size.control}",
+      "button.font-size-xs": "{font.size.control-xs}",
+      "button.font-weight": "{font.weight.control}",
+      "button.gap.default": "{space.control.gap.default}",
+      "button.gap.sm": "{space.control.gap.sm}",
+      "button.gap.xs": "{space.control.gap.xs}",
+      "button.ghost.bg-hover": "{color.accent}",
+      "button.ghost.fg": "{color.foreground}",
+      "button.ghost.fg-hover": "{color.accent-foreground}",
+      "button.height.default": "{size.control.default}",
+      "button.height.lg": "{size.control.lg}",
+      "button.height.sm": "{size.control.sm}",
+      "button.height.xs": "{size.control.xs}",
+      "button.icon-size": "{size.icon.default}",
+      "button.icon-size-xs": "{size.icon.sm}",
+      "button.line-height": "{font.line-height.control}",
+      "button.link.fg": "{color.primary}",
+      "button.link.underline-offset": "{space.text.underline-offset}",
+      "button.outline.bg": "{color.background}",
+      "button.outline.bg-hover": "{color.accent}",
+      "button.outline.border": "{color.border}",
+      "button.outline.fg": "{color.foreground}",
+      "button.outline.fg-hover": "{color.accent-foreground}",
+      "button.outline.shadow": "{elevation.xs}",
+      "button.padding-x-icon.default": "{space.control.padding-x-icon.default}",
+      "button.padding-x-icon.lg": "{space.control.padding-x-icon.lg}",
+      "button.padding-x-icon.sm": "{space.control.padding-x-icon.sm}",
+      "button.padding-x-icon.xs": "{space.control.padding-x-icon.xs}",
+      "button.padding-x.default": "{space.control.padding-x.default}",
+      "button.padding-x.lg": "{space.control.padding-x.lg}",
+      "button.padding-x.sm": "{space.control.padding-x.sm}",
+      "button.padding-x.xs": "{space.control.padding-x.xs}",
+      "button.radius": "{radius.control}",
+      "button.secondary.bg": "{color.secondary}",
+      "button.secondary.fg": "{color.secondary-foreground}",
+      "button.transition-duration": "{motion.duration.fast}",
+      "button.transition-easing": "{motion.easing.standard}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "size": [
+          "medium",
+          "tiny",
+          "small",
+          "large",
+          "icon",
+          "icon-tiny",
+          "icon-small",
+          "icon-large"
+        ],
+        "variant": [
+          "primary",
+          "destructive",
+          "tertiary",
+          "secondary",
+          "ghost",
+          "link"
+        ]
+      },
+      "excludedCombinations": [
+        {
+          "reason": "A link-styled icon has no visible affordance.",
+          "size": "icon",
+          "variant": "link"
+        },
+        {
+          "reason": "A link-styled icon has no visible affordance.",
+          "size": "icon-tiny",
+          "variant": "link"
+        },
+        {
+          "reason": "A link-styled icon has no visible affordance.",
+          "size": "icon-small",
+          "variant": "link"
+        },
+        {
+          "reason": "A link-styled icon has no visible affordance.",
+          "size": "icon-large",
+          "variant": "link"
+        }
+      ]
+    }
+  },
+  "plan": "# Plan: Button (planning gate)\n\nStatus: **approved 2026-11-08** (owner approved both plans; Q4 answered yes, SB-0006). Built test-first; now beta.\n\n## Scope\n`sb-button`: 6 variants × 8 sizes (44 valid combinations), states hover, focus-visible, active, disabled, loading; slots default, leading-icon, trailing-icon; form-associated (submit, reset, name/value). Built with the contract-first standard (contract pair, file layout, mixins, behavior spec).\n\nOut of scope: Button Group, Toggle, (Spinner is its own component, used by Button).\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/button/Button.stories.ts`: one story per variant, per size, and per state (generated from the contract) |\n| 2 | `playwright/tests/button/button.behavior.spec.ts`: written first, must fail |\n| 3 | `src/mixins/form-associated.ts`: ElementInternals base shared with Input (`FormAssociated`) |\n| 4 | `src/components/button/Button.scss` → `Button.styles.ts` (generated) |\n| 5 | `src/components/button/Button.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Renders a native button with the label as its accessible name; icon sizes take `aria-label` from the host; warns once when nameless.\n- `variant` and `size` reflect and resolve the right component tokens in light and dark (computed styles).\n- Keyboard: Tab focuses, Enter and Space click, focus ring only on keyboard focus.\n- Disabled: no click, out of tab order, dimmed. Loading: no click, stays focusable, `aria-busy` and `aria-disabled`, spinner visible, label visible.\n- Forms: `type=submit` submits with name/value, `type=reset` resets, default `button` does nothing.\n- axe: no violations in each story.\n\n## Accessibility deviations from the references\n- From the visual reference: solid 3px focus ring (ring/50 is below 3:1).\n- From the reference implementation: loading keeps focus (aria-disabled, not native disabled).\n\n## Open question (recommendation first)\n- **Q4. Links that look like buttons** (answered yes): add `href`, rendering a native `<a part=\"button\">` with button styling (recommended), or leave links to a future Link component?"
+}

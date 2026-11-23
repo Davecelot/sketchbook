@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: plan Status line (2026-11-08)
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:e7a768926068c6a509809c14a8352188a33fbae0b2015e2e0d76dec3c7bf2477
+approved-plan: sha256:429cf2eddc329dda36ff5bdd8192d315134acabad411d052ca543b1b473a7a41
+---
+
 # Plan: Button (planning gate)
 
 Status: **approved 2026-11-08** (owner approved both plans; Q4 answered yes, SB-0006). Built test-first; now beta.
@@ -30,4 +40,3 @@ Out of scope: Button Group, Toggle, (Spinner is its own component, used by Butto
 
 ## Open question (recommendation first)
 - **Q4. Links that look like buttons** (answered yes): add `href`, rendering a native `<a part="button">` with button styling (recommended), or leave links to a future Link component?
-

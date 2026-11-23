@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: plan Status line (2026-11-12)
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-12
+approved-contract: sha256:d1e02a9b7a9a5a8ec3a766571806ce1b8fc54a02dac8c6343bba2084783b0211
+approved-plan: sha256:03c264dbac998601a40e3b0ec1d8046418afd57d54a0cc65ee8128f9ccb45980
+---
+
 # Plan: Command (planning gate)
 
 Status: **approved** (owner answered Q1–Q7, 2026-11-12). Test-first from here. Decisions: SB-0103, SB-0106, SB-0107 (accepted).

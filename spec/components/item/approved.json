@@ -1,0 +1,395 @@
+{
+  "contract": {
+    "$extensions": {
+      "design.figma": {
+        "options": [
+          {
+            "default": false,
+            "kind": "boolean",
+            "name": "Avatar",
+            "reason": "The code puts any element in the media slot; the activity rows in the stories use an Avatar.",
+            "shows": [
+              "avatar-media"
+            ]
+          },
+          {
+            "default": true,
+            "kind": "boolean",
+            "name": "Icon",
+            "reason": "The icon media is one choice for the media slot, so the design file can turn it off for the avatar.",
+            "shows": [
+              "media"
+            ]
+          }
+        ]
+      }
+    },
+    "accessibility": {
+      "accessibleNameSource": "The row's text content, for an item with href (the link's name is everything inside it).",
+      "announcements": [],
+      "aria": [
+        "sb-item-group host: role=list; sb-item inside it: role=listitem, both set when the element connects; an item moved in or out of a group gains or loses the listitem role it was given (an author role is never touched)",
+        "sb-item-separator: role=presentation, so a list has only listitem children",
+        "href: the whole row is one native link, so nested interactive controls should not be placed inside it",
+        "data-has-description and data-fixed are presentation-only attributes set by sb-item"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "item.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "item.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "item.muted-bg",
+          "fg": "item.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "item.muted-bg",
+          "fg": "item.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "item.focus-ring.color",
+          "kind": "ui"
+        },
+        {
+          "bg": "item.media.icon.bg",
+          "fg": "item.media.icon.fg",
+          "kind": "text"
+        }
+      ],
+      "focusRingVisible": ":focus-visible only; border and solid ring in item.focus-ring.color.",
+      "keyboard": {
+        "Enter": "follows the link",
+        "Tab": "focuses an item with href"
+      },
+      "native": "a",
+      "role": "none for a standalone item; listitem when its parent is sb-item-group; link when href is set (native a)",
+      "targetSize": "A linked item is at least as tall as its padding plus text (more than 24px).",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.7",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Drop href and put the controls in sb-item-actions",
+          "pattern": "Buttons or links inside an item that has href",
+          "why": "Nested interactive content inside a link is invalid and confusing"
+        },
+        {
+          "alternative": "Table",
+          "pattern": "A data grid made of items",
+          "why": "Rows and columns need table semantics"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "item",
+        "list item",
+        "row",
+        "media object",
+        "entry",
+        "link row"
+      ],
+      "useCases": [
+        {
+          "use": "sb-item-group of sb-item with media, content and actions",
+          "when": "A list of entries with an icon, a title, some text and an action"
+        },
+        {
+          "use": "sb-item with href",
+          "when": "The whole row goes somewhere"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "item",
+        "notes": "A div, or an a when href is set; wraps the slotted parts, carries border, padding and the focus ring.",
+        "parent": null,
+        "part": "item",
+        "role": "container"
+      }
+    ],
+    "component": "Item",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "sb-item-media, sb-item-content, sb-item-actions, sb-item-header and sb-item-footer.",
+        "required": false
+      }
+    },
+    "decisions": [
+      "SB-0007",
+      "SB-0011",
+      "SB-0115"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-item and sb-item-separator elements.",
+            "required": false
+          }
+        },
+        "notes": "The host carries role=list.",
+        "role": "list",
+        "summary": "A vertical stack of items, exposed as a list.",
+        "tag": "sb-item-group"
+      },
+      {
+        "content": {},
+        "notes": "Host role=presentation, so the list's only semantic children are its items.",
+        "role": "presentation",
+        "summary": "A thin rule between items in a group. Decorative.",
+        "tag": "sb-item-separator"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "An svg, an img or an avatar.",
+            "required": false
+          }
+        },
+        "props": {
+          "variant": {
+            "default": "primary",
+            "note": "primary: no frame. icon: 32px muted tile with a border and a 16px svg. image: 40px rounded crop.",
+            "reflect": true,
+            "type": "variant",
+            "values": [
+              "primary",
+              "icon",
+              "image"
+            ]
+          }
+        },
+        "summary": "Leading visual: an icon in a bordered tile, an image, or anything else.",
+        "tag": "sb-item-media"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-item-title and sb-item-description.",
+            "required": false
+          }
+        },
+        "notes": "Grows to fill the row. A second sb-item-content next to it does not grow (data-fixed set by sb-item).",
+        "summary": "The text block: title and description.",
+        "tag": "sb-item-content"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Title text.",
+            "required": true
+          }
+        },
+        "summary": "The item's main text, in medium weight; can hold a badge next to the text.",
+        "tag": "sb-item-title"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Description text.",
+            "required": false
+          }
+        },
+        "summary": "Supporting text in muted color. Direct child links are underlined.",
+        "tag": "sb-item-description"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-button or other controls.",
+            "required": false
+          }
+        },
+        "summary": "Controls at the end of the row.",
+        "tag": "sb-item-actions"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Content spread across the row.",
+            "required": false
+          }
+        },
+        "summary": "A full-width row above the content.",
+        "tag": "sb-item-header"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Content spread across the row.",
+            "required": false
+          }
+        },
+        "summary": "A full-width row below the content.",
+        "tag": "sb-item-footer"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "href renders <a part=\"item\">.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "How does a row become a link without a render-as-child mechanism?",
+        "recommendation": "An href prop renders the wrapper as a native a.",
+        "status": "answered"
+      },
+      {
+        "answer": "As recommended; checked in the accessibility tree.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "List semantics: who is the list and who are the items?",
+        "recommendation": "sb-item-group is role=list; a sb-item whose parent is the group becomes role=listitem; the separator is presentational.",
+        "status": "answered"
+      },
+      {
+        "answer": "Dropped; logged as drift.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Two-line description clamp?",
+        "recommendation": "Drop it: clipped text hides content (WCAG 1.4.10).",
+        "status": "answered"
+      },
+      {
+        "answer": "data-fixed from slotchange.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Sibling rule: a second content block does not grow.",
+        "recommendation": "sb-item marks it with data-fixed from slotchange.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "href": {
+        "default": null,
+        "note": "Renders the whole row as a native link. Without it, or when empty, the row is a plain container. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115).",
+        "type": "text"
+      },
+      "size": {
+        "default": "medium",
+        "note": "medium: 16px padding and gap. small: 12px block padding, 10px gap.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "medium",
+          "small"
+        ]
+      },
+      "variant": {
+        "default": "primary",
+        "note": "primary: no surface. tertiary: bordered. muted: tinted surface (muted at half strength).",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "primary",
+          "tertiary",
+          "muted"
+        ]
+      }
+    },
+    "states": {
+      "focus-visible": {
+        "note": "Border and a solid ring in the ring color.",
+        "tokens": [
+          "item.focus-ring.color",
+          "item.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on an item with href"
+      },
+      "hover": {
+        "note": "Tinted at half strength.",
+        "tokens": [
+          "item.hover-bg"
+        ],
+        "trigger": "pointer over an item that has href"
+      }
+    },
+    "summary": "A flexible row for a piece of content with optional media, title, description and actions, usable alone, as a link, or in a list (a family of Web Components).",
+    "tag": "sb-item",
+    "tokens": {
+      "item.actions.gap": "{space.stack.sm}",
+      "item.border": "{color.border}",
+      "item.border-width": "{border-width.default}",
+      "item.content.gap": "{space.stack.tight}",
+      "item.description.fg": "{color.muted-foreground}",
+      "item.description.line-height": "{font.line-height.body}",
+      "item.description.link-hover-fg": "{color.primary}",
+      "item.description.link-underline-offset": "{space.text.underline-offset}",
+      "item.fg": "{color.foreground}",
+      "item.focus-ring.color": "{color.ring}",
+      "item.focus-ring.width": "{focus.ring.width}",
+      "item.font-family": "{font.family.body}",
+      "item.font-size": "{font.size.body}",
+      "item.gap": "{space.stack.loose}",
+      "item.gap-sm": "{space.stack.cozy}",
+      "item.hover-bg": "{color.accent}",
+      "item.line-height": "{font.line-height.control}",
+      "item.media.gap": "{space.stack.sm}",
+      "item.media.icon.bg": "{color.muted}",
+      "item.media.icon.border": "{color.border}",
+      "item.media.icon.fg": "{color.foreground}",
+      "item.media.icon.radius": "{radius.small}",
+      "item.media.icon.size": "{size.media.default}",
+      "item.media.icon.svg-size": "{size.icon.default}",
+      "item.media.image.size": "{size.media.lg}",
+      "item.media.offset": "{space.stack.2xs}",
+      "item.muted-bg": "{color.muted}",
+      "item.padding": "{space.stack.loose}",
+      "item.padding-block-sm": "{space.stack.md}",
+      "item.padding-inline-sm": "{space.stack.loose}",
+      "item.radius": "{radius.control}",
+      "item.row-gap": "{space.stack.sm}",
+      "item.separator.bg": "{color.border}",
+      "item.separator.height": "{border-width.default}",
+      "item.title.font-weight": "{font.weight.label}",
+      "item.title.gap": "{space.stack.sm}",
+      "item.transition-duration": "{motion.duration.fast}",
+      "item.transition-easing": "{motion.easing.standard}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "size": [
+          "medium",
+          "small"
+        ],
+        "variant": [
+          "primary",
+          "tertiary",
+          "muted"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Item (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-item` (variant, size, href) and ten parts: group, separator, media (variant primary|icon|image), content, title, description, actions, header, footer.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/item/Item.stories.ts` |\n| 2 | `playwright/tests/item/item.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/item/Item.scss` -> `Item.styles.ts` (generated, shared) |\n| 4 | `Item.ts`, `ItemGroup.ts`, `ItemSeparator.ts`, `ItemMedia.ts`, `ItemContent.ts`, `ItemTitle.ts`, `ItemDescription.ts`, `ItemActions.ts`, `ItemHeader.ts`, `ItemFooter.ts`, `index.ts` |\n\n## Tokens\n`item.*` aliases semantic tokens (shared `space.stack.*`, `size.media.*`).\n\n## Test plan (test-first)\n- Layout, padding, gap, radius per variant and size; reflection; colors in light and dark.\n- `href`: native link with a name, focus ring for keyboard only, hover tint, Enter follows; no link without href.\n- Accessibility tree: group is a list whose semantic children are only listitems; standalone item has no role.\n- Media frames; media alignment when a description exists; second content does not grow; header and footer span the row.\n- Typography; links in the description; axe clean on all stories.\n\n## Accessibility deviations from the references\n- Solid 3px focus ring instead of a half-strength one.\n- No two-line description clamp.\n- Explicit list roles; presentational separator.\n\n## Open questions\n- Q1 Link row: answered, `href`.\n- Q2 List semantics: answered, host roles.\n- Q3 Description clamp: answered, dropped.\n- Q4 Second content block: answered, `data-fixed`."
+}

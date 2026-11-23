@@ -1,0 +1,12 @@
+{
+  "stub": {
+    "on": "2026-11-23",
+    "spec": "sha256:bf22ec90d5d876dffc8c6e958ab2935aaaf5761680682a517207290525df8506",
+    "failed": 10,
+    "total": 12,
+    "passing": [
+      "a group lays keys out in a row with the gap token",
+      "the group does not fall back to the native kbd monospace font"
+    ]
+  }
+}

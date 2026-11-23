@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:30a69763bb3db56640f76a1134263e00324b239cfeb68b07350cdfb584e21ce6
+approved-plan: sha256:49aae6b0206a53bee64ea6c0340a7aaf27cbec40625974111611030bdc4a6b5f
+---
+
 # Plan: Radio Group (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

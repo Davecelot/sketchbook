@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:3b3180bfc924d7f5da0e82a950ed7abd283b79d2937271aa43a2f43c2df01622
+approved-plan: sha256:8fda9858ae481986c745a133a47bd5e465d471a3e778f7622452200a47b2b889
+---
+
 # Plan: Textarea (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

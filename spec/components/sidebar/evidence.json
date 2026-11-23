@@ -1,0 +1,36 @@
+{
+  "stub": {
+    "on": "2026-11-23",
+    "spec": "sha256:1703dc3e2ad661ccbf6420318b79f1c796932d21155693a39e9b25425e1b3aa8",
+    "failed": 33,
+    "total": 59,
+    "passing": [
+      "href: javascript:, vbscript: and data: URLs are not rendered, other URLs are (SB-0115)",
+      "menus are lists of list items; an author role is kept",
+      "groups are named by their group label, and follow a label added later",
+      "a group without a label has no group role, and takes it when a label arrives; an author role is kept",
+      "without ariaLabelledByElements, the copied group name follows a label text change",
+      "menu button: a link with href, a button without",
+      "active marks the current page, and is ignored without href",
+      "menu button click is native, bubbles and composes",
+      "trigger: a button named by label, expanded, controlling the sidebar by element reference",
+      "trigger: re-links to a sidebar added after the first render",
+      "trigger: warns once where ariaControlsElements is unsupported",
+      "focus inside the panel moves to the trigger when the viewport turns narrow",
+      "closing the panel from code while it holds focus moves focus to the trigger",
+      "provider expanded reflects and defaults to true",
+      "Enter and Space on the trigger toggle the panel",
+      "sb-toggle fires on the provider, bubbling and composed, from the trigger and from code",
+      "Collapsed story: the panel starts hidden and the trigger collapsed",
+      "Tab moves through the links in document order, then the trigger",
+      "focus ring: keyboard only, in the focus-ring token",
+      "hover and current page take the accent fill from tokens",
+      "Control+B and Meta+B toggle the panel on a wide viewport; the trigger announces the shortcut",
+      "Default has no violations",
+      "Collapsed has no violations",
+      "Not collapsible has no violations",
+      "RTL has no violations",
+      "Dark has no violations"
+    ]
+  }
+}

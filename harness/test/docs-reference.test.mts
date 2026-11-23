@@ -83,7 +83,9 @@ test('the project getting-started guide uses the installed CLI and matches its s
   assert.match(template, /snapshot does not automatically reflect later changes/);
   assert.match(template, /core-only project includes neither integration/);
   assert.match(template, /selected a shared agent profile/);
-  assert.match(template, /selected and activated the Claude integration/);
+  assert.match(template, /selected and activated the Claude Code integration/);
+  assert.match(template, /npx sketchbook help approve/);
+  assert.match(template, /npx sketchbook help evidence/);
 });
 
 test('checkout and project guidance distinguish the initial inventory from current setup', sourceRepoOnly, async () => {

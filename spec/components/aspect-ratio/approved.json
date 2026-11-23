@@ -1,0 +1,115 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "None. The slotted content is named as usual (alt text on an img, title on an iframe).",
+      "announcements": [],
+      "aria": [
+        "adds no role, no ARIA and no focus stop",
+        "the slotted content keeps its own semantics and accessible name"
+      ],
+      "contrast": [],
+      "keyboard": {},
+      "role": "none: the box adds no semantics",
+      "targetSize": "Not interactive.",
+      "wcag": [
+        "1.1.1",
+        "1.4.4",
+        "1.4.10"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Give the img alt text, or alt=\"\" if purely decorative",
+          "pattern": "Image without alt text inside the box",
+          "why": "The box does not name its content"
+        },
+        {
+          "alternative": "Wrap them in one element",
+          "pattern": "Several children in the box",
+          "why": "They are all stretched over each other"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "aspect ratio",
+        "ratio",
+        "16:9",
+        "media",
+        "image",
+        "video",
+        "frame"
+      ],
+      "useCases": [
+        {
+          "use": "sb-aspect-ratio with ratio=16/9 around the media",
+          "when": "An image or video must keep its shape while the width changes"
+        },
+        {
+          "use": "the default ratio of 1",
+          "when": "A square avatar or thumbnail slot"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "frame",
+        "notes": "The box that holds the ratio; the slotted child is stretched to fill it.",
+        "parent": null,
+        "part": "frame",
+        "role": "container"
+      }
+    ],
+    "component": "AspectRatio",
+    "content": {
+      "default": {
+        "multiple": false,
+        "notes": "One child, usually an image, video or iframe. It is stretched to fill the box; set object-fit on it to crop or contain.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-005",
+      "D-011",
+      "SB-0007",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Number or a/b fraction in the ratio attribute.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "How is the ratio written?",
+        "recommendation": "A number, plus the fraction form 16/9 which is easier to read than 1.7778.",
+        "status": "answered"
+      },
+      {
+        "answer": "The author sets object-fit on the child.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Crop or contain the child?",
+        "recommendation": "Neither: the child fills the box; the author chooses object-fit, so the component stays neutral.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "ratio": {
+        "default": 1,
+        "note": "Width divided by height. Accepts a number (1.7778) or a fraction written as 16/9. Invalid or non-positive values fall back to 1.",
+        "type": "number"
+      }
+    },
+    "states": {},
+    "summary": "A box that keeps a fixed width-to-height ratio for the media or content placed inside it.",
+    "tag": "sb-aspect-ratio",
+    "tokens": {}
+  },
+  "plan": "# Plan: Aspect Ratio (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-aspect-ratio`: `ratio` (number or `a/b`), one slotted child stretched to fill. No tokens (it draws nothing). Out of scope: cropping presets.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/aspect-ratio/AspectRatio.stories.ts` |\n| 2 | `playwright/tests/aspect-ratio/aspect-ratio.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/aspect-ratio/AspectRatio.scss` -> `AspectRatio.styles.ts` (generated) |\n| 4 | `src/components/aspect-ratio/AspectRatio.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Default is square; width and ratio give the height (number, attribute, fraction form, property change).\n- Invalid ratios fall back to 1.\n- The slotted child fills the box exactly; tall content does not stretch the box.\n- No role and no focus stop; the child keeps its name; axe clean.\n\n## Accessibility deviations from the references\nNone.\n\n## Open questions (recommendation first)\nBoth answered in contract.json (number or fraction; child fills, author picks object-fit)."
+}

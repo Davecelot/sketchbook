@@ -255,6 +255,38 @@ Examples:
 - `sketchbook add Button Group --dry-run`
 - `sketchbook add Date Picker --blank`
 
+### approve
+
+Record a person’s approval of a component’s contract and plan, or carry it over a change that leaves the scope as approved. Check C4 verifies it.
+
+```
+sketchbook approve [Component Name...] [--by <name>] [--diff] [--carry] [--reason <text>] [--review] [--backfill] [--basis <ref>] [--dry-run] [--json]
+```
+
+Changes files; supports `--dry-run`.
+
+| Argument | Meaning |
+| --- | --- |
+| `Component Name` (optional) | Component with spec/components/<name>/contract.json and plan.md (not with --review or --backfill) |
+
+| Option | Meaning |
+| --- | --- |
+| `--by` | The person approving (approve, --backfill) or confirming carried approvals (--review) |
+| `--diff` | Show what changed since the approval and how the CLI classifies it (none, mechanical, editorial, material). Read-only |
+| `--carry` | Carry the approval over a mechanical change, or an editorial one when approval.triage is on. Refuses a material change |
+| `--reason` | With --carry: why the approved scope is unchanged (required for an editorial change) |
+| `--review` | List approvals carried by triage; with --by, confirm them all |
+| `--backfill` | Write a record for every plan that has none (needs --by and --basis) |
+| `--basis` | With --backfill: what the original approval rests on (for example SB-0011); "Approved under SB-NNNN" or another approved Status line on the plan wins |
+
+Examples:
+
+- `sketchbook approve switch --by "Ana Diaz"`
+- `sketchbook approve switch --diff`
+- `sketchbook approve switch --carry --reason "Reworded the summary"`
+- `sketchbook approve --review --by Ana`
+- `sketchbook approve --backfill --by Ana --basis SB-0011 --dry-run`
+
 ### remove
 
 Remove a component you no longer use. Review dependencies and local edits before removing it.
@@ -668,6 +700,35 @@ Examples:
 
 - `sketchbook audit-decisions ../decisions-before.md`
 - `sketchbook audit-decisions --git-ref HEAD --json`
+
+### evidence
+
+Record a component’s behavior spec failing (red) and passing (green) with the same test setup. Stub reports which tests pass without the element. Ready requires current green evidence and clean component checks. A test setup failure records nothing.
+
+```
+sketchbook evidence <step> <Component Name...> [--dry-run] [--json]
+```
+
+Changes files; supports `--dry-run`.
+
+| Argument | Meaning |
+| --- | --- |
+| `step` | red | green | stub | ready |
+| `Component Name` | Component whose contract names realizations.web.spec |
+
+| Subcommand | What it does |
+| --- | --- |
+| `sketchbook evidence red` | See `sketchbook help evidence`. |
+| `sketchbook evidence green` | See `sketchbook help evidence`. |
+| `sketchbook evidence stub` | See `sketchbook help evidence`. |
+| `sketchbook evidence ready` | See `sketchbook help evidence`. |
+
+Examples:
+
+- `sketchbook evidence red banner`
+- `sketchbook evidence green banner --json`
+- `sketchbook evidence stub switch`
+- `sketchbook evidence ready banner`
 
 ### check
 

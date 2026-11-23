@@ -1,0 +1,215 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "None. The title is a visual heading; use a real heading element inside sb-empty-title when it belongs in the document outline.",
+      "announcements": [],
+      "aria": [
+        "no roles or ARIA on any element",
+        "decorative media is marked aria-hidden by the author",
+        "description links are underlined, so they do not rely on color (WCAG 1.4.1)"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "empty.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "empty.media.icon.bg",
+          "fg": "empty.media.icon.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "empty.description.link-hover-fg",
+          "kind": "text"
+        }
+      ],
+      "keyboard": {},
+      "role": "none (generic container)",
+      "wcag": [
+        "1.3.1",
+        "1.4.1",
+        "1.4.3",
+        "1.4.10"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Add a sb-empty-content action or a link in the description",
+          "pattern": "Empty state with no way forward",
+          "why": "People are left at a dead end"
+        },
+        {
+          "alternative": "Alert with feedback=danger",
+          "pattern": "Using Empty for an error",
+          "why": "An error needs an announced, assertive message"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "empty",
+        "empty state",
+        "no results",
+        "placeholder",
+        "zero state",
+        "blank slate"
+      ],
+      "useCases": [
+        {
+          "use": "sb-empty with an icon media, a title, a description and one primary action",
+          "when": "A list, table or search has no content yet"
+        },
+        {
+          "use": "sb-empty-title naming the query, a description with a link to clear filters",
+          "when": "No search results"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "The host is a centered column; its parts are child elements. A border is added by the consumer (for example a dashed border).",
+        "parent": null,
+        "role": "container"
+      }
+    ],
+    "component": "Empty",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "sb-empty-header and sb-empty-content.",
+        "required": false
+      }
+    },
+    "decisions": [
+      "SB-0007",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-empty-media, sb-empty-title and sb-empty-description.",
+            "required": false
+          }
+        },
+        "summary": "Centers the media, title and description in a column no wider than 48 characters.",
+        "tag": "sb-empty-header"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "An svg, image or avatar. Decorative media should be aria-hidden.",
+            "required": false
+          }
+        },
+        "props": {
+          "variant": {
+            "default": "primary",
+            "note": "primary: no box, the media is shown as is. icon: 40px muted square, 24px svg.",
+            "reflect": true,
+            "type": "variant",
+            "values": [
+              "primary",
+              "icon"
+            ]
+          }
+        },
+        "summary": "The illustration or icon above the title. The icon variant puts it in a 40px muted rounded square.",
+        "tag": "sb-empty-media"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Short title.",
+            "required": true
+          }
+        },
+        "summary": "What is empty, in 18px medium weight.",
+        "tag": "sb-empty-title"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Text, optionally with a link.",
+            "required": false
+          }
+        },
+        "summary": "One or two sentences saying why and what to do next. Direct child links are underlined.",
+        "tag": "sb-empty-description"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-button, links or inputs.",
+            "required": false
+          }
+        },
+        "summary": "The actions below the header, as a centered column (buttons, links, a small form).",
+        "tag": "sb-empty-content"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "No built-in border.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Border on the root (the docs use border-dashed with a border class)?",
+        "recommendation": "No built-in border: the consumer styles the host (border: 1px dashed ...). Keeps the root a pure layout container.",
+        "status": "answered"
+      },
+      {
+        "answer": "Media query at 48em (768px).",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Responsive padding (md:p-12) without Tailwind breakpoints?",
+        "recommendation": "A min-width media query at 48em switches padding to empty.padding-lg.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {},
+    "states": {},
+    "summary": "A placeholder for a view with nothing to show yet: optional media, title, description and actions (a family of Web Components).",
+    "tag": "sb-empty",
+    "tokens": {
+      "empty.content.fg": "{color.foreground}",
+      "empty.content.font-size": "{font.size.body}",
+      "empty.content.gap": "{space.stack.loose}",
+      "empty.description.fg": "{color.muted-foreground}",
+      "empty.description.font-size": "{font.size.body}",
+      "empty.description.line-height": "{font.line-height.body}",
+      "empty.description.link-hover-fg": "{color.primary}",
+      "empty.description.link-underline-offset": "{space.text.underline-offset}",
+      "empty.font-family": "{font.family.body}",
+      "empty.gap": "{space.inset.surface}",
+      "empty.header.gap": "{space.stack.sm}",
+      "empty.media.icon.bg": "{color.muted}",
+      "empty.media.icon.fg": "{color.foreground}",
+      "empty.media.icon.radius": "{radius.surface}",
+      "empty.media.icon.size": "{size.media.lg}",
+      "empty.media.icon.svg-size": "{size.icon.xl}",
+      "empty.media.margin-bottom": "{space.stack.sm}",
+      "empty.padding": "{space.inset.surface}",
+      "empty.padding-lg": "{space.inset.spacious}",
+      "empty.radius": "{radius.surface}",
+      "empty.title.fg": "{color.foreground}",
+      "empty.title.font-size": "{font.size.heading-lg}",
+      "empty.title.font-weight": "{font.weight.label}",
+      "empty.title.line-height": "{font.line-height.heading-lg}"
+    }
+  },
+  "plan": "# Plan: Empty (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-empty` with `sb-empty-header`, `sb-empty-media` (variant primary|icon), `sb-empty-title`, `sb-empty-description`, `sb-empty-content`. Non-interactive layout.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/empty/Empty.stories.ts` |\n| 2 | `playwright/tests/empty/empty.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/empty/Empty.scss` -> `Empty.styles.ts` (generated, shared by all parts) |\n| 4 | `Empty.ts`, `EmptyHeader.ts`, `EmptyMedia.ts`, `EmptyTitle.ts`, `EmptyDescription.ts`, `EmptyContent.ts`, `index.ts` |\n\n## Tokens\n`empty.*` aliases semantic tokens. Added semantic token: `space.inset.spacious` (48px), with the shared `space.stack.*`, `size.media.*`, `size.icon.xl` and `font.*.heading-lg`.\n\n## Test plan (test-first)\n- Layout: centered column, padding 24px and 48px from 768px, gap, header and content max width.\n- Media: icon variant is a 40px muted rounded square with a 24px svg; default has no box; `variant` reflects.\n- Typography and colors in light and dark; description links underlined, primary on hover.\n- No roles; axe clean on all stories.\n\n## Accessibility deviations from the references\nNone. Description links stay underlined.\n\n## Open questions\n- Q1 Border: answered, none built in.\n- Q2 Responsive padding: answered, media query at 48em."
+}

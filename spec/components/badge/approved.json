@@ -1,0 +1,274 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "Its text content.",
+      "announcements": [],
+      "aria": [
+        "a plain badge has no role and is not focusable",
+        "with href the inner element is a native link and keeps link semantics",
+        "meaning must be in the text: color alone (destructive, secondary) is not the only signal",
+        "a badge that shows a changing count does not announce changes; use a status region for that"
+      ],
+      "contrast": [
+        {
+          "bg": "badge.default.bg",
+          "fg": "badge.default.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "badge.secondary.bg",
+          "fg": "badge.secondary.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "badge.destructive.bg",
+          "fg": "badge.destructive.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "badge.outline.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "badge.outline.bg-hover",
+          "fg": "badge.outline.fg-hover",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "badge.ghost.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "badge.ghost.bg-hover",
+          "fg": "badge.ghost.fg-hover",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "badge.link.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "badge.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": "link badge, :focus-visible only, 3px solid ring in badge.focus-ring.color.",
+      "keyboard": {
+        "Enter": "follows the link",
+        "Tab": "focuses a link badge"
+      },
+      "native": "span, or a when href is set",
+      "role": "none for a plain badge (text); link for a badge with href",
+      "targetSize": "A plain badge is not interactive. A link badge is at least 24px high (badge.link-min-height, WCAG 2.5.8); the plain pill is 22px.",
+      "wcag": [
+        "1.3.1",
+        "1.4.1",
+        "1.4.3",
+        "1.4.11",
+        "2.4.7",
+        "2.5.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Put the status in words",
+          "pattern": "Color as the only meaning (a red badge with no text)",
+          "why": "People who cannot see the color miss it"
+        },
+        {
+          "alternative": "Button",
+          "pattern": "Badge used as a button",
+          "why": "It is a label, not a control"
+        },
+        {
+          "alternative": "Alert or plain text",
+          "pattern": "Long sentences in a badge",
+          "why": "It does not wrap"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "badge",
+        "tag",
+        "chip",
+        "pill",
+        "status",
+        "count",
+        "label"
+      ],
+      "useCases": [
+        {
+          "use": "variant=secondary or tertiary",
+          "when": "A short status or category next to a title"
+        },
+        {
+          "use": "variant=primary",
+          "when": "A count or an emphasised marker"
+        },
+        {
+          "use": "variant=destructive, with words that say what failed",
+          "when": "A failed or critical status"
+        },
+        {
+          "use": "set href",
+          "when": "A badge that leads somewhere"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "badge",
+        "notes": "A span, or a native a when href is set.",
+        "parent": null,
+        "part": "badge",
+        "role": "container"
+      }
+    ],
+    "component": "Badge",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "Short text or a number, optionally with an svg icon (12px). Keep it to a word or two.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-005",
+      "D-011",
+      "SB-0007",
+      "SB-0011",
+      "SB-0115"
+    ],
+    "dependsOn": [],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Six variants: primary, secondary, destructive, tertiary, ghost, link.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Include ghost and link variants?",
+        "recommendation": "Yes: the visual reference's current Badge has six variants; ghost and link are useful on a link badge.",
+        "status": "answered"
+      },
+      {
+        "answer": "href renders a native link; link badge min height 24px.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "href option?",
+        "recommendation": "Yes, same pattern as Button: render a native a, with a 24px minimum height so the link target meets 2.5.8.",
+        "status": "answered"
+      },
+      {
+        "answer": "Not reproduced; logged as drift.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Dark-mode destructive background?",
+        "recommendation": "Keep the full destructive color: the visual reference dims it to 60%, which breaks contrast with white text.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "href": {
+        "default": null,
+        "note": "Renders the pill as a native link (a). Gains hover and a focus ring, and a 24px minimum height for the target size rule. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115).",
+        "type": "text"
+      },
+      "label": {
+        "note": "Default slot: the text or number, optionally with a small svg icon.",
+        "type": "slot"
+      },
+      "variant": {
+        "default": "primary",
+        "note": "Look of the pill. primary is filled with the primary color; secondary and destructive are filled; tertiary has a border; ghost and link have no fill.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "primary",
+          "secondary",
+          "destructive",
+          "tertiary",
+          "ghost",
+          "link"
+        ]
+      }
+    },
+    "states": {
+      "focus-visible": {
+        "note": "Solid 3px ring.",
+        "tokens": [
+          "badge.focus-ring.color",
+          "badge.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on a link badge"
+      },
+      "hover": {
+        "note": "Filled variants darken with color-mix (90%); link underlines. Plain (non-link) badges do not react.",
+        "tokens": [
+          "badge.outline.bg-hover",
+          "badge.outline.fg-hover",
+          "badge.ghost.bg-hover",
+          "badge.ghost.fg-hover"
+        ],
+        "trigger": "pointer over a link badge (href)"
+      }
+    },
+    "summary": "A small pill that labels or counts something, optionally a link.",
+    "tag": "sb-badge",
+    "tokens": {
+      "badge.border-width": "{border-width.default}",
+      "badge.default.bg": "{color.primary}",
+      "badge.default.fg": "{color.primary-foreground}",
+      "badge.destructive.bg": "{color.destructive}",
+      "badge.destructive.fg": "{color.destructive-foreground}",
+      "badge.focus-ring.color": "{color.ring}",
+      "badge.focus-ring.width": "{focus.ring.width}",
+      "badge.font-family": "{font.family.body}",
+      "badge.font-size": "{font.size.caption}",
+      "badge.font-weight": "{font.weight.label}",
+      "badge.gap": "{space.control.gap.xs}",
+      "badge.ghost.bg-hover": "{color.accent}",
+      "badge.ghost.fg": "{color.foreground}",
+      "badge.ghost.fg-hover": "{color.accent-foreground}",
+      "badge.icon-size": "{size.icon.sm}",
+      "badge.line-height": "{font.line-height.caption}",
+      "badge.link-min-height": "{size.control.xs}",
+      "badge.link.fg": "{color.primary}",
+      "badge.link.underline-offset": "{space.text.underline-offset}",
+      "badge.outline.bg-hover": "{color.accent}",
+      "badge.outline.border": "{color.border}",
+      "badge.outline.fg": "{color.foreground}",
+      "badge.outline.fg-hover": "{color.accent-foreground}",
+      "badge.padding-x": "{space.control.padding-x.xs}",
+      "badge.padding-y": "{space.badge.padding-y}",
+      "badge.radius": "{radius.pill}",
+      "badge.secondary.bg": "{color.secondary}",
+      "badge.secondary.fg": "{color.secondary-foreground}",
+      "badge.transition-duration": "{motion.duration.fast}",
+      "badge.transition-easing": "{motion.easing.standard}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "variant": [
+          "primary",
+          "secondary",
+          "destructive",
+          "tertiary",
+          "ghost",
+          "link"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Badge (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-badge`: six variants, optional `href` (native link), inline svg icons. Out of scope: dismissible badges, counts that announce changes, an invalid-state style.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/badge/Badge.stories.ts` |\n| 2 | `playwright/tests/badge/badge.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/badge/Badge.scss` -> `Badge.styles.ts` (generated) |\n| 4 | `src/components/badge/Badge.ts`, `index.ts` |\n\nSemantic tokens added: `space.badge.padding-y`, `font.line-height.caption`.\n\n## Test plan (test-first)\n- Span by default, native link with `href`; name from text; variant reflects; swapping `href` swaps the element.\n- Per-variant colors and border from tokens; pill shape, size, padding, gap, icon size.\n- Link badge: hover change, keyboard focus ring, 24px minimum height, Enter navigates, host focus delegates.\n- Plain badge: not focusable, no hover change.\n- axe clean (variants, link variants, icon).\n\n## Accessibility deviations from the references\nLink badge minimum height 24px (2.5.8); solid focus ring (1.4.11); destructive not dimmed in dark mode (1.4.3).\n\n## Open questions (recommendation first)\nAll three answered in contract.json (six variants; href; dark destructive)."
+}

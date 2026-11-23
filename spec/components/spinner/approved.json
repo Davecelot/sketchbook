@@ -1,0 +1,115 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "The label prop as aria-label on the host (default \"Loading\").",
+      "announcements": [
+        "status role: polite announcement of the label when the spinner is inserted"
+      ],
+      "aria": [
+        "host: role=\"status\" and aria-label=label, set before the first render",
+        "label is also visually hidden text inside the status",
+        "decorative: aria-hidden=\"true\" on the host, no role, no label text"
+      ],
+      "contrast": [],
+      "keyboard": {},
+      "role": "status",
+      "wcag": [
+        "1.1.1",
+        "2.2.2",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Progress",
+          "pattern": "Spinner for a long task with known progress",
+          "why": "People can't tell how long is left"
+        },
+        {
+          "alternative": "One spinner or Skeleton placeholders",
+          "pattern": "Several spinners at once on one screen",
+          "why": "Several status announcements compete"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "spinner",
+        "loading",
+        "busy",
+        "progress"
+      ],
+      "useCases": [
+        {
+          "use": "sb-spinner with a label that names what is loading",
+          "when": "Content or an action is loading and its duration is unknown"
+        },
+        {
+          "use": "Button renders it decorative; Button announces busy",
+          "when": "Inside a loading Button"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "controlledBy": "label",
+        "name": "label",
+        "notes": "Visually hidden text inside the status, so the live region has content to announce.",
+        "parent": null,
+        "part": "label",
+        "role": "text"
+      },
+      {
+        "name": "icon",
+        "notes": "Inline SVG of Lucide's loader icon, stroked in currentColor.",
+        "parent": null,
+        "part": "icon",
+        "role": "icon"
+      }
+    ],
+    "component": "Spinner",
+    "content": {},
+    "decisions": [
+      "D-027",
+      "SB-0006"
+    ],
+    "dependsOn": [],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Yes, at double duration.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Keep spinning under prefers-reduced-motion?",
+        "recommendation": "Yes, slower: it conveys essential state, so it keeps moving (WCAG 2.2.2 allows essential motion) at double duration.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "decorative": {
+        "default": false,
+        "note": "Hides the spinner from assistive technology. Use it when the container already announces busy (e.g. a loading Button).",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "label": {
+        "default": "Loading",
+        "note": "Accessible name announced by the status role. Change it to say what is loading.",
+        "type": "text"
+      }
+    },
+    "states": {},
+    "summary": "A small rotating mark that says work is in progress and its end is unknown.",
+    "tag": "sb-spinner",
+    "tokens": {
+      "spinner.duration": "{motion.duration.loop}",
+      "spinner.easing": "{motion.easing.linear}",
+      "spinner.size": "{size.icon.default}"
+    }
+  },
+  "plan": "# Plan: Spinner (planning gate)\n\nStatus: **approved 2026-11-08** (full implementation plan approved; Spinner added to the slice, SB-0006).\n\n## Scope\n`sb-spinner`: Lucide loader icon, 16px, spinning, `role=\"status\"` with a label; `decorative` mode for use inside Button.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/spinner/Spinner.stories.ts` |\n| 2 | `playwright/tests/spinner/spinner.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/spinner/Spinner.scss` -> `Spinner.styles.ts` (generated) |\n| 4 | `src/components/spinner/Spinner.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Default: role status, accessible name \"Loading\"; custom label changes the name.\n- Decorative: no status role, aria-hidden.\n- Size 16px from the token; follows `--sb-spinner-size` overrides.\n- Animates; under reduced motion still animates with a longer duration.\n- Color follows the parent's `color`.\n- axe: no violations.\n\n## Accessibility deviations from the references\nNone (role=status with a label meets the need).\n\n## Open questions\nNone open (Q1 answered in the contract)."
+}

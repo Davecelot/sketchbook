@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: plan Status line (2026-11-12)
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-12
+approved-contract: sha256:7c42b3c2d9326e10c5fb75dce42ca3caf67d277096a2a1e36fb9481b8ecfb9a8
+approved-plan: sha256:8c186227c6960dc38c4f788f197ea09a303685a56b4707ae6e0eeaef4546f77c
+---
+
 # Plan: Dialog (planning gate)
 
 Status: **approved** (owner answered Q1–Q6, 2026-11-12: tokens added, defer non-modal/alert/sheet/animation/sticky regions, built-in hideable close, native Tab behavior, Command composes as-is; manual screen-reader pass replaced by automated views, SB-0113). Test-first from here.

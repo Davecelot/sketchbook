@@ -1,0 +1,153 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "Content: the key text. An icon-only key needs a visually hidden or aria-label name from the author.",
+      "announcements": [],
+      "aria": [
+        "not focusable and not interactive",
+        "svg icons slotted in are decorative unless the author names them",
+        "a key made only of an icon needs a text alternative on the svg (role=img with aria-label)"
+      ],
+      "contrast": [
+        {
+          "bg": "kbd.bg",
+          "fg": "kbd.fg",
+          "kind": "text"
+        }
+      ],
+      "keyboard": {},
+      "native": "kbd",
+      "role": "generic (kbd has no ARIA role); the text is read as is",
+      "targetSize": "Not interactive.",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.4",
+        "1.4.11"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Button",
+          "pattern": "Kbd styled as a button",
+          "why": "It is not interactive and has no focus state"
+        },
+        {
+          "alternative": "Give the svg role=img and aria-label",
+          "pattern": "Icon-only key without a text alternative",
+          "why": "The key has no accessible name"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "kbd",
+        "keyboard",
+        "shortcut",
+        "key",
+        "hotkey"
+      ],
+      "useCases": [
+        {
+          "use": "sb-kbd-group containing one sb-kbd per key",
+          "when": "Showing a keyboard shortcut next to an action"
+        },
+        {
+          "use": "one sb-kbd inline in the sentence",
+          "when": "Naming a single key in text"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "key",
+        "notes": "Native <kbd> in the shadow root.",
+        "parent": null,
+        "part": "key",
+        "role": "container"
+      }
+    ],
+    "component": "Kbd",
+    "content": {
+      "default": {
+        "multiple": false,
+        "notes": "The key name or symbol (Ctrl, Esc, a command symbol) or an svg icon. Text or icon only.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-005",
+      "D-011",
+      "SB-0007",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "group",
+            "notes": "Native <kbd> that wraps the keys: a nested kbd means one key sequence.",
+            "parent": null,
+            "part": "group",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-kbd elements and optional separator text such as +.",
+            "required": true
+          }
+        },
+        "events": {},
+        "props": {},
+        "summary": "Groups several sb-kbd keys into one combination, spaced evenly.",
+        "tag": "sb-kbd-group"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Yes: sb-kbd-group, a separate custom element.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Is KbdGroup its own element?",
+        "recommendation": "Yes, sb-kbd-group, a separate custom element declared in elements (SB-0007).",
+        "status": "answered"
+      },
+      {
+        "answer": "Not reproduced; logged as drift.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "The visual reference restyles Kbd inside a tooltip. Reproduce it?",
+        "recommendation": "No: there is no Tooltip yet; Tooltip can theme its own content through the tokens later.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {},
+    "states": {},
+    "summary": "Marks up a key or shortcut people should press, such as Ctrl + K.",
+    "tag": "sb-kbd",
+    "tokens": {
+      "kbd.bg": "{color.muted}",
+      "kbd.fg": "{color.muted-foreground}",
+      "kbd.font-family": "{font.family.body}",
+      "kbd.font-size": "{font.size.caption}",
+      "kbd.font-weight": "{font.weight.label}",
+      "kbd.gap": "{space.control.gap.xs}",
+      "kbd.group.gap": "{space.control.gap.xs}",
+      "kbd.height": "{size.key}",
+      "kbd.icon-size": "{size.icon.sm}",
+      "kbd.min-width": "{size.key}",
+      "kbd.padding-x": "{space.key.padding-x}",
+      "kbd.radius": "{radius.small}"
+    }
+  },
+  "plan": "# Plan: Kbd (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-kbd` (a key) and `sb-kbd-group` (a combination), the Kbd and KbdGroup parts. No props. Out of scope: tooltip restyle, platform-specific symbol mapping.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/kbd/Kbd.stories.ts` |\n| 2 | `playwright/tests/kbd/kbd.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/kbd/Kbd.scss` -> `Kbd.styles.ts` (generated; shared by both elements) |\n| 4 | `src/components/kbd/Kbd.ts`, `KbdGroup.ts`, `index.ts` |\n\nSemantic tokens added: `size.key` (20px), `space.key.padding-x` (4px).\n\n## Test plan (test-first)\n- sb-kbd renders a native kbd with the slotted text; 20px high, min 20px wide, grows with long text.\n- Colors, font and radius resolve from component tokens; slotted svg is 12px.\n- Group is inline-flex with the gap token; contains keys in order.\n- Not focusable, no role added; axe clean.\n\n## Accessibility deviations from the references\nNone. Icon-only keys need an author-provided text alternative (documented).\n\n## Open questions (recommendation first)\nBoth answered in contract.json: separate `sb-kbd-group` (yes); tooltip restyle (not reproduced)."
+}

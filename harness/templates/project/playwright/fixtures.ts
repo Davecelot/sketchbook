@@ -4,6 +4,14 @@ export { expect } from '@playwright/test';
 
 export const test = base.extend({
   page: async ({ page }, use, info) => {
+    // sketchbook evidence stub: the element is never defined, so every test that needs it must fail.
+    const stub = process.env.SKETCHBOOK_STUB_TAG;
+    if (stub) {
+      await page.addInitScript((tag) => {
+        const define = customElements.define.bind(customElements);
+        customElements.define = (name, ctor, options) => { if (name !== tag) define(name, ctor, options); };
+      }, stub);
+    }
     if (info.project.name === 'chromium-alt-brand') {
       // Change the stable semantic roles so the built component aliases resolve to different brand values.
       await page.addInitScript(() => {

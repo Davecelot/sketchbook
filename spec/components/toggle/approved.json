@@ -1,0 +1,287 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "Default slot text. Host aria-label is forwarded to the inner button. aria-labelledby and aria-describedby are not forwarded: ID references do not resolve across shadow roots (SB-0009).",
+      "announcements": [],
+      "aria": [
+        "aria-pressed=\"true\" or \"false\" on the native button (APG toggle button pattern); the label does not change with the state",
+        "disabled: native disabled",
+        "slotted icons are decorative; the label or aria-label names the control"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "toggle.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "toggle.on.bg",
+          "fg": "toggle.on.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "toggle.hover.bg",
+          "fg": "toggle.hover.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "toggle.outline.bg-hover",
+          "fg": "toggle.outline.fg-hover",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "toggle.outline.border",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "toggle.focus-ring.color",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "toggle.on.border",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible only; 3px solid ring in toggle.focus-ring.color.",
+      "formAssociation": {
+        "note": "A toggle is an action button with state, not a form field: it submits nothing. It is formAssociated only to follow <fieldset disabled>.",
+        "value": false
+      },
+      "keyboard": {
+        "Enter": "toggle",
+        "Space": "toggle",
+        "Tab": "move focus in and out"
+      },
+      "missingNameWarning": "Dev-only console warning, once per element, when there is no text and no aria-label.",
+      "native": "button",
+      "role": "button",
+      "targetSize": "At least 32x32px in every size (WCAG 2.5.8).",
+      "wcag": [
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.7",
+        "2.5.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "sb-switch or sb-checkbox",
+          "pattern": "Toggle for a setting saved with a form",
+          "why": "It submits no value"
+        },
+        {
+          "alternative": "Keep the label, let aria-pressed carry the state",
+          "pattern": "Changing the label when pressed",
+          "why": "aria-pressed already announces the state; a changed label reads as a double state"
+        },
+        {
+          "alternative": "Set aria-label on sb-toggle",
+          "pattern": "Icon-only toggle without aria-label",
+          "why": "The button has no accessible name"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "toggle",
+        "pressed",
+        "on off",
+        "bold",
+        "italic",
+        "toggle button"
+      ],
+      "useCases": [
+        {
+          "use": "sb-toggle, optionally in a sb-toggle-group",
+          "when": "A formatting or view option that is on or off and takes effect at once"
+        },
+        {
+          "use": "sb-toggle with aria-label",
+          "when": "An icon-only on/off action"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "button",
+        "notes": "Native <button aria-pressed> in the shadow root; receives focus and keyboard input.",
+        "parent": null,
+        "part": "button",
+        "role": "control"
+      }
+    ],
+    "component": "Toggle",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "Text, an icon, or both. An icon-only toggle needs aria-label on the host.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-011",
+      "SB-0005",
+      "SB-0009",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "composed": true,
+        "detail": "{ selected: boolean }",
+        "note": "Fired after a person toggles it. Not fired when the selected property is set from code."
+      },
+      "click": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": true,
+        "note": "Pointer, Enter or Space. Cancelled while disabled."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "Not a form field. formAssociated only for fieldset disabled.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Is Toggle form-associated?",
+        "recommendation": "No: it is a stateful action button and submits nothing (it is a button, not a field). It only follows <fieldset disabled> through formDisabledCallback, like Button.",
+        "status": "answered"
+      },
+      {
+        "answer": "selected property, flipped by the person, change event with detail.selected.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Controlled or uncontrolled selected state?",
+        "recommendation": "Uncontrolled with a selected property: a click flips it and fires change; code can set it.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "disabled": {
+        "default": false,
+        "note": "Native disabled: dimmed, not interactive, out of the tab order.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "selected": {
+        "default": false,
+        "note": "On state. Toggled by click, Enter or Space; reflected as aria-pressed on the inner button.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "medium",
+        "note": "Sizes: 32/36/40px high, at least as wide as high.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "medium",
+          "small",
+          "large"
+        ]
+      },
+      "variant": {
+        "default": "ghost",
+        "note": "Variants: tertiary adds a border and a shadow.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "ghost",
+          "tertiary"
+        ]
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "toggle.disabled-opacity"
+        ],
+        "trigger": "disabled attribute"
+      },
+      "focus-visible": {
+        "note": "3px solid ring so it reaches 3:1.",
+        "tokens": [
+          "toggle.focus-ring.color",
+          "toggle.focus-ring.width"
+        ],
+        "trigger": "keyboard focus"
+      },
+      "hover": {
+        "tokens": [
+          "toggle.hover.bg",
+          "toggle.hover.fg",
+          "toggle.outline.bg-hover",
+          "toggle.outline.fg-hover"
+        ],
+        "trigger": "pointer over an enabled toggle"
+      },
+      "selected": {
+        "tokens": [
+          "toggle.on.bg",
+          "toggle.on.fg"
+        ],
+        "trigger": "selected attribute"
+      }
+    },
+    "summary": "A pressable control that stays on or off until pressed again, for one setting such as bold (Web Component).",
+    "tag": "sb-toggle",
+    "tokens": {
+      "toggle.border-width": "{border-width.default}",
+      "toggle.disabled-opacity": "{opacity.disabled}",
+      "toggle.fg": "{color.foreground}",
+      "toggle.focus-ring.color": "{color.ring}",
+      "toggle.focus-ring.width": "{focus.ring.width}",
+      "toggle.font-family": "{font.family.body}",
+      "toggle.font-size": "{font.size.control}",
+      "toggle.font-weight": "{font.weight.control}",
+      "toggle.gap": "{space.control.gap.default}",
+      "toggle.height.default": "{size.control.default}",
+      "toggle.height.lg": "{size.control.lg}",
+      "toggle.height.sm": "{size.control.sm}",
+      "toggle.hover.bg": "{color.muted}",
+      "toggle.hover.fg": "{color.muted-foreground}",
+      "toggle.icon-size": "{size.icon.default}",
+      "toggle.line-height": "{font.line-height.control}",
+      "toggle.on.bg": "{color.accent}",
+      "toggle.on.border": "{color.foreground}",
+      "toggle.on.fg": "{color.accent-foreground}",
+      "toggle.outline.bg-hover": "{color.accent}",
+      "toggle.outline.border": "{color.input}",
+      "toggle.outline.fg-hover": "{color.accent-foreground}",
+      "toggle.outline.shadow": "{elevation.xs}",
+      "toggle.padding-x.default": "{space.control.padding-x.xs}",
+      "toggle.padding-x.lg": "{space.control.padding-x-icon.sm}",
+      "toggle.padding-x.sm": "{space.control.padding-x-icon.xs}",
+      "toggle.radius": "{radius.control}",
+      "toggle.transition-duration": "{motion.duration.fast}",
+      "toggle.transition-easing": "{motion.easing.standard}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "size": [
+          "medium",
+          "small",
+          "large"
+        ],
+        "variant": [
+          "ghost",
+          "tertiary"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Toggle (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-toggle`: a two-state button. Variants default and outline, sizes default, sm and lg, `selected`, `disabled`. A native `<button aria-pressed>` in the shadow root. Out of scope: form submission (Q1), Toggle Group (its own contract).\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/toggle/Toggle.stories.ts` |\n| 2 | `playwright/tests/toggle/toggle.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/toggle/Toggle.scss` -> `Toggle.styles.ts` (generated) |\n| 4 | `src/components/toggle/Toggle.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Native button with `aria-pressed`, named by label; `aria-label` forwarded for icon-only.\n- `selected` reflects; click, Enter and Space flip it and fire a composed `change` once with `detail.selected`; setting the property fires nothing.\n- Variant and size tokens resolve (colors, heights, min-width); on state uses `on.bg`.\n- Focus ring on keyboard focus only; disabled: no toggle, out of tab order, dimmed; `<fieldset disabled>` disables it.\n- axe clean for the variant matrix, pressed and disabled.\n\n## Accessibility deviations from the references\n- Solid 3px focus ring instead of the visual reference's translucent ring (WCAG 1.4.11).\n- Light `muted` hover text uses the SB-0004 muted tokens (already contrast-fixed).\n\n## Open questions (recommendation first)\n- Q1 form association: no, only for `<fieldset disabled>`. Answered.\n- Q2 controlled pressed: uncontrolled property plus `change`. Answered."
+}

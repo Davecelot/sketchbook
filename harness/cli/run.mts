@@ -65,7 +65,9 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
   const finish = (cmdName: string, r: CommandResult): number => {
     const errors = (r.errors ?? []).map(asError);
     const exitCode = r.exitCode ?? (errors.length ? 1 : 0);
-    const envelope: Envelope = { ok: exitCode !== 1, command: cmdName, changed: r.changed ?? [], warnings: (r.warnings ?? []).map((w) => (typeof w === 'string' ? w : asError(w))), errors, next: r.next ?? null, ...(r.data !== undefined ? { data: r.data } : {}) };
+    // Exit 2 can be a passing check with overrides or an evidence blocker. Only the former has no errors.
+    const ok = errors.length === 0 && (exitCode === 0 || exitCode === 2);
+    const envelope: Envelope = { ok, command: cmdName, changed: r.changed ?? [], warnings: (r.warnings ?? []).map((w) => (typeof w === 'string' ? w : asError(w))), errors, next: r.next ?? null, ...(r.data !== undefined ? { data: r.data } : {}) };
     result?.(envelope);
     if (json) stdout(JSON.stringify(envelope, null, 2) + '\n');
     else for (const e of errors) stderr(ui.enabled ? errorUi.error(e.msg, e.fix, e.file) : `${e.msg}${e.fix ? `\n  fix: ${e.fix}` : ''}\n`);

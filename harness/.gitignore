@@ -33,6 +33,10 @@
 /checks/c2-contract-tokens.d.mts
 /checks/c3-parity.mjs
 /checks/c3-parity.d.mts
+/checks/c4-plan-approval.mjs
+/checks/c4-plan-approval.d.mts
+/checks/c5-test-first.mjs
+/checks/c5-test-first.d.mts
 /checks/d1-design-drift.mjs
 /checks/d1-design-drift.d.mts
 /checks/d3-design-docs.mjs
@@ -87,6 +91,8 @@
 /cli/commands/add.d.mts
 /cli/commands/api.mjs
 /cli/commands/api.d.mts
+/cli/commands/approve.mjs
+/cli/commands/approve.d.mts
 /cli/commands/audit-css.mjs
 /cli/commands/audit-css.d.mts
 /cli/commands/audit-decisions.mjs
@@ -101,6 +107,8 @@
 /cli/commands/docs.d.mts
 /cli/commands/doctor.mjs
 /cli/commands/doctor.d.mts
+/cli/commands/evidence.mjs
+/cli/commands/evidence.d.mts
 /cli/commands/explain.mjs
 /cli/commands/explain.d.mts
 /cli/commands/generate.mjs
@@ -203,6 +211,8 @@
 /lib/claude-layer.d.mts
 /lib/color.mjs
 /lib/color.d.mts
+/lib/contract-diff.mjs
+/lib/contract-diff.d.mts
 /lib/css.mjs
 /lib/css.d.mts
 /lib/decisions.mjs
@@ -239,6 +249,8 @@
 /lib/design/tokens.d.mts
 /lib/design/verify.mjs
 /lib/design/verify.d.mts
+/lib/evidence.mjs
+/lib/evidence.d.mts
 /lib/files.mjs
 /lib/files.d.mts
 /lib/icons.mjs
@@ -249,6 +261,8 @@
 /lib/interface.d.mts
 /lib/page-outline.mjs
 /lib/page-outline.d.mts
+/lib/plan-approval.mjs
+/lib/plan-approval.d.mts
 /lib/propagation.mjs
 /lib/propagation.d.mts
 /lib/renames.mjs
@@ -295,6 +309,8 @@
 /test/design.test.d.mts
 /test/docs-reference.test.mjs
 /test/docs-reference.test.d.mts
+/test/evidence.test.mjs
+/test/evidence.test.d.mts
 /test/fonts.test.mjs
 /test/fonts.test.d.mts
 /test/foundations.test.mjs
@@ -313,6 +329,8 @@
 /test/package-lifecycle.test.d.mts
 /test/package.test.mjs
 /test/package.test.d.mts
+/test/plan-approval.test.mjs
+/test/plan-approval.test.d.mts
 /test/portable-decisions.test.mjs
 /test/portable-decisions.test.d.mts
 /test/portable-outline.test.mjs

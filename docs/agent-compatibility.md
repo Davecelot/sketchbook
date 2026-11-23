@@ -38,7 +38,7 @@ For an existing setup, update the CLI and run `sketchbook init --dry-run` to pre
 
 ## Reuse checks by integration pattern
 
-The same CLI, contracts, generators and checks run for every client, so test each project workflow and package lifecycle once per relevant platform or release rather than once per IDE. Client checks should focus on the parts the shared tests cannot prove:
+The same CLI, contracts, generators and checks run for every client. `sketchbook approve` and `sketchbook evidence` write the records that C4 and C5 check, even without an agent profile. A client may still block an agent from running a command. If that happens, the person can run it directly; no permission change is needed. Test each shared workflow once per relevant platform or release, and test client discovery and permissions separately:
 
 | Pattern | Reusable evidence | Client-specific check |
 | --- | --- | --- |

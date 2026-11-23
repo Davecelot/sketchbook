@@ -1,0 +1,311 @@
+{
+  "contract": {
+    "$extensions": {
+      "design.figma": {
+        "options": [
+          {
+            "default": false,
+            "kind": "boolean",
+            "name": "Middle",
+            "reason": "The code takes any number of items; the stories show one between Home and the current page.",
+            "shows": [
+              "link-middle",
+              "separator-mid"
+            ]
+          },
+          {
+            "default": true,
+            "kind": "boolean",
+            "name": "Ellipsis",
+            "reason": "The collapsed-items marker is optional in the code; the stories show trails with and without it.",
+            "shows": [
+              "ellipsis",
+              "separator-end"
+            ]
+          }
+        ]
+      }
+    },
+    "accessibility": {
+      "accessibleNameSource": "label prop as aria-label on the inner nav; link text for links.",
+      "announcements": [],
+      "aria": [
+        "inner nav has aria-label from label",
+        "list host: role=list; item host: role=listitem; set when the element connects, before it renders",
+        "current page: inner span with role=link, aria-disabled=true and aria-current=page; Chromium drops aria-current from a generic node, so the role is what exposes it (checked in the accessibility tree); it has no href and is not focusable",
+        "separator host: role=presentation and aria-hidden=true, so only items count in the list",
+        "ellipsis: icon hidden, label read as text (not aria-hidden, unlike the reference)"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "breadcrumb.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "breadcrumb.fg-current",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "breadcrumb.link.fg-hover",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "breadcrumb.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible only; solid ring in breadcrumb.focus-ring.color.",
+      "keyboard": {
+        "Enter": "follows the focused link",
+        "Tab": "moves through the links in order"
+      },
+      "native": "nav, a",
+      "role": "navigation (landmark) containing a list of listitems",
+      "targetSize": "Links in the trail are inline text and fall under the WCAG 2.5.8 inline exception.",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "2.1.1",
+        "2.4.7",
+        "2.4.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "sb-breadcrumb-page",
+          "pattern": "Making the current page a link",
+          "why": "A link to where you already are adds noise"
+        },
+        {
+          "alternative": "Give each a different label",
+          "pattern": "Two breadcrumbs with the same label on one page",
+          "why": "Landmarks need distinct names"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "breadcrumb",
+        "trail",
+        "navigation",
+        "hierarchy",
+        "path"
+      ],
+      "useCases": [
+        {
+          "use": "sb-breadcrumb with links and a final sb-breadcrumb-page",
+          "when": "Show the ancestors of the current page so people can jump up"
+        },
+        {
+          "use": "Replace middle steps with sb-breadcrumb-ellipsis",
+          "when": "The trail is too long"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "nav",
+        "notes": "Native nav element in the shadow root; the landmark.",
+        "parent": null,
+        "part": "nav",
+        "role": "container"
+      }
+    ],
+    "component": "Breadcrumb",
+    "content": {
+      "default": {
+        "multiple": false,
+        "notes": "One sb-breadcrumb-list.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "SB-0007",
+      "SB-0011",
+      "SB-0115"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-breadcrumb-item and sb-breadcrumb-separator elements, in order.",
+            "required": false
+          }
+        },
+        "notes": "The host carries role=list because a native ol cannot span custom element boundaries.",
+        "role": "list",
+        "summary": "The ordered list of the trail. Wraps onto several lines when it does not fit.",
+        "tag": "sb-breadcrumb-list"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "sb-breadcrumb-link, sb-breadcrumb-page or sb-breadcrumb-ellipsis.",
+            "required": false
+          }
+        },
+        "notes": "The host carries role=listitem.",
+        "role": "listitem",
+        "summary": "One step of the trail: a link, the current page or an ellipsis.",
+        "tag": "sb-breadcrumb-item"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "link",
+            "notes": "Native a in the shadow root; receives focus.",
+            "parent": null,
+            "part": "link",
+            "role": "control"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Link text.",
+            "required": true
+          }
+        },
+        "props": {
+          "href": {
+            "default": null,
+            "note": "Link address. Without it the element renders an anchor without href, which is not focusable or a link. javascript:, vbscript: and data: URLs are dropped: the link renders without href and a console warning names it (SB-0115).",
+            "type": "text"
+          }
+        },
+        "summary": "A link to an ancestor page.",
+        "tag": "sb-breadcrumb-link"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "page",
+            "notes": "Span with role=link, aria-disabled=true and aria-current=page; not focusable.",
+            "parent": null,
+            "part": "page",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Page title.",
+            "required": true
+          }
+        },
+        "summary": "The current page: a non-interactive item marked aria-current=page.",
+        "tag": "sb-breadcrumb-page"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Optional replacement for the default chevron, for example a slash.",
+            "required": false
+          }
+        },
+        "notes": "Default content is an inline chevron icon in the slot fallback.",
+        "summary": "The mark between two items. Decorative: hidden from assistive technology.",
+        "tag": "sb-breadcrumb-separator"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "icon",
+            "notes": "Three dots, hidden from assistive technology.",
+            "parent": null,
+            "part": "icon",
+            "role": "icon"
+          },
+          {
+            "controlledBy": "label",
+            "name": "label",
+            "notes": "Visually hidden text.",
+            "parent": null,
+            "part": "label",
+            "role": "text"
+          }
+        ],
+        "content": {},
+        "props": {
+          "label": {
+            "default": "More",
+            "note": "Text read in place of the dots. Translate it.",
+            "type": "text"
+          }
+        },
+        "summary": "Stands for collapsed steps. Announced with a label so the gap is not silent.",
+        "tag": "sb-breadcrumb-ellipsis"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Host roles, checked in the accessibility tree by the spec.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "How do ol and li semantics survive custom element boundaries?",
+        "recommendation": "Hosts carry role=list and role=listitem; shadow roots hold only slots. Verify in the accessibility tree.",
+        "status": "answered"
+      },
+      {
+        "answer": "role=link with aria-disabled=true and aria-current=page, not focusable.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Current page: plain span with aria-current, or a disabled link role?",
+        "recommendation": "A span with role=link, aria-disabled and aria-current=page: the accessibility tree prunes aria-current from a generic span (verified), and the link role is the pattern the trail pattern allows.",
+        "status": "answered"
+      },
+      {
+        "answer": "Label is read; icon hidden.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Ellipsis hidden from assistive technology with a hidden label (reference), or announced?",
+        "recommendation": "Announced with its label: hidden content cannot be read, so the visible dots would be an unexplained gap.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "label": {
+        "default": "Breadcrumb",
+        "note": "Accessible name of the navigation landmark. Translate it, and make it unique when a page has several navigation landmarks.",
+        "type": "text"
+      }
+    },
+    "states": {},
+    "summary": "A trail of links showing where the current page sits in a hierarchy, built from a navigation landmark and an ordered list (a family of Web Components).",
+    "tag": "sb-breadcrumb",
+    "tokens": {
+      "breadcrumb.ellipsis.icon-size": "{size.icon.default}",
+      "breadcrumb.ellipsis.size": "{size.control.default}",
+      "breadcrumb.fg": "{color.muted-foreground}",
+      "breadcrumb.fg-current": "{color.foreground}",
+      "breadcrumb.focus-ring.color": "{color.ring}",
+      "breadcrumb.focus-ring.radius": "{radius.small}",
+      "breadcrumb.focus-ring.width": "{focus.ring.width}",
+      "breadcrumb.font-family": "{font.family.body}",
+      "breadcrumb.font-size": "{font.size.body}",
+      "breadcrumb.font-weight": "{font.weight.body}",
+      "breadcrumb.gap": "{space.stack.snug}",
+      "breadcrumb.gap-wide": "{space.stack.cozy}",
+      "breadcrumb.line-height": "{font.line-height.control}",
+      "breadcrumb.link.fg-hover": "{color.foreground}",
+      "breadcrumb.separator.size": "{size.icon.default}",
+      "breadcrumb.transition-duration": "{motion.duration.fast}",
+      "breadcrumb.transition-easing": "{motion.easing.standard}"
+    }
+  },
+  "plan": "# Plan: Breadcrumb (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-breadcrumb` plus list, item, link, page, separator and ellipsis. Landmark with a name, list semantics through host roles, current page marked.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/breadcrumb/Breadcrumb.stories.ts` |\n| 2 | `playwright/tests/breadcrumb/breadcrumb.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/breadcrumb/Breadcrumb.scss` -> `Breadcrumb.styles.ts` (generated, shared) |\n| 4 | `Breadcrumb.ts`, `BreadcrumbList.ts`, `BreadcrumbItem.ts`, `BreadcrumbLink.ts`, `BreadcrumbPage.ts`, `BreadcrumbSeparator.ts`, `BreadcrumbEllipsis.ts`, `index.ts` |\n\n## Tokens\n`breadcrumb.*` aliases semantic tokens (`space.stack.*` shared).\n\n## Test plan (test-first)\n- Accessibility tree (CDP): one navigation named by `label`; one list whose semantic children are all listitems, one per step; separators absent; current page is a disabled, unfocusable link node marked aria-current=page (the AX tree has no current property).\n- Links: role link with href, Tab order, solid focus ring on keyboard focus only, Enter follows the link, hover color.\n- Ellipsis label is read; icon hidden.\n- Default chevron and a replaced separator.\n- Layout: wrapping, gap 6px and 10px from 640px; colors in light and dark; axe clean.\n\n## Accessibility deviations from the references\n- Current page is a non-focusable `role=link` with `aria-disabled` and `aria-current=page`; aria-current alone is not exposed on a generic node.\n- Ellipsis label is exposed instead of hidden.\n\n## Open questions\n- Q1 List semantics across elements: answered, host roles.\n- Q2 Current page: answered, disabled link role with aria-current.\n- Q3 Ellipsis: answered, label read."
+}

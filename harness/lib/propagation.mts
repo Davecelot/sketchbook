@@ -20,7 +20,8 @@ export interface PropagationRecord {
   [key: string]: unknown;
 }
 
-const OUTPUT = /(^|\/)foundation\/|overrides\.json$|stamp\.json$|verify\.json$|\.snapshot\.json$|^generated\//;
+// Plan records, approval snapshots and test evidence are process records, not build inputs (SB-0123).
+const OUTPUT = /(^|\/)foundation\/|overrides\.json$|stamp\.json$|verify\.json$|\.snapshot\.json$|^generated\/|^spec\/components\/[^/]+\/(plan\.md|approved\.json|evidence\.json)$/;
 
 async function walk(root: string, rel: string, out: string[], ext = /\.(json|md|ts|mts|mjs)$/): Promise<void> {
   let entries: Dirent[];

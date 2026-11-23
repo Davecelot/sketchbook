@@ -1,0 +1,401 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "The label prop, through a native <label for> in the same shadow root.",
+      "announcements": [
+        "error text is announced once when it appears (persistent aria-live=polite region; fix over the reference implementation, where the error is only read on focus)"
+      ],
+      "aria": [
+        "aria-describedby -> description and error ids (same root)",
+        "aria-invalid=\"true\" when invalid",
+        "required: native required on the input; the asterisk is aria-hidden",
+        "errorMessage: sets a customError validity, so the form blocks submission",
+        "aria-invalid=\"true\" on the host marks the inner input invalid too (as errorMessage does), so a wrapper such as sb-input-group can mark it"
+      ],
+      "contrast": [
+        {
+          "bg": "input.bg",
+          "fg": "input.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "input.bg",
+          "fg": "input.placeholder",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "input.label.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "input.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "input.error.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "input.bg",
+          "fg": "input.border",
+          "kind": "ui"
+        },
+        {
+          "bg": "input.bg",
+          "fg": "input.border-invalid",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "input.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": "On focus of the input; 3px ring in input.focus-ring.color.",
+      "formAssociation": {
+        "note": "ElementInternals: setFormValue on input, validity mirrored with setValidity (anchored to the inner input), formResetCallback restores the default value, disabled fields are not submitted.",
+        "value": true
+      },
+      "keyboard": {
+        "Enter": "submits the owning form (handled by the component: the inner input has no form owner)",
+        "Tab": "move focus in and out",
+        "typing": "native text editing"
+      },
+      "missingNameWarning": "Dev-only console warning, once, when label is empty.",
+      "native": "input",
+      "role": "textbox (searchbox for type=search)",
+      "targetSize": "36px high.",
+      "wcag": [
+        "1.3.1",
+        "1.3.5",
+        "1.4.3",
+        "1.4.11",
+        "2.4.6",
+        "2.4.7",
+        "3.3.1",
+        "3.3.2",
+        "4.1.2",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "label (visible or hide-label)",
+          "pattern": "Placeholder as the only label",
+          "why": "It disappears on typing and is not a reliable accessible name"
+        },
+        {
+          "alternative": "Validate on blur or submit",
+          "pattern": "Showing errors on the first keystroke",
+          "why": "Punishes people for not being done yet"
+        },
+        {
+          "alternative": "Textarea",
+          "pattern": "Multi-line text in Input",
+          "why": "Input is single-line"
+        },
+        {
+          "alternative": "One line per form: \"* required\"",
+          "pattern": "Asterisks with no explanation",
+          "why": "The meaning of * is not universal"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "input",
+        "text field",
+        "form",
+        "email",
+        "password",
+        "search"
+      ],
+      "useCases": [
+        {
+          "use": "sb-input with a label",
+          "when": "Short free text: names, emails, codes, search"
+        },
+        {
+          "use": "hide-label, keep the label text",
+          "when": "The label would repeat visible context (e.g. a search bar)"
+        },
+        {
+          "use": "description",
+          "when": "Format or purpose needs explaining before typing"
+        },
+        {
+          "use": "errorMessage with what went wrong and how to fix it",
+          "when": "Server or custom validation failed"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "field",
+        "notes": "Vertical stack with the field gap.",
+        "parent": null,
+        "part": "field",
+        "role": "container"
+      },
+      {
+        "controlledBy": "label",
+        "name": "label",
+        "notes": "Native <label for> in the same shadow root.",
+        "parent": "field",
+        "part": "label",
+        "role": "text"
+      },
+      {
+        "controlledBy": "required",
+        "name": "required-indicator",
+        "notes": "Asterisk, aria-hidden.",
+        "optional": true,
+        "parent": "label",
+        "part": "required-indicator",
+        "role": "text"
+      },
+      {
+        "name": "input",
+        "notes": "Native <input>; receives focus, typing and validation.",
+        "parent": "field",
+        "part": "input",
+        "role": "control"
+      },
+      {
+        "controlledBy": "description",
+        "name": "description",
+        "optional": true,
+        "parent": "field",
+        "part": "description",
+        "role": "text"
+      },
+      {
+        "controlledBy": "errorMessage",
+        "name": "error",
+        "notes": "Persistent polite live region; text appears when invalid.",
+        "optional": true,
+        "parent": "field",
+        "part": "error",
+        "role": "text"
+      }
+    ],
+    "component": "Input",
+    "content": {},
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-005",
+      "D-011",
+      "D-016",
+      "D-024",
+      "D-025",
+      "D-027"
+    ],
+    "dependsOn": [],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": false,
+        "note": "Value committed (blur or Enter). Re-dispatched from the host because native change is not composed (NativeControl mixin)."
+      },
+      "input": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": true,
+        "note": "Each edit. Native and composed, so it crosses the shadow boundary."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "Inside Input (contract-first standard; option A): native <label for>, description and error in one shadow root.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Where does the label live?",
+        "status": "answered"
+      },
+      {
+        "answer": "the reference implementation: aria-hidden asterisk plus native required; a one-line '* required' legend per form is documented in Usage.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "How are required fields marked?",
+        "status": "answered"
+      },
+      {
+        "answer": "None: one height (36px).",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Sizes?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "autocomplete": {
+        "default": "",
+        "note": "Native autocomplete token (WCAG 1.3.5 for personal data).",
+        "type": "text"
+      },
+      "description": {
+        "default": "",
+        "note": "Help text under the field.",
+        "type": "text"
+      },
+      "disabled": {
+        "default": false,
+        "note": "Native disabled; dimmed; not submitted.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "errorMessage": {
+        "attribute": "error-message",
+        "default": "",
+        "note": "Error message. Setting it marks the field invalid.",
+        "type": "text"
+      },
+      "hideLabel": {
+        "attribute": "hide-label",
+        "default": false,
+        "note": "Visually hides the label; it stays the accessible name.",
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "note": "Visible label and accessible name. Required: shadow DOM keeps an external <label for> from reaching the inner input.",
+        "required": true,
+        "type": "text"
+      },
+      "maxlength": {
+        "default": null,
+        "note": "Native validation.",
+        "type": "number"
+      },
+      "minlength": {
+        "default": null,
+        "note": "Native validation.",
+        "type": "number"
+      },
+      "name": {
+        "default": "",
+        "note": "Form field name.",
+        "type": "text"
+      },
+      "pattern": {
+        "default": "",
+        "note": "Native validation.",
+        "type": "text"
+      },
+      "placeholder": {
+        "default": "",
+        "note": "Example of the expected input. Never a substitute for the label.",
+        "type": "text"
+      },
+      "readOnly": {
+        "attribute": "readonly",
+        "default": false,
+        "note": "Focusable and submitted; not editable.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "required": {
+        "default": false,
+        "note": "Native required, plus an aria-hidden asterisk after the label . Explain * once per form.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "type": {
+        "default": "text",
+        "note": "Native input type.",
+        "type": "variant",
+        "values": [
+          "text",
+          "email",
+          "password",
+          "search",
+          "tel",
+          "url",
+          "number"
+        ]
+      },
+      "value": {
+        "default": "",
+        "note": "Current value; submitted with the form.",
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "input.disabled-opacity"
+        ],
+        "trigger": "disabled attribute"
+      },
+      "error": {
+        "note": "Never on the first keystroke.",
+        "tokens": [
+          "input.border-invalid",
+          "input.error.fg"
+        ],
+        "trigger": "error-message set, or native validity fails after blur or a submit attempt"
+      },
+      "focus-visible": {
+        "borderColor": "input.focus-ring.color",
+        "note": "3px solid ring and border in the ring color (see drift for the visual reference).",
+        "tokens": [
+          "input.focus-ring.color",
+          "input.focus-ring.width"
+        ],
+        "trigger": "focus in the input"
+      },
+      "hover": {
+        "tokens": [],
+        "trigger": "pointer over an enabled field"
+      },
+      "read-only": {
+        "tokens": [],
+        "trigger": "readonly attribute"
+      }
+    },
+    "summary": "A single-line text field with its label, description and error built in, taking part in forms.",
+    "tag": "sb-input",
+    "tokens": {
+      "input.bg": "{color.input-background}",
+      "input.border": "{color.input}",
+      "input.border-invalid": "{color.destructive}",
+      "input.border-width": "{border-width.default}",
+      "input.description.fg": "{color.muted-foreground}",
+      "input.description.font-size": "{font.size.body}",
+      "input.description.line-height": "{font.line-height.body}",
+      "input.disabled-opacity": "{opacity.disabled}",
+      "input.error.fg": "{color.destructive}",
+      "input.fg": "{color.foreground}",
+      "input.focus-ring.color": "{color.ring}",
+      "input.focus-ring.width": "{focus.ring.width}",
+      "input.font-family": "{font.family.body}",
+      "input.font-size": "{font.size.control}",
+      "input.gap": "{space.field.gap}",
+      "input.height": "{size.control.default}",
+      "input.label.fg": "{color.foreground}",
+      "input.label.font-size": "{font.size.control}",
+      "input.label.font-weight": "{font.weight.label}",
+      "input.label.line-height": "{font.line-height.label}",
+      "input.line-height": "{font.line-height.control}",
+      "input.padding-x": "{space.control.padding-x.field}",
+      "input.padding-y": "{space.control.padding-y.field}",
+      "input.placeholder": "{color.muted-foreground}",
+      "input.radius": "{radius.control}",
+      "input.shadow": "{elevation.xs}",
+      "input.transition-duration": "{motion.duration.fast}",
+      "input.transition-easing": "{motion.easing.standard}"
+    }
+  },
+  "plan": "# Plan: Input (planning gate)\n\nStatus: **approved 2026-11-08** (owner approved both plans; Q4 answered yes, SB-0006). Built test-first; now beta.\n\n## Scope\n`sb-input`: a single-line field with the label, description and error built in because shadow DOM keeps an external `<label for>` from reaching the inner input . States focus-visible, invalid, disabled, readonly. Form-associated: value, validity, reset.\n\nOut of scope: Input Group adornments, Textarea, stand-alone Label and Field components.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/input/Input.stories.ts`: default, with description, with error, required, disabled, readonly, hidden label, each type |\n| 2 | `playwright/tests/input/input.behavior.spec.ts`: written first, must fail |\n| 3 | `src/mixins/native-control.ts`: label/description wiring, change re-dispatch, missing-name warning (`NativeControl`), on top of `form-associated.ts` |\n| 4 | `src/components/input/Input.scss` → `Input.styles.ts` (generated) |\n| 5 | `src/components/input/Input.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Label is the accessible name; clicking it focuses the input; `hide-label` keeps the name.\n- Description and error are in the accessible description; `aria-invalid` only when invalid.\n- Invalid appears after blur or submit, not on the first keystroke; the error is announced once (live region text changes).\n- `input` and `change` reach the host (bubbles, composed); `change` only on commit.\n- Forms: value in FormData; required and pattern block submit through validity; reset restores the default; disabled is not submitted.\n- Required: native required on the input; asterisk is aria-hidden.\n- axe: no violations in each story.\n\n## Accessibility deviations from the references\n- From the visual reference: input border 3:1 (neutral-500), solid focus ring.\n- From the reference implementation: error announced when it appears.\n\n## Open questions\nNone. Label placement, required marker and sizes were answered on 2026-11-08 (see contract.json openQuestions)."
+}

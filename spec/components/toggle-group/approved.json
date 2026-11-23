@@ -1,0 +1,375 @@
+{
+  "contract": {
+    "$extensions": {
+      "design.figma": {
+        "options": [
+          {
+            "default": "0",
+            "kind": "enum",
+            "name": "Spacing",
+            "reason": "spacing takes any number of 4 px units; the stories draw 0 (the joined bar) and 2 (separate items, Onboarding). The gap of 2 binds the spacing scale's step 2, which is 2 x space.unit in every preset (SB-0121).",
+            "values": [
+              "0",
+              "2"
+            ]
+          }
+        ]
+      }
+    },
+    "accessibility": {
+      "accessibleNameSource": "Host aria-label is forwarded to the group; a group of toggles needs a name when its purpose is not clear from the surrounding text. Each item is named by its text or its own aria-label.",
+      "announcements": [],
+      "aria": [
+        "group: role=\"group\" with the forwarded aria-label",
+        "items are native buttons with aria-pressed for both selections (APG toolbar and toggle button patterns). Single mode keeps aria-pressed rather than radio semantics because a pressed item can be pressed again to clear it, which a radio cannot do.",
+        "roving tab stop: one item has tabindex 0, the others -1; arrows move focus only, they do not press",
+        "disabled items are skipped by the arrows and are not focusable"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "toggle-group.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "toggle-group.on.bg",
+          "fg": "toggle-group.on.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "toggle-group.hover.bg",
+          "fg": "toggle-group.hover.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "toggle-group.outline.bg-hover",
+          "fg": "toggle-group.outline.fg-hover",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "toggle-group.outline.border",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "toggle-group.focus-ring.color",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "toggle-group.on.border",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible on the item; 3px solid ring in toggle-group.focus-ring.color; the focused item paints above its neighbours.",
+      "formAssociation": {
+        "note": "Not a form field. formAssociated only to follow <fieldset disabled>.",
+        "value": false
+      },
+      "keyboard": {
+        "ArrowDown": "next item (vertical orientation)",
+        "ArrowLeft": "previous item (ArrowRight in RTL), wraps",
+        "ArrowRight": "next item (ArrowLeft in RTL), wraps",
+        "ArrowUp": "previous item (vertical orientation)",
+        "End": "last enabled item",
+        "Enter": "toggle the focused item",
+        "Home": "first enabled item",
+        "Space": "toggle the focused item",
+        "Tab": "enters the group on one item (the first pressed item, else the first enabled one) and leaves it"
+      },
+      "missingNameWarning": "Console warning, once per element (in every build), when the host has no aria-label. A name from an outer legend or label is not detected.",
+      "native": "button",
+      "role": "group",
+      "targetSize": "At least 32x32px in every size (WCAG 2.5.8).",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.3",
+        "2.4.7",
+        "2.5.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "sb-radio-group",
+          "pattern": "Toggle Group as a required single choice in a form",
+          "why": "A pressed item can be pressed again to clear it, and nothing is submitted"
+        },
+        {
+          "alternative": "Set aria-label on every icon-only sb-toggle-group-item",
+          "pattern": "Icon-only items without aria-label",
+          "why": "The buttons have no accessible name"
+        },
+        {
+          "alternative": "Set aria-label on sb-toggle-group",
+          "pattern": "Group without a name when its purpose is unclear",
+          "why": "A screen-reader user hears bare buttons"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "toggle group",
+        "segmented",
+        "bold italic underline",
+        "view switcher",
+        "toggle buttons"
+      ],
+      "useCases": [
+        {
+          "use": "selection=multiple",
+          "when": "Related on/off options such as text formatting"
+        },
+        {
+          "use": "selection=single",
+          "when": "Pick one of a few views or alignments that can also be cleared"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "group",
+        "notes": "div role=group in the shadow root; named by the host's aria-label.",
+        "parent": null,
+        "part": "group",
+        "role": "container"
+      }
+    ],
+    "component": "ToggleGroup",
+    "content": {
+      "default": {
+        "component": "sb-toggle-group-item",
+        "multiple": true,
+        "notes": "The items. Their order is the roving-focus order.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-011",
+      "SB-0005",
+      "SB-0007",
+      "SB-0009",
+      "SB-0011",
+      "SB-0121"
+    ],
+    "dependsOn": [
+      "Toggle"
+    ],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "button",
+            "notes": "Native <button aria-pressed> in the shadow root.",
+            "parent": null,
+            "part": "button",
+            "role": "control"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Text, an icon, or both. An icon-only item needs aria-label.",
+            "required": true
+          }
+        },
+        "events": {
+          "click": {
+            "bubbles": true,
+            "composed": true,
+            "detail": null,
+            "native": true,
+            "note": "Pointer, Enter or Space. Cancelled while disabled."
+          }
+        },
+        "notes": "Must be a direct child of sb-toggle-group. The group sets data-position (first, middle, last, only) on slotchange; the item sets data-pressed from the group's value.",
+        "props": {
+          "disabled": {
+            "default": false,
+            "note": "Disables this item only; it is skipped by the arrows.",
+            "reflect": true,
+            "type": "boolean"
+          },
+          "value": {
+            "default": null,
+            "note": "Identifies the item in the group's value.",
+            "required": true,
+            "type": "text"
+          }
+        },
+        "role": "button",
+        "summary": "One toggle button of a sb-toggle-group. Takes variant, size and orientation from the group.",
+        "tag": "sb-toggle-group-item"
+      }
+    ],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "composed": true,
+        "detail": "{ value: string[] }",
+        "note": "Fired after a person changes the pressed items. Not fired when value is set from code."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "aria-pressed buttons in role=group, both types.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Single mode: radio semantics (role=radio, aria-checked) or aria-pressed?",
+        "recommendation": "aria-pressed on native buttons in both types: single mode lets the pressed item be cleared, which a radio cannot, and the APG toolbar pattern uses toggle buttons. A required one-of-many choice is Radio Group.",
+        "status": "answered"
+      },
+      {
+        "answer": "Both types use roving focus.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Roving focus in multiple mode too?",
+        "recommendation": "Yes, both types: one tab stop and arrows, like the APG toolbar. Selection never follows focus.",
+        "status": "answered"
+      },
+      {
+        "answer": "string[] property; space-separated attribute.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Shape of value?",
+        "recommendation": "string[] on the property for both types; space-separated on the attribute. One shape keeps type switching simple.",
+        "status": "answered"
+      },
+      {
+        "answer": "Group-level only.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Per-item variant and size?",
+        "recommendation": "No: the group sets them (items inherit from the group). Add later if needed.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "disabled": {
+        "default": false,
+        "note": "Disables every item.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "orientation": {
+        "default": "horizontal",
+        "note": "Layout and arrow-key axis.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      "selection": {
+        "default": "single",
+        "note": "single: at most one item is pressed (pressing it again clears it). multiple: any number.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "single",
+          "multiple"
+        ]
+      },
+      "size": {
+        "default": "medium",
+        "note": "Applied to every item.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "medium",
+          "small",
+          "large"
+        ]
+      },
+      "spacing": {
+        "default": 0,
+        "note": "Gap between items in 4px units. 0 joins the items into one bar with shared borders.",
+        "reflect": true,
+        "type": "number"
+      },
+      "value": {
+        "attribute": "value",
+        "default": null,
+        "note": "Values of the pressed items. Property: string[]. Attribute: space-separated values.",
+        "type": "text"
+      },
+      "variant": {
+        "default": "ghost",
+        "note": "Applied to every item.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "ghost",
+          "tertiary"
+        ]
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "toggle-group.disabled-opacity"
+        ],
+        "trigger": "disabled attribute or <fieldset disabled>"
+      }
+    },
+    "summary": "Related on/off controls in one row: pick exactly one, or turn several on, like text alignment or formatting (Web Components).",
+    "tag": "sb-toggle-group",
+    "tokens": {
+      "toggle-group.border-width": "{border-width.default}",
+      "toggle-group.disabled-opacity": "{opacity.disabled}",
+      "toggle-group.fg": "{color.foreground}",
+      "toggle-group.focus-ring.color": "{color.ring}",
+      "toggle-group.focus-ring.width": "{focus.ring.width}",
+      "toggle-group.font-family": "{font.family.body}",
+      "toggle-group.font-size": "{font.size.control}",
+      "toggle-group.font-weight": "{font.weight.control}",
+      "toggle-group.gap": "{space.control.gap.default}",
+      "toggle-group.height.default": "{size.control.default}",
+      "toggle-group.height.lg": "{size.control.lg}",
+      "toggle-group.height.sm": "{size.control.sm}",
+      "toggle-group.hover.bg": "{color.muted}",
+      "toggle-group.hover.fg": "{color.muted-foreground}",
+      "toggle-group.icon-size": "{size.icon.default}",
+      "toggle-group.line-height": "{font.line-height.control}",
+      "toggle-group.on.bg": "{color.accent}",
+      "toggle-group.on.border": "{color.foreground}",
+      "toggle-group.on.fg": "{color.accent-foreground}",
+      "toggle-group.outline.bg-hover": "{color.accent}",
+      "toggle-group.outline.border": "{color.input}",
+      "toggle-group.outline.fg-hover": "{color.accent-foreground}",
+      "toggle-group.outline.shadow": "{elevation.xs}",
+      "toggle-group.padding-x.default": "{space.control.padding-x.xs}",
+      "toggle-group.padding-x.lg": "{space.control.padding-x-icon.sm}",
+      "toggle-group.padding-x.sm": "{space.control.padding-x-icon.xs}",
+      "toggle-group.radius": "{radius.control}",
+      "toggle-group.spacing-unit": "{space.unit}",
+      "toggle-group.transition-duration": "{motion.duration.fast}",
+      "toggle-group.transition-easing": "{motion.easing.standard}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "size": [
+          "medium",
+          "small",
+          "large"
+        ],
+        "variant": [
+          "ghost",
+          "tertiary"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Toggle Group (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-toggle-group` and `sb-toggle-group-item`: a set of toggle buttons. `selection` single or multiple, `variant`, `size`, `spacing`, `orientation`, `value`, `disabled`, `change`. Roving focus through `src/controllers/roving-focus.ts`. State shared with `@lit/context`; the group writes `data-position` on slotchange.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/toggle-group/ToggleGroup.stories.ts` |\n| 2 | `playwright/tests/toggle-group/toggle-group.behavior.spec.ts` (written first, must fail) |\n| 3 | `ToggleGroup.scss` -> `ToggleGroup.styles.ts` (generated; one sheet for both elements) |\n| 4 | `ToggleGroup.ts`, `ToggleGroupItem.ts`, `context.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Group is `role=group` named by aria-label; items are buttons with aria-pressed.\n- single: pressing moves the selection, pressing again clears it; multiple: independent. `value` property and attribute; `change` composed, once, `detail.value`; no change for code updates.\n- Roving: one tab stop (first pressed, else first enabled), arrows wrap, Home/End, vertical axis, RTL reverses, disabled skipped, arrows never press.\n- Group disabled and item disabled; fieldset disabled.\n- Layout: joined (spacing 0) shares borders and only outer corners round; spacing > 0 gaps; data-position values; vertical stacks.\n- Token colors, focus ring keyboard-only, axe clean.\n\n## Accessibility deviations from the references\n- Solid 3px focus ring instead of ring/50.\n- Single mode uses aria-pressed, not radio semantics (the visual reference uses radio there): the item can be cleared.\n\n## Open questions (recommendation first)\n- Q1 radio vs pressed: pressed. Answered.\n- Q2 roving in multiple: yes. Answered.\n- Q3 value shape: string[]. Answered.\n- Q4 per-item variant/size: no. Answered."
+}

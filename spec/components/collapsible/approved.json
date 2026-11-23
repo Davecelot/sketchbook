@@ -1,0 +1,246 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "Trigger text. Host aria-label on sb-collapsible-trigger is forwarded to the inner button (ID references do not cross shadow roots, SB-0009).",
+      "announcements": [],
+      "aria": [
+        "trigger button: aria-expanded mirrors expanded",
+        "trigger button: aria-controls points to the sb-collapsible-content host through the ariaControlsElements property, which resolves from a shadow root to an element in the light DOM above it (Chromium exposes it in the accessibility tree only when the target has an accessibility node, and the plain content host has none); with no support for the property, aria-controls is omitted and aria-expanded still carries the state",
+        "closed content is visibility:hidden after the animation, so it is neither focusable nor read",
+        "prefers-reduced-motion removes the height animation",
+        "aria-controls is re-resolved when content is added or removed after the trigger"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "collapsible.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible only; 3px solid ring in collapsible.focus-ring.color.",
+      "keyboard": {
+        "Enter": "toggle the content",
+        "Space": "toggle the content",
+        "Tab": "move focus to the trigger and past it; closed content is out of the tab order"
+      },
+      "native": "button",
+      "role": "button (the trigger); the content has no role",
+      "targetSize": "The trigger is at least 24x24px (WCAG 2.5.8).",
+      "wcag": [
+        "1.4.11",
+        "2.1.1",
+        "2.3.3",
+        "2.4.7",
+        "2.5.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Put only text and icons in the trigger",
+          "pattern": "A button or link inside sb-collapsible-trigger",
+          "why": "Nested interactive controls break keyboard and screen reader use"
+        },
+        {
+          "alternative": "Show it, or use Accordion only for optional detail",
+          "pattern": "Hiding content that people must read to finish a task",
+          "why": "Required information behind a click is easy to miss"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "collapsible",
+        "disclosure",
+        "expand",
+        "collapse",
+        "show more"
+      ],
+      "useCases": [
+        {
+          "use": "sb-collapsible with a trigger and content",
+          "when": "One section of optional detail that a person can reveal"
+        },
+        {
+          "use": "Accordion",
+          "when": "Several related sections where one open at a time helps"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "sb-collapsible: light-DOM wrapper that owns the expanded state and shares it with its parts through context. It has no shadow content of its own.",
+        "parent": null,
+        "role": "container"
+      }
+    ],
+    "component": "Collapsible",
+    "content": {
+      "default": {
+        "component": "sb-collapsible-trigger, sb-collapsible-content",
+        "multiple": true,
+        "notes": "One trigger and one content, in that order. Other markup (a heading, an always-visible item) may sit around them.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-011",
+      "SB-0007",
+      "SB-0009"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "trigger",
+            "notes": "Native <button> in the shadow root.",
+            "parent": null,
+            "part": "trigger",
+            "role": "control"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Text and decorative icons only; the trigger is already a button, so do not nest another control.",
+            "required": true
+          }
+        },
+        "events": {
+          "click": {
+            "bubbles": true,
+            "composed": true,
+            "detail": null,
+            "native": true,
+            "note": "Pointer, Enter or Space; toggles the collapsible."
+          }
+        },
+        "notes": "Must be a descendant of sb-collapsible.",
+        "props": {},
+        "role": "button",
+        "summary": "The control that toggles its collapsible. Renders a native button around its slotted content.",
+        "tag": "sb-collapsible-trigger"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "content",
+            "notes": "Grid wrapper whose row animates between 0fr and 1fr.",
+            "parent": null,
+            "part": "content",
+            "role": "container"
+          },
+          {
+            "name": "inner",
+            "notes": "Clips the content while it animates.",
+            "parent": "content",
+            "part": "inner",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Any content.",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Must be a descendant of sb-collapsible.",
+        "props": {},
+        "summary": "The panel that is shown or hidden. Its height animates.",
+        "tag": "sb-collapsible-content"
+      }
+    ],
+    "events": {
+      "sb-toggle": {
+        "bubbles": true,
+        "cancelable": false,
+        "composed": true,
+        "detail": null,
+        "native": false,
+        "note": "Fires on the sb-collapsible host after expanded changes, from the trigger or from code (like <details> toggle, but it bubbles; shaped like Dialog's sb-toggle). Read host.expanded for the new state."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "Set ariaControlsElements on the inner button (inside to outside references resolve); document that without browser support only aria-expanded remains.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "aria-controls across shadow roots: how?",
+        "status": "answered"
+      },
+      {
+        "answer": "toggle (bubbles, composed) after every change of open, like <details>.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Which events does the root fire?",
+        "status": "answered"
+      },
+      {
+        "answer": "No: the WAI-ARIA disclosure pattern needs no role, and many collapsibles on a page would add landmark noise.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Is the content a region landmark?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "disabled": {
+        "default": false,
+        "note": "Disables the trigger. The current state is kept.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "expanded": {
+        "default": false,
+        "note": "Whether the panel is shown. The trigger flips it; code can set it too.",
+        "reflect": true,
+        "type": "boolean"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "collapsible.disabled-opacity"
+        ],
+        "trigger": "disabled attribute"
+      },
+      "focus-visible": {
+        "tokens": [
+          "collapsible.focus-ring.color",
+          "collapsible.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on the trigger"
+      },
+      "open": {
+        "note": "Content height animates from 0 to its natural height.",
+        "tokens": [
+          "collapsible.transition-duration",
+          "collapsible.transition-easing"
+        ],
+        "trigger": "expanded attribute"
+      }
+    },
+    "summary": "A disclosure that shows or hides one panel of content from a trigger. Three custom elements share state through context.",
+    "tag": "sb-collapsible",
+    "tokens": {
+      "collapsible.disabled-opacity": "{opacity.disabled}",
+      "collapsible.fg": "{color.foreground}",
+      "collapsible.focus-ring.color": "{color.ring}",
+      "collapsible.focus-ring.width": "{focus.ring.width}",
+      "collapsible.radius": "{radius.control}",
+      "collapsible.transition-duration": "{motion.duration.normal}",
+      "collapsible.transition-easing": "{motion.easing.standard}",
+      "collapsible.trigger-min-size": "{size.control.xs}"
+    }
+  },
+  "plan": "# Plan: Collapsible (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-collapsible`, `sb-collapsible-trigger`, `sb-collapsible-content` following the visual reference. `expanded`, `disabled`, an `sb-toggle` event, a height animation from motion tokens. Out of scope: lazy content, controlled-only mode.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/collapsible/Collapsible.stories.ts` |\n| 2 | `playwright/tests/collapsible/collapsible.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/collapsible/Collapsible.scss` -> `Collapsible.styles.ts` (generated, shared by the three elements) |\n| 4 | `Collapsible.ts`, `CollapsibleTrigger.ts`, `CollapsibleContent.ts`, `context.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Trigger is a native button named by its text; `aria-expanded` follows `expanded`.\n- Click, Enter and Space toggle; `sb-toggle` bubbles and is composed; fires for programmatic changes too.\n- `disabled`: no toggle, native disabled, dimmed.\n- `aria-controls` resolves to the content host (element reflection).\n- Closed content: hidden, links inside are out of the tab order.\n- Focus ring on keyboard focus only; transition duration from the token; none under reduced motion.\n- Icon-only trigger named through forwarded `aria-label`. axe in open and closed states.\n\n## Accessibility deviations from the references\n- None beyond the 3px solid focus ring on the trigger.\n\n## Open questions (recommendation first)\n- Q1 aria-controls across roots: `ariaControlsElements` on the inner button. Answered: yes.\n- Q2 events: `toggle`, bubbles and composed. Answered: yes.\n- Q3 content role: none. Answered: none."
+}

@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: plan Status line (2026-11-12)
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-12
+approved-contract: sha256:87eb6900bae61e26c4ab2877a9f72993cb83ed3f8213c5026639fd70db46af31
+approved-plan: sha256:196ed6ce85ec1dedc30820b5a7de5c0c6e17a60b3a4cd4f5c465dcde5dfd36ef
+---
+
 # Plan: Sidebar (planning gate)
 
 Status: **approved** (owner answered Q1–Q6, 2026-11-12: sidebar color, width and backdrop tokens added; breakpoint as a token inlined at build time, no literal; a link closes the drawer; manual screen-reader pass replaced by automated views, SB-0113). Test-first from here. Contract: [contract.json](./contract.json), [contract.md](./contract.md). Decision: SB-0101 (proposed).

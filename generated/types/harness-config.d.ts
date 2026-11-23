@@ -43,7 +43,7 @@ export interface HarnessConfigJson {
     [k: string]: unknown;
   };
   /**
-   * Process switches read by the rules and slash commands (advisory: checks do not depend on them).
+   * Process switches read by the rules and slash commands; only check C5 reads one (testFirst).
    */
   features: {
     planningGate?: boolean;
@@ -52,6 +52,19 @@ export interface HarnessConfigJson {
     issueTracker?: boolean;
     reviewGate?: boolean;
     releaseFlow?: boolean;
+  };
+  /**
+   * Plan approval records, verified by check C4 (sketchbook approve).
+   */
+  approval?: {
+    /**
+     * An agent may carry an approval over a wording-only change (sketchbook approve --carry); a person confirms carried approvals later (--review).
+     */
+    triage?: boolean;
+    /**
+     * Require a plan for local or customized components and a frontmatter record in every plan. Untouched catalog installs are exempt.
+     */
+    requireRecord?: boolean;
   };
   ui?: {
     reference?: string;

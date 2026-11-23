@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:0d1c1a1c351846a02606fc421aa776bab63bc9b41283f56b5e7de2fb889cfd07
+approved-plan: sha256:dd3573f750dc8e44f46a8820d22ea6dc1bb8045adfd11bbc49a771b815d623fd
+---
+
 # Plan: Aspect Ratio (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

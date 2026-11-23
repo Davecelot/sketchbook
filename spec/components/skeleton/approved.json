@@ -1,0 +1,109 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "None. The loading state is announced by the author on the container (aria-busy, or a visible or live status).",
+      "announcements": [],
+      "aria": [
+        "aria-hidden=\"true\" on the host, set before the first render",
+        "not focusable",
+        "the container of skeletons should carry aria-busy=\"true\" while loading, or the page should announce loading in a status region"
+      ],
+      "contrast": [],
+      "keyboard": {},
+      "role": "none: hidden from assistive technology (aria-hidden)",
+      "targetSize": "Not interactive.",
+      "wcag": [
+        "1.4.3",
+        "2.2.2",
+        "2.3.3",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Set aria-busy on the container or announce loading in a status",
+          "pattern": "Skeleton as the only loading signal for assistive technology",
+          "why": "It is hidden from them"
+        },
+        {
+          "alternative": "Progress or Spinner",
+          "pattern": "Skeleton for a short, known-progress task",
+          "why": "Placeholders imply content is about to appear"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "skeleton",
+        "placeholder",
+        "loading",
+        "shimmer",
+        "pulse"
+      ],
+      "useCases": [
+        {
+          "use": "one sb-skeleton per text line, image or avatar, sized with CSS",
+          "when": "The layout of loading content is known"
+        },
+        {
+          "use": "set --sb-skeleton-radius to the pill radius token",
+          "when": "Round avatars"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "block",
+        "notes": "The filled, pulsing shape; it fills the host, which the author sizes.",
+        "parent": null,
+        "part": "block",
+        "role": "container"
+      }
+    ],
+    "component": "Skeleton",
+    "content": {},
+    "decisions": [
+      "D-001",
+      "D-005",
+      "D-011",
+      "SB-0007",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Static block under reduced motion.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Pulse under prefers-reduced-motion?",
+        "recommendation": "Stop it: a placeholder conveys no essential state, so the block stays static (WCAG 2.3.3, 2.2.2). Unlike Spinner it is not the only signal.",
+        "status": "answered"
+      },
+      {
+        "answer": "No size props; sized by CSS.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Sizing API?",
+        "recommendation": "None: the author sizes the host with CSS (width, height, or a flex or grid cell), like a plain block; radius is themable through --sb-skeleton-radius.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {},
+    "states": {},
+    "summary": "A pulsing placeholder block that holds the space of content that is still loading.",
+    "tag": "sb-skeleton",
+    "tokens": {
+      "skeleton.bg": "{color.accent}",
+      "skeleton.duration": "{motion.duration.loop}",
+      "skeleton.easing": "{motion.easing.standard}",
+      "skeleton.pulse-opacity": "{opacity.pulse}",
+      "skeleton.radius": "{radius.control}"
+    }
+  },
+  "plan": "# Plan: Skeleton (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-skeleton`: a hidden, pulsing block sized by the author. No props. Out of scope: shimmer variants, built-in text-line or avatar presets.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/skeleton/Skeleton.stories.ts` |\n| 2 | `playwright/tests/skeleton/skeleton.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/skeleton/Skeleton.scss` -> `Skeleton.styles.ts` (generated) |\n| 4 | `src/components/skeleton/Skeleton.ts`, `index.ts` |\n\nSemantic token added: `opacity.pulse` (0.5).\n\n## Test plan (test-first)\n- aria-hidden on the host from first render; absent from the accessibility tree.\n- Fill, radius from tokens; radius overridable through `--sb-skeleton-radius`; sized by the author's CSS.\n- Pulse animation runs at twice the loop duration; static with reduced motion.\n- Not focusable; axe clean.\n\n## Accessibility deviations from the references\nReduced motion stops the pulse (the visual reference keeps pulsing).\n\n## Open questions (recommendation first)\nBoth answered in contract.json (static under reduced motion; no size props)."
+}

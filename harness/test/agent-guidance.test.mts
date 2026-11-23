@@ -16,6 +16,14 @@ test('shared component skills use standard frontmatter and Claude wrappers lead 
     assert.ok(typeof description === 'string' && description.length > 0 && description.length <= 400);
     assert.match(source, /features\.planningGate/);
     assert.doesNotMatch(source, /\.claude\/|`Agent`|haiku|sonnet|opus/);
+    const briefLinks = [...source.matchAll(/\]\((agents\/[^)]+\.md)\)/g)];
+    assert.ok(briefLinks.length, `expected brief links in ${path}`);
+    for (const [, brief] of briefLinks) {
+      assert.ok(brief);
+      const portable = await readFile(join(ROOT, '.agents/skills', name, brief), 'utf8');
+      assert.equal(portable, await readFile(join(ROOT, 'harness/templates/agent-catalog', name, brief), 'utf8'), brief);
+      assert.deepEqual(Object.keys(frontmatter(portable) ?? {}).sort(), ['description', 'name']);
+    }
     const wrapper = await readFile(join(ROOT, '.claude/skills', name, 'SKILL.md'), 'utf8');
     assert.ok(wrapper.includes(`(../../../${path})`));
   }

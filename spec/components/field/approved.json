@@ -1,0 +1,439 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "For a native input, select or textarea inside the field, the field wires aria-labelledby to its sb-field-label and aria-describedby to its sb-field-description and non-empty sb-field-error. sb-input, sb-checkbox and the other DS controls carry their own label, description and error inside their shadow root: they do not need Field for names, because ID references do not cross shadow roots (SB-0009). sb-field-set is a native fieldset named by its legend.",
+      "announcements": [
+        "sb-field-error content changes are announced (role=alert)"
+      ],
+      "aria": [
+        "sb-field-set: native fieldset with a legend, exposed as a group named by the legend and described by a sb-field-description placed directly in it; a set without a legend warns once",
+        "native control in a sb-field: the field adds its own ids to aria-labelledby and aria-describedby (description, then error when it has text) and sets aria-invalid, keeping ids and an aria-invalid the author set",
+        "sb-field-error: role=\"alert\" so a message that appears is announced",
+        "sb-field-separator lines are aria-hidden; its text stays readable"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "field.label.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "field.label.fg-invalid",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "field.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "field.error.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "field.separator.text.bg",
+          "fg": "field.separator.text.fg",
+          "kind": "text"
+        }
+      ],
+      "focusRingVisible": "Not applicable: the elements are not focusable. Clicking a sb-field-label focuses or activates its control.",
+      "formAssociation": {
+        "note": "Layout only. Controls keep their own form behavior.",
+        "value": false
+      },
+      "keyboard": {
+        "Tab": "no stops of its own; moves between the controls inside"
+      },
+      "native": "fieldset (sb-field-set only)",
+      "role": "none",
+      "targetSize": "Set by the controls inside.",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "3.3.1",
+        "3.3.2",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Use their label, description and error props; use sb-field-group only for spacing",
+          "pattern": "sb-field around sb-input or sb-checkbox just to add a label",
+          "why": "They already render their own label, description and error; a second label duplicates the name"
+        },
+        {
+          "alternative": "Use the control's own label prop",
+          "pattern": "Pointing aria-labelledby at a sb-field-label from inside a DS control",
+          "why": "ID references do not cross shadow roots"
+        },
+        {
+          "alternative": "One sb-field per control, grouped by sb-field-set",
+          "pattern": "Several controls in one sb-field",
+          "why": "The field names only its first native control"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "field",
+        "form layout",
+        "fieldset",
+        "legend",
+        "label",
+        "description",
+        "error"
+      ],
+      "useCases": [
+        {
+          "use": "sb-field with sb-field-label, the control, sb-field-description and sb-field-error",
+          "when": "Labelling a native input, select or textarea with description and error"
+        },
+        {
+          "use": "sb-field-set with a legend around sb-field children",
+          "when": "A group of related controls such as a set of radios or checkboxes"
+        },
+        {
+          "use": "sb-field orientation=horizontal with sb-field-content",
+          "when": "A checkbox or switch row with text beside it"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "field",
+        "notes": "Flex container in the shadow root; no role of its own.",
+        "parent": null,
+        "part": "field",
+        "role": "container"
+      }
+    ],
+    "component": "Field",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "sb-field-label, sb-field-content, sb-field-description, sb-field-error, sb-field-title and one control.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-011",
+      "SB-0007",
+      "SB-0009",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "fieldset",
+            "notes": "Native <fieldset> in the shadow root.",
+            "parent": null,
+            "part": "fieldset",
+            "role": "container"
+          },
+          {
+            "name": "legend",
+            "notes": "Native <legend>; rendered only when legend is set.",
+            "parent": "fieldset",
+            "part": "legend",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Fields, sb-field-group and sb-field-description.",
+            "required": false
+          }
+        },
+        "notes": "To disable a set of fields, wrap them in a native <fieldset disabled> in the light DOM: a fieldset inside a shadow root cannot disable slotted controls.",
+        "props": {
+          "legend": {
+            "default": "",
+            "note": "Visible group name; becomes the accessible name of the group.",
+            "reflect": true,
+            "type": "text"
+          }
+        },
+        "summary": "A native fieldset with a visible legend that groups related fields into one named group.",
+        "tag": "sb-field-set"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "group",
+            "parent": null,
+            "part": "group",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-field, sb-field-separator and sb-field-set children.",
+            "required": false
+          }
+        },
+        "summary": "A vertical stack of fields with the standard spacing between them.",
+        "tag": "sb-field-group"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "label",
+            "parent": null,
+            "part": "label",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Label text.",
+            "required": false
+          }
+        },
+        "props": {
+          "for": {
+            "default": null,
+            "note": "Id of the control to focus or activate on click. sb-field fills it in for its native control.",
+            "reflect": true,
+            "type": "text"
+          }
+        },
+        "summary": "The visible label of a field. Names a native control through aria-labelledby and forwards clicks to it.",
+        "tag": "sb-field-label"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "description",
+            "parent": null,
+            "part": "description",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Description text.",
+            "required": false
+          }
+        },
+        "summary": "Helper text under or beside a control; announced after the name through aria-describedby.",
+        "tag": "sb-field-description"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "error",
+            "notes": "div role=alert, hidden while it has no content.",
+            "parent": null,
+            "part": "error",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Error text.",
+            "required": false
+          }
+        },
+        "summary": "Error text for a field. Hidden while empty; announced when text appears.",
+        "tag": "sb-field-error"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "separator",
+            "parent": null,
+            "part": "separator",
+            "role": "container"
+          },
+          {
+            "name": "line",
+            "notes": "Two aria-hidden lines either side of the text.",
+            "parent": "separator",
+            "part": "line",
+            "role": "other"
+          },
+          {
+            "name": "text",
+            "notes": "Shown only when the default slot has content.",
+            "parent": "separator",
+            "part": "text",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Optional text such as \"or\".",
+            "required": false
+          }
+        },
+        "summary": "A divider between fields, with optional text in the middle.",
+        "tag": "sb-field-separator"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "content",
+            "parent": null,
+            "part": "content",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-field-label, sb-field-title and sb-field-description.",
+            "required": false
+          }
+        },
+        "summary": "A column that keeps a label and description together, used in horizontal fields.",
+        "tag": "sb-field-content"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "title",
+            "parent": null,
+            "part": "title",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Title text.",
+            "required": false
+          }
+        },
+        "summary": "Non-label heading text for a field, such as the name of a choice card.",
+        "tag": "sb-field-title"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "As recommended; documented in Usage and in anti-patterns.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "When to use Field and when the control's own label?",
+        "recommendation": "sb-input, sb-checkbox and other DS controls carry label, description and error themselves: use those props. Use Field for native controls, custom controls without their own label, groups (sb-field-set), spacing (sb-field-group) and side-by-side layouts.",
+        "status": "answered"
+      },
+      {
+        "answer": "sb-field wires aria-labelledby, aria-describedby and aria-invalid on its first native control, and re-wires on DOM changes.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "How does a label in one shadow root name a control in another tree?",
+        "recommendation": "It cannot with for or ID references from inside the label. The sb-field-label host is the label: sb-field gives it an id and sets aria-labelledby on its native control in the same tree, and gives the control an id for the label's click forwarding.",
+        "status": "answered"
+      },
+      {
+        "answer": "legend prop on sb-field-set.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "How is the legend done?",
+        "recommendation": "sb-field-set renders a native fieldset and legend from a legend prop; a slotted element cannot be a native legend.",
+        "status": "answered"
+      },
+      {
+        "answer": "Deferred.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Responsive orientation?",
+        "recommendation": "Not now: vertical and horizontal only; add when a layout needs it.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "orientation": {
+        "default": "vertical",
+        "note": "vertical stacks label, control, description and error; horizontal puts the control and its text side by side (checkbox or switch rows).",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "vertical",
+          "horizontal"
+        ]
+      },
+      "validation": {
+        "default": "none",
+        "note": "error marks the field as invalid: label turns to the error color, the native control gets aria-invalid, and children receive data-invalid.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "none",
+          "error"
+        ]
+      }
+    },
+    "states": {
+      "error": {
+        "tokens": [
+          "field.label.fg-invalid"
+        ],
+        "trigger": "validation=\"error\""
+      }
+    },
+    "summary": "Layout and grouping for form controls: a labelled row or column of label, control, description and error, plus sets, groups and dividers.",
+    "tag": "sb-field",
+    "tokens": {
+      "field.content-gap": "{space.stack.xs}",
+      "field.description.fg": "{color.muted-foreground}",
+      "field.description.font-size": "{font.size.body}",
+      "field.description.line-height": "{font.line-height.body}",
+      "field.error.fg": "{color.destructive}",
+      "field.error.font-size": "{font.size.body}",
+      "field.error.font-weight": "{font.weight.control}",
+      "field.error.line-height": "{font.line-height.body}",
+      "field.font-family": "{font.family.body}",
+      "field.gap": "{space.stack.md}",
+      "field.group.gap": "{space.stack.lg}",
+      "field.label.fg": "{color.foreground}",
+      "field.label.fg-invalid": "{color.destructive}",
+      "field.label.font-size": "{font.size.control}",
+      "field.label.font-weight": "{font.weight.label}",
+      "field.label.line-height": "{font.line-height.control}",
+      "field.legend.fg": "{color.foreground}",
+      "field.legend.font-size": "{font.size.control}",
+      "field.legend.font-weight": "{font.weight.label}",
+      "field.legend.line-height": "{font.line-height.control}",
+      "field.legend.margin-bottom": "{space.stack.md}",
+      "field.separator.font-size": "{font.size.body}",
+      "field.separator.line": "{color.border}",
+      "field.separator.line-height": "{font.line-height.body}",
+      "field.separator.text.bg": "{color.background}",
+      "field.separator.text.fg": "{color.muted-foreground}",
+      "field.separator.text.padding-x": "{space.stack.sm}",
+      "field.separator.thickness": "{border-width.default}",
+      "field.set.gap": "{space.stack.lg}",
+      "field.title.fg": "{color.foreground}",
+      "field.title.font-size": "{font.size.control}",
+      "field.title.font-weight": "{font.weight.label}",
+      "field.title.line-height": "{font.line-height.control}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "orientation": [
+          "vertical",
+          "horizontal"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Field (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\nNine elements: `sb-field` (orientation, invalid, wiring), `sb-field-set` (native fieldset, legend), `sb-field-group`, `sb-field-label`, `sb-field-description`, `sb-field-error`, `sb-field-separator`, `sb-field-content`, `sb-field-title`. Layout, naming and grouping; no values.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/field/Field.stories.ts` |\n| 2 | `playwright/tests/field/field.behavior.spec.ts` (written first, must fail) |\n| 3 | `Field.scss` -> `Field.styles.ts` (one sheet, `:host(tag)` rules per element) |\n| 4 | one `.ts` per element, `index.ts` |\n\n## Test plan (test-first)\n- `sb-field-set`: group named by its legend; no legend element without the prop.\n- Wiring: native input named by the label and described by description and error; error text joins the description only when non-empty; `validation=\"error\"` sets `aria-invalid` and the label color; re-wiring after DOM changes; clicking the label focuses the input or toggles a checkbox.\n- Error role=alert and hidden while empty; separator lines hidden from the tree, text kept.\n- Layout: vertical stacking and token gaps, horizontal row, group gap.\n- A DS control with its own label inside a group stays correctly named (no duplicate).\n- Token colors; axe clean on every story.\n\n## Accessibility deviations from the references\n- The label is not a native `<label>` (a shadow-root label cannot reference a light-DOM control); the field wires `aria-labelledby` instead.\n- `sb-field` has no `role=\"group\"`: an unnamed group adds noise; `sb-field-set` is the named group.\n\n## Open questions (recommendation first)\n- Q1 when to use Field: native and custom controls, sets, layout; DS controls use their own props. Q2 wiring by the field. Q3 `legend` prop. Q4 no responsive orientation. All answered."
+}

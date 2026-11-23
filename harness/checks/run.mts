@@ -1,4 +1,4 @@
-// npm run check  (--maintainer also checks the Storybook and docs site builds)  -> deterministic checks (T1–T7, F1, C1–C3, A1, P1, R1, G1, D1/D2/D3/D4, O1, M1 (maintainer), S1, W1, X1, K1, H1, H2), no AI. Exit 0 = pass, 1 = fail, 2 = pass with flagged overrides.
+// npm run check  (--maintainer also checks the Storybook and docs site builds)  -> deterministic checks (T1–T7, F1, C1–C5, A1, P1, R1, G1, D1/D2/D3/D4, O1, M1 (maintainer), S1, W1, X1, K1, H1, H2), no AI. Exit 0 = pass, 1 = fail, 2 = pass with flagged overrides.
 // --json for agents and CI. --verbose lists every check, not only the ones with findings. --only=T1,T6 to run a subset. --fix rebuilds generated outputs first.
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -20,6 +20,8 @@ import * as t6 from './t6-contrast.mjs';
 import * as c1 from './c1-contracts.mjs';
 import * as c2 from './c2-contract-tokens.mjs';
 import * as c3 from './c3-parity.mjs';
+import * as c4 from './c4-plan-approval.mjs';
+import * as c5 from './c5-test-first.mjs';
 import * as p1 from './p1-prefix.mjs';
 import * as r1 from './r1-registry.mjs';
 import * as g1 from './g1-generated.mjs';
@@ -38,7 +40,7 @@ import * as o1 from './o1-propagation.mjs';
 import * as m1 from './m1-docs-coverage.mjs';
 import * as s1 from './s1-screen-reader.mjs';
 
-export const CHECKS: Check[] = [t1, t2, t3, t4, t5, t6, t7, f1, c1, c2, c3, a1, p1, r1, g1, d1, d3, d4, o1, m1, s1, w1, x1, k1, h1, h2];
+export const CHECKS: Check[] = [t1, t2, t3, t4, t5, t6, t7, f1, c1, c2, c3, c4, c5, a1, p1, r1, g1, d1, d3, d4, o1, m1, s1, w1, x1, k1, h1, h2];
 
 export interface RunOptions { only?: string[]; maintainer?: boolean }
 

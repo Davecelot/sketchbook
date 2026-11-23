@@ -37,11 +37,13 @@ In Claude Code, `/add <Component Name>` runs the dry run, shows the result, then
 
 ## Design a new component
 
-You can do this in a core-only project, with any coding agent or without one.
+You can do this with or without an agent profile. Run `sketchbook help approve` and `sketchbook help evidence` to check that your installed CLI supports the records below.
 
 1. Add a `planned` entry to `spec/registry.json` if the name is not already there. Preview with `sketchbook add "<Name>" --blank --dry-run`, then run it without `--dry-run` to create the contract and plan.
 2. [Draft the contract](/concepts/contracts/) from your design and applicable accessibility references. Use `spec/api.json` for canonical API names. Run `sketchbook check`.
-3. If `features.planningGate` is enabled in `harness.config.json`, complete `spec/components/<name>/plan.md` and request approval before writing tests or implementation. After approval, follow the project's test-first setting.
+3. If `features.planningGate` is on, complete `spec/components/<name>/plan.md`. Before writing tests or implementation, have the approving person run `sketchbook approve <name> --by <name>`. C4 verifies that the approval still covers the current scope.
+4. If `features.testFirst` is on, write the story and behavior spec and run `sketchbook evidence red <name>`. Check that the tests fail for the behavior you haven’t implemented yet. A missing browser or server records nothing.
+5. Implement the component. With test-first on, run `sketchbook evidence green <name>` with the same spec and test setup. If you need to change the suite, record red again against the pre-change code. After review, run `sketchbook evidence ready <name>` to confirm that your passing run is still current and the component checks pass.
 
 ## Remove a component
 

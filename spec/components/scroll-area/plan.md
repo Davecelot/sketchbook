@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:e8767dc456b0f60f68b18317622445b23205aeb2cc4c2caa911d2bca78daa8ff
+approved-plan: sha256:e9ba6e43bbaba315d25f8b3a18894c60c6d322a0e5e23688eebb7118daf3bb01
+---
+
 # Plan: Scroll Area (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

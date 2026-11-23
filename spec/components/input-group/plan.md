@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:e2266e73f62106d2144614cd5b1e3f050269ac90eb4f0de2c86cc5a7347a2664
+approved-plan: sha256:76a476883ba62a650fdabffe4e91b1813bf8044edf1a1f64e55cfca5c458aa8c
+---
+
 # Plan: Input Group (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

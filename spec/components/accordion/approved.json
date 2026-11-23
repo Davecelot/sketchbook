@@ -1,0 +1,388 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "Trigger text. The panel is named by its trigger.",
+      "announcements": [],
+      "aria": [
+        "trigger: native button inside an element with role=heading and aria-level (level prop, default 3)",
+        "trigger: aria-expanded mirrors the item; aria-controls through ariaControlsElements to the content host (resolves from a shadow root to the light DOM above it)",
+        "selection=single without collapsible: the open item's trigger has aria-disabled=true",
+        "content: role=region named by its trigger through ElementInternals ariaLabelledByElements (ID references would not cross shadow roots); aria-label with the trigger text where the property is unsupported",
+        "closed content is visibility:hidden after the animation, so it is neither focusable nor read",
+        "the chevron is aria-hidden",
+        "aria-controls and the region's aria-labelledby are re-resolved when a trigger or content is added or removed later",
+        "heading level is clamped to 2-6 (a non-number falls back to 3)",
+        "item values must not contain whitespace (the accordion value is space-separated); a console warning fires once per item otherwise",
+        "forced colors: the chevron takes ButtonText"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "accordion.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "accordion.chevron.color",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "accordion.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible only; 3px solid ring in accordion.focus-ring.color.",
+      "keyboard": {
+        "ArrowDown": "focus the next enabled trigger, wrapping to the first",
+        "ArrowUp": "focus the previous enabled trigger, wrapping to the last",
+        "End": "focus the last enabled trigger",
+        "Enter": "toggle the focused item",
+        "Home": "focus the first enabled trigger",
+        "Space": "toggle the focused item",
+        "Tab": "every enabled trigger stays in the tab order"
+      },
+      "native": "button",
+      "role": "heading + button per item; region per open panel",
+      "targetSize": "Each trigger is at least 44px high with default padding (WCAG 2.5.8).",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.3.3",
+        "2.4.7",
+        "2.5.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Put controls in the content",
+          "pattern": "Interactive controls inside sb-accordion-trigger",
+          "why": "The trigger is a button; nested controls break keyboard and screen reader use"
+        },
+        {
+          "alternative": "Give every item a unique value",
+          "pattern": "Duplicate item values",
+          "why": "Opening one item opens the others with the same value"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "accordion",
+        "expand",
+        "collapse",
+        "sections"
+      ],
+      "useCases": [
+        {
+          "use": "sb-accordion selection=single collapsible",
+          "when": "Independent topics where reading one at a time is enough"
+        },
+        {
+          "use": "sb-accordion selection=multiple",
+          "when": "Sections people compare while open"
+        },
+        {
+          "use": "Collapsible",
+          "when": "A single optional section"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "sb-accordion: light-DOM wrapper that owns which items are open, moves focus between triggers and shares state through context. No shadow content of its own.",
+        "parent": null,
+        "role": "container"
+      }
+    ],
+    "component": "Accordion",
+    "content": {
+      "default": {
+        "component": "sb-accordion-item",
+        "multiple": true,
+        "notes": "Two or more sb-accordion-item elements.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-011",
+      "SB-0007",
+      "SB-0009"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "item",
+            "notes": "Light-DOM block with the border; sets data-state to open or closed for its parts.",
+            "parent": null,
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "component": "sb-accordion-trigger, sb-accordion-content",
+            "multiple": true,
+            "notes": "One trigger, then one content.",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Must be a child of sb-accordion.",
+        "props": {
+          "disabled": {
+            "default": false,
+            "note": "Disables this item's trigger.",
+            "reflect": true,
+            "type": "boolean"
+          },
+          "value": {
+            "default": "",
+            "note": "Identifies the item in the accordion value. Must be unique within the accordion.",
+            "reflect": true,
+            "type": "text"
+          }
+        },
+        "summary": "One collapsible section: a trigger and its content, with a bottom border.",
+        "tag": "sb-accordion-item"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "header",
+            "notes": "role=heading with aria-level.",
+            "parent": null,
+            "part": "header",
+            "role": "container"
+          },
+          {
+            "name": "trigger",
+            "notes": "Native <button>.",
+            "parent": "header",
+            "part": "trigger",
+            "role": "control"
+          },
+          {
+            "controlledBy": "label",
+            "name": "label",
+            "parent": "trigger",
+            "part": "label",
+            "role": "text"
+          },
+          {
+            "name": "chevron",
+            "notes": "Lucide chevron-down, decorative; rotates 180 degrees when open.",
+            "parent": "trigger",
+            "part": "chevron",
+            "role": "icon"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Text only; the trigger is already a button.",
+            "required": true
+          }
+        },
+        "events": {
+          "click": {
+            "bubbles": true,
+            "composed": true,
+            "detail": null,
+            "native": true,
+            "note": "Toggles the item."
+          }
+        },
+        "notes": "Must be inside sb-accordion-item.",
+        "props": {
+          "level": {
+            "default": 3,
+            "note": "Heading level of the wrapper (aria-level), 2 to 6. Pick the level that fits the page outline.",
+            "reflect": true,
+            "type": "number"
+          }
+        },
+        "role": "button",
+        "summary": "The heading and button that toggles its item, with a chevron.",
+        "tag": "sb-accordion-trigger"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "content",
+            "notes": "Grid wrapper whose row animates between 0fr and 1fr.",
+            "parent": null,
+            "part": "content",
+            "role": "container"
+          },
+          {
+            "name": "inner",
+            "notes": "Clips the content while it animates.",
+            "parent": "content",
+            "part": "inner",
+            "role": "container"
+          },
+          {
+            "name": "body",
+            "notes": "Holds the bottom padding, so a closed panel collapses to zero height.",
+            "parent": "inner",
+            "part": "body",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Any content.",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Must be inside sb-accordion-item.",
+        "props": {},
+        "role": "region",
+        "summary": "The panel of an item. Its height animates.",
+        "tag": "sb-accordion-content"
+      }
+    ],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "cancelable": false,
+        "composed": true,
+        "detail": "{ value: string[] }",
+        "native": false,
+        "note": "Fires on the sb-accordion host after a person opens or closes an item. detail.value lists the open item values. Not fired for changes made from code. A change from a form control inside the content also bubbles to the host: listen with event.target === host (that one has no detail)."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "A space-separated string in the attribute; the event detail carries a string[].",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "How is value expressed for selection=multiple?",
+        "status": "answered"
+      },
+      {
+        "answer": "All triggers stay in the tab order and arrows add shortcuts (APG accordion); plain focus management, not the roving-focus controller.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Roving tabindex or all triggers in the tab order?",
+        "status": "answered"
+      },
+      {
+        "answer": "A level prop on the trigger (default 3) rendered as role=heading with aria-level.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Heading level?",
+        "status": "answered"
+      },
+      {
+        "answer": "value-change, not change, so native change events from controls inside the content are not confused with it.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Event name?",
+        "status": "answered"
+      },
+      {
+        "answer": "Keep its trigger focusable with aria-disabled=true (APG).",
+        "answeredOn": "2026-11-08",
+        "id": "Q5",
+        "question": "Open item of a non-collapsible single accordion?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "collapsible": {
+        "default": false,
+        "note": "With selection=single, lets the open item be closed. Without it the open item's trigger is aria-disabled so one item always stays open. Ignored for multiple.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "disabled": {
+        "default": false,
+        "note": "Disables every item.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "selection": {
+        "default": "single",
+        "note": "single opens one item at a time; multiple lets any number be open.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "single",
+          "multiple"
+        ]
+      },
+      "value": {
+        "default": "",
+        "note": "The open item value. With selection=multiple, a space-separated list of item values. Updated when a person opens or closes an item.",
+        "reflect": true,
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "accordion.disabled-opacity"
+        ],
+        "trigger": "disabled on the accordion or the item"
+      },
+      "focus-visible": {
+        "tokens": [
+          "accordion.focus-ring.color",
+          "accordion.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on a trigger"
+      },
+      "hover": {
+        "note": "The trigger text is underlined.",
+        "tokens": [],
+        "trigger": "pointer over an enabled trigger"
+      },
+      "open": {
+        "note": "Content height animates; the chevron turns 180 degrees.",
+        "tokens": [
+          "accordion.transition-duration",
+          "accordion.transition-easing"
+        ],
+        "trigger": "item value is in the accordion value"
+      }
+    },
+    "summary": "Sections behind headings: people open only the parts they need, which keeps long pages short. Four custom elements share state through context.",
+    "tag": "sb-accordion",
+    "tokens": {
+      "accordion.border": "{color.border}",
+      "accordion.border-width": "{border-width.default}",
+      "accordion.chevron.color": "{color.muted-foreground}",
+      "accordion.chevron.size": "{size.icon.default}",
+      "accordion.content.line-height": "{font.line-height.control}",
+      "accordion.content.padding-bottom": "{space.inset.md}",
+      "accordion.disabled-opacity": "{opacity.disabled}",
+      "accordion.fg": "{color.foreground}",
+      "accordion.focus-ring.color": "{color.ring}",
+      "accordion.focus-ring.width": "{focus.ring.width}",
+      "accordion.font-family": "{font.family.body}",
+      "accordion.font-size": "{font.size.body}",
+      "accordion.radius": "{radius.control}",
+      "accordion.transition-duration": "{motion.duration.normal}",
+      "accordion.transition-easing": "{motion.easing.enter}",
+      "accordion.trigger.font-weight": "{font.weight.control}",
+      "accordion.trigger.gap": "{space.inset.md}",
+      "accordion.trigger.line-height": "{font.line-height.control}",
+      "accordion.trigger.padding-y": "{space.inset.md}"
+    }
+  },
+  "plan": "# Plan: Accordion (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-accordion`, `-item`, `-trigger`, `-content` following the visual reference: selection single|multiple, collapsible, value, disabled, chevron rotation, animated height, arrow-key navigation between triggers. Out of scope: lazy content, per-item `defaultValue` (use `value`).\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/accordion/Accordion.stories.ts` |\n| 2 | `playwright/tests/accordion/accordion.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/accordion/Accordion.scss` -> `Accordion.styles.ts` (generated, shared) |\n| 4 | `Accordion.ts`, `AccordionItem.ts`, `AccordionTrigger.ts`, `AccordionContent.ts`, `context.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Heading + native button per item; trigger name is its text; `aria-level` follows `level`.\n- single: opening one closes the other; collapsible closes the open one; without it the open trigger is `aria-disabled` and stays open.\n- multiple: several open; `value` is a space-separated list and reflects.\n- `change` detail, bubbles and composed; not fired for programmatic `value`.\n- Arrow Up/Down wrap, Home/End, disabled items skipped; every trigger stays tabbable.\n- `aria-controls` property and panel name from its trigger; panel is a region.\n- Chevron rotates; focus ring keyboard-only; disabled (root and item); transition token and reduced motion.\n- axe in several states.\n\n## Accessibility deviations from the references\n- 3px solid focus ring (the reference's translucent ring is below 3:1, SB-0005).\n- Arrow-key navigation added; Tab order unchanged.\n\n## Open questions (recommendation first)\nAll five answered with the recommendation (see contract.openQuestions): multiple `value` as a space-separated string; all triggers in the tab order; `level` prop; `value-change` event name; aria-disabled on the sole open trigger."
+}

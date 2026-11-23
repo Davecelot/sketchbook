@@ -1,0 +1,553 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "label on sb-command names the search field and the listbox. A group is named by its label. An option is named by its text; the shortcut hint is not part of the name.",
+      "announcements": [
+        "after the search text changes and typing pauses, a polite status announces resultsLabel with the count of visible enabled items, or the sb-command-empty text when nothing matches",
+        "moving the active item is announced by the screen reader through aria-activedescendant (option name, position in set); the arrows skip disabled items, so a disabled option is never active and is not announced as unavailable that way; it is found in browse mode"
+      ],
+      "aria": [
+        "search field: native input with role=combobox, aria-expanded=true (the list is always shown), aria-autocomplete=list, aria-label from label; autocomplete, autocorrect and spellcheck off",
+        "search field to list: aria-controls through the ariaControlsElements property; an element reference from a shadow root to the light DOM above it resolves, an ID would not (SB-0009)",
+        "active item: aria-activedescendant through the ariaActiveDescendantElement property on the search field, pointing at the active sb-command-item host; cleared when no item matches",
+        "list: role=listbox as a host attribute with aria-label copied from label",
+        "group: role=group as a host attribute with aria-label from its label; the visible heading is aria-hidden so it is not read twice",
+        "item: role=option as a host attribute, aria-selected=true only on the active item, aria-disabled=true when disabled",
+        "separator and empty state are role=none inside the listbox (a listbox owns only options and groups); the empty text is announced through the status region",
+        "shortcut hint: aria-hidden; when the app really registers the shortcut, the consumer sets aria-keyshortcuts on the item",
+        "decorative icons in the search field and items are aria-hidden",
+        "filtered-out items, empty groups and separators while searching are hidden from the accessibility tree, not only visually",
+        "references (aria-controls, aria-activedescendant) are re-resolved when items are added, removed or filtered",
+        "forced colors: the active item is Highlight on HighlightText"
+      ],
+      "contrast": [
+        {
+          "bg": "command.bg",
+          "fg": "command.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "command.item.active.bg",
+          "fg": "command.item.active.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "command.bg",
+          "fg": "command.group.heading.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "command.bg",
+          "fg": "command.input.placeholder",
+          "kind": "text"
+        },
+        {
+          "bg": "command.bg",
+          "fg": "command.shortcut.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "command.item.active.bg",
+          "fg": "command.item.active.shortcut-fg",
+          "kind": "text"
+        },
+        {
+          "bg": "command.bg",
+          "fg": "command.item.active.ring-color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": "DOM focus stays in the search field, which shows its caret; the active item shows the accent fill plus a 2px inset ring in command.item.active.ring-color. No ring around the search field (Q4), except with no active item (a search with no match): then the search row shows the same ring (command.item.active.ring-color, command.item.active.ring-width; owner decision, 2026-11-12).",
+      "formAssociation": {
+        "note": "The search field filters the list; its text is not a value to submit, so Command is not a form control (rule form-associated-controls covers controls that stand in for a native form field). PROPOSAL; owner to confirm (Q3).",
+        "value": false
+      },
+      "keyboard": {
+        "ArrowDown": "next enabled visible item becomes active; stops at the last unless loop",
+        "ArrowUp": "previous enabled visible item becomes active; stops at the first unless loop",
+        "End": "moves the caret to the end of the search text",
+        "Enter": "selects the active item (fires sb-select); never submits a surrounding form",
+        "Escape": "not handled, so it reaches the container (a dialog closes)",
+        "Home": "moves the caret to the start of the search text (APG editable combobox), not to the first item",
+        "Printable characters": "edit the search text; the first matching enabled item becomes active",
+        "Tab": "leaves the command; the search field is its only tab stop"
+      },
+      "missingNameWarning": "Console warning, once per sb-command, when label is empty.",
+      "native": "input type=text",
+      "role": "combobox (the search field) controlling a listbox of options, with group for each titled group",
+      "targetSize": "Each item is at least 32px high (20px line plus 6px padding on each side) and spans the list width (WCAG 2.5.8).",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.3",
+        "2.4.7",
+        "2.5.8",
+        "4.1.2",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "One action per item, chosen with sb-select",
+          "pattern": "Buttons, links or other controls inside an item",
+          "why": "An option in a listbox cannot hold interactive content (WAI-ARIA APG Listbox); focus stays in the search field, so the inner control is unreachable by keyboard"
+        }
+      ],
+      "category": "organism",
+      "keywords": [
+        "command",
+        "command palette",
+        "command menu",
+        "search",
+        "quick search",
+        "spotlight",
+        "cmdk",
+        "combobox",
+        "filter list",
+        "jump to"
+      ],
+      "useCases": [
+        {
+          "use": "sb-command inside sb-dialog (the command palette composition), with groups per section",
+          "when": "Site or app search over a known set of pages or actions, opened with a shortcut"
+        },
+        {
+          "use": "sb-command inline, sized by its container",
+          "when": "A filterable list of actions shown in the page"
+        },
+        {
+          "use": "filter=manual and render the matching items on input",
+          "when": "Results come from a server or need a custom ranking"
+        },
+        {
+          "use": "sb-command-shortcut in the item, plus aria-keyshortcuts on the item when the app registers it",
+          "when": "An action that also has a global keyboard shortcut"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "sb-command: surface that stacks the search field and the list, owns the search text, the active item and the filtering, and shares them through context.",
+        "parent": null,
+        "part": "root",
+        "role": "container"
+      },
+      {
+        "name": "status",
+        "notes": "Visually hidden polite live region for the result count.",
+        "parent": "root",
+        "role": "text"
+      }
+    ],
+    "component": "Command",
+    "content": {
+      "default": {
+        "component": "sb-command-input, sb-command-list",
+        "multiple": true,
+        "notes": "One sb-command-input followed by one sb-command-list.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "SB-0007",
+      "SB-0009",
+      "SB-0103"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "input-row",
+            "notes": "Row with the bottom border, the icon and the field.",
+            "parent": null,
+            "part": "input-row",
+            "role": "container"
+          },
+          {
+            "name": "icon",
+            "notes": "Search icon from the icon set, decorative.",
+            "parent": "input-row",
+            "part": "icon",
+            "role": "icon"
+          },
+          {
+            "name": "input",
+            "notes": "Native text input, the only tab stop of the command.",
+            "parent": "input-row",
+            "part": "input",
+            "role": "control"
+          }
+        ],
+        "content": {},
+        "events": {
+          "input": {
+            "bubbles": true,
+            "composed": true,
+            "detail": null,
+            "native": true,
+            "note": "From the native field on every edit; read the search text from the sb-command-input value. With filter=manual this is where the consumer filters."
+          }
+        },
+        "notes": "Must be a direct child of sb-command, before sb-command-list. Delegates focus, so focusing the host (or a dialog's initial focus) lands in the field.",
+        "props": {
+          "placeholder": {
+            "default": "",
+            "note": "Hint shown while the field is empty (\"Search documentation...\"). Not an accessible name.",
+            "type": "text"
+          },
+          "value": {
+            "default": "",
+            "note": "The search text. Setting it from code filters the list as typing does.",
+            "type": "text"
+          }
+        },
+        "role": "combobox",
+        "summary": "The search field: a decorative search icon and a native text input with the combobox role.",
+        "tag": "sb-command-input"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "list",
+            "notes": "Scrolls vertically past its maximum height; never scrolls horizontally.",
+            "parent": null,
+            "part": "list",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "component": "sb-command-empty, sb-command-group, sb-command-item, sb-command-separator",
+            "multiple": true,
+            "notes": "Groups of items (or items directly), separators between groups, one optional empty state.",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Must be a child of sb-command. The active item is scrolled into view (nearest edge).",
+        "props": {},
+        "role": "listbox",
+        "summary": "The scrolling list of groups, items, separators and the empty state.",
+        "tag": "sb-command-list"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "empty",
+            "notes": "Centered text.",
+            "parent": null,
+            "part": "empty",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "notes": "Short text (\"No results found.\").",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Inside sb-command-list. Its text is what the status region announces when nothing matches.",
+        "props": {},
+        "summary": "Text shown only while no item matches the search text.",
+        "tag": "sb-command-empty"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "group",
+            "notes": "Padded container.",
+            "parent": null,
+            "part": "group",
+            "role": "container"
+          },
+          {
+            "controlledBy": "label",
+            "name": "heading",
+            "notes": "Small muted heading; absent when label is empty.",
+            "optional": true,
+            "parent": "group",
+            "part": "heading",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "component": "sb-command-item",
+            "multiple": true,
+            "notes": "Items only.",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Inside sb-command-list. Hidden while none of its items match.",
+        "props": {
+          "label": {
+            "default": "",
+            "note": "Visible heading and accessible name of the group (the section name).",
+            "type": "text"
+          }
+        },
+        "role": "group",
+        "summary": "A titled group of items (a docs section).",
+        "tag": "sb-command-group"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "item",
+            "notes": "Row: optional icon, text, optional shortcut at the end.",
+            "parent": null,
+            "part": "item",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Text, optionally a decorative leading icon and one sb-command-shortcut. No interactive content.",
+            "required": true
+          }
+        },
+        "events": {
+          "sb-select": {
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "detail": "{ value: string }",
+            "native": false,
+            "note": "Fires on the item when a person chooses it (Enter while active, or a click). Listen on sb-command and read event.detail.value (or event.target). Not fired for disabled items or changes made from code."
+          }
+        },
+        "notes": "Inside sb-command-list or an sb-command-group. Never takes DOM focus.",
+        "props": {
+          "disabled": {
+            "default": false,
+            "note": "Cannot become active or be selected; skipped by the arrows.",
+            "reflect": true,
+            "type": "boolean"
+          },
+          "keywords": {
+            "default": "",
+            "note": "Extra space-separated words that also match (synonyms, the section name), never shown.",
+            "proposal": true,
+            "type": "text"
+          },
+          "value": {
+            "default": "",
+            "note": "What the search text is matched against and what sb-select reports. Empty means the item's trimmed text. Unique within the command.",
+            "type": "text"
+          }
+        },
+        "role": "option",
+        "summary": "One option: text, optionally an icon before it and a shortcut hint after it.",
+        "tag": "sb-command-item"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "separator",
+            "notes": "1px line spanning the list.",
+            "parent": null,
+            "part": "separator",
+            "role": "other"
+          }
+        ],
+        "content": {},
+        "events": {},
+        "notes": "Hidden while there is search text (filter=auto), since groups around it may be gone.",
+        "props": {},
+        "summary": "A line between groups.",
+        "tag": "sb-command-separator"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "shortcut",
+            "notes": "Small muted text pushed to the end of the row.",
+            "parent": null,
+            "part": "shortcut",
+            "role": "text"
+          }
+        ],
+        "content": {
+          "default": {
+            "notes": "Key text (\"⌘P\").",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Inside sb-command-item. A hint only: Command does not register the shortcut.",
+        "props": {},
+        "summary": "A keyboard shortcut hint at the end of an item.",
+        "tag": "sb-command-shortcut"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Yes. size.list.max-height (300px) and font.letter-spacing.key (font.letter-spacing.widest, 0.1em; SB-0106, SB-0107) are added; the contract uses them through command.list.max-height and command.shortcut.letter-spacing. No literal.",
+        "answeredOn": "2026-11-12",
+        "id": "Q1",
+        "question": "The list maximum height (300px in the visual reference) and the shortcut letter spacing (widest, 0.1em) have no semantic token. Add size.list.max-height and font.letter-spacing.key (plan.md, Semantic tokens to add)?",
+        "recommendation": "Add both through the foundations flow; until then the list height is a literal with a sketchbook-allow-literal reason and the shortcut uses normal letter spacing.",
+        "status": "answered"
+      },
+      {
+        "answer": "Keep the all-terms substring rule (case and accent insensitive), document order, no ranking; ranking can come later behind filter=manual.",
+        "answeredOn": "2026-11-12",
+        "id": "Q2",
+        "question": "Built-in filtering: every space-separated term of the search text must appear in value or keywords (case and accent insensitive), document order kept. Enough for the docs palette, or rank matches?",
+        "recommendation": "Keep the substring rule and document order; ranking can come later behind filter=manual without an API change.",
+        "status": "answered"
+      },
+      {
+        "answer": "Confirmed: not form-associated, an explicit exception to rule form-associated-controls (the search text is never submitted). A value-picking combobox will be its own, form-associated component. Recorded in SB-0103.",
+        "answeredOn": "2026-11-12",
+        "id": "Q3",
+        "question": "Confirm Command is not form-associated (its search text is never submitted), as an explicit exception to rule form-associated-controls.",
+        "recommendation": "Confirm; a value-picking combobox would be a separate component that is form-associated.",
+        "status": "answered"
+      },
+      {
+        "answer": "Accepted: caret only on the search field, a 2px inset ring on the active item; the a11y-auditor confirms it in the live keyboard pass.",
+        "answeredOn": "2026-11-12",
+        "id": "Q4",
+        "question": "Focus indication: no ring on the search field (caret only, as in the reference), and an added 2px inset ring on the active item so the active item does not rely on a fill below 3:1 (WCAG 1.4.11). Accept?",
+        "recommendation": "Accept; the a11y-auditor confirms in the live keyboard pass.",
+        "status": "answered"
+      },
+      {
+        "answer": "The manual pass is replaced by the automated screen-reader views (SB-0113): playwright/tests/command/__screen-reader__/command-arrow-down.txt and command-filtered.txt, plus the story views in playwright/tests/command/__screen-reader__/stories/.",
+        "answeredOn": "2026-11-12",
+        "id": "Q5",
+        "question": "ariaActiveDescendantElement (element reflection) is how the active item crosses the shadow boundary. Screen-reader announcement must be confirmed by hand (VoiceOver with Safari, NVDA with Chrome and Firefox).",
+        "recommendation": "Run the manual pass before beta; if a reader stays silent, mirror the active item's name into the status region as a fallback.",
+        "status": "answered"
+      },
+      {
+        "answer": "Leave all of them out of 0.1. The site owns the opening shortcut; navigation happens in the sb-select listener.",
+        "answeredOn": "2026-11-12",
+        "id": "Q6",
+        "question": "Deferred: async results with a loading state, nested pages, multi-select, registering global shortcuts (such as Cmd+K to open), item href, a controlled active value, vim-style Ctrl+N/P keys. Leave out of 0.1?",
+        "recommendation": "Leave out; the docs palette needs none. filter=manual already allows async results; navigation happens in the sb-select listener; opening the dialog with a shortcut belongs to the app.",
+        "status": "answered"
+      },
+      {
+        "answer": "Ship with the one grounded anti-pattern; add more as reviews find them.",
+        "answeredOn": "2026-11-12",
+        "id": "Q7",
+        "question": "Anti-patterns: only one is grounded in a source (interactive content in an option, APG Listbox). Any others from the owner?",
+        "recommendation": "Ship with the one; add more as reviews find them.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "filter": {
+        "default": "auto",
+        "note": "auto hides the items that do not match the search text (rule in Usage, Behavior). manual never hides items: the consumer listens to input and renders the matching items itself (remote or custom search).",
+        "proposal": true,
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "auto",
+          "manual"
+        ]
+      },
+      "label": {
+        "default": "",
+        "note": "Accessible name of the search field and of the list (\"Search documentation\"). The placeholder is not a name.",
+        "required": true,
+        "type": "text"
+      },
+      "loop": {
+        "default": false,
+        "note": "Arrow Down on the last item moves to the first, and Arrow Up on the first moves to the last.",
+        "proposal": true,
+        "reflect": true,
+        "type": "boolean"
+      },
+      "resultsLabel": {
+        "attribute": "results-label",
+        "default": "{count} results",
+        "note": "Template for the polite announcement of how many items match after the search text changes; {count} is replaced by the number. Set it to translate the announcement.",
+        "proposal": true,
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "note": "Skipped by the arrows and by hover, not selectable, still matched and announced as unavailable.",
+        "tokens": [
+          "command.item.disabled-opacity"
+        ],
+        "trigger": "disabled on an item"
+      },
+      "selected": {
+        "note": "Active, not chosen: Enter or a click chooses it. The ring is a PROPOSAL so the active item does not rely on a fill below 3:1.",
+        "tokens": [
+          "command.item.active.bg",
+          "command.item.active.fg",
+          "command.item.active.ring-color",
+          "command.item.active.shortcut-fg",
+          "command.item.active.ring-width"
+        ],
+        "trigger": "the item is the active item (moved to by Arrow keys, by pointer hover, or the first match after the search text changes)"
+      }
+    },
+    "summary": "A search field that filters a list of grouped actions or destinations; Arrow Up and Down move the active item and Enter selects it. Used inline or inside a dialog as a command palette. Eight custom elements share state through context.",
+    "tag": "sb-command",
+    "tokens": {
+      "command.bg": "{color.popover}",
+      "command.empty.padding-y": "{space.stack.lg}",
+      "command.fg": "{color.popover-foreground}",
+      "command.font-family": "{font.family.body}",
+      "command.font-size": "{font.size.control}",
+      "command.group.heading.fg": "{color.muted-foreground}",
+      "command.group.heading.font-size": "{font.size.caption}",
+      "command.group.heading.font-weight": "{font.weight.label}",
+      "command.group.heading.padding-x": "{space.inset.sm}",
+      "command.group.heading.padding-y": "{space.stack.xs}",
+      "command.group.padding": "{space.unit}",
+      "command.input.border": "{color.border}",
+      "command.input.border-width": "{border-width.default}",
+      "command.input.gap": "{space.control.gap.default}",
+      "command.input.height": "{size.control.default}",
+      "command.input.icon-fg": "{color.muted-foreground}",
+      "command.input.icon-size": "{size.icon.default}",
+      "command.input.padding-x": "{space.control.padding-x.field}",
+      "command.input.placeholder": "{color.muted-foreground}",
+      "command.item.active.bg": "{color.accent}",
+      "command.item.active.fg": "{color.accent-foreground}",
+      "command.item.active.ring-color": "{color.ring}",
+      "command.item.active.ring-width": "{border-width.indicator}",
+      "command.item.active.shortcut-fg": "{color.accent-foreground}",
+      "command.item.disabled-opacity": "{opacity.disabled}",
+      "command.item.gap": "{space.control.gap.default}",
+      "command.item.icon-fg": "{color.muted-foreground}",
+      "command.item.icon-size": "{size.icon.default}",
+      "command.item.padding-x": "{space.inset.sm}",
+      "command.item.padding-y": "{space.stack.xs}",
+      "command.item.radius": "{radius.small}",
+      "command.line-height": "{font.line-height.control}",
+      "command.list.max-height": "{size.list.max-height}",
+      "command.list.scroll-padding": "{space.unit}",
+      "command.radius": "{radius.control}",
+      "command.separator.color": "{color.border}",
+      "command.separator.width": "{border-width.default}",
+      "command.shortcut.fg": "{color.muted-foreground}",
+      "command.shortcut.font-size": "{font.size.caption}",
+      "command.shortcut.letter-spacing": "{font.letter-spacing.key}"
+    }
+  },
+  "plan": "# Plan: Command (planning gate)\n\nStatus: **approved** (owner answered Q1–Q7, 2026-11-12). Test-first from here. Decisions: SB-0103, SB-0106, SB-0107 (accepted).\n\n## Scope\nIn: the eight elements of the contract (`sb-command`, `-input`, `-list`, `-empty`, `-group`, `-item`, `-separator`, `-shortcut`); built-in filtering (`filter=\"auto\"`) and `filter=\"manual\"`; active item by arrows, hover and first match; `loop`; `sb-select`; result-count announcement (`results-label`); stories inline and inside `sb-dialog` (only if Dialog is built by then, otherwise a native `<dialog>` in the story).\n\nOut (contract Q6): async loading state, nested pages, multi-select, global shortcut registration (Cmd+K), item `href`, a controlled active value, Ctrl+N/P keys, dialog-specific sizing, ranking.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/command/Command.stories.ts` (Default, Groups and shortcuts, Disabled item, Empty, Manual filter, Scrollable, In a dialog, RTL) |\n| 2 | `playwright/tests/command/command.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/command/Command.scss` -> `Command.styles.ts` (generated) |\n| 4 | `src/components/command/context.ts`, `Command.ts`, `CommandInput.ts`, `CommandList.ts`, `CommandEmpty.ts`, `CommandGroup.ts`, `CommandItem.ts`, `CommandSeparator.ts`, `CommandShortcut.ts`, `index.ts` |\n| 5 | `npm run generate` (styles, `src/index.ts`, component tokens), then `contract.json` realizations filled |\n\nOne stylesheet for the family, as Tabs does. No new mixin or controller: `RovingFocusController` moves DOM focus, which this pattern must not do, so the arrow handling (a few lines over the visible enabled items) lives in `sb-command`. Not form-associated (Q3), so no `FormAssociated` mixin.\n\n## Tokens\nAll 40 component tokens alias existing semantic tokens (contract `tokens`); no literal in the CSS. The two that were missing (Q1) are added: `size.list.max-height` (300px, base) behind `command.list.max-height`, and `font.letter-spacing.key` (`font.letter-spacing.widest`, 0.1em, from the tailwind letter-spacing preset, SB-0106/SB-0107) behind `command.shortcut.letter-spacing`.\n\nNo color token is missing (light and dark use popover, accent, muted-foreground, border, ring).\n\n## Accessibility approach\n- Search field: native `<input type=\"text\">` in `sb-command-input`'s shadow root, `delegatesFocus`, `role=\"combobox\"`, `aria-expanded=\"true\"`, `aria-autocomplete=\"list\"`, `aria-label` from `sb-command`'s `label`; autocomplete/autocorrect/spellcheck off.\n- Cross-root references by element reflection, never IDs (SB-0009): `input.ariaControlsElements = [list]`, `input.ariaActiveDescendantElement = activeItem` (light-DOM hosts, reached outward from the shadow root). Re-set on every filter, add or remove.\n- Roles as host attributes: `listbox` (list, `aria-label` = label), `group` (named by its label; visible heading `aria-hidden`), `option` (item, `aria-selected` on the active one, `aria-disabled`). Separator and empty: `role=\"none\"`. Hidden items: `hidden` (out of the a11y tree).\n- Status: visually hidden `role=\"status\"` in `sb-command`'s shadow root, updated after typing pauses (a short debounce in code; the delay is a `PROPOSAL` confirmed in review).\n- Keyboard: ArrowDown/ArrowUp (loop optional), Enter selects and `preventDefault` (no form submit, SB-0009 point 1 in reverse), Home/End left to the field, Escape not handled.\n- Forced colors: active item `Highlight`/`HighlightText`.\n- The manual screen-reader pass (Q5) is replaced by the automated screen-reader views (SB-0113), stored in playwright/tests/command/__screen-reader__/*.txt.\n\n## Test plan (test-first)\nOne test per contract item in `command.behavior.spec.ts`, with the helpers in `playwright/helpers/`; each must fail first (element not defined), recorded before implementing.\n- Props: `label` names the combobox and the listbox; `filter=auto` hides non-matching items, groups and separators and keeps order; accent- and case-insensitive multi-term match against `value` and `keywords`; `filter=manual` hides nothing; `loop` off stops at ends, on wraps; `results-label` template used in the status text; item `value` defaults to trimmed text; `disabled` item skipped by arrows and hover, no `sb-select`.\n- States: first enabled match is active after typing; hover makes active; active item has `aria-selected=true`, accent fill and ring from tokens; disabled opacity from tokens; empty state shown only with zero matches.\n- Keyboard: ArrowDown/ArrowUp; Enter fires `sb-select`; Enter inside a `<form>` does not submit; Home/End move the caret; Escape propagates (a listener on an ancestor sees it); Tab leaves.\n- Events: `sb-select` detail `{ value }`, bubbles, composed, target is the item, not fired from code; native `input` reaches `sb-command`.\n- Accessibility: combobox/listbox/option/group roles in the accessibility snapshot; `ariaActiveDescendantElement` and `ariaControlsElements` point at the right elements after filtering; status text after typing pauses (count, then empty text); shortcut not in the option name; console warning without `label`; forced colors; axe clean on every story; inside a dialog, opening focuses the search field.\n- RTL story: layout mirrors (shortcut at the inline end).\n\n## Risks\n- Element-reflection `aria-activedescendant` support and announcement differ across browser and screen-reader pairs (Q5); Playwright only proves the property, not speech.\n- Keeping references and the status in sync with light-DOM changes (items added by a manual filter) needs a slot-change/mutation path; tested with the manual-filter story.\n- `role` attributes on hosts nested in custom elements: axe must see option ownership through `sb-command-group`; Tabs hit a similar ownership issue (tabindex on the host).\n- Dialog is being authored at the same time; the dialog story waits for it or uses a native `<dialog>`.\n\n## Answers (owner, 2026-11-12)\n- Q1 Tokens: **added** (`size.list.max-height`, `font.letter-spacing.key`).\n- Q2 Filter rule: **all-terms substring, case/accent-insensitive, document order**; ranking later behind `filter=manual`.\n- Q3 **Not form-associated**, an explicit exception to rule form-associated-controls (SB-0103).\n- Q4 **Caret-only field, inset ring on the active item.**\n- Q5 **Manual screen-reader pass** is replaced by the automated screen-reader views (SB-0113), stored in playwright/tests/command/__screen-reader__/*.txt; fallback is mirroring the active name into the status region.\n- Q6 Deferred features **left out of 0.1** (list in Scope).\n- Q7 **One anti-pattern** (APG Listbox).\n\n## Documentation (check M1 and the plan's definition of done)\nBefore beta: `site/_examples/command.html` (curated example; the page comes from `npm run docs:components`), batch in `spec/design-docs.json`, design library (`sync library command`, verify, realize), doc page stamped `checked`, parity audit, catalog rebuilt."
+}

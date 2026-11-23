@@ -26,6 +26,8 @@ Run `sketchbook check` for the project checks or use `--only <ids>` with a comma
 | C1 | Contracts are valid and match the registry |
 | C2 | Contract token references point at real tokens |
 | C3 | Code matches its contract: props, parts, slots, events |
+| C4 | Required plans have a record, and approvals still cover the current contract and plan (`sketchbook approve`) |
+| C5 | Red and green evidence use the same behavior spec and test setup; `ready` requires current green evidence for work tracked test-first (`sketchbook evidence`) |
 | A1 | Contracts use the API vocabulary in `spec/api.json` |
 | R1 | Registry statuses are backed by evidence (see [Contract format](/reference/contract-format/)) |
 | P1 | Component sources use the configured prefix |

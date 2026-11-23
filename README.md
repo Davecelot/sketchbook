@@ -13,7 +13,7 @@ Choose a starter, change the sources your team owns, and use the Sketchbook CLI 
 [![npm version](https://img.shields.io/npm/v/@usesketchbook/cli?style=flat-square&labelColor=555)](https://www.npmjs.com/package/@usesketchbook/cli?activeTab=readme)
 ![license](https://img.shields.io/badge/license-MIT-6aa84f?style=flat-square&labelColor=555)
 ![process](https://img.shields.io/badge/process-contract--first%20%C2%B7%20test--first-e69138?style=flat-square&labelColor=555)
-![checks](https://img.shields.io/badge/checks-26%20deterministic-3d85c6?style=flat-square&labelColor=555)
+![checks](https://img.shields.io/badge/checks-28%20deterministic-3d85c6?style=flat-square&labelColor=555)
 ![claude layer](https://img.shields.io/badge/claude%20layer-13%20skills%20%C2%B7%208%20rules-c27ba0?style=flat-square&labelColor=555)
 ![accessibility](https://img.shields.io/badge/accessibility-WCAG%202.2%20AA-8e7cc3?style=flat-square&labelColor=555)
 ![default output](https://img.shields.io/badge/default%20output-Web%20Components-d9683f?style=flat-square&labelColor=555)
@@ -32,7 +32,7 @@ Sketchbook gives your team a workflow for building and maintaining a design syst
 | --- | --- |
 | **Sources of truth** | Brand config, semantic tokens, one contract per component, a decision log. You edit these. |
 | **Generators** | Rebuild foundation tokens, CSS, component styles, Storybook and the Figma file from the sources. |
-| **Checks** | 26 deterministic checks (including one maintainer-only check): tokens, contrast, contracts, drift, white-label, decisions and more. |
+| **Checks** | 28 deterministic checks (including one maintainer-only check): tokens, contrast, contracts, drift, white-label, decisions and more. |
 | **Gates** | A new component stops at a planning gate, is built test-first, and is reviewed before it leaves beta. |
 | **Agent guidance** | Portable project instructions and task workflows, plus the existing Claude Code rules, skills, commands and hooks. |
 | **Outputs** | Tokens, a Web Components library, 8 page templates, Storybook, a Figma file and docs. The default library follows [shadcn/ui](https://ui.shadcn.com) and is a starting point you can edit or replace. |
@@ -68,7 +68,7 @@ Edit the source that owns the change, then rebuild. If a check finds drift, its 
 ```mermaid
 flowchart LR
   S["Edit a source<br/>brand · tokens · contract · decision"] --> G["Rebuild<br/>generators"]
-  G --> K{"26 checks<br/>+ guard hooks"}
+  G --> K{"28 checks<br/>+ guard hooks"}
   K -- fail --> S
   K -- pass --> O["Outputs<br/>CSS · components · Storybook · Figma · docs"]
 ```
@@ -77,10 +77,10 @@ Use this workflow to design a new component when the planning and test-first gat
 
 1. **Contract.** `contract.json` and `contract.md` describe the API, tokens and accessibility. `npm run check` must pass.
 2. **Plan.** `plan.md` states scope, files, tokens, accessibility approach, test plan and open questions.
-3. **Approval.** Work stops here. Code starts only after a person approves the plan.
-4. **Tests first.** Stories and a behavior spec (Playwright and axe) are written from the contract and seen failing.
+3. **Approval.** A person reviews the contract and plan and records approval with `npm run sketchbook -- approve <name> --by <person>`. Check C4 verifies that the approval still covers the current scope.
+4. **Tests first.** Write stories and a behavior spec from the contract. Run `npm run sketchbook -- evidence red <name>` and confirm the tests fail for the intended reason.
 5. **Implement** the smallest code that passes, using only the component's own tokens.
-6. **Gates.** Checks, typecheck and tests pass, then a multi-lens review before the component moves to `beta`.
+6. **Verify and review.** Record `npm run sketchbook -- evidence green <name>` with the same spec and test setup. Run checks and typecheck, review the component, then run `npm run sketchbook -- evidence ready <name>` before it moves to `beta`.
 
 **Checks and hooks have different scopes.** The configured Git commit gate runs deterministic checks. Claude Code hooks can block edits to generated files and accepted decisions; Gemini CLI and Copilot have adapters for specific native edit tools. Hook activation, trust and tool coverage vary by client. The Claude layer also loads task-specific rules by `paths:` (SB-0114). See the [compatibility map](./docs/agent-compatibility.md) for current coverage and limitations.
 
@@ -137,7 +137,7 @@ Dark mode follows `prefers-color-scheme`, or set `data-theme="dark"` on `<html>`
 | --- | --- |
 | **Agree on the component before building** | Contract, plan, approval, tests, checks and review, documented for contributors and agents. |
 | **Agent guidance** | Shared instructions describe the process; client-specific hooks and deterministic checks provide additional safeguards. |
-| **Run checks locally** | 26 deterministic checks cost no model spend and can each fail. |
+| **Run checks locally** | 28 deterministic checks cost no model spend and can each fail. |
 | **Rebuild from shared sources** | Code, Storybook, CSS variables and Figma stay in step because they come from the same files. |
 | **Every foundation is yours** | 19 foundation families with 63 cited presets, or your own values, in one config. |
 | **Start where you are** | Seven starters, from blank to an existing codebase. |

@@ -1,0 +1,390 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "The label prop, through a native <label for> in the same shadow root.",
+      "announcements": [
+        "error text is announced once when it appears (persistent aria-live=polite region)"
+      ],
+      "aria": [
+        "aria-describedby -> description and error ids (same root)",
+        "aria-invalid=\"true\" when invalid",
+        "required: native required on the select; the asterisk is aria-hidden",
+        "errorMessage: sets a customError validity, so the form blocks submission",
+        "the chevron is aria-hidden"
+      ],
+      "contrast": [
+        {
+          "bg": "native-select.bg",
+          "fg": "native-select.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "native-select.option.bg",
+          "fg": "native-select.option.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "native-select.label.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "native-select.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "native-select.error.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "native-select.bg",
+          "fg": "native-select.border",
+          "kind": "ui"
+        },
+        {
+          "bg": "native-select.bg",
+          "fg": "native-select.border-invalid",
+          "kind": "ui"
+        },
+        {
+          "bg": "native-select.bg",
+          "fg": "native-select.icon.fg",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "native-select.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": "On keyboard focus of the select; 3px ring in native-select.focus-ring.color.",
+      "formAssociation": {
+        "note": "ElementInternals: setFormValue(value), validity mirrored from the inner select (required -> valueMissing) with setValidity, formResetCallback restores the default selection, disabled is not submitted.",
+        "value": true
+      },
+      "keyboard": {
+        "ArrowUp / ArrowDown": "change or move through options (platform behavior)",
+        "Space / Enter / Alt+ArrowDown": "open the native popup (platform behavior)",
+        "Tab": "move focus in and out",
+        "typing": "jump to the option starting with the typed text"
+      },
+      "missingNameWarning": "Dev-only console warning, once, when label is empty.",
+      "native": "select",
+      "role": "combobox (a native single-selection <select>; listbox when size > 1)",
+      "targetSize": "36px high (small 32px), full width.",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.6",
+        "2.4.7",
+        "3.3.1",
+        "3.3.2",
+        "4.1.2",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "A custom Select (later)",
+          "pattern": "Options with rich content (icons, descriptions)",
+          "why": "Native options are plain text"
+        },
+        {
+          "alternative": "Radio Group",
+          "pattern": "Few options (2 to 4) where all should be visible",
+          "why": "A closed select hides the choices"
+        },
+        {
+          "alternative": "A first prompt option with an empty value (\"Select…\") plus required",
+          "pattern": "A prompt option with a real value",
+          "why": "It is submitted as a valid choice"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "select",
+        "native select",
+        "dropdown",
+        "option",
+        "choose",
+        "form"
+      ],
+      "useCases": [
+        {
+          "use": "sb-native-select with plain <option> children",
+          "when": "Choose one value from a known list, especially on mobile or in a long form"
+        },
+        {
+          "use": "<optgroup label>",
+          "when": "Options fall into named sets"
+        },
+        {
+          "use": "required with a first <option value=\"\"> prompt",
+          "when": "A value must be picked before submit"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "field",
+        "notes": "Vertical stack with the field gap.",
+        "parent": null,
+        "part": "field",
+        "role": "container"
+      },
+      {
+        "controlledBy": "label",
+        "name": "label",
+        "notes": "Native <label for> in the same shadow root.",
+        "parent": "field",
+        "part": "label",
+        "role": "text"
+      },
+      {
+        "controlledBy": "required",
+        "name": "required-indicator",
+        "notes": "Asterisk, aria-hidden.",
+        "optional": true,
+        "parent": "label",
+        "part": "required-indicator",
+        "role": "text"
+      },
+      {
+        "name": "control",
+        "notes": "Positions the chevron over the select.",
+        "parent": "field",
+        "part": "control",
+        "role": "container"
+      },
+      {
+        "name": "select",
+        "notes": "Native <select>, appearance none; its <option> and <optgroup> children mirror the host's light-DOM ones.",
+        "parent": "control",
+        "part": "select",
+        "role": "control"
+      },
+      {
+        "name": "icon",
+        "notes": "Chevron down, decorative, ignores pointer.",
+        "parent": "control",
+        "part": "icon",
+        "role": "icon"
+      },
+      {
+        "controlledBy": "description",
+        "name": "description",
+        "optional": true,
+        "parent": "field",
+        "part": "description",
+        "role": "text"
+      },
+      {
+        "controlledBy": "errorMessage",
+        "name": "error",
+        "notes": "Persistent polite live region; text appears when invalid.",
+        "optional": true,
+        "parent": "field",
+        "part": "error",
+        "role": "text"
+      }
+    ],
+    "component": "NativeSelect",
+    "content": {},
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-005",
+      "D-011",
+      "D-016",
+      "D-024",
+      "D-025",
+      "D-027"
+    ],
+    "dependsOn": [],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": false,
+        "note": "Selection committed. Re-dispatched from the host because native change is not composed (NativeControl)."
+      },
+      "input": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": true,
+        "note": "Each selection change. Native and composed, so it crosses the shadow boundary."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "Yes: the native select keeps its platform keyboard model; label above like Input.",
+        "answeredOn": "2026-11-08",
+        "id": "Q0",
+        "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+        "status": "answered"
+      },
+      {
+        "answer": "Plain light-DOM <option> and <optgroup> children, mirrored into the shadow <select> by a MutationObserver. Simplest and most robust: no extra elements or contexts, authors keep native markup, and a native <option> never needs to render itself. The children are not slotted (they stay unrendered);",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Separate sb-native-select-option and sb-native-select-optgroup elements, or plain light-DOM children?",
+        "status": "answered"
+      },
+      {
+        "answer": "The value attribute if set, else the option with the selected attribute, else the first option, like a native select. Form reset restores it.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Which option is selected by default?",
+        "status": "answered"
+      },
+      {
+        "answer": "medium (36px) and small (32px).",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Sizes?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "description": {
+        "default": "",
+        "note": "Help text under the field.",
+        "type": "text"
+      },
+      "disabled": {
+        "default": false,
+        "note": "Native disabled; dimmed; not submitted.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "errorMessage": {
+        "attribute": "error-message",
+        "default": "",
+        "note": "Error message. Setting it marks the field invalid.",
+        "type": "text"
+      },
+      "hideLabel": {
+        "attribute": "hide-label",
+        "default": false,
+        "note": "Visually hides the label; it stays the accessible name.",
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "note": "Visible label and accessible name. Required: shadow DOM keeps external <label for> from reaching the inner select.",
+        "required": true,
+        "type": "text"
+      },
+      "name": {
+        "default": "",
+        "note": "Form field name.",
+        "type": "text"
+      },
+      "required": {
+        "default": false,
+        "note": "Native required: the selected option must have a non-empty value. Adds an aria-hidden asterisk after the label.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "medium",
+        "note": "Control height: medium 36px, small 32px.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "medium",
+          "small"
+        ]
+      },
+      "value": {
+        "default": "",
+        "note": "Value of the selected option; submitted with the form. Without it, the option marked selected (else the first option) is the default restored by form reset.",
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "native-select.disabled-opacity"
+        ],
+        "trigger": "disabled attribute"
+      },
+      "error": {
+        "tokens": [
+          "native-select.border-invalid",
+          "native-select.error.fg"
+        ],
+        "trigger": "error-message set, or native validity fails after blur or a submit attempt"
+      },
+      "focus-visible": {
+        "borderColor": "native-select.focus-ring.color",
+        "note": "3px solid ring and border in ring color (a translucent ring would fall under 3:1).",
+        "tokens": [
+          "native-select.focus-ring.color",
+          "native-select.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on the select"
+      },
+      "hover": {
+        "tokens": [],
+        "trigger": "pointer over an enabled select"
+      }
+    },
+    "summary": "A native select with label, description and error built in, taking part in forms. Options are plain <option> and <optgroup> children.",
+    "tag": "sb-native-select",
+    "tokens": {
+      "native-select.bg": "{color.input-background}",
+      "native-select.border": "{color.input}",
+      "native-select.border-invalid": "{color.destructive}",
+      "native-select.border-width": "{border-width.default}",
+      "native-select.description.fg": "{color.muted-foreground}",
+      "native-select.description.font-size": "{font.size.body}",
+      "native-select.description.line-height": "{font.line-height.body}",
+      "native-select.disabled-opacity": "{opacity.disabled}",
+      "native-select.error.fg": "{color.destructive}",
+      "native-select.fg": "{color.foreground}",
+      "native-select.focus-ring.color": "{color.ring}",
+      "native-select.focus-ring.width": "{focus.ring.width}",
+      "native-select.font-family": "{font.family.body}",
+      "native-select.font-size": "{font.size.control}",
+      "native-select.gap": "{space.field.gap}",
+      "native-select.height": "{size.control.default}",
+      "native-select.height-sm": "{size.control.sm}",
+      "native-select.icon.fg": "{color.muted-foreground}",
+      "native-select.icon.size": "{size.icon.default}",
+      "native-select.label.fg": "{color.foreground}",
+      "native-select.label.font-size": "{font.size.control}",
+      "native-select.label.font-weight": "{font.weight.label}",
+      "native-select.label.line-height": "{font.line-height.label}",
+      "native-select.line-height": "{font.line-height.control}",
+      "native-select.option.bg": "{color.popover}",
+      "native-select.option.fg": "{color.popover-foreground}",
+      "native-select.padding-x": "{space.control.padding-x.field}",
+      "native-select.padding-y": "{space.control.padding-y.field}",
+      "native-select.radius": "{radius.control}",
+      "native-select.shadow": "{elevation.xs}",
+      "native-select.transition-duration": "{motion.duration.fast}",
+      "native-select.transition-easing": "{motion.easing.standard}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "size": [
+          "medium",
+          "small"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Native Select (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-native-select`: a native `<select>` in the shadow root with the Field layout (label, description, error), sizes default and sm, chevron icon. Options come from plain light-DOM `<option>` and `<optgroup>` children, mirrored by a MutationObserver. Form-associated.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/native-select/NativeSelect.stories.ts` |\n| 2 | `playwright/tests/native-select/native-select.behavior.spec.ts` (first, must fail) |\n| 3 | `src/components/native-select/NativeSelect.scss` -> `NativeSelect.styles.ts` |\n| 4 | `src/components/native-select/NativeSelect.ts`, `index.ts` |\n\n## Test plan\nName and label click focus, options and optgroups mirrored (and updated when children change), default selection rules, change/input composed, typing selects an option, sizes, focus ring, required/error validity, form value, reset, disabled, disabled fieldset, label for, axe.\n\n## Accessibility deviations\n- From the visual reference: border 3:1, solid focus ring.\n\n## Open questions (recommendation first)\n- Option elements: separate custom elements or plain children? Plain light-DOM children mirrored into the shadow select (recorded in contract Q1).\n- Semantic tokens: none added."
+}

@@ -1,0 +1,311 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "Host aria-label is forwarded to the radiogroup; otherwise name it with a visible legend in a sb-field-set. Each item is named by its label.",
+      "announcements": [],
+      "aria": [
+        "group: role=\"radiogroup\" with the forwarded aria-label and aria-required when required",
+        "items: native input type=radio, each with aria-posinset and aria-setsize so the set reads as N of M although every radio lives in its own shadow root",
+        "roving tab stop: one item has tabindex 0, the rest -1; selection follows focus",
+        "disabled items are skipped by the arrows and are not focusable"
+      ],
+      "contrast": [
+        {
+          "bg": "radio-group.bg",
+          "fg": "radio-group.border",
+          "kind": "ui"
+        },
+        {
+          "bg": "radio-group.bg",
+          "fg": "radio-group.dot",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "radio-group.label.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "radio-group.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible on the native radio; 3px solid ring in radio-group.focus-ring.color.",
+      "formAssociation": {
+        "note": "The group is the form field (FormAssociated mixin): name, value, required, disabled. formValue is the selected value or null; form reset restores the initial value attribute; the validity anchor is the first enabled item's native radio, so reportValidity() focuses it. Items are not form-associated: native radios in separate shadow roots cannot form a native group, so the group owns exclusivity, the tab stop and arrow keys.",
+        "value": true
+      },
+      "keyboard": {
+        "ArrowDown": "next item and select it (wraps)",
+        "ArrowLeft": "previous item and select it (next in RTL)",
+        "ArrowRight": "next item and select it (previous in RTL)",
+        "ArrowUp": "previous item and select it (wraps)",
+        "End": "last enabled item, selected",
+        "Enter": "submits the form (implicit submission; the control has no form owner in its shadow root, SB-0009)",
+        "Home": "first enabled item, selected",
+        "Space": "select the focused item",
+        "Tab": "enters the group on the selected item, else the first enabled one; leaves on the next Tab"
+      },
+      "missingNameWarning": "Console warning, once per item (in every build), when the item has no label; and once per group when the group has no aria-label (a name from an outer legend is not detected).",
+      "native": "input[type=radio]",
+      "role": "radiogroup",
+      "targetSize": "The 16px control and its label (a 20px row) form one clickable target; the 12px vertical (24px horizontal) gap between items satisfies the WCAG 2.5.8 spacing exception.",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.7",
+        "2.5.8",
+        "3.3.2",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "sb-native-select",
+          "pattern": "Radio group for more than about 7 options",
+          "why": "Scanning all options is slow"
+        },
+        {
+          "alternative": "sb-checkbox or sb-switch",
+          "pattern": "Radio group for an on/off choice",
+          "why": "One checkbox or switch says it in one control"
+        },
+        {
+          "alternative": "Set label on every sb-radio-group-item",
+          "pattern": "Items without labels",
+          "why": "The radios have no accessible name"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "radio",
+        "radio group",
+        "single choice",
+        "option",
+        "single-choice"
+      ],
+      "useCases": [
+        {
+          "use": "sb-radio-group with sb-radio-group-item children",
+          "when": "Pick exactly one of a few options, all visible"
+        },
+        {
+          "use": "name and required on sb-radio-group",
+          "when": "A required choice submitted with a form"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "group",
+        "notes": "div role=radiogroup in the shadow root; named by the host's aria-label.",
+        "parent": null,
+        "part": "group",
+        "role": "container"
+      }
+    ],
+    "component": "RadioGroup",
+    "content": {
+      "default": {
+        "component": "sb-radio-group-item",
+        "multiple": true,
+        "notes": "The items. Their order is the arrow-key order.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-011",
+      "SB-0007",
+      "SB-0009",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "root",
+            "notes": "The <label> row: clicking the label text selects the item.",
+            "parent": null,
+            "part": "root",
+            "role": "container"
+          },
+          {
+            "name": "control",
+            "notes": "Native <input type=radio> in the shadow root, a group of one; checked, tab stop and posinset come from the group.",
+            "parent": "root",
+            "part": "control",
+            "role": "control"
+          },
+          {
+            "controlledBy": "label",
+            "name": "label",
+            "parent": "root",
+            "part": "label",
+            "role": "text"
+          }
+        ],
+        "notes": "Must be a direct child of sb-radio-group.",
+        "props": {
+          "disabled": {
+            "default": false,
+            "note": "Disables this item only; it is skipped by the arrows.",
+            "reflect": true,
+            "type": "boolean"
+          },
+          "label": {
+            "default": "",
+            "note": "Visible label next to the control; names the radio.",
+            "reflect": true,
+            "type": "text"
+          },
+          "value": {
+            "default": null,
+            "note": "Submitted as the group's value when selected.",
+            "required": true,
+            "type": "text"
+          }
+        },
+        "role": "radio",
+        "summary": "One radio button of a sb-radio-group, with its label. The group owns its checked state.",
+        "tag": "sb-radio-group-item"
+      }
+    ],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "composed": true,
+        "detail": "{ value: string }",
+        "note": "Fired once after a person selects an item (click, label, Space or arrow key). Not fired when value is set from code or by form reset."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "Native inputs, driven by the group.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Native inputs or role=radio buttons for the items?",
+        "recommendation": "Native input type=radio in each item (native first). Radios in separate shadow roots cannot form a native group, so each is a group of one and the group sets checked, tabindex, aria-posinset and aria-setsize; the accessibility tree then shows a radiogroup of N radios.",
+        "status": "answered"
+      },
+      {
+        "answer": "The group is form-associated; items are not.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Where does form association live?",
+        "recommendation": "On the group (name, value, required, disabled), like a native radio group is one field. Items are plain elements.",
+        "status": "answered"
+      },
+      {
+        "answer": "Group valueMissing; aria-required on the radiogroup.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "How is required reported?",
+        "recommendation": "Group-level valueMissing with the browser's own message (read from an unattached required radio), anchored to the first enabled item's radio; aria-required on the radiogroup instead of required on every inner radio.",
+        "status": "answered"
+      },
+      {
+        "answer": "label prop.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Item label: slot or prop?",
+        "recommendation": "label prop, as Input and Checkbox have. Rich labels are not needed yet.",
+        "status": "answered"
+      },
+      {
+        "answer": "Not in this component.",
+        "answeredOn": "2026-11-08",
+        "id": "Q5",
+        "question": "Invalid styling and an error prop?",
+        "recommendation": "Out of scope here; Field's sb-field-error carries error text. The browser's validity bubble covers required.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "disabled": {
+        "default": false,
+        "note": "Disables every item; the group is not submitted.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "name": {
+        "default": "",
+        "note": "Form field name. The group submits the selected item's value under it.",
+        "reflect": true,
+        "type": "text"
+      },
+      "orientation": {
+        "default": "vertical",
+        "note": "Layout only; every arrow key moves in both orientations, as in a native radio group.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "vertical",
+          "horizontal"
+        ]
+      },
+      "required": {
+        "default": false,
+        "note": "A selection is required: valueMissing while none is selected; aria-required on the radiogroup.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "value": {
+        "default": null,
+        "note": "Value of the selected item; null when none is selected. The initial attribute is the reset value.",
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "radio-group.disabled-opacity"
+        ],
+        "trigger": "disabled attribute or <fieldset disabled>"
+      },
+      "focus-visible": {
+        "note": "Ring around the focused control (the selected item is the tab stop).",
+        "tokens": [
+          "radio-group.focus-ring.color",
+          "radio-group.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on a radio"
+      }
+    },
+    "summary": "Mutually exclusive choices shown all at once: picking one clears the others, and the group is the form field (Web Components).",
+    "tag": "sb-radio-group",
+    "tokens": {
+      "radio-group.bg": "{color.input-background}",
+      "radio-group.border": "{color.input}",
+      "radio-group.border-width": "{border-width.default}",
+      "radio-group.disabled-opacity": "{opacity.disabled}",
+      "radio-group.dot": "{color.primary}",
+      "radio-group.focus-ring.color": "{color.ring}",
+      "radio-group.focus-ring.width": "{focus.ring.width}",
+      "radio-group.gap": "{space.stack.md}",
+      "radio-group.gap-horizontal": "{space.stack.lg}",
+      "radio-group.item-gap": "{space.control.gap.default}",
+      "radio-group.label.fg": "{color.foreground}",
+      "radio-group.label.font-family": "{font.family.body}",
+      "radio-group.label.font-size": "{font.size.control}",
+      "radio-group.label.font-weight": "{font.weight.label}",
+      "radio-group.label.line-height": "{font.line-height.control}",
+      "radio-group.radius": "{radius.pill}",
+      "radio-group.shadow": "{elevation.xs}",
+      "radio-group.size": "{size.icon.default}",
+      "radio-group.transition-duration": "{motion.duration.fast}",
+      "radio-group.transition-easing": "{motion.easing.standard}"
+    }
+  },
+  "plan": "# Plan: Radio Group (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-radio-group` (form-associated: name, value, required, disabled, orientation) and `sb-radio-group-item` (value, label, disabled). Group owns exclusivity, the roving tab stop (`src/controllers/roving-focus.ts`, selection follows focus), posinset/setsize and form validity. State shared with `@lit/context`.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/radio-group/RadioGroup.stories.ts` |\n| 2 | `playwright/tests/radio-group/radio-group.behavior.spec.ts` (written first, must fail) |\n| 3 | `RadioGroup.scss` -> `RadioGroup.styles.ts` (generated; one sheet for both elements) |\n| 4 | `RadioGroup.ts`, `RadioGroupItem.ts`, `context.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Accessibility tree: radiogroup with the aria-label, N radios named by label, checked state, posinset/setsize.\n- Selection by click, label click and Space; one checked at a time; `change` composed once with `detail.value`; none for code updates.\n- Roving: tab stop on selected else first; arrows (four directions) select and wrap; RTL; Home/End; disabled skipped; Tab leaves the group.\n- Forms: FormData name/value, nothing when none, `form.reset()` to the initial value, `<fieldset disabled>` and re-enable, `required` valueMissing and message, `reportValidity()` focuses the first radio, `<label for>` activation.\n- Disabled group and item; horizontal layout; tokens (dot, border); focus ring keyboard-only; axe.\n\n## Accessibility deviations from the references\n- Items are native radios that are each a group of one; aria-posinset/setsize restore the set size (the reference implementation does the same).\n- `aria-required` on the radiogroup instead of `required` on every inner radio (a common member-level pattern).\n- Solid 3px focus ring instead of the visual reference's translucent ring.\n\n## Open questions (recommendation first)\n- Q1 native inputs: yes. Q2 group form-associated: yes. Q3 required: group valueMissing. Q4 label prop. Q5 no invalid styling. All answered."
+}

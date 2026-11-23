@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:01956ae55ad46c810b3ee37ebc1c1ff3fbe43ceb7193c76eed8592d2ec2e3db2
+approved-plan: sha256:eec45a6e2d62ef2689fff88c8f9a7b8daa9d63ac9e034c2e15a72712d95c0eac
+---
+
 # Plan: Kbd (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

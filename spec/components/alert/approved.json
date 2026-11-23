@@ -1,0 +1,218 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "None needed: the content is the message.",
+      "announcements": [
+        "role=alert (danger): assertive; announced when inserted with content or when its content changes",
+        "role=status (neutral): polite; only changes to a live region that already exists are reliably announced, so insert the empty sb-alert first and add the message afterwards, or render it with the page when it needs no announcement"
+      ],
+      "aria": [
+        "host role is set before the first render: status for feedback=neutral, alert for feedback=danger, and follows feedback while the author has not set a role",
+        "an authored role attribute is never overwritten",
+        "icon is decorative: authors mark it aria-hidden",
+        "sb-alert-title is a plain block, not a heading; use a real heading element inside it when the alert belongs in the document outline",
+        "data-has-icon and data-has-action are presentation-only host attributes set from slotchange"
+      ],
+      "contrast": [
+        {
+          "bg": "alert.bg",
+          "fg": "alert.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "alert.bg",
+          "fg": "alert.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "alert.bg",
+          "fg": "alert.destructive.fg",
+          "kind": "text"
+        }
+      ],
+      "keyboard": {},
+      "role": "status (feedback=neutral) or alert (feedback=danger); an explicit role attribute on the host wins",
+      "targetSize": "An action control inside follows its own component (at least 24px).",
+      "wcag": [
+        "1.3.1",
+        "1.4.1",
+        "1.4.3",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Plain text, or feedback=neutral which is polite",
+          "pattern": "Using alert for every inline note",
+          "why": "Assertive live regions interrupt screen-reader users"
+        },
+        {
+          "alternative": "Insert it empty, then add the text",
+          "pattern": "Inserting a status alert already filled and expecting it to be announced",
+          "why": "Live regions announce changes to a region that already exists"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "alert",
+        "callout",
+        "message",
+        "banner",
+        "notice",
+        "error",
+        "status"
+      ],
+      "useCases": [
+        {
+          "use": "sb-alert with a title and description",
+          "when": "Tell the user something important that stays on screen"
+        },
+        {
+          "use": "feedback=danger (role=alert)",
+          "when": "An error that needs attention now"
+        },
+        {
+          "use": "sb-alert-action with a sb-button",
+          "when": "The message can be dismissed or acted on"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "The host is the callout (border, radius, grid). Its parts are child elements.",
+        "parent": null,
+        "role": "container"
+      },
+      {
+        "controlledBy": "icon",
+        "name": "icon",
+        "notes": "Decorative 16px icon in the first column.",
+        "optional": true,
+        "parent": "root",
+        "role": "icon"
+      }
+    ],
+    "component": "Alert",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "sb-alert-title, sb-alert-description and an optional sb-alert-action.",
+        "required": false
+      },
+      "icon": {
+        "multiple": false,
+        "notes": "Optional decorative icon (svg), 16px. Mark it aria-hidden.",
+        "required": false
+      }
+    },
+    "decisions": [
+      "SB-0007",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Short title.",
+            "required": false
+          }
+        },
+        "summary": "The alert's headline, in medium weight.",
+        "tag": "sb-alert-title"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Description text or paragraphs.",
+            "required": false
+          }
+        },
+        "summary": "Supporting text. Muted when neutral, in the alert color when danger.",
+        "tag": "sb-alert-description"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "A control such as sb-button.",
+            "required": false
+          }
+        },
+        "summary": "An action (button or link) placed at the end of the alert, spanning title and description.",
+        "tag": "sb-alert-action"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Default is role=status, destructive is role=alert; authored role wins.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "role=alert for every variant (visual reference) or role=status for the default variant?",
+        "recommendation": "status for default (polite), alert for destructive (assertive). An authored role wins. Document that live regions must exist before their content changes.",
+        "status": "answered"
+      },
+      {
+        "answer": "Dropped; logged as drift.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Title line-clamp-1 and the description's destructive/90 color?",
+        "recommendation": "Drop both: truncating a title hides content (WCAG 1.4.10) and 90% destructive text risks 4.5:1.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "feedback": {
+        "default": "neutral",
+        "note": "neutral: card colors, announced politely (role=status). danger: error colors, announced assertively (role=alert).",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "neutral",
+          "danger"
+        ]
+      }
+    },
+    "states": {},
+    "summary": "A static message box for news people should notice without being interrupted: optional icon, title, description and action (a family of Web Components).",
+    "tag": "sb-alert",
+    "tokens": {
+      "alert.bg": "{color.card}",
+      "alert.border": "{color.border}",
+      "alert.border-width": "{border-width.default}",
+      "alert.column-gap": "{space.stack.md}",
+      "alert.description.fg": "{color.muted-foreground}",
+      "alert.description.gap": "{space.stack.tight}",
+      "alert.destructive.fg": "{color.destructive}",
+      "alert.fg": "{color.card-foreground}",
+      "alert.font-family": "{font.family.body}",
+      "alert.font-size": "{font.size.body}",
+      "alert.icon-offset": "{space.stack.2xs}",
+      "alert.icon-size": "{size.icon.default}",
+      "alert.line-height": "{font.line-height.control}",
+      "alert.padding-x": "{space.stack.loose}",
+      "alert.padding-y": "{space.stack.md}",
+      "alert.radius": "{radius.surface}",
+      "alert.row-gap": "{space.stack.2xs}",
+      "alert.title.font-weight": "{font.weight.label}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "feedback": [
+          "neutral",
+          "danger"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Alert (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-alert` plus `sb-alert-title`, `sb-alert-description` and `sb-alert-action`, with feedback neutral and danger, an `icon` slot and an action area. Host role is `status` or `alert` by feedback.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/alert/Alert.stories.ts` |\n| 2 | `playwright/tests/alert/alert.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/alert/Alert.scss` -> `Alert.styles.ts` (generated, shared by all parts) |\n| 4 | `Alert.ts`, `AlertTitle.ts`, `AlertDescription.ts`, `AlertAction.ts`, `index.ts` |\n\n## Tokens\n`alert.*` aliases semantic tokens, including the new `space.stack.*`.\n\n## Test plan (test-first)\n- Role: status for neutral, alert for danger; present on an empty alert before content arrives and unchanged when content is added; follows `feedback`; authored role is kept.\n- Layout: with an icon the content starts after 16px + 12px; without it, at the padding edge; action at the end.\n- Colors per feedback (title and description) in light and dark; border, radius, padding.\n- Title weight; no title truncation.\n- axe clean on neutral, danger and action stories.\n\n## Accessibility deviations from the references\n- Role: `status` for neutral feedback (visual reference: `alert` always).\n- No title line-clamp; description in full destructive color (not /90).\n\n## Open questions\n- Q1 Role alert vs status: answered, by variant, authored role wins.\n- Q2 Title clamp and /90 tint: answered, dropped."
+}

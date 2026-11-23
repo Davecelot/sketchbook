@@ -51,7 +51,9 @@ npx sketchbook explain SB-0009
 ```
 
 ## 6. Add or change a component
-`npx sketchbook add <name>` installs a reference component from the catalog; `npx sketchbook kits` manages page templates. To design a new component, start with the contract and follow the project’s enabled planning and test-first gates. If you selected an agent profile, use `contract-author` and `component-builder` under `.agents/skills/`. If you selected a shared agent profile, `AGENT-WORKFLOWS.md` covers other workflows; if you selected and activated the Claude integration, you can also use `/add <Name>` in Claude Code. A core-only project includes neither integration; use `npx sketchbook init --agent <profile>` to add one, or follow the [component guide](https://sketchbook-docs.vercel.app/guides/add-component/) without an agent.
+Run `npx sketchbook add <name>` to install a reference component from the catalog, or use `npx sketchbook kits` for page templates. To design your own component, start with the contract and follow the [component guide](https://sketchbook-docs.vercel.app/guides/add-component/). Run `npx sketchbook help approve` and `npx sketchbook help evidence` to see whether your installed version can record approvals and test runs.
+
+If you selected a shared agent profile, use `AGENT-WORKFLOWS.md` and the `contract-author` and `component-builder` skills under `.agents/skills/`. If you selected and activated the Claude Code integration, you can also use `/add <Name>`. A core-only project includes neither integration and can use the CLI directly.
 
 ## 7. Keep the design file in step
 

@@ -97,7 +97,7 @@ export const installedKits = (root: string): string[] => kitIndex(root).filter((
 
 export function componentFiles(root: string, name: string): string[] {
   const files = [
-    ...walk(root, `spec/components/${name}`).filter((f) => !f.endsWith('/plan.md')),
+    ...walk(root, `spec/components/${name}`).filter((f) => !/\/(plan\.md|approved\.json|evidence\.json)$/.test(f)),
     ...walk(root, `src/components/${name}`).filter((f) => !f.endsWith('.styles.ts')),
     ...walk(root, `playwright/tests/${name}`),
   ];

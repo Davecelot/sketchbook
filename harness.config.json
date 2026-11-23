@@ -27,6 +27,10 @@
     "reviewGate": false,
     "releaseFlow": false
   },
+  "approval": {
+    "triage": true,
+    "requireRecord": true
+  },
   "ui": {
     "reference": "shadcn/ui",
     "note": "Visuals and theme variables follow shadcn/ui; the component API speaks spec/api.json (SB-0122); deviations are listed in each contract (realizations.*.drift)."

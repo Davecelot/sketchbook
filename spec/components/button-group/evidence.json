@@ -1,0 +1,9 @@
+{
+  "stub": {
+    "on": "2026-11-23",
+    "spec": "sha256:d7e1964ea5ad56231d79bc13543792ca455fed7a9f5b8665a07dd8904f75d83c",
+    "failed": 17,
+    "total": 17,
+    "passing": []
+  }
+}

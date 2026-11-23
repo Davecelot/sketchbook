@@ -16,6 +16,7 @@
   "rules/test-first.md": "paths:\n  - \"src/components/**\"\n  - \"spec/components/**\"\n  - \"playwright/**\"\n  - \"src/patterns/**\"",
   "skills/a11y-checker/agents/a11y-auditor.md": "tools: Read, Grep, Glob, Bash, Write",
   "skills/component-builder/agents/parity-auditor.md": "tools: Read, Bash, Grep, Glob",
+  "skills/contract-author/agents/change-triage.md": "tools: Read, Bash, Grep, Glob\nmodel: haiku",
   "skills/contract-author/agents/drafter.md": "tools: Read, Write, Edit, Grep, Glob",
   "skills/contract-author/agents/extractor.md": "tools: Read, Grep, Glob, WebFetch",
   "skills/contract-author/agents/validator.md": "tools: Read, Edit, Bash, Grep, Glob",

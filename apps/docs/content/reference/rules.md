@@ -16,11 +16,11 @@ Change foundations in `brand.config.json` or with `sketchbook tokens set|preset`
 
 ## planning-gate
 
-Active when `features.planningGate` is true. Before component code, pass `npm run check`, write `plan.md`, then stop for approval. Manual.
+When `features.planningGate` is on, run `npm run check`, write `plan.md`, and stop for approval before writing tests or code. A person records approval with `sketchbook approve <name> --by <name>`. C4 checks whether it still covers the current scope.
 
 ## test-first
 
-Active when `features.testFirst` is true. Write the story and behavior spec first and confirm each test fails for the right reason. Manual; check R1 requires that both files exist for `beta`, not that they failed first.
+When `features.testFirst` is on, write the story and behavior spec first. Run `sketchbook evidence red <name>` and check why the tests failed. After implementation, run `sketchbook evidence green <name>` with the same spec and test setup. C5 verifies the records; it cannot tell you whether a test failed for the intended reason.
 
 ## contract-first
 

@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:c5e34265dea6f5b1a8e62893fb752034c339f4e14f60cd2eeb9bb52feb5aaa62
+approved-plan: sha256:1c8de2fdac1e00a77aea4b3e7fffb0ebf774c69a31302b830bf378a3fdf8d79b
+---
+
 # Plan: Avatar (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

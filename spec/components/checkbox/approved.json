@@ -1,0 +1,379 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "The label prop, through a native <label for> in the same shadow root.",
+      "announcements": [
+        "error text is announced once when it appears (persistent aria-live=polite region)"
+      ],
+      "aria": [
+        "aria-describedby -> description and error ids (same root)",
+        "aria-invalid=\"true\" when invalid",
+        "indeterminate: native input.indeterminate exposes aria-checked=\"mixed\"",
+        "required: native required; the asterisk is aria-hidden",
+        "errorMessage: sets a customError validity, so the form blocks submission"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "checkbox.label.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "checkbox.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "checkbox.error.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "checkbox.border",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "checkbox.border-invalid",
+          "kind": "ui"
+        },
+        {
+          "bg": "checkbox.checked.bg",
+          "fg": "checkbox.checked.fg",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "checkbox.checked.bg",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "checkbox.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": "On keyboard focus of the input; 3px ring in checkbox.focus-ring.color.",
+      "formAssociation": {
+        "note": "ElementInternals: setFormValue(value) only while checked, validity mirrored from the inner input (required -> valueMissing), formResetCallback restores the default checked state, disabled is not submitted.",
+        "value": true
+      },
+      "keyboard": {
+        "Enter": "submits the form (implicit submission; the control has no form owner in its shadow root, SB-0009)",
+        "Space": "toggles checked (native)",
+        "Tab": "move focus to and from the checkbox"
+      },
+      "missingNameWarning": "Dev-only console warning, once, when label is empty.",
+      "native": "input type=checkbox",
+      "role": "checkbox",
+      "targetSize": "Box is 16px; the label next to it is part of the clickable row and the 12px gap satisfies the WCAG 2.5.8 spacing exception.",
+      "wcag": [
+        "1.3.1",
+        "1.4.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.7",
+        "2.5.8",
+        "3.3.1",
+        "4.1.2",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Switch",
+          "pattern": "A checkbox that applies its effect immediately",
+          "why": "Checkboxes record a choice; a setting that acts at once reads as a switch"
+        },
+        {
+          "alternative": "Radio Group",
+          "pattern": "Choosing exactly one option from several",
+          "why": "Checkboxes allow many"
+        },
+        {
+          "alternative": "A label that states the choice",
+          "pattern": "Vague labels like \"Option\"",
+          "why": "The label is the only name for the box"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "checkbox",
+        "check",
+        "tick",
+        "multi-select",
+        "terms",
+        "consent",
+        "form"
+      ],
+      "useCases": [
+        {
+          "use": "sb-checkbox, one per option",
+          "when": "An independent yes/no choice, or choosing several from a list"
+        },
+        {
+          "use": "indeterminate on the parent",
+          "when": "A parent row summarizes some-but-not-all children"
+        },
+        {
+          "use": "description",
+          "when": "Format or consequence needs explaining"
+        },
+        {
+          "use": "required with a label that states the agreement",
+          "when": "Agreement must be given before submit"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "field",
+        "notes": "Grid: box in the first column, label, description and error in the second.",
+        "parent": null,
+        "part": "field",
+        "role": "container"
+      },
+      {
+        "name": "control",
+        "notes": "Box wrapper; positions the check and dash icons over the native input.",
+        "parent": "field",
+        "part": "control",
+        "role": "container"
+      },
+      {
+        "name": "input",
+        "notes": "Native <input type=\"checkbox\">; receives focus, Space and validation.",
+        "parent": "control",
+        "part": "input",
+        "role": "control"
+      },
+      {
+        "controlledBy": "label",
+        "name": "label",
+        "notes": "Native <label for> in the same shadow root.",
+        "parent": "field",
+        "part": "label",
+        "role": "text"
+      },
+      {
+        "controlledBy": "required",
+        "name": "required-indicator",
+        "notes": "Asterisk, aria-hidden.",
+        "optional": true,
+        "parent": "label",
+        "part": "required-indicator",
+        "role": "text"
+      },
+      {
+        "controlledBy": "description",
+        "name": "description",
+        "optional": true,
+        "parent": "field",
+        "part": "description",
+        "role": "text"
+      },
+      {
+        "controlledBy": "errorMessage",
+        "name": "error",
+        "notes": "Persistent polite live region; text appears when invalid.",
+        "optional": true,
+        "parent": "field",
+        "part": "error",
+        "role": "text"
+      }
+    ],
+    "component": "Checkbox",
+    "content": {},
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-005",
+      "D-011",
+      "D-016",
+      "D-024",
+      "D-025",
+      "D-027"
+    ],
+    "dependsOn": [],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": false,
+        "note": "Toggle committed. Re-dispatched from the host because native change is not composed (NativeControl)."
+      },
+      "input": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": true,
+        "note": "Each toggle. Native and composed, so it crosses the shadow boundary."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "Yes: APG checkbox pattern, label row beside the box.",
+        "answeredOn": "2026-11-08",
+        "id": "Q0",
+        "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+        "status": "answered"
+      },
+      {
+        "answer": "No. The attribute is the default that form reset restores (like native defaultChecked); selected is a property and attribute both read it at start.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Is selected reflected to an attribute?",
+        "status": "answered"
+      },
+      {
+        "answer": "Yes, like Input. hide-label keeps it as the accessible name.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Is label required?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "description": {
+        "default": "",
+        "note": "Help text under the label.",
+        "type": "text"
+      },
+      "disabled": {
+        "default": false,
+        "note": "Native disabled; dimmed; not submitted.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "errorMessage": {
+        "attribute": "error-message",
+        "default": "",
+        "note": "Error message. Setting it marks the field invalid.",
+        "type": "text"
+      },
+      "hideLabel": {
+        "attribute": "hide-label",
+        "default": false,
+        "note": "Visually hides the label; it stays the accessible name. Use only when the row has other visible text naming the box.",
+        "type": "boolean"
+      },
+      "indeterminate": {
+        "default": false,
+        "note": "Mixed state (dash). Cleared by the first user toggle. Not reflected.",
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "note": "Visible label next to the box and accessible name. Required: shadow DOM keeps external <label for> from reaching the inner input.",
+        "required": true,
+        "type": "text"
+      },
+      "name": {
+        "default": "",
+        "note": "Form field name.",
+        "type": "text"
+      },
+      "required": {
+        "default": false,
+        "note": "Native required: must be checked. Adds an aria-hidden asterisk after the label.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "selected": {
+        "default": false,
+        "note": "Current state. Not reflected: the attribute is the default restored by form reset.",
+        "type": "boolean"
+      },
+      "value": {
+        "default": "on",
+        "note": "Submitted with the form while checked.",
+        "reflect": true,
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "checkbox.disabled-opacity"
+        ],
+        "trigger": "disabled attribute"
+      },
+      "error": {
+        "tokens": [
+          "checkbox.border-invalid",
+          "checkbox.error.fg"
+        ],
+        "trigger": "error-message set, or required and unchecked after blur or a submit attempt"
+      },
+      "focus-visible": {
+        "borderColor": "checkbox.focus-ring.color",
+        "note": "3px solid ring and border in ring color (a translucent ring would fall under 3:1).",
+        "tokens": [
+          "checkbox.focus-ring.color",
+          "checkbox.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on the box"
+      },
+      "hover": {
+        "tokens": [],
+        "trigger": "pointer over an enabled checkbox"
+      },
+      "indeterminate": {
+        "note": "Same fill as checked, dash instead of check.",
+        "tokens": [
+          "checkbox.checked.bg",
+          "checkbox.checked.border",
+          "checkbox.checked.fg"
+        ],
+        "trigger": "indeterminate"
+      },
+      "selected": {
+        "tokens": [
+          "checkbox.checked.bg",
+          "checkbox.checked.border",
+          "checkbox.checked.fg"
+        ],
+        "trigger": "selected"
+      }
+    },
+    "summary": "A checkbox with its label, description and error laid out beside it, taking part in forms.",
+    "tag": "sb-checkbox",
+    "tokens": {
+      "checkbox.bg": "{color.input-background}",
+      "checkbox.border": "{color.input}",
+      "checkbox.border-invalid": "{color.destructive}",
+      "checkbox.border-width": "{border-width.default}",
+      "checkbox.checked.bg": "{color.primary}",
+      "checkbox.checked.border": "{color.primary}",
+      "checkbox.checked.fg": "{color.primary-foreground}",
+      "checkbox.content-gap": "{space.control.gap.sm}",
+      "checkbox.description.fg": "{color.muted-foreground}",
+      "checkbox.description.font-size": "{font.size.body}",
+      "checkbox.description.line-height": "{font.line-height.body}",
+      "checkbox.disabled-opacity": "{opacity.disabled}",
+      "checkbox.error.fg": "{color.destructive}",
+      "checkbox.focus-ring.color": "{color.ring}",
+      "checkbox.focus-ring.width": "{focus.ring.width}",
+      "checkbox.font-family": "{font.family.body}",
+      "checkbox.gap": "{space.field.gap}",
+      "checkbox.label.fg": "{color.foreground}",
+      "checkbox.label.font-size": "{font.size.control}",
+      "checkbox.label.font-weight": "{font.weight.label}",
+      "checkbox.label.line-height": "{font.line-height.control}",
+      "checkbox.radius": "{radius.xsmall}",
+      "checkbox.shadow": "{elevation.xs}",
+      "checkbox.size": "{size.icon.default}",
+      "checkbox.transition-duration": "{motion.duration.fast}",
+      "checkbox.transition-easing": "{motion.easing.standard}"
+    }
+  },
+  "plan": "# Plan: Checkbox (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-checkbox`: native checkbox in the shadow root with the Field horizontal layout (box, label, description, error). Form-associated. checked, indeterminate, disabled, required, value, error.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/checkbox/Checkbox.stories.ts` |\n| 2 | `playwright/tests/checkbox/checkbox.behavior.spec.ts` (first, must fail) |\n| 3 | `src/components/checkbox/Checkbox.scss` -> `Checkbox.styles.ts` |\n| 4 | `src/components/checkbox/Checkbox.ts`, `index.ts` |\n\n## Test plan\nName and label click, Space toggles, indeterminate (mixed, cleared on toggle), required/error validity, input and change composed, focus ring, form value (only while checked, custom value), reset to the attribute default, disabled, disabled fieldset, label for, axe.\n\n## Accessibility deviations\n- From the visual reference: border 3:1, solid focus ring.\n\n## Open questions (recommendation first)\n- Is `selected` reflected? No: the attribute stays the reset default.\n- Semantic token added: `radius.xsmall` (4px in the default brand), aliasing the foundation `radius.xs` so it follows radius.style."
+}

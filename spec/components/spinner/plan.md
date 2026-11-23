@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: plan Status line (2026-11-08)
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:4d1707eb8d44d7e358469d8d94f6f4a2f9bc5a5deb5de1b419770c8bda10fdfd
+approved-plan: sha256:79ab916ea2602513251f8f6fbf1f593b80df9a8c01d028173ac969d43926b2e7
+---
+
 # Plan: Spinner (planning gate)
 
 Status: **approved 2026-11-08** (full implementation plan approved; Spinner added to the slice, SB-0006).

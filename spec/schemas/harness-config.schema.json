@@ -41,7 +41,7 @@
     },
     "features": {
       "type": "object",
-      "description": "Process switches read by the rules and slash commands (advisory: checks do not depend on them).",
+      "description": "Process switches read by the rules and slash commands; only check C5 reads one (testFirst).",
       "properties": {
         "planningGate": { "type": "boolean" },
         "specTasks": { "type": "boolean" },
@@ -49,6 +49,15 @@
         "issueTracker": { "type": "boolean" },
         "reviewGate": { "type": "boolean" },
         "releaseFlow": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "approval": {
+      "type": "object",
+      "description": "Plan approval records, verified by check C4 (sketchbook approve).",
+      "properties": {
+        "triage": { "type": "boolean", "description": "An agent may carry an approval over a wording-only change (sketchbook approve --carry); a person confirms carried approvals later (--review)." },
+        "requireRecord": { "type": "boolean", "description": "Require a plan for local or customized components and a frontmatter record in every plan. Untouched catalog installs are exempt." }
       },
       "additionalProperties": false
     },

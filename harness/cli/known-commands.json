@@ -45,6 +45,9 @@
     "add": {
       "summary": "Install a catalog component with its dependencies, or start a new contract with --blank."
     },
+    "approve": {
+      "summary": "Record a person’s approval of a component’s contract and plan, or carry it over a change that leaves the scope as approved. Check C4 verifies it."
+    },
     "remove": {
       "summary": "Remove a component you no longer use. Review dependencies and local edits before removing it."
     },
@@ -114,6 +117,15 @@
     },
     "audit-decisions": {
       "summary": "Compare settled decisions with a trusted earlier copy or Git revision. Run sketchbook check to validate the log."
+    },
+    "evidence": {
+      "summary": "Record a component’s behavior spec failing (red) and passing (green) with the same test setup. Stub reports which tests pass without the element. Ready requires current green evidence and clean component checks. A test setup failure records nothing.",
+      "subcommands": [
+        "red",
+        "green",
+        "stub",
+        "ready"
+      ]
     },
     "sync": {
       "summary": "Prepare scripts to update or verify your Figma file. Record sync progress after you run the scripts. Use verify to compare a read-back with the spec, stamp to record a push or stage, and realize to write design realizations.",

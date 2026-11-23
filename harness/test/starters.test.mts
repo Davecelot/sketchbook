@@ -395,7 +395,7 @@ test('S19 doctor --json reports starter, versions, components, kits, brands, ove
   cli(dir, 'init', '--start', 'pick', '--components', 'badge', '--yes', '--detach-catalog');
   await appendFile(join(dir, 'src/components/badge/Badge.scss'), '\n');
   const { json, code } = cliJson<Doctor>(dir, 'doctor', '--json');
-  assert.equal(code, 0);
+  assert.equal(code, 1, 'the customized catalog component is missing its local plan');
   for (const k of ['ok', 'command', 'changed', 'warnings', 'errors', 'next']) assert.ok(k in json, k);
   const d = json.data;
   assert.equal(d.starter, 'pick');
@@ -410,7 +410,7 @@ test('S19 doctor --json reports starter, versions, components, kits, brands, ove
   assert.equal(d.overrides, 0);
   assert.ok('tool' in d.design);
   assert.deepEqual(Object.keys(d.checks).sort(), ['exitCode', 'failing', 'warnings']);
-  assert.ok(Array.isArray(d.checks.failing));
+  assert.deepEqual(d.checks.failing, ['C4', 'C5']);
   await rm(dir, { recursive: true });
 });
 

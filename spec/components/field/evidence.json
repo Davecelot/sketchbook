@@ -1,0 +1,16 @@
+{
+  "stub": {
+    "on": "2026-11-23",
+    "spec": "sha256:d55783ea6832f7a484042855ab55ede6342aae92ac509db4e4e85ab6249c9569",
+    "failed": 18,
+    "total": 24,
+    "passing": [
+      "field set is a native group named by its legend",
+      "group stacks fields with the group gap",
+      "DS controls keep their own names inside a group",
+      "a description directly in a field set describes the group",
+      "warns once when a field set has no legend, and not when it has one",
+      "axe clean: with-ds-controls"
+    ]
+  }
+}

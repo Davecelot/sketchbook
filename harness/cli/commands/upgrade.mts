@@ -1,5 +1,6 @@
 import { upgrade, loadOwnership } from '../../commands/upgrade.mjs';
 import { syncHarness } from '../../commands/bootstrap.mjs';
+import { addStubHook, FIXTURES, STUB_HOOK_FIX } from '../../lib/evidence.mjs';
 import { ENGINE } from '../../lib/files.mjs';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -36,11 +37,14 @@ export default {
       if (r.updated.length) out(`${dryRun ? 'Would update' : 'Updated'} (${r.updated.length}):\n  ${r.updated.join('\n  ')}`);
       const { hooks } = r;
       if (hooks.length) out(`${dryRun ? 'Would add or update' : 'Added or updated'} ${hooks.length} Sketchbook hook(s) in settings.json (your own hooks and settings are kept):\n  ${hooks.join('\n  ')}`);
+      const stub = addStubHook(root, { dryRun });
+      if (stub === 'added') out(`${dryRun ? 'Would add' : 'Added'} the evidence stub hook to ${FIXTURES} (the rest of the file is kept).`);
+      if (stub === 'manual') out(`${FIXTURES} was changed by the team, so the evidence stub hook was not added: ${STUB_HOOK_FIX}`);
       if (r.preserved.length) out(`Existing agent files kept: ${r.preserved.join(', ')}`);
       if (r.skipped.length) out(`Blocked agent setup paths (kept): ${r.skipped.join(', ')}`);
-      if (!r.skipped.length && !r.added.length && !r.updated.length && !hooks.length) out('The harness-owned files here already match the installed engine.');
+      if (!r.skipped.length && !r.added.length && !r.updated.length && !hooks.length && stub !== 'added') out('The harness-owned files here already match the installed engine.');
       out(dryRun ? 'Next: Review these paths, then run sketchbook upgrade to apply the update.' : 'Next: Run sketchbook check to verify the project.');
-      return { changed: [...r.added, ...r.updated, ...(hooks.length && r.hookSettings ? [r.hookSettings] : []), ...(dryRun ? [] : ['harness.config.json'])], warnings: r.skipped.map((file) => ({ file, msg: 'Existing path blocks agent setup.', fix: 'Review the path and run sketchbook init.' })), data: { version: { before, after: version }, ...r }, next: dryRun ? 'sketchbook upgrade' : 'sketchbook check' };
+      return { changed: [...r.added, ...r.updated, ...(stub === 'added' ? [FIXTURES] : []), ...(hooks.length && r.hookSettings ? [r.hookSettings] : []), ...(dryRun ? [] : ['harness.config.json'])], warnings: [...r.skipped.map((file) => ({ file, msg: 'Existing path blocks agent setup.', fix: 'Review the path and run sketchbook init.' })), ...(stub === 'manual' ? [{ file: FIXTURES, msg: 'The evidence stub hook could not be added safely.', fix: STUB_HOOK_FIX }] : [])], data: { version: { before, after: version }, ...r }, next: dryRun ? 'sketchbook upgrade' : 'sketchbook check' };
     }
     if (!options.from) throw Object.assign(new Error('Usage: sketchbook upgrade --from <path|git-url> [--dry-run] [--yes]'), { fix: 'Point --from at a newer Sketchbook (this project has its own harness/).' });
     const r = upgrade(root, options.from, { dryRun, yes: options.yes });

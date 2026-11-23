@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:c01f97ae609cca53bf9f75ce58fa50bf6a8805a9210c872dd67e5ab688e8bfb4
+approved-plan: sha256:3eb7ded7b25b04a0c9a025a6d5228b313bcdb6b78a8a98041599011517955188
+---
+
 # Plan: Checkbox (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

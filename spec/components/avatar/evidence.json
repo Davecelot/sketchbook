@@ -1,0 +1,14 @@
+{
+  "stub": {
+    "on": "2026-11-23",
+    "spec": "sha256:5d1303dddb9208b8a106caa0b5cdd63ce8d98227e7f44923e44ff94a172103ef",
+    "failed": 15,
+    "total": 19,
+    "passing": [
+      "a group overlaps avatars by the overlap token with a ring in the background color",
+      "group count matches the avatars size and the group size follows its largest avatar",
+      "group count uses the count colors and the group keeps authored role and name",
+      "group count label gives the count the role img and a name before first render"
+    ]
+  }
+}

@@ -178,7 +178,7 @@ One case per check (T1–T6, C1–C3, A1, R1, M1, G1, W1, X1, P1, H1, H2): break
 | S16 | `brand use ocean` | brand.config.json takes the brand, foundation regenerated, checks pass |
 | S17 | `upgrade --from <copy> --dry-run` where the copy changed a harness file and a team file | Lists only the harness file as an update, lists the team file as a team-owned difference, writes nothing |
 | S18 | `upgrade --from <copy>` | Harness file written, team file untouched, `harnessVersion` recorded, checks run |
-| S19 | `doctor --json` | Envelope data: starter, harnessVersion, components {installed, available, customized}, kits, brands, overrides, design, checks {failing} |
+| S19 | `doctor --json` after editing a catalog component without a local plan | Envelope data: starter, harnessVersion, components {installed, available, customized}, kits, brands, overrides, design; failing checks C4 and C5 |
 | S20 | `audit-css <fixture.css>` | `generated/import/codebase.proposal.json` with colors clustered by OKLCH distance (near-duplicates merged, counts summed), font sizes in px, spacing base guessed, radii and shadows listed; same input gives the same bytes |
 | S19b | `doctor` with a broken contract | Exits 1 like `check` (0 pass, 2 pass with overrides) |
 | S20b | `audit-css` on a sheet with `body { font-size: 16px }`; on one with three single-use sizes | The body rule wins; a tie goes to the size closest to 16px |
@@ -240,6 +240,39 @@ Every mutating subcommand runs: plan → (dry run: stop and report) → write �
 | K23 | `__proto__`, `prototype`, `constructor` as a key or path segment in set, add, remove, rename | Refused; `Object.prototype` untouched (SB-0065) |
 | K24 | `tokens add` while (test seam `stageHooks.beforeCopyBack`) a new `docs/team-notes.md` is saved and `Badge.ts` edited; then `generated/css/tokens.css` edited mid-run; then a target made read-only | The new file and the edit survive and the command applies; a changed target refuses (exit 1, `data.conflict`, only the mid-run edit in `git status`); a failed copy-back restores every file (SB-0070) |
 | K25 | `tokens import app.css`, `tokens import tokens.json` without `--from`; `tokens.txt` | The format comes from the file; an unknown one still asks for `--from` |
+
+## Plan approval (`plan-approval.test.mts`, SB-0123)
+| # | Case | Expectation |
+| --- | --- | --- |
+| PA1 | A plan without frontmatter; a stage past `plan` without approval; an unknown stage | Skipped; C4 error; C4 error |
+| PA2 | A matching approval, then only `status`, `version` and `realizations` change | C4 passes both times |
+| PA3 | The contract or plan body changes after approval, or `approved-by` is missing | C4 error past stage `plan`, warning at stage `plan` |
+| PA4 | `sketchbook approve` without `--by`, with `--dry-run`, then for real | Exit 1; nothing written; record written, stage `test` (testFirst), body kept, C4 passes |
+| PA5 | A real `tokens rename` after approval | C4 passes with an info line; `approve --carry` needs no reason and records `carried-by: sketchbook` |
+| PA6 | `classify`: a prefix change; a summary edit plus a new Risks section; a Scope edit; a new prop | mechanical; editorial; material; material |
+| PA7 | A summary edit: `--carry` with triage off, on without a reason, on with a reason; then `--review`, `--review --by` | Exit 1; exit 1; carried and C4 passes with "awaiting a person"; listed; `confirmed-by` set, info gone |
+| PA8 | A new prop, or a snapshot that is not what the record approved | `--carry` refused (material) |
+| PA9 | `requireRecord` with a plan without a record; `--backfill` without `--basis`, `--dry-run`, real | C4 error; exit 1; nothing written; record with basis and stage from the registry, C4 passes |
+| PA10 | Real prefix rename after approval with tags in the plan and contract | Dry run keeps records untouched; actual rename preserves the snapshot and C4 accepts the mechanical change |
+| PA11 | Missing plan for a local component, an untouched catalog install, then a customized catalog component | C4 and C5 reject the missing local plan, exempt the untouched install, and reject the customization |
+| PA12 | Edit the first of two Scope sections | Material, never `none` |
+| PA13 | Unconfirmed editorial carry followed by a token rename and a mechanical carry | C4 keeps the warning and the original triage reason is still listed for review |
+
+## Test-first evidence (`evidence.test.mts`, SB-0123)
+| # | Case | Expectation |
+| --- | --- | --- |
+| EV1 | `outcomeOf` on no report, no tests, a launch error, failures, passes | blocker, blocker, blocker, failed, passed |
+| EV2 | `evidence red` before approval; with a missing browser; with passing tests; failing; then `green` failing and passing; then an implementation edit | Exit 1; exit 2 and nothing recorded; exit 1; recorded, stage implement, C5 passes; exit 1; stage review, C5 clean; C5 warning |
+| EV3 | Stage `implement` with no red; red and green against code that already existed; then `test-first: unverified (pre-record)` | C5 error; C5 error "unchanged since the red run"; info only |
+| EV4 | `evidence stub` with one test passing and two failing; with no report; a spec that imports `@playwright/test` directly; then a legacy record | Exit 0, stub recorded, a warning names the passing test; exit 2; blocker "stub hook is missing"; C5 info "2 of 3 tests need the element" |
+| EV5 | `evidence ready` before review; after green with the code edited; with the code as at green | Exit 1; exit 1 "no green run for the current code"; stage ready |
+| EV6 | `addStubHook` (run by `upgrade`) on the pre-SB-0123 fixtures file: dry run, real, again; then on a rewritten fixture | Would add, nothing written; only the stub block inserted; `present`; `manual`, file untouched |
+| EV7 | A passing-looking report with a nonzero exit, or a report with a flaky test | Blocker, not green evidence; JSON reports `ok: false` |
+| EV8 | Change the story or shared fixture after green; change the spec, setup or test count between red and green | A stale green cannot go ready; green refuses a different test suite from red |
+
+## Portable component skills (`agent-guidance.test.mts`)
+
+Every brief linked by the checkout's shared component skills exists beside the skill and matches the shared catalog source. The portable copies do not include Claude-specific metadata.
 
 ## Checks T7 and F1 (`checks.test.mts`)
 | # | Case | Expectation |

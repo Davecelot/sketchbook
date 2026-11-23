@@ -29,11 +29,13 @@ When the folder is its own git repository, `sketchbook init` points `core.hooksP
 
 ## Gates
 
-Planning and test-first are enabled by default and configurable in `harness.config.json`. Follow the enabled gates regardless of client or model. These are workflow requirements: a passing CLI check does not prove that someone approved a plan or saw a test fail before implementation.
+Planning and test-first are enabled by default and configurable in `harness.config.json`. The same CLI records and checks apply with any client or without an agent.
 
-The planning gate (`features.planningGate`) puts the contract and `plan.md` first, then stops for approval before writing tests or implementation.
+The planning gate (`features.planningGate`) puts the contract and `plan.md` first. A person runs `sketchbook approve <name> --by <name>` before tests or implementation. C4 checks that the recorded approval still covers the contract and plan. With `approval.requireRecord`, locally designed or customized components need a plan; unchanged catalog installs do not.
 
-Test-first (`features.testFirst`) writes tests from the contract and sees them fail before the code exists.
+If C4 reports that approval no longer holds, run `sketchbook approve <name> --diff`. Recorded token renames and prefix changes keep the approval. Material changes need a new approval. When `approval.triage` is on, a wording-only change can carry the existing approval with `--carry --reason`. A person lists the pending carries with `sketchbook approve --review`, reviews them, and confirms them with `sketchbook approve --review --by <name>`.
+
+Test-first (`features.testFirst`) uses `sketchbook evidence red` and `green` to record runs of the same behavior spec and test setup before and after implementing the change. C5 checks the records, and `sketchbook evidence ready` also requires a green run that matches the current inputs. Older plans marked `test-first: unverified (pre-record)` do not attest to the order of the original work. The records do not authenticate the person or judge whether a test failed for the intended reason.
 
 > **Note** Both gates are walked through in [Contracts](/concepts/contracts/).
 

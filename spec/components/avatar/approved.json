@@ -1,0 +1,288 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "alt on sb-avatar-image; label on sb-avatar-fallback and sb-avatar-group-count (role img); label on sb-avatar-badge. Without a label, plain text inside the fallback or count is read as text.",
+      "announcements": [],
+      "aria": [
+        "image: native img with alt; empty alt makes it decorative",
+        "fallback: with label set, role=img and aria-label are set before first render",
+        "group count: with label set, role=img and aria-label are set before first render",
+        "badge: with label set, role=img and aria-label; otherwise aria-hidden=true",
+        "the hidden image or fallback is removed from the accessibility tree (hidden attribute)",
+        "data-image-status and data-size are presentation-only host attributes",
+        "sb-avatar-image with an empty alt takes the sibling sb-avatar-fallback label as the image alt, so the avatar keeps its name once the image replaces the fallback"
+      ],
+      "contrast": [
+        {
+          "bg": "avatar.fallback.bg",
+          "fg": "avatar.fallback.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "avatar.count.bg",
+          "fg": "avatar.count.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "avatar.badge.bg",
+          "fg": "avatar.badge.fg",
+          "kind": "ui"
+        },
+        {
+          "bg": "avatar.badge.ring-color",
+          "fg": "avatar.badge.bg",
+          "kind": "ui"
+        }
+      ],
+      "keyboard": {},
+      "role": "none (generic); the image has role img from the native img element",
+      "targetSize": "Not interactive. Put an avatar inside a button or link to make it a control; that control sets the target size.",
+      "wcag": [
+        "1.1.1",
+        "1.4.3",
+        "1.4.11"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Always add sb-avatar-fallback",
+          "pattern": "An avatar with no fallback",
+          "why": "A failed or slow image leaves an empty circle"
+        },
+        {
+          "alternative": "Give the badge a label, or show the status as text nearby",
+          "pattern": "Presence shown by badge color alone",
+          "why": "Color cannot be the only signal"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "avatar",
+        "profile picture",
+        "initials",
+        "user",
+        "badge",
+        "group"
+      ],
+      "useCases": [
+        {
+          "use": "sb-avatar with sb-avatar-image and a sb-avatar-fallback of initials",
+          "when": "Show who a comment, row or card belongs to"
+        },
+        {
+          "use": "sb-avatar-group with a sb-avatar-group-count for the rest",
+          "when": "Show who shares a document"
+        },
+        {
+          "use": "sb-avatar-badge with a label",
+          "when": "Show presence"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "The host is the circle and the positioning context for the badge. It tracks whether its image has loaded and shows the fallback until then.",
+        "parent": null,
+        "role": "container"
+      }
+    ],
+    "component": "Avatar",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "sb-avatar-image, sb-avatar-fallback and an optional sb-avatar-badge.",
+        "required": false
+      }
+    },
+    "decisions": [
+      "SB-0007",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "image",
+            "notes": "Native img inside the shadow root.",
+            "parent": null,
+            "part": "image",
+            "role": "control"
+          }
+        ],
+        "content": {},
+        "props": {
+          "alt": {
+            "default": "",
+            "note": "Text alternative. Empty means the image is decorative, which suits an avatar whose name is written next to it.",
+            "type": "text"
+          },
+          "src": {
+            "default": null,
+            "note": "Image address. Changing it starts a new load and brings the fallback back until it finishes.",
+            "type": "text"
+          }
+        },
+        "summary": "The picture. It stays hidden until it has loaded, and reports success or failure to the surrounding avatar.",
+        "tag": "sb-avatar-image"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Initials or an icon.",
+            "required": false
+          }
+        },
+        "props": {
+          "label": {
+            "default": null,
+            "note": "Accessible name for initials or an icon. When set the fallback is exposed as an image with this name.",
+            "type": "text"
+          }
+        },
+        "summary": "Shown while there is no loaded image: initials, an icon or any short content, on a muted disc.",
+        "tag": "sb-avatar-fallback"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Optional svg icon.",
+            "required": false
+          }
+        },
+        "props": {
+          "label": {
+            "default": null,
+            "note": "Says what the badge means (for example Online). Without it the badge is decorative and hidden from assistive technology.",
+            "type": "text"
+          }
+        },
+        "summary": "A small status dot at the bottom end of the avatar, optionally holding an icon (hidden at size small).",
+        "tag": "sb-avatar-badge"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-avatar elements and an optional sb-avatar-group-count.",
+            "required": false
+          }
+        },
+        "notes": "Sets data-size on itself from its avatars (large, else small, else medium) so the count matches.",
+        "summary": "Overlaps its avatars in a row; each gets a ring in the page background so the edges stay readable. Author may set role=group and aria-label on it.",
+        "tag": "sb-avatar-group"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "A short count such as +3, or an icon.",
+            "required": false
+          }
+        },
+        "props": {
+          "label": {
+            "default": null,
+            "note": "Accessible name for the count or an icon (for example 3 more members). When set the count is exposed as an image with this name.",
+            "type": "text"
+          }
+        },
+        "summary": "A disc, sized like the group's avatars, showing how many more there are.",
+        "tag": "sb-avatar-group-count"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Context from sb-avatar; status reflected in data-image-status.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "How do the image and the fallback coordinate across shadow roots?",
+        "recommendation": "The avatar provides a context (@lit/context) holding the image status; the image reports load and error, the fallback hides itself when loaded.",
+        "status": "answered"
+      },
+      {
+        "answer": "label props as described.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Name for initials and for the badge?",
+        "recommendation": "A label prop on the fallback and on the badge sets role=img and aria-label; without a label the badge is decorative.",
+        "status": "answered"
+      },
+      {
+        "answer": "Badge diameter is 30% of the avatar size; logged as drift.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Badge size tokens (8, 10 and 12px do not exist in the size scale)?",
+        "recommendation": "Derive from the avatar diameter (30%) in CSS.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "size": {
+        "default": "medium",
+        "note": "Diameter from the media size tokens: 32px, 24px or 40px.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "medium",
+          "small",
+          "large"
+        ]
+      }
+    },
+    "states": {
+      "image-loading": {
+        "note": "The fallback is visible and the image hidden. The avatar reflects the status in data-image-status (idle, loaded, error).",
+        "tokens": [
+          "avatar.fallback.bg",
+          "avatar.fallback.fg"
+        ],
+        "trigger": "image has not loaded, or failed to load"
+      }
+    },
+    "summary": "A circular picture or initials that represent a person or entity, with an optional status badge and an overlapping group (a family of Web Components).",
+    "tag": "sb-avatar",
+    "tokens": {
+      "avatar.badge.bg": "{color.primary}",
+      "avatar.badge.fg": "{color.primary-foreground}",
+      "avatar.badge.ring-color": "{color.background}",
+      "avatar.badge.ring-width": "{border-width.thick}",
+      "avatar.count.bg": "{color.border}",
+      "avatar.count.fg": "{color.foreground}",
+      "avatar.fallback.bg": "{color.border}",
+      "avatar.fallback.fg": "{color.foreground}",
+      "avatar.fallback.font-size": "{font.size.body}",
+      "avatar.fallback.font-size-sm": "{font.size.caption}",
+      "avatar.font-family": "{font.family.body}",
+      "avatar.group.overlap": "{space.stack.sm}",
+      "avatar.group.ring-color": "{color.background}",
+      "avatar.group.ring-width": "{border-width.thick}",
+      "avatar.icon-size": "{size.icon.default}",
+      "avatar.icon-size-lg": "{size.icon.lg}",
+      "avatar.icon-size-sm": "{size.icon.sm}",
+      "avatar.radius": "{radius.pill}",
+      "avatar.size": "{size.media.default}",
+      "avatar.size-lg": "{size.media.lg}",
+      "avatar.size-sm": "{size.media.sm}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "size": [
+          "medium",
+          "small",
+          "large"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Avatar (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-avatar` (size medium|small|large) with `sb-avatar-image`, `sb-avatar-fallback`, `sb-avatar-badge`, `sb-avatar-group`, `sb-avatar-group-count`. The fallback shows until the image has loaded, and on error.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/avatar/Avatar.stories.ts` |\n| 2 | `playwright/tests/avatar/avatar.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/avatar/Avatar.scss` -> `Avatar.styles.ts` (generated, shared) |\n| 4 | `context.ts`, `Avatar.ts`, `AvatarImage.ts`, `AvatarFallback.ts`, `AvatarBadge.ts`, `AvatarGroup.ts`, `AvatarGroupCount.ts`, `index.ts` |\n\n## Tokens\n`avatar.*` aliases semantic tokens, using the shared `size.media.*`, `space.stack.*`, `border-width.thick`.\n\n## Test plan (test-first)\n- Sizes per `size`; reflection.\n- Image status: slow load keeps the fallback visible, then swaps; a failing source keeps the fallback; changing `src` returns to the fallback; `data-image-status` follows.\n- Accessibility tree: image name from `alt`; hidden parts are absent; fallback `label` gives role img; badge `label` or aria-hidden.\n- Badge geometry and ring; icon hidden at sm. Group overlap, ring, count size follows the group.\n- Colors in light and dark; axe clean.\n\n## Accessibility deviations from the references\n- `label` props for naming initials and the badge (the reference has none).\n\n## Open questions\n- Q1 Image/fallback coordination: answered, context.\n- Q2 Naming initials and badge: answered, `label` props.\n- Q3 Badge sizes: answered, 30% of the avatar."
+}

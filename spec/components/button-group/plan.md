@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:e42d31865023aef4c052b265a0dcdb51bc1d9ab0a5a41d6613271531775c1008
+approved-plan: sha256:5043c3298260c026b8fb0476d789ccb2666d697cfd46d0a1845c78ccb9db3bd2
+---
+
 # Plan: Button Group (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

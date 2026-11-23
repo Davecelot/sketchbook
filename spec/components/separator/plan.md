@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: SB-0011
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:e72bf8b5127941f5993172c5db9ef40e2fdec8dc867148299c680175d0129ea9
+approved-plan: sha256:8eab3ce6c9d4e16884ea3c027304c7e6cf541bdf0c48f68a6df34174a618d685
+---
+
 # Plan: Separator (planning gate)
 
 Status: Approved under SB-0011 (owner pre-approval, 2026-11-08).

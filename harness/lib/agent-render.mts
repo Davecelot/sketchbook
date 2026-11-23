@@ -23,8 +23,9 @@ export function catalogProjections() {
     const bytes = readFileSync(join(ENGINE, source));
     const metadata = native[dest];
     const files: { source: string; path: string; bytes: Buffer }[] = [];
-    if (COMPONENTS.includes(id) && parts.join('/') === 'SKILL.md') {
-      return [{ source, path: `.agents/${dest}`, bytes }]; // existing Claude wrappers only route to the shared skill
+    if (COMPONENTS.includes(id)) {
+      files.push({ source, path: `.agents/${dest}`, bytes });
+      if (parts.join('/') === 'SKILL.md') return files; // existing Claude wrappers route to the shared skill
     }
     if (dest.endsWith('.md') && (parts.join('/') === 'SKILL.md' || isRule || isCommand || parts[0] === 'agents')) {
       const { header, body } = split(bytes.toString('utf8'));

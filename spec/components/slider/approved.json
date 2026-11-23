@@ -1,0 +1,400 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "The label prop through a native <label for> on the first thumb; with a range each thumb also gets an aria-label (\"<label> minimum\", \"<label> maximum\").",
+      "announcements": [
+        "error text is announced once when it appears (persistent aria-live=polite region); value changes are announced by the native slider"
+      ],
+      "aria": [
+        "each thumb is a native range input: role slider with aria-valuemin, aria-valuemax and aria-valuenow from the native control",
+        "aria-orientation=\"vertical\" on each thumb when vertical",
+        "aria-describedby -> description and error ids (same root)",
+        "aria-invalid=\"true\" when an error is set",
+        "a thumb cannot cross the other: the lower one is clamped to the upper one"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "slider.label.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "slider.description.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "slider.error.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "slider.thumb.border",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "slider.track.bg",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "slider.range.bg",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "slider.border-invalid",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "slider.focus-ring.color",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": "On keyboard focus of a thumb; 3px ring in slider.focus-ring.color.",
+      "formAssociation": {
+        "note": "ElementInternals: setFormValue with the value, or one entry per thumb for a range; the inner input anchors validity (errorMessage sets customError); formResetCallback restores the default values; disabled is not submitted.",
+        "value": true
+      },
+      "keyboard": {
+        "ArrowLeft / ArrowDown": "decrease by step",
+        "ArrowRight / ArrowUp": "increase by step",
+        "Enter": "submits the form (implicit submission; the control has no form owner in its shadow root, SB-0009)",
+        "Home / End": "jump to the minimum or maximum",
+        "PageUp / PageDown": "larger increase or decrease (native)",
+        "Tab": "move between thumbs and out"
+      },
+      "missingNameWarning": "Dev-only console warning, once, when label is empty.",
+      "native": "input type=range",
+      "role": "slider (one per thumb)",
+      "targetSize": "The thumb is 16px inside a 24px press area (WCAG 2.5.8); the track is also pressable and keys work without any pointer.",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.7",
+        "2.5.7",
+        "3.3.1",
+        "4.1.2",
+        "4.1.3"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Input type number",
+          "pattern": "A slider for a precise value (an amount, a quantity)",
+          "why": "Dragging is imprecise and hard for many people"
+        },
+        {
+          "alternative": "Show the value in the label or beside the slider",
+          "pattern": "Hiding the current value",
+          "why": "The thumb position alone is not exact"
+        },
+        {
+          "alternative": "Radio Group",
+          "pattern": "A slider with only a few discrete choices",
+          "why": "Choices should be visible"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "slider",
+        "range",
+        "volume",
+        "price range",
+        "numeric",
+        "form"
+      ],
+      "useCases": [
+        {
+          "use": "sb-slider with a label",
+          "when": "Pick a number where approximate position matters more than the exact digit"
+        },
+        {
+          "use": "value with two numbers",
+          "when": "Pick a lower and upper bound"
+        },
+        {
+          "use": "pair with a number Input",
+          "when": "People may need the exact number"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "field",
+        "notes": "Vertical stack with the field gap.",
+        "parent": null,
+        "part": "field",
+        "role": "container"
+      },
+      {
+        "controlledBy": "label",
+        "name": "label",
+        "notes": "Native <label for> pointing at the first thumb.",
+        "parent": "field",
+        "part": "label",
+        "role": "text"
+      },
+      {
+        "name": "control",
+        "notes": "Positions the track, range and thumbs; also takes pointer presses on the track of a two-thumb range.",
+        "parent": "field",
+        "part": "control",
+        "role": "container"
+      },
+      {
+        "name": "track",
+        "notes": "Full-length bar behind the thumbs.",
+        "parent": "control",
+        "part": "track",
+        "role": "container"
+      },
+      {
+        "name": "range",
+        "notes": "Filled part: from the start to the thumb, or between the two thumbs.",
+        "parent": "track",
+        "part": "range",
+        "role": "other"
+      },
+      {
+        "name": "thumb",
+        "notes": "Native <input type=\"range\">, one per value, drawn as a round handle. Receives focus and keys.",
+        "parent": "control",
+        "part": "thumb",
+        "role": "control"
+      },
+      {
+        "controlledBy": "description",
+        "name": "description",
+        "optional": true,
+        "parent": "field",
+        "part": "description",
+        "role": "text"
+      },
+      {
+        "controlledBy": "errorMessage",
+        "name": "error",
+        "notes": "Persistent polite live region; text appears when invalid.",
+        "optional": true,
+        "parent": "field",
+        "part": "error",
+        "role": "text"
+      }
+    ],
+    "component": "Slider",
+    "content": {},
+    "decisions": [
+      "D-001",
+      "D-003",
+      "D-005",
+      "D-011",
+      "D-016",
+      "D-024",
+      "D-025",
+      "D-027"
+    ],
+    "dependsOn": [],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": false,
+        "note": "Value committed (key press, release). Re-dispatched from the host because native change is not composed (NativeControl)."
+      },
+      "input": {
+        "bubbles": true,
+        "composed": true,
+        "detail": null,
+        "native": true,
+        "note": "While a thumb moves. Native and composed; a press on the track of a range emits an equivalent event from the host."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "Yes: APG slider and multi-thumb slider patterns, realized with native range inputs.",
+        "answeredOn": "2026-11-08",
+        "id": "Q0",
+        "question": "Contract content drafted with the contract-author skill (visual reference, WAI-ARIA APG)?",
+        "status": "answered"
+      },
+      {
+        "answer": "Two native range inputs overlaid on one track, each a real slider with its own name; the lower one is clamped to the upper one. A press on the track moves the nearest thumb.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "How is a range built?",
+        "status": "answered"
+      },
+      {
+        "answer": "\"<label> minimum\" and \"<label> maximum\" through aria-label; the visible label points at the first thumb. A later change can add props to localize them.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "How are thumb names built for a range?",
+        "status": "answered"
+      },
+      {
+        "answer": "A comma-separated list of numbers in the value attribute, one thumb per number; the property returns an array of numbers.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "What is the value format?",
+        "status": "answered"
+      },
+      {
+        "answer": "A vertical slider is three times the semantic unit size.slider.vertical-length (64px), 192px, because the scale has no 176px step. Logged as drift.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Vertical length against the foundation scale?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "description": {
+        "default": "",
+        "note": "Help text under the field.",
+        "type": "text"
+      },
+      "disabled": {
+        "default": false,
+        "note": "Native disabled; dimmed; not submitted.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "errorMessage": {
+        "attribute": "error-message",
+        "default": "",
+        "note": "Error message. Setting it marks the field invalid.",
+        "type": "text"
+      },
+      "hideLabel": {
+        "attribute": "hide-label",
+        "default": false,
+        "note": "Visually hides the label; it stays the accessible name.",
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "note": "Visible label and accessible name. With two values each thumb is named \"<label> minimum\" and \"<label> maximum\".",
+        "required": true,
+        "type": "text"
+      },
+      "max": {
+        "default": 100,
+        "note": "Highest value.",
+        "type": "number"
+      },
+      "min": {
+        "default": 0,
+        "note": "Lowest value.",
+        "type": "number"
+      },
+      "name": {
+        "default": "",
+        "note": "Form field name. A range submits one entry per thumb under this name.",
+        "type": "text"
+      },
+      "orientation": {
+        "default": "horizontal",
+        "note": "Direction of the track. Vertical grows upward.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      "required": {
+        "default": false,
+        "note": "Accepted for form-associated parity; a slider always has a value, so it never blocks submission and shows no asterisk.",
+        "reflect": true,
+        "type": "boolean"
+      },
+      "step": {
+        "default": 1,
+        "note": "Increment for keys and snapping.",
+        "type": "number"
+      },
+      "value": {
+        "default": "",
+        "note": "Current values as numbers separated by commas: \"40\" for one thumb, \"20,80\" for a range. One thumb per number. Empty means the minimum. Not reflected: the attribute is the default restored by form reset.",
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "slider.disabled-opacity"
+        ],
+        "trigger": "disabled attribute"
+      },
+      "error": {
+        "tokens": [
+          "slider.border-invalid",
+          "slider.error.fg"
+        ],
+        "trigger": "error-message set"
+      },
+      "focus-visible": {
+        "note": "3px solid ring around the focused thumb.",
+        "tokens": [
+          "slider.focus-ring.color",
+          "slider.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on a thumb"
+      },
+      "hover": {
+        "tokens": [],
+        "trigger": "pointer over an enabled thumb"
+      }
+    },
+    "summary": "A slider for picking a number, or a range with two thumbs, built on native range inputs, with label, description and error built in, taking part in forms.",
+    "tag": "sb-slider",
+    "tokens": {
+      "slider.border-invalid": "{color.destructive}",
+      "slider.description.fg": "{color.muted-foreground}",
+      "slider.description.font-size": "{font.size.body}",
+      "slider.description.line-height": "{font.line-height.body}",
+      "slider.disabled-opacity": "{opacity.disabled}",
+      "slider.error.fg": "{color.destructive}",
+      "slider.focus-ring.color": "{color.ring}",
+      "slider.focus-ring.width": "{focus.ring.width}",
+      "slider.font-family": "{font.family.body}",
+      "slider.gap": "{space.field.gap}",
+      "slider.label.fg": "{color.foreground}",
+      "slider.label.font-size": "{font.size.control}",
+      "slider.label.font-weight": "{font.weight.label}",
+      "slider.label.line-height": "{font.line-height.label}",
+      "slider.range.bg": "{color.primary}",
+      "slider.target-size": "{size.control.xs}",
+      "slider.thumb.bg": "{color.background}",
+      "slider.thumb.border": "{color.primary}",
+      "slider.thumb.border-width": "{border-width.default}",
+      "slider.thumb.shadow": "{elevation.sm}",
+      "slider.thumb.size": "{size.icon.default}",
+      "slider.track.bg": "{color.input}",
+      "slider.track.radius": "{radius.pill}",
+      "slider.track.size": "{size.slider.track}",
+      "slider.transition-duration": "{motion.duration.fast}",
+      "slider.transition-easing": "{motion.easing.standard}",
+      "slider.vertical-length": "{size.slider.vertical-length}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "orientation": [
+          "horizontal",
+          "vertical"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Slider (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-slider`: native `<input type=\"range\">` per value inside one shadow root, drawn with a custom track and filled range; horizontal and vertical; one or two thumbs; form-associated.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/slider/Slider.stories.ts` |\n| 2 | `playwright/tests/slider/slider.behavior.spec.ts` (first, must fail) |\n| 3 | `src/components/slider/Slider.scss` -> `Slider.styles.ts` |\n| 4 | `src/components/slider/Slider.ts`, `index.ts` |\n\n## Test plan\nName and label click, one slider role per value with distinct names for a range, keyboard (arrows, Home, End, Page keys), vertical (ArrowUp increases, aria-orientation), min/max/step, thumb clamping, track press on a range, filled range geometry, input/change composed, focus ring, form value (one entry per thumb), reset, disabled, disabled fieldset, error validity, axe.\n\n## Accessibility deviations\n- Unfilled track below 3:1 (visual choice); thumb and range meet it.\n- Solid focus ring.\n\n## Open questions (recommendation first)\n- Range as two native inputs, names via aria-label (contract Q1, Q2).\n- Semantic tokens added: `size.slider.vertical-length` (64px unit; the control is 3 units) and `size.slider.track` (6px)."
+}

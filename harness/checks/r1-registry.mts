@@ -30,13 +30,13 @@ export function run({ root, all, registry, previous }: CheckContext): CheckResul
     if (!web.spec || !existsSync(join(root, web.spec))) fail('no behavior spec', 'Write the Playwright behavior spec (test-first).');
     if (c3?.errors.some((e) => web.files?.some((f) => f === e.file))) fail('contract/code parity errors (C3)', 'Fix C3 first.');
     if (rank >= 4) {
-      if (!auditsOf(root, PARITY_AUDITS, name).length) fail('no parity audit report', 'Launch .claude/skills/component-builder/agents/parity-auditor.md (writes docs/parity-audits/<name>-<date>.md).');
+      if (!auditsOf(root, PARITY_AUDITS, name).length) fail('no parity audit report', 'Run the parity-auditor brief of the component-builder skill (writes docs/parity-audits/<name>-<date>.md).');
       const a11y = auditsOf(root, A11Y_AUDITS, name);
       const last = a11y.at(-1);
       const latest = last !== undefined ? readFileSync(join(root, A11Y_AUDITS, last), 'utf8') : '';
-      if (!latest) fail('no a11y audit report', 'Launch .claude/skills/a11y-checker/agents/a11y-auditor.md (writes docs/a11y-audits/<name>-<date>.md).');
+      if (!latest) fail('no a11y audit report', 'Run the a11y-auditor brief of the a11y-checker skill (writes docs/a11y-audits/<name>-<date>.md).');
       else {
-        if (!/verdict:\s*ready/i.test(latest)) fail('latest a11y audit is not "Verdict: ready"', 'Fix the findings and re-run .claude/skills/a11y-checker/agents/a11y-auditor.md.');
+        if (!/verdict:\s*ready/i.test(latest)) fail('latest a11y audit is not "Verdict: ready"', 'Fix the findings and re-run the a11y-auditor brief of the a11y-checker skill.');
         if (!/^Approved-by:\s*\S/m.test(latest)) fail('no person approved it (Approved-by: line in the a11y audit)', 'A person reviews the component and adds "Approved-by: <name>" to the latest a11y audit.');
       }
       if (contract.realizations?.design?.status !== 'complete') fail('design realization not complete', 'Sync the design file.');

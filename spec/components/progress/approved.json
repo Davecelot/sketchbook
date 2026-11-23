@@ -1,0 +1,165 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "label prop, else aria-label or aria-labelledby on the host. The host carries the role, so aria-labelledby resolves in the page.",
+      "announcements": [],
+      "aria": [
+        "host: role=progressbar with aria-valuemin=0, aria-valuemax=max and aria-valuenow=value",
+        "indeterminate: aria-valuenow is omitted, as the pattern requires",
+        "aria-label comes from label unless the author already set aria-label",
+        "console warning, once per element (in every build), when there is no accessible name",
+        "the indicator animation stops under prefers-reduced-motion",
+        "clearing label removes the aria-label it set and restores an author aria-label",
+        "forced colors: the track gets a CanvasText outline and the fill is drawn in Highlight (backgrounds would otherwise both become Canvas)"
+      ],
+      "contrast": [
+        {
+          "bg": "color.background",
+          "fg": "progress.indicator.bg",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": "Not focusable.",
+      "keyboard": {},
+      "role": "progressbar",
+      "targetSize": "Not interactive.",
+      "wcag": [
+        "1.1.1",
+        "1.4.11",
+        "2.3.3",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Set label, aria-label or aria-labelledby",
+          "pattern": "A bar with no accessible name",
+          "why": "Screen reader users hear an unlabeled progressbar"
+        },
+        {
+          "alternative": "Leave value out, or use a spinner",
+          "pattern": "A fixed value that never changes",
+          "why": "It claims progress that is not happening"
+        }
+      ],
+      "category": "atom",
+      "keywords": [
+        "progress",
+        "progress bar",
+        "loading",
+        "upload",
+        "meter"
+      ],
+      "useCases": [
+        {
+          "use": "value and max",
+          "when": "A task has a known amount of work"
+        },
+        {
+          "use": "no value (indeterminate)",
+          "when": "A task is running but its length is unknown"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "track",
+        "notes": "Rounded, clipped background of the bar.",
+        "parent": null,
+        "part": "track",
+        "role": "container"
+      },
+      {
+        "name": "indicator",
+        "notes": "The filled part; its width is value divided by max, or a sliding segment when indeterminate.",
+        "parent": "track",
+        "part": "indicator",
+        "role": "other"
+      }
+    ],
+    "component": "Progress",
+    "content": {},
+    "decisions": [
+      "D-001",
+      "D-011",
+      "SB-0009"
+    ],
+    "dependsOn": [],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "On the host, set in willUpdate, so aria-labelledby from the page resolves and the host-role approach is kept.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Where does the progressbar role live?",
+        "status": "answered"
+      },
+      {
+        "answer": "No: the bar is the visual; label is the accessible name only. Compose text around it.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Is there a visible label or percentage?",
+        "status": "answered"
+      },
+      {
+        "answer": "A segment sliding along the track, motion-token duration, static under reduced motion.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Indeterminate look?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "label": {
+        "default": "",
+        "note": "Accessible name of the bar, not drawn. Alternatively use aria-label or aria-labelledby on the host.",
+        "type": "text"
+      },
+      "max": {
+        "default": 100,
+        "note": "The amount that means done. Must be greater than 0.",
+        "type": "number"
+      },
+      "value": {
+        "default": null,
+        "note": "Current amount, from 0 to max. Values outside the range are clamped. When absent the bar is indeterminate. An empty value attribute is the same as no value (indeterminate).",
+        "type": "number"
+      }
+    },
+    "states": {
+      "determinate": {
+        "note": "The fill width eases to the new value.",
+        "tokens": [
+          "progress.indicator.bg",
+          "progress.transition-duration",
+          "progress.transition-easing"
+        ],
+        "trigger": "value is set"
+      },
+      "indeterminate": {
+        "note": "A segment slides along the track; reduced motion shows a static segment instead.",
+        "tokens": [
+          "progress.loop-duration"
+        ],
+        "trigger": "value is absent"
+      }
+    },
+    "summary": "A horizontal bar that shows how far a task has come, or that it is still working when the amount is not known.",
+    "tag": "sb-progress",
+    "tokens": {
+      "progress.height": "{size.track.default}",
+      "progress.indicator.bg": "{color.primary}",
+      "progress.loop-duration": "{motion.duration.loop}",
+      "progress.radius": "{radius.pill}",
+      "progress.track.bg": "{color.primary}",
+      "progress.transition-duration": "{motion.duration.normal}",
+      "progress.transition-easing": "{motion.easing.standard}"
+    }
+  },
+  "plan": "# Plan: Progress (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-progress` with `value`, `max`, `label`, determinate and indeterminate modes. Out of scope: visible percentage text, circular variant, paused/error states.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/progress/Progress.stories.ts` |\n| 2 | `playwright/tests/progress/progress.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/progress/Progress.scss` -> `Progress.styles.ts` (generated) |\n| 4 | `src/components/progress/Progress.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Role, name from label, aria-valuemin/max/now; custom max; clamping.\n- Fill width follows value/max; indeterminate has no aria-valuenow and animates; reduced motion stops it.\n- aria-label and aria-labelledby from the page name the bar; one-time missing-name warning.\n- Height, radius and colors from tokens; axe.\n\n## Accessibility deviations from the references\nNone.\n\n## Open questions (recommendation first)\nAll three answered with the recommendation: role on the host; no visible text; sliding segment for indeterminate."
+}

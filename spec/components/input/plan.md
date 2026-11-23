@@ -1,3 +1,13 @@
+---
+stage: ready
+basis: plan Status line (2026-11-08)
+test-first: unverified (pre-record)
+approved-by: Davecelot
+approved-on: 2026-11-08
+approved-contract: sha256:8a4117d91a05308767df8c1cc65fc4cf2a0eab4c3aa9a85d53386df83d24310a
+approved-plan: sha256:df84cd02bb575507cb30d834983db497ee8a075d43fffc039daef3f2910d8c6e
+---
+
 # Plan: Input (planning gate)
 
 Status: **approved 2026-11-08** (owner approved both plans; Q4 answered yes, SB-0006). Built test-first; now beta.
@@ -31,4 +41,3 @@ Out of scope: Input Group adornments, Textarea, stand-alone Label and Field comp
 
 ## Open questions
 None. Label placement, required marker and sizes were answered on 2026-11-08 (see contract.json openQuestions).
-

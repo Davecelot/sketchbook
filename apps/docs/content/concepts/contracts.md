@@ -43,8 +43,8 @@ Use the shared `contract-author` and `component-builder` skills when working wit
    sketchbook check
    ```
 
-4. If the planning gate is enabled, complete `plan.md` and stop for approval before writing tests or implementation. Record answers in the contract's `openQuestions` and in the plan.
-5. If test-first is enabled, write the story and behavior spec and confirm the tests fail as intended before implementing. Verify against the contract, then review before promoting the component.
+4. If the planning gate is on, complete `plan.md` and record answers to open questions in the contract and plan. Have the approving person run `sketchbook approve <name> --by <name>` before you write tests or implementation.
+5. If test-first is on, write the story and behavior spec. Use the [step-by-step component guide](/guides/add-component/#design-a-new-component) to record failing and passing test runs, then verify and review before you promote the component.
 
 The gates are described in [Checks](/concepts/checks/). Claude Code's `/add <Name>` is a native entry point for scaffolding and contract planning, not a prerequisite.
 

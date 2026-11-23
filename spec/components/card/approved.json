@@ -1,0 +1,222 @@
+{
+  "contract": {
+    "accessibility": {
+      "accessibleNameSource": "None. Card has no role, so it is not a landmark or a named region; the title is a visual heading. For a heading in the document outline, put a real heading element inside sb-card-title.",
+      "announcements": [],
+      "aria": [
+        "no roles or ARIA on any card element: content keeps its own semantics",
+        "sb-card-header sets data-has-action (presentation only)"
+      ],
+      "contrast": [
+        {
+          "bg": "card.bg",
+          "fg": "card.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "card.bg",
+          "fg": "card.description.fg",
+          "kind": "text"
+        }
+      ],
+      "keyboard": {},
+      "role": "none (generic container)",
+      "targetSize": "Card itself is not interactive; controls placed in it follow their own components.",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.10"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Separator or Item inside one card",
+          "pattern": "Nesting cards inside cards",
+          "why": "Stacked borders and shadows flatten the hierarchy and waste space"
+        },
+        {
+          "alternative": "Plain layout",
+          "pattern": "Using a card as the only way to group a whole page",
+          "why": "A page-wide card adds a border without grouping anything"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "card",
+        "surface",
+        "panel",
+        "container",
+        "header",
+        "footer"
+      ],
+      "useCases": [
+        {
+          "use": "sb-card with sb-card-header, sb-card-content, sb-card-footer",
+          "when": "Group related content with an optional title and actions"
+        },
+        {
+          "use": "size=small",
+          "when": "A dense list of cards or a sidebar panel"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "The host is the card surface (border, radius, shadow); its parts are child elements in the default slot.",
+        "parent": null,
+        "role": "container"
+      }
+    ],
+    "component": "Card",
+    "content": {
+      "default": {
+        "multiple": true,
+        "notes": "sb-card-header, sb-card-content and sb-card-footer, in reading order.",
+        "required": false
+      }
+    },
+    "decisions": [
+      "SB-0007",
+      "SB-0011"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "sb-card-title, sb-card-description and an optional sb-card-action.",
+            "required": false
+          }
+        },
+        "notes": "Sets the data-has-action host attribute from slotchange; sibling selectors do not cross shadow roots.",
+        "summary": "Groups title, description and an optional action. A sb-card-action child moves the action to the end of the header.",
+        "tag": "sb-card-header"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Title text.",
+            "required": true
+          }
+        },
+        "summary": "The card's heading text.",
+        "tag": "sb-card-title"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "Description text.",
+            "required": false
+          }
+        },
+        "summary": "Supporting text under the title, in muted color.",
+        "tag": "sb-card-description"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": false,
+            "notes": "A control such as sb-button.",
+            "required": false
+          }
+        },
+        "summary": "An action (button, menu trigger) placed at the end of the header, spanning title and description.",
+        "tag": "sb-card-action"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Any content.",
+            "required": false
+          }
+        },
+        "summary": "The card's main content, inset like the header.",
+        "tag": "sb-card-content"
+      },
+      {
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Actions or text, laid out in a row.",
+            "required": false
+          }
+        },
+        "summary": "A row of actions or summary text at the bottom of the card.",
+        "tag": "sb-card-footer"
+      }
+    ],
+    "events": {},
+    "openQuestions": [
+      {
+        "answer": "Host attribute from slotchange (data-has-action).",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "How does the header know it has an action, without sibling selectors across shadow roots?",
+        "recommendation": "sb-card-header listens to slotchange and sets data-has-action on itself; CSS keys off that attribute.",
+        "status": "answered"
+      },
+      {
+        "answer": "Out of scope for v1.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Optional header and footer borders?",
+        "recommendation": "Not in v1: no class hooks in Web Components; add boolean props when a use case appears.",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "size": {
+        "default": "medium",
+        "note": "medium: 24px padding and gap. small: 16px.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "medium",
+          "small"
+        ]
+      }
+    },
+    "states": {},
+    "summary": "A surface that groups related content and actions: header, title, description, action, content and footer (a family of Web Components).",
+    "tag": "sb-card",
+    "tokens": {
+      "card.bg": "{color.card}",
+      "card.border": "{color.border}",
+      "card.border-width": "{border-width.default}",
+      "card.description.fg": "{color.muted-foreground}",
+      "card.description.font-size": "{font.size.body}",
+      "card.description.line-height": "{font.line-height.body}",
+      "card.fg": "{color.card-foreground}",
+      "card.font-family": "{font.family.body}",
+      "card.gap": "{space.inset.surface}",
+      "card.gap-sm": "{space.stack.loose}",
+      "card.header-gap": "{space.stack.sm}",
+      "card.padding": "{space.inset.surface}",
+      "card.padding-sm": "{space.stack.loose}",
+      "card.radius": "{radius.large}",
+      "card.shadow": "{elevation.sm}",
+      "card.title.font-size": "{font.size.heading}",
+      "card.title.font-weight": "{font.weight.heading}",
+      "card.title.line-height": "{font.line-height.heading}"
+    },
+    "variantMatrix": {
+      "dimensions": {
+        "size": [
+          "medium",
+          "small"
+        ]
+      }
+    }
+  },
+  "plan": "# Plan: Card (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-card` and six parts (`sb-card-header`, `-title`, `-description`, `-action`, `-content`, `-footer`) with `size` medium|small. Non-interactive surface.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/card/Card.stories.ts` |\n| 2 | `playwright/tests/card/card.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/card/Card.scss` -> `Card.styles.ts` (generated, shared by all parts) |\n| 4 | `Card.ts`, `CardHeader.ts`, `CardTitle.ts`, `CardDescription.ts`, `CardAction.ts`, `CardContent.ts`, `CardFooter.ts`, `index.ts` |\n\n## Tokens\nComponent tokens `card.*` alias semantic tokens. Added semantic tokens: `space.stack.*`, `font.size.heading`, `font.weight.heading`, `font.line-height.heading` (shared with the other Wave 1b components).\n\n## Test plan (test-first)\n- Surface: border, radius, padding, gap and colors resolve from tokens in light and dark.\n- `size=small` changes padding, gap and the inset of header, content and footer.\n- Header: `data-has-action` appears and disappears as an action is added or removed; with an action, the action sits at the end and title and description stay at the start.\n- Title and description typography.\n- No roles anywhere; all seven tags are registered; axe clean on the default and action stories.\n\n## Accessibility deviations from the references\nNone.\n\n## Open questions\n- Q1 Header action detection: answered, host attribute from `slotchange`.\n- Q2 Header and footer borders: answered, out of scope for v1."
+}

@@ -1,0 +1,405 @@
+{
+  "contract": {
+    "$extensions": {
+      "design.figma": {
+        "options": [
+          {
+            "default": false,
+            "kind": "boolean",
+            "name": "Third",
+            "reason": "The stories show a third tab (Settings: General, Notifications, Appearance); the code takes any number of triggers.",
+            "set": "tabs-list",
+            "shows": [
+              "trigger-third"
+            ]
+          },
+          {
+            "default": "1",
+            "kind": "enum",
+            "name": "Active",
+            "reason": "The selected tab is any of the triggers in the code; the design file draws which one.",
+            "set": "tabs-list",
+            "values": [
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        ]
+      }
+    },
+    "accessibility": {
+      "accessibleNameSource": "Tab text. A panel is named by its tab. Name the tab list with aria-label when the context does not.",
+      "announcements": [],
+      "aria": [
+        "list: role=tablist and aria-orientation set as host attributes (following orientation), unless the author set a role, which is kept",
+        "tab: native button with role=tab, aria-selected, one tab stop (roving tabindex, applied to the inner button)",
+        "tab: aria-controls through the ariaControlsElements property (an element reference from a shadow root to the light DOM above it resolves; an ID would not)",
+        "panel: role=tabpanel as a host attribute, named by its tab with ElementInternals ariaLabelledByElements; where unsupported the tab text is copied into aria-label",
+        "panel: tabindex=0 so a panel with no focusable content is reachable by keyboard",
+        "inactive panels are display:none",
+        "references between tabs and panels (aria-controls, ariaLabelledByElements) are re-resolved whenever tabs or panels are added, removed or change value",
+        "a value that names no enabled tab (empty, unknown, disabled) selects the first enabled tab",
+        "forced colors: the selected tab of the primary variant is Highlight on HighlightText; the line variant draws its indicator in Highlight"
+      ],
+      "contrast": [
+        {
+          "bg": "tabs.list.bg",
+          "fg": "tabs.trigger.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "tabs.trigger.active.bg",
+          "fg": "tabs.trigger.active.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "tabs.trigger.fg",
+          "kind": "text"
+        },
+        {
+          "bg": "color.background",
+          "fg": "tabs.indicator.color",
+          "kind": "ui"
+        },
+        {
+          "bg": "color.background",
+          "fg": "tabs.focus-ring.color",
+          "kind": "ui"
+        },
+        {
+          "bg": "tabs.list.bg",
+          "fg": "tabs.trigger.active.border",
+          "kind": "ui"
+        }
+      ],
+      "focusRingVisible": ":focus-visible only; 3px solid ring in tabs.focus-ring.color.",
+      "keyboard": {
+        "ArrowDown": "next enabled tab in a vertical list",
+        "ArrowLeft": "previous enabled tab (next in right-to-left); wraps",
+        "ArrowRight": "next enabled tab (previous in right-to-left); wraps",
+        "ArrowUp": "previous enabled tab in a vertical list",
+        "End": "last enabled tab",
+        "Enter": "select the focused tab (manual activation)",
+        "Home": "first enabled tab",
+        "Space": "select the focused tab (manual activation)",
+        "Tab": "enters the list on the selected tab, then moves to the selected panel"
+      },
+      "native": "button",
+      "role": "tablist, tab and tabpanel",
+      "targetSize": "Each tab is at least 24px high and wide enough for its text (WCAG 2.5.8).",
+      "wcag": [
+        "1.3.1",
+        "1.4.3",
+        "1.4.11",
+        "2.1.1",
+        "2.4.3",
+        "2.4.7",
+        "2.5.8",
+        "4.1.2"
+      ]
+    },
+    "aiHints": {
+      "antiPatterns": [
+        {
+          "alternative": "Use links in a navigation landmark",
+          "pattern": "Tabs that navigate to other pages",
+          "why": "Tab semantics promise a panel on the same page"
+        },
+        {
+          "alternative": "Shorten the labels or use fewer tabs",
+          "pattern": "Tab labels that wrap into several lines or overflow",
+          "why": "The list stops reading as one row and hides tabs"
+        }
+      ],
+      "category": "molecule",
+      "keywords": [
+        "tabs",
+        "tab list",
+        "panels",
+        "segmented",
+        "view switcher"
+      ],
+      "useCases": [
+        {
+          "use": "sb-tabs with the primary list",
+          "when": "Peer views of one object, switched without leaving the page"
+        },
+        {
+          "use": "sb-tabs-list variant=line",
+          "when": "Sub-navigation inside a page header where a filled track is too heavy"
+        }
+      ]
+    },
+    "anatomy": [
+      {
+        "name": "root",
+        "notes": "sb-tabs: lays out the list and the panels, owns the selected value and shares it through context.",
+        "parent": null,
+        "part": "root",
+        "role": "container"
+      }
+    ],
+    "component": "Tabs",
+    "content": {
+      "default": {
+        "component": "sb-tabs-list, sb-tabs-content",
+        "multiple": true,
+        "notes": "One sb-tabs-list followed by one sb-tabs-content per tab.",
+        "required": true
+      }
+    },
+    "decisions": [
+      "D-001",
+      "D-011",
+      "SB-0007",
+      "SB-0009"
+    ],
+    "dependsOn": [],
+    "elements": [
+      {
+        "anatomy": [
+          {
+            "name": "list",
+            "notes": "Flex container for the tabs.",
+            "parent": null,
+            "part": "list",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "component": "sb-tabs-trigger",
+            "multiple": true,
+            "notes": "Tabs only.",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Must be a child of sb-tabs. Give it aria-label when the tabs need a name.",
+        "props": {
+          "variant": {
+            "default": "primary",
+            "note": "primary is a filled track with a raised selected tab; line is transparent with an indicator bar under the selected tab.",
+            "reflect": true,
+            "type": "variant",
+            "values": [
+              "primary",
+              "line"
+            ]
+          }
+        },
+        "role": "tablist",
+        "summary": "The row or column that holds the tabs.",
+        "tag": "sb-tabs-list"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "trigger",
+            "notes": "Native <button role=\"tab\">.",
+            "parent": null,
+            "part": "trigger",
+            "role": "control"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Text, optionally with a decorative icon.",
+            "required": true
+          }
+        },
+        "events": {
+          "click": {
+            "bubbles": true,
+            "composed": true,
+            "detail": null,
+            "native": true,
+            "note": "Selects the tab."
+          }
+        },
+        "notes": "Must be inside sb-tabs-list.",
+        "props": {
+          "disabled": {
+            "default": false,
+            "note": "Not focusable and not selectable.",
+            "reflect": true,
+            "type": "boolean"
+          },
+          "value": {
+            "default": "",
+            "note": "Links the tab to the panel with the same value. Unique within the tabs.",
+            "reflect": true,
+            "type": "text"
+          }
+        },
+        "role": "tab",
+        "summary": "One tab. Renders a native button with role tab.",
+        "tag": "sb-tabs-trigger"
+      },
+      {
+        "anatomy": [
+          {
+            "name": "panel",
+            "notes": "Wrapper around the slotted content.",
+            "parent": null,
+            "part": "panel",
+            "role": "container"
+          }
+        ],
+        "content": {
+          "default": {
+            "multiple": true,
+            "notes": "Any content.",
+            "required": true
+          }
+        },
+        "events": {},
+        "notes": "Must be a descendant of sb-tabs.",
+        "props": {
+          "value": {
+            "default": "",
+            "note": "The tab value this panel belongs to.",
+            "reflect": true,
+            "type": "text"
+          }
+        },
+        "role": "tabpanel",
+        "summary": "The panel of one tab; only the selected panel is displayed.",
+        "tag": "sb-tabs-content"
+      }
+    ],
+    "events": {
+      "change": {
+        "bubbles": true,
+        "cancelable": false,
+        "composed": true,
+        "detail": "{ value: string }",
+        "native": false,
+        "note": "Fires on the sb-tabs host after a person selects a different tab. Not fired for changes made from code. A change from a form control inside a panel also bubbles to the host: listen with event.target === host (that one has no detail)."
+      }
+    },
+    "openQuestions": [
+      {
+        "answer": "The inner button. The roving-focus controller works on the sb-tabs-trigger hosts (so retargeted key events match), and the host's tabIndex accessor forwards to its button; a tabindex on the generic host breaks the tablist/tab ownership check in axe.",
+        "answeredOn": "2026-11-08",
+        "id": "Q1",
+        "question": "Which element carries tabindex for roving focus?",
+        "status": "answered"
+      },
+      {
+        "answer": "ariaControlsElements on the tab button; ElementInternals ariaLabelledByElements on the panel, with an aria-label copy as fallback.",
+        "answeredOn": "2026-11-08",
+        "id": "Q2",
+        "question": "Cross-root references between tab and panel?",
+        "status": "answered"
+      },
+      {
+        "answer": "Offer it as the activation prop; automatic is the default.",
+        "answeredOn": "2026-11-08",
+        "id": "Q3",
+        "question": "Manual activation?",
+        "status": "answered"
+      },
+      {
+        "answer": "value-change, so native change events from controls inside a panel are not confused with it.",
+        "answeredOn": "2026-11-08",
+        "id": "Q4",
+        "question": "Event name?",
+        "status": "answered"
+      }
+    ],
+    "platforms": [
+      "web",
+      "design"
+    ],
+    "props": {
+      "activation": {
+        "default": "automatic",
+        "note": "automatic selects a tab as soon as it takes focus; manual moves focus only, and Enter or Space selects.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "automatic",
+          "manual"
+        ]
+      },
+      "orientation": {
+        "default": "horizontal",
+        "note": "Direction of the tab list. Vertical lists use Arrow Up and Down.",
+        "reflect": true,
+        "type": "variant",
+        "values": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      "value": {
+        "default": "",
+        "note": "Value of the selected tab. When empty, the first enabled tab is selected.",
+        "reflect": true,
+        "type": "text"
+      }
+    },
+    "states": {
+      "disabled": {
+        "tokens": [
+          "tabs.disabled-opacity"
+        ],
+        "trigger": "disabled on a tab"
+      },
+      "focus-visible": {
+        "tokens": [
+          "tabs.focus-ring.color",
+          "tabs.focus-ring.width"
+        ],
+        "trigger": "keyboard focus on a tab or panel"
+      },
+      "selected": {
+        "note": "The line variant shows an indicator bar instead of a filled tab.",
+        "tokens": [
+          "tabs.trigger.active.bg",
+          "tabs.trigger.active.fg",
+          "tabs.trigger.active.shadow",
+          "tabs.indicator.color"
+        ],
+        "trigger": "tab value equals the tabs value"
+      }
+    },
+    "summary": "Switches between panels of related content, one visible at a time, with a row or column of tabs. Four custom elements share state through context.",
+    "tag": "sb-tabs",
+    "tokens": {
+      "tabs.disabled-opacity": "{opacity.disabled}",
+      "tabs.focus-ring.color": "{color.ring}",
+      "tabs.focus-ring.width": "{focus.ring.width}",
+      "tabs.font-family": "{font.family.body}",
+      "tabs.font-size": "{font.size.control}",
+      "tabs.font-weight": "{font.weight.control}",
+      "tabs.gap": "{space.control.gap.default}",
+      "tabs.indicator.color": "{color.foreground}",
+      "tabs.indicator.width": "{border-width.indicator}",
+      "tabs.line-height": "{font.line-height.control}",
+      "tabs.list.bg": "{color.muted}",
+      "tabs.list.gap-line": "{space.control.gap.xs}",
+      "tabs.list.height": "{size.control.default}",
+      "tabs.list.padding": "{space.inset.track}",
+      "tabs.list.radius": "{radius.surface}",
+      "tabs.transition-duration": "{motion.duration.fast}",
+      "tabs.transition-easing": "{motion.easing.standard}",
+      "tabs.trigger.active.bg": "{color.background}",
+      "tabs.trigger.active.border": "{color.input}",
+      "tabs.trigger.active.fg": "{color.foreground}",
+      "tabs.trigger.active.shadow": "{elevation.sm}",
+      "tabs.trigger.border-width": "{border-width.default}",
+      "tabs.trigger.fg": "{color.muted-foreground}",
+      "tabs.trigger.gap": "{space.control.gap.sm}",
+      "tabs.trigger.icon-size": "{size.icon.default}",
+      "tabs.trigger.padding-x": "{space.control.padding-x.xs}",
+      "tabs.trigger.padding-y": "{space.control.padding-y.field}",
+      "tabs.trigger.radius": "{radius.control}"
+    }
+  },
+  "plan": "# Plan: Tabs (planning gate)\n\nStatus: Approved under SB-0011 (owner pre-approval, 2026-11-08).\n\n## Scope\n`sb-tabs`, `-list` (variant primary|line), `-trigger`, `-content`: value, orientation, automatic and manual activation, roving focus, `change`. Out of scope: scrolling overflow, closable tabs.\n\n## Files (in build order)\n| Step | File |\n| --- | --- |\n| 1 | `src/components/tabs/Tabs.stories.ts` |\n| 2 | `playwright/tests/tabs/tabs.behavior.spec.ts` (written first, must fail) |\n| 3 | `src/components/tabs/Tabs.scss` -> `Tabs.styles.ts` (generated, shared) |\n| 4 | `Tabs.ts`, `TabsList.ts`, `TabsTrigger.ts`, `TabsContent.ts`, `context.ts`, `index.ts` |\n\n## Test plan (test-first)\n- Roles tablist, tab, tabpanel; names; only the selected panel displayed.\n- Initial selection from `value` or first enabled; click selects; `change` detail, bubbles, composed, not for code changes.\n- Keyboard: one tab stop, arrows wrap, Home/End, disabled skipped, Tab reaches the panel; manual activation; vertical orientation; right-to-left reverses.\n- `aria-controls` and the panel name in the accessibility tree.\n- Variants from tokens; focus ring keyboard-only; disabled; axe.\n\n## Accessibility deviations from the references\n- 3px solid focus ring; inactive tab text uses `muted-foreground` in both modes (documented drift).\n\n## Open questions (recommendation first)\nAll four answered with the recommendation: tabindex on the trigger host; element references across roots with an aria-label fallback; manual activation as a prop; `value-change` event name."
+}
