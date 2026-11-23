@@ -158,6 +158,7 @@ test('an editorial change is carried by triage only when approval.triage is on, 
   const dir = await probe();
   assert.equal(sb(dir, 'approve', 'probe', '--by', 'Ana').status, 0);
   await writeFile(join(dir, CONTRACT_FILE), JSON.stringify({ ...CONTRACT, summary: 'A probe, reworded.' }));
+  await appendFile(join(dir, PLAN), '\n## Notes\nA clarification.\n');
   assert.match((await c4(dir)).errors.map((e) => e.msg).join(), /editorial change/);
   const diff = JSON.parse(sb(dir, 'approve', 'probe', '--diff', '--json').stdout) as { data: { class: string; contractKeys: string[] } };
   assert.deepEqual([diff.data.class, diff.data.contractKeys], ['editorial', ['summary']]);
@@ -169,7 +170,20 @@ test('an editorial change is carried by triage only when approval.triage is on, 
   const out = await c4(dir);
   assert.deepEqual(out.errors, []);
   assert.match(msgs(out.warnings), /awaiting a person/);
-  assert.match(sb(dir, 'approve', '--review').stdout, /probe: Summary reworded/);
+  const review = sb(dir, 'approve', '--review').stdout;
+  assert.match(review, /probe: Summary reworded/);
+  assert.ok(review.includes(CONTRACT.summary));
+  assert.match(review, /A clarification/);
+  assert.match(sb(dir, 'approve', 'probe', '--diff').stdout, /approval holds/);
+  const json = JSON.parse(sb(dir, 'approve', '--review', '--json').stdout) as { data: { reviews: { component: string; carries: { contract: unknown; plan: unknown }[] }[] } };
+  const pending = must(json.data.reviews[0], 'pending review');
+  const carry = must(pending.carries[0], 'saved changes');
+  assert.equal(pending.component, 'probe');
+  assert.deepEqual(carry.contract, [{ key: 'summary', before: CONTRACT.summary, after: 'A probe, reworded.' }]);
+  assert.deepEqual(carry.plan, [{ section: 'Notes', after: ['## Notes\nA clarification.'] }]);
+  const beforeReview = await readFile(join(dir, PLAN), 'utf8');
+  assert.equal(sb(dir, 'approve', '--review', '--by', 'Ana', '--dry-run').status, 0);
+  assert.equal(await readFile(join(dir, PLAN), 'utf8'), beforeReview);
   assert.equal(sb(dir, 'approve', '--review', '--by', 'Ana').status, 0);
   assert.equal(must(readRecord(await readFile(join(dir, PLAN), 'utf8')), 'record')['confirmed-by'], 'Ana');
   assert.deepEqual((await c4(dir)).warnings, []);
@@ -181,12 +195,59 @@ test('a mechanical carry does not clear a pending human review', async () => {
   assert.equal(sb(dir, 'approve', 'probe', '--by', 'Ana').status, 0);
   await writeFile(join(dir, CONTRACT_FILE), JSON.stringify({ ...CONTRACT, summary: 'A probe, reworded.' }));
   assert.equal(sb(dir, 'approve', 'probe', '--carry', '--reason', 'Summary reworded').status, 0);
+  await writeFile(join(dir, CONTRACT_FILE), JSON.stringify({ ...CONTRACT, summary: 'A probe, with another rewording.' }));
+  assert.equal(sb(dir, 'approve', 'probe', '--carry', '--reason', 'Another rewording').status, 0);
   const rename = sb(dir, 'tokens', 'rename', 'color.background', 'color.canvas');
   assert.ok(rename.status === 0 || rename.status === 2, rename.stdout + rename.stderr);
-  assert.match(msgs((await c4(dir)).warnings), /Summary reworded.*awaiting a person/);
+  assert.match(msgs((await c4(dir)).warnings), /Another rewording.*awaiting a person/);
+  assert.equal(sb(dir, 'approve', '--review', '--by', 'Ana', '--dry-run').status, 0, 'an unrecorded mechanical change does not invalidate the carried scope');
   assert.equal(sb(dir, 'approve', 'probe', '--carry').status, 0);
-  assert.match(sb(dir, 'approve', '--review').stdout, /probe: Summary reworded/);
+  const review = sb(dir, 'approve', '--review').stdout;
+  assert.match(review, /probe: Summary reworded/);
+  assert.match(review, /probe: Another rewording/);
   assert.match(msgs((await c4(dir)).warnings), /awaiting a person/);
+  await rm(dir, { recursive: true });
+});
+
+test('batch confirmation leaves every plan alone if a later scope change makes one carry stale', async () => {
+  const dir = await probe();
+  await edit<ComponentRegistry>(dir, 'spec/registry.json', (r) => r.components.push({ name: 'Notice', tier: 1, status: 'planned' }));
+  assert.equal(sb(dir, 'add', 'notice', '--blank').status, 0);
+  for (const name of ['notice', 'probe']) {
+    assert.equal(sb(dir, 'approve', name, '--by', 'Ana').status, 0);
+    await edit<{ summary: string }>(dir, `spec/components/${name}/contract.json`, (c) => { c.summary += ' Rephrased.'; });
+    assert.equal(sb(dir, 'approve', name, '--carry', '--reason', 'Wording only').status, 0);
+  }
+  const files = ['spec/components/notice/plan.md', PLAN].map((f) => join(dir, f));
+  const before = await Promise.all(files.map((f) => readFile(f, 'utf8')));
+  const carriedContract = await readFile(join(dir, CONTRACT_FILE), 'utf8');
+  await edit<{ props: object }>(dir, CONTRACT_FILE, (c) => { c.props = { size: { type: 'string' } }; });
+  const result = sb(dir, 'approve', '--review', '--by', 'Ana', '--json');
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /no longer matches the carry/);
+  assert.deepEqual(await Promise.all(files.map((f) => readFile(f, 'utf8'))), before);
+  assert.equal(sb(dir, 'approve', '--review', 'notice', '--by', 'Ana').status, 1, 'a component argument must not confirm a whole batch');
+  await rm(join(dir, CONTRACT_FILE));
+  assert.equal(sb(dir, 'approve', '--review', '--by', 'Ana').status, 1, 'a missing contract must not silently omit a pending carry');
+  assert.deepEqual(await Promise.all(files.map((f) => readFile(f, 'utf8'))), before);
+  await writeFile(join(dir, CONTRACT_FILE), carriedContract);
+  assert.equal(sb(dir, 'approve', '--review', '--by', 'Ana').status, 0);
+  await rm(dir, { recursive: true });
+});
+
+test('a pending carry without a valid saved diff cannot be confirmed', async () => {
+  const dir = await probe();
+  assert.equal(sb(dir, 'approve', 'probe', '--by', 'Ana').status, 0);
+  const current = { ...CONTRACT, summary: 'A probe, reworded.' };
+  await writeFile(join(dir, CONTRACT_FILE), JSON.stringify(current));
+  assert.equal(sb(dir, 'approve', 'probe', '--carry', '--reason', 'Wording only').status, 0);
+  const plan = await readFile(join(dir, PLAN), 'utf8');
+  // This is also the snapshot shape for a carry made before saved review diffs.
+  await writeFile(join(dir, 'spec/components/probe/approved.json'), JSON.stringify(snapshotOf(current, plan)));
+  assert.match(sb(dir, 'approve', '--review').stdout, /no valid saved changes/);
+  assert.equal(sb(dir, 'approve', '--review', '--by', 'Ana').status, 1);
+  assert.equal(await readFile(join(dir, PLAN), 'utf8'), plan);
+  assert.equal(sb(dir, 'approve', 'probe', '--by', 'Ana').status, 0, 'an explicit reapproval still works');
   await rm(dir, { recursive: true });
 });
 

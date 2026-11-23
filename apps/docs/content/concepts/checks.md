@@ -33,7 +33,9 @@ Planning and test-first are enabled by default and configurable in `harness.conf
 
 The planning gate (`features.planningGate`) puts the contract and `plan.md` first. A person runs `sketchbook approve <name> --by <name>` before tests or implementation. C4 checks that the recorded approval still covers the contract and plan. With `approval.requireRecord`, locally designed or customized components need a plan; unchanged catalog installs do not.
 
-If C4 reports that approval no longer holds, run `sketchbook approve <name> --diff`. Recorded token renames and prefix changes keep the approval. Material changes need a new approval. When `approval.triage` is on, a wording-only change can carry the existing approval with `--carry --reason`. A person lists the pending carries with `sketchbook approve --review`, reviews them, and confirms them with `sketchbook approve --review --by <name>`.
+If C4 reports that approval no longer holds, run `sketchbook approve <name> --diff`. Recorded token renames and prefix changes keep the approval. Material changes need a new approval. When `approval.triage` is on, a wording-only change can carry the existing approval with `--carry --reason`.
+
+Run `sketchbook approve --review` to see the reason and before-and-after changes for each pending carry, even after it was committed. A person confirms them with `sketchbook approve --review --by <name>`. If any carry no longer matches the current scope, nothing in the batch is confirmed. If an older carry has no saved changes, review it in Git and have a person approve the current scope with `sketchbook approve <component> --by <name>`.
 
 Test-first (`features.testFirst`) uses `sketchbook evidence red` and `green` to record runs of the same behavior spec and test setup before and after implementing the change. C5 checks the records, and `sketchbook evidence ready` also requires a green run that matches the current inputs. Older plans marked `test-first: unverified (pre-record)` do not attest to the order of the original work. The records do not authenticate the person or judge whether a test failed for the intended reason.
 

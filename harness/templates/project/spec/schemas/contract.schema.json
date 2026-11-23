@@ -27,7 +27,7 @@
     },
     "tag": {
       "type": "string",
-      "pattern": "^[a-z]+-[a-z-]+$"
+      "pattern": "^[a-z][a-z0-9]*-[a-z-]+$"
     },
     "status": {
       "enum": [
@@ -637,7 +637,7 @@
       "properties": {
         "tag": {
           "type": "string",
-          "pattern": "^[a-z]+-[a-z-]+$"
+          "pattern": "^[a-z][a-z0-9]*-[a-z-]+$"
         },
         "summary": {
           "type": "string"

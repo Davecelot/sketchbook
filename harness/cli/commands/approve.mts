@@ -3,9 +3,9 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { kebab } from '../../commands/catalog.mjs';
 import { parseJson } from '../../lib/files.mjs';
-import { readRecord, snapshotFile, snapshotOf, stamp, verifyApproval, writeRecord } from '../../lib/plan-approval.mjs';
+import { awaitingReview, carryDigest, planFile, readCarries, readRecord, snapshotFile, snapshotOf, stamp, verifyApproval, writeRecord } from '../../lib/plan-approval.mjs';
 import { classifyComponent } from '../../lib/contract-diff.mjs';
-import type { PlanRecord } from '../../lib/plan-approval.mjs';
+import type { CarryDiff, PlanRecord } from '../../lib/plan-approval.mjs';
 import type { HarnessConfigJson } from '../../../generated/types/harness-config.js';
 import type { ComponentRegistry } from '../../../generated/types/registry.js';
 import type { Command, CommandResult, OptionSpecs } from '../types.mjs';
@@ -15,7 +15,7 @@ const options = {
   diff: { type: 'boolean', description: 'Show what changed since the approval and how the CLI classifies it (none, mechanical, editorial, material). Read-only' },
   carry: { type: 'boolean', description: 'Carry the approval over a mechanical change, or an editorial one when approval.triage is on. Refuses a material change' },
   reason: { type: 'string', value: 'text', description: 'With --carry: why the approved scope is unchanged (required for an editorial change)' },
-  review: { type: 'boolean', description: 'List approvals carried by triage; with --by, confirm them all' },
+  review: { type: 'boolean', description: 'Show the saved changes for each pending editorial carry. With --by, confirm the batch only if every carry still matches the current scope' },
   backfill: { type: 'boolean', description: 'Write a record for every plan that has none (needs --by and --basis)' },
   basis: { type: 'string', value: 'ref', description: 'With --backfill: what the original approval rests on (for example SB-0011); "Approved under SB-NNNN" or another approved Status line on the plan wins' },
 } satisfies OptionSpecs;
@@ -32,24 +32,31 @@ const basisOf = (text: string, fallback: string): string => {
 };
 const today = (): string => new Date().toISOString().slice(0, 10);
 
-interface Files { planFile: string; text: string; contract: object; record: PlanRecord }
+interface Plan { file: string; text: string; record: PlanRecord }
+interface Files extends Plan { contract: object }
+const contractFile = (name: string): string => `spec/components/${name}/contract.json`;
 
 async function load(root: string, name: string): Promise<Files | CommandResult> {
-  const contractFile = `spec/components/${name}/contract.json`;
-  const planFile = `spec/components/${name}/plan.md`;
-  for (const f of [contractFile, planFile]) if (!existsSync(join(root, f))) return { exitCode: 1, errors: [{ file: f, msg: 'missing', fix: 'Write the contract and plan first (contract-author workflow).' }] };
-  const text = await readFile(join(root, planFile), 'utf8');
-  return { planFile, text, contract: parseJson<object>(await readFile(join(root, contractFile), 'utf8')), record: readRecord(text) ?? {} };
+  const file = planFile(name);
+  const contract = contractFile(name);
+  for (const f of [contract, file]) if (!existsSync(join(root, f))) return { exitCode: 1, errors: [{ file: f, msg: 'missing', fix: 'Write the contract and plan first (contract-author workflow).' }] };
+  const text = await readFile(join(root, file), 'utf8');
+  return { file, text, contract: parseJson<object>(await readFile(join(root, contract), 'utf8')), record: readRecord(text) ?? {} };
 }
 
-async function save(root: string, name: string, f: Files, record: PlanRecord): Promise<string[]> {
-  await writeFile(join(root, f.planFile), writeRecord(f.text, stamp(record, f.contract, f.text)));
-  await writeFile(join(root, snapshotFile(name)), JSON.stringify(snapshotOf(f.contract, f.text), null, 2) + '\n');
-  return [f.planFile, snapshotFile(name)];
+async function save(root: string, name: string, f: Files, record: PlanRecord, carries?: CarryDiff[]): Promise<string[]> {
+  const snap = { ...snapshotOf(f.contract, f.text), ...(carries ? { carries } : {}) };
+  const updated = stamp({ ...record, 'carried-diff': carries ? carryDigest(carries) : undefined }, f.contract, f.text);
+  await writeFile(join(root, f.file), writeRecord(f.text, updated));
+  await writeFile(join(root, snapshotFile(name)), JSON.stringify(snap, null, 2) + '\n');
+  return [f.file, snapshotFile(name)];
 }
 
 const plans = (root: string): string[] => readdirSync(join(root, 'spec/components'))
-  .filter((n) => existsSync(join(root, 'spec/components', n, 'plan.md')) && existsSync(join(root, 'spec/components', n, 'contract.json')));
+  .filter((n) => existsSync(join(root, planFile(n)))).sort();
+
+const reviewFix = (name: string): string => `Review the change in Git, then have a person run sketchbook approve ${name} --by <name>.`;
+const show = (value: unknown): string => JSON.stringify(value) ?? '(not present)';
 
 export default {
   name: 'approve',
@@ -57,7 +64,7 @@ export default {
   summary: 'Record a person’s approval of a component’s contract and plan, or carry it over a change that leaves the scope as approved. Check C4 verifies it.',
   args: [{ name: 'Component Name', required: false, variadic: true, description: 'Component with spec/components/<name>/contract.json and plan.md (not with --review or --backfill)' }],
   options,
-  examples: ['sketchbook approve switch --by "Ana Diaz"', 'sketchbook approve switch --diff', 'sketchbook approve switch --carry --reason "Reworded the summary"', 'sketchbook approve --review --by Ana', 'sketchbook approve --backfill --by Ana --basis SB-0011 --dry-run'],
+  examples: ['sketchbook approve switch --by "Ana Diaz"', 'sketchbook approve switch --diff', 'sketchbook approve switch --carry --reason "Reworded the summary"', 'sketchbook approve --review', 'sketchbook approve --review --by Ana', 'sketchbook approve --backfill --by Ana --basis SB-0011 --dry-run'],
   mutates: true,
   dryRun: true,
   async run({ root, args, options, dryRun, out }) {
@@ -65,17 +72,53 @@ export default {
     const by = options.by?.trim();
 
     if (options.review) {
-      const pending: Files[] = [];
-      const names: string[] = [];
-      for (const name of plans(root)) {
-        const f = await load(root, name) as Files;
-        if (f.record['carried-by'] === 'triage' && !f.record['confirmed-by']) { pending.push(f); names.push(name); out(`${name}: ${f.record['carried-reason'] ?? '(no reason)'} (carried ${f.record['carried-on'] ?? '?'})`); }
+      if (args.length || options.carry || options.diff || options.backfill || options.reason || options.basis) {
+        return { exitCode: 1, errors: [{ msg: '--review lists or confirms the entire batch; do not pass a component or another approval mode', fix: 'Run sketchbook approve --review to inspect the batch.' }] };
       }
+      const pending: Plan[] = [];
+      const reviews: { component: string; carries: CarryDiff[]; problem: string | null }[] = [];
+      const errors: NonNullable<CommandResult['errors']> = [];
+      for (const name of plans(root)) {
+        const file = planFile(name);
+        const text = await readFile(join(root, file), 'utf8');
+        const record = readRecord(text);
+        if (!record || !awaitingReview(record)) continue;
+        const carries = readCarries(root, name, record);
+        const contract = await readFile(join(root, contractFile(name)), 'utf8').then((t) => parseJson<object>(t)).catch(() => null);
+        const holds = contract && Boolean(record['approved-by']) && (verifyApproval(record, contract, text).ok
+          || classifyComponent(root, name, record, contract, text, config.prefix)?.class === 'mechanical');
+        const problem = !carries ? 'no valid saved changes for this carry' : !holds ? 'the current contract or plan no longer matches the carry' : null;
+        reviews.push({ component: name, carries: carries ?? [], problem });
+        pending.push({ file, text, record });
+        if (!carries) out(`${name}: ${record['carried-reason'] ?? '(no reason)'} (carried ${record['carried-on'] ?? '?'})`);
+        for (const carry of carries ?? []) {
+          out(`${name}: ${carry.reason} (carried ${carry.on})`);
+          for (const c of carry.contract) out(`  contract.${c.key}: ${show(c.before)} -> ${show(c.after)}`);
+          for (const p of carry.plan) {
+            out(`  plan section: ${p.section || '(top)'}`);
+            for (const [label, sections] of [['before', p.before], ['after', p.after]] as const) {
+              out(`    ${label}:${sections ? '' : ' (not present)'}`);
+              for (const section of sections ?? []) for (const line of section.split('\n')) out(`      ${line}`);
+            }
+          }
+        }
+        if (problem) {
+          out(`  Cannot confirm: ${problem}.`);
+          errors.push({
+            file, msg: `${name}: ${problem}`,
+            fix: carries ? `Run sketchbook approve ${name} --diff. Restore the carried scope, carry another wording-only change, or get a new approval before confirming the batch.` : reviewFix(name),
+          });
+        }
+      }
+      const data = { pending: reviews.map(({ component }) => component), reviews };
       if (!pending.length) out('No carried approvals await review.');
-      if (!by || dryRun || !pending.length) return { data: { pending: names }, next: pending.length && !by ? 'Review each change (git diff), then: sketchbook approve --review --by <name>' : null };
-      for (const f of pending) await writeFile(join(root, f.planFile), writeRecord(f.text, { ...f.record, 'confirmed-by': by }));
+      if (!by || !pending.length) return { data, next: !pending.length ? null : errors.length ? 'Resolve the unconfirmable carries before confirming the batch.' : 'Review the saved changes above, then: sketchbook approve --review --by <name>' };
+      // Check the entire batch before writing a confirmation to any plan.
+      if (errors.length) return { exitCode: 1, data, errors };
+      if (dryRun) { out(`Would confirm ${pending.length} carried approval(s) as ${by}.`); return { changed: pending.map((f) => f.file), data }; }
+      for (const f of pending) await writeFile(join(root, f.file), writeRecord(f.text, { ...f.record, 'confirmed-by': by }));
       out(`${by} confirmed ${pending.length} carried approval(s).`);
-      return { changed: pending.map((f) => f.planFile), data: { pending: names, confirmedBy: by } };
+      return { changed: pending.map((f) => f.file), data: { ...data, confirmedBy: by } };
     }
 
     if (options.backfill) {
@@ -86,8 +129,8 @@ export default {
       const changed: string[] = [];
       const names: string[] = [];
       for (const name of plans(root)) {
-        const f = await load(root, name) as Files;
-        if (readRecord(f.text)) continue;
+        const f = await load(root, name);
+        if (!('file' in f) || readRecord(f.text)) continue;
         const stage = STAGE_OF_STATUS[status.get(name) ?? 'draft'] ?? 'plan';
         const record: PlanRecord = {
           stage, basis: basisOf(f.text, basis), 'approved-by': by, 'approved-on': /\d{4}-\d{2}-\d{2}/.exec(f.text)?.[0] ?? today(),
@@ -103,7 +146,7 @@ export default {
     const name = kebab(args.join(' '));
     if (!name) return { exitCode: 1, errors: [{ msg: 'name a component', fix: 'sketchbook approve <name> --by <name>' }] };
     const f = await load(root, name);
-    if (!('planFile' in f)) return f;
+    if (!('file' in f)) return f;
 
     if (options.diff || options.carry) {
       const held = verifyApproval(f.record, f.contract, f.text).ok;
@@ -117,15 +160,25 @@ export default {
         return { data };
       }
       if (cls === 'none') { out(`${name}: the approval holds; nothing to carry.`); return { data }; }
-      if (cls === 'material') return { exitCode: 1, data, errors: [{ file: f.planFile, msg: `${name}: a material change needs a person's approval`, fix: `A person reviews it (sketchbook approve ${name} --diff) and runs sketchbook approve ${name} --by <name>.` }] };
-      if (cls === 'editorial' && !config.approval?.triage) return { exitCode: 1, data, errors: [{ file: f.planFile, msg: 'approval.triage is off: an editorial change needs a person', fix: `sketchbook approve ${name} --by <name>, or turn on approval.triage in harness.config.json.` }] };
+      if (cls === 'material') return { exitCode: 1, data, errors: [{ file: f.file, msg: `${name}: a material change needs a person's approval`, fix: `A person reviews it (sketchbook approve ${name} --diff) and runs sketchbook approve ${name} --by <name>.` }] };
+      if (cls === 'editorial' && !config.approval?.triage) return { exitCode: 1, data, errors: [{ file: f.file, msg: 'approval.triage is off: an editorial change needs a person', fix: `sketchbook approve ${name} --by <name>, or turn on approval.triage in harness.config.json.` }] };
       const reason = options.reason?.trim() || (cls === 'mechanical' ? 'recorded token renames or prefix change' : '');
       if (!reason) return { exitCode: 1, data, errors: [{ msg: '--carry needs --reason for an editorial change', fix: `sketchbook approve ${name} --carry --reason "<why scope is unchanged>"` }] };
+      const previous = readCarries(root, name, f.record);
+      if (awaitingReview(f.record) && !previous) return { exitCode: 1, data, errors: [{ file: f.file, msg: 'the existing carry has no valid saved changes for review', fix: reviewFix(name) }] };
+      let carries = previous ?? undefined;
+      if (change?.class === 'editorial') {
+        carries = [...(awaitingReview(f.record) ? previous ?? [] : []), {
+          reason, on: today(),
+          contract: change.contractKeys.map((key) => ({ key, before: change.before[key], after: change.after[key] })),
+          plan: change.planChanges,
+        }];
+      }
       // Renaming after triage must not replace the reason a person still needs to review.
       const record: PlanRecord = cls === 'mechanical' && f.record['carried-by'] === 'triage' ? f.record
         : { ...f.record, 'carried-by': cls === 'editorial' ? 'triage' : 'sketchbook', 'carried-reason': reason, 'carried-on': today(), 'confirmed-by': undefined };
-      if (dryRun) { out(`Would carry ${name}'s approval over ${cls === 'editorial' ? 'an' : 'a'} ${cls} change.`); return { changed: [f.planFile, snapshotFile(name)], data }; }
-      const changed = await save(root, name, f, record);
+      if (dryRun) { out(`Would carry ${name}'s approval over ${cls === 'editorial' ? 'an' : 'a'} ${cls} change.`); return { changed: [f.file, snapshotFile(name)], data }; }
+      const changed = await save(root, name, f, record, carries);
       out(`Carried ${name}'s approval over ${cls === 'editorial' ? 'an' : 'a'} ${cls} change${cls === 'editorial' ? '; a person confirms it with sketchbook approve --review' : ''}.`);
       return { changed, data };
     }
@@ -139,7 +192,7 @@ export default {
       'carried-by': undefined, 'carried-reason': undefined, 'carried-on': undefined, 'confirmed-by': undefined,
     };
     const data = { component: name, stage, approvedBy: by };
-    if (dryRun) { out(`Would record ${by}'s approval of ${name} in ${f.planFile} (stage: ${stage}).`); return { changed: [f.planFile, snapshotFile(name)], data }; }
+    if (dryRun) { out(`Would record ${by}'s approval of ${name} in ${f.file} (stage: ${stage}).`); return { changed: [f.file, snapshotFile(name)], data }; }
     const changed = await save(root, name, f, record);
     out(`Recorded ${by}'s approval of ${name} (stage: ${stage}). Check C4 fails if the contract or plan changes in scope.`);
     return { changed, next: `Continue at stage ${stage}; npm run check verifies the approval.`, data };

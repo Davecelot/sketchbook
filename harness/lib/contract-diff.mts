@@ -2,7 +2,7 @@ import { applyRenames, readRenames, semanticPaths } from './renames.mjs';
 import { planBody, readSnapshot, scopedContract, sorted } from './plan-approval.mjs';
 import { rewrite } from '../commands/prefix.mjs';
 import type { Rename } from './renames.mjs';
-import type { PlanRecord, Snapshot } from './plan-approval.mjs';
+import type { CarryDiff, PlanRecord, Snapshot } from './plan-approval.mjs';
 
 // none: nothing in scope changed. mechanical: explained by recorded token renames or a prefix change (no person needed).
 // editorial: wording only (an agent may carry it when approval.triage is on). material: a person approves again.
@@ -14,6 +14,7 @@ export interface Classification {
   planSections: string[];
   before: Record<string, unknown>;
   after: Record<string, unknown>;
+  planChanges: CarryDiff['plan'];
 }
 
 const EDITORIAL_KEYS = new Set(['summary', 'aiHints', 'openQuestions', 'decisions']);
@@ -60,7 +61,8 @@ export function classify(snap: Snapshot, contract: object, planText: string, { r
   const a = sections(priorPlan);
   const b = sections(currentPlan);
   const planSections = [...new Set([...a.keys(), ...b.keys()])].filter((t) => !same(a.get(t), b.get(t)));
-  const result = { contractKeys: keys, planSections, before, after };
+  const planChanges = planSections.map((section) => ({ section, before: a.get(section), after: b.get(section) }));
+  const result = { contractKeys: keys, planSections, before, after, planChanges };
   if (same(snap.contract, after) && snap.plan === currentPlan) return { class: 'none', ...result };
   if (!keys.length && priorPlan === currentPlan) return { class: 'mechanical', ...result };
   // Grouping sections labels a diff but is not proof that the approved body is unchanged.

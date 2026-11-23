@@ -275,7 +275,7 @@ Changes files; supports `--dry-run`.
 | `--diff` | Show what changed since the approval and how the CLI classifies it (none, mechanical, editorial, material). Read-only |
 | `--carry` | Carry the approval over a mechanical change, or an editorial one when approval.triage is on. Refuses a material change |
 | `--reason` | With --carry: why the approved scope is unchanged (required for an editorial change) |
-| `--review` | List approvals carried by triage; with --by, confirm them all |
+| `--review` | Show the saved changes for each pending editorial carry. With --by, confirm the batch only if every carry still matches the current scope |
 | `--backfill` | Write a record for every plan that has none (needs --by and --basis) |
 | `--basis` | With --backfill: what the original approval rests on (for example SB-0011); "Approved under SB-NNNN" or another approved Status line on the plan wins |
 
@@ -284,6 +284,7 @@ Examples:
 - `sketchbook approve switch --by "Ana Diaz"`
 - `sketchbook approve switch --diff`
 - `sketchbook approve switch --carry --reason "Reworded the summary"`
+- `sketchbook approve --review`
 - `sketchbook approve --review --by Ana`
 - `sketchbook approve --backfill --by Ana --basis SB-0011 --dry-run`
 

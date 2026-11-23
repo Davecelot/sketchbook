@@ -21,10 +21,11 @@ export interface PlanRecord {
   'carried-by'?: string;
   'carried-reason'?: string;
   'carried-on'?: string;
+  'carried-diff'?: string;
   'confirmed-by'?: string;
 }
 
-const FIELDS: (keyof PlanRecord)[] = ['stage', 'next', 'blocker', 'basis', 'test-first', 'approved-by', 'approved-on', 'approved-contract', 'approved-plan', 'carried-by', 'carried-reason', 'carried-on', 'confirmed-by'];
+const FIELDS: (keyof PlanRecord)[] = ['stage', 'next', 'blocker', 'basis', 'test-first', 'approved-by', 'approved-on', 'approved-contract', 'approved-plan', 'carried-by', 'carried-reason', 'carried-on', 'carried-diff', 'confirmed-by'];
 const FRONTMATTER = /^---\n[\s\S]*?\n---\n/;
 export const PROCESS_RECORD = /^spec\/components\/[^/]+\/(plan\.md|approved\.json|evidence\.json)$/;
 export const planFile = (name: string): string => `spec/components/${name}/plan.md`;
@@ -78,7 +79,13 @@ export function verifyApproval(record: PlanRecord, contract: object, planText: s
 }
 
 // What was approved, so a later change can be classified (contract-diff.mts). Written only by sketchbook approve.
-export interface Snapshot { contract: Record<string, unknown>; plan: string }
+export interface CarryDiff {
+  reason: string;
+  on: string;
+  contract: { key: string; before?: unknown; after?: unknown }[];
+  plan: { section: string; before?: string[]; after?: string[] }[];
+}
+export interface Snapshot { contract: Record<string, unknown>; plan: string; carries?: CarryDiff[] }
 
 export const snapshotFile = (name: string): string => `spec/components/${name}/approved.json`;
 
@@ -94,6 +101,14 @@ export function readSnapshot(root: string, name: string, record: PlanRecord): Sn
     const snap = JSON.parse(readFileSync(file, 'utf8')) as Snapshot;
     return sha(JSON.stringify(sorted(snap.contract))) === record['approved-contract'] && sha(snap.plan) === record['approved-plan'] ? snap : null;
   } catch { return null; }
+}
+
+export const awaitingReview = (record: PlanRecord): boolean => record['carried-by'] === 'triage' && !record['confirmed-by'];
+export const carryDigest = (carries: CarryDiff[]): string => sha(JSON.stringify(sorted(carries)));
+
+export function readCarries(root: string, name: string, record: PlanRecord): CarryDiff[] | null {
+  const carries = readSnapshot(root, name, record)?.carries;
+  return Array.isArray(carries) && carries.length > 0 && carryDigest(carries) === record['carried-diff'] ? carries : null;
 }
 
 export function stamp(record: PlanRecord, contract: object, planText: string): PlanRecord {

@@ -13,7 +13,7 @@ The schema allows only these fields.
 | Field | Purpose | Required |
 | --- | --- | --- |
 | `component` | Component name, for example `Badge`. | Yes |
-| `tag` | Custom element tag, for example `sb-badge`. | Yes |
+| `tag` | Custom element tag, for example `sb-badge` or `team2-badge`. The prefix starts with a lowercase letter and can include digits after it. | Yes |
 | `status` | Lifecycle status (see below). | Yes |
 | `platforms` | Where the component exists, for example `web`, `design`. | Yes |
 | `summary` | One-sentence description. | Yes |

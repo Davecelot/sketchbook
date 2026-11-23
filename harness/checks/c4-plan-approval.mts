@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { missingPlanIssues, planFile, readRecord, verifyApproval, STAGES } from '../lib/plan-approval.mjs';
+import { awaitingReview, missingPlanIssues, planFile, readRecord, verifyApproval, STAGES } from '../lib/plan-approval.mjs';
 import { classifyComponent } from '../lib/contract-diff.mjs';
 import type { CheckContext, CheckInfo, CheckIssue, CheckResult } from './types.mjs';
 
@@ -33,8 +33,7 @@ export function run(ctx: CheckContext): CheckResult {
       if (stage !== 'plan') errors.push({ file, token: name, msg: `stage "${stage}" needs an approval`, fix: `Set stage: plan until approved. ${approve}` });
       continue;
     }
-    const pending = record['carried-by'] === 'triage' && !record['confirmed-by'];
-    if (pending) warnings.push({ file, token: name, msg: `carried by triage (${record['carried-reason'] ?? 'no reason'}), awaiting a person`, fix: 'Review the change, then sketchbook approve --review --by <name>.' });
+    if (awaitingReview(record)) warnings.push({ file, token: name, msg: `carried by triage (${record['carried-reason'] ?? 'no reason'}), awaiting a person`, fix: 'Run sketchbook approve --review to see the saved changes before confirming them.' });
     const v = verifyApproval(record, contract, text);
     if (v.ok) continue;
     const change = record['approved-by'] ? classifyComponent(root, name, record, contract, text, config.prefix) : null;

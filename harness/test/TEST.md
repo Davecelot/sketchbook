@@ -257,6 +257,8 @@ Every mutating subcommand runs: plan → (dry run: stop and report) → write �
 | PA11 | Missing plan for a local component, an untouched catalog install, then a customized catalog component | C4 and C5 reject the missing local plan, exempt the untouched install, and reject the customization |
 | PA12 | Edit the first of two Scope sections | Material, never `none` |
 | PA13 | Unconfirmed editorial carry followed by a token rename and a mechanical carry | C4 keeps the warning and the original triage reason is still listed for review |
+| PA14 | Review a saved editorial carry after `--diff` reports no current change; carry again and then rename mechanically | Exact contract values and plan sections are still visible; repeated carries preserve earlier changes and reasons |
+| PA15 | Confirm a batch with a stale carry or a carry with no saved changes | Refused before writing any confirmation; explicit human approval can replace a record made before review diffs |
 
 ## Test-first evidence (`evidence.test.mts`, SB-0123)
 | # | Case | Expectation |

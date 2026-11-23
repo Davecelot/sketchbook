@@ -34,11 +34,11 @@ async function* files(dir: string): AsyncGenerator<string> {
   }
 }
 
-test('renamePrefix to a new prefix leaves no trace of the old one in src/ or playwright/ and passes every check', async () => {
+test('renamePrefix to a prefix with digits leaves no trace of the old one in src/ or playwright/ and passes every check', async () => {
   // On the reference project (helpers.mjs), whatever prefix this install uses.
   const dir = await fixture(PARTS);
   const FROM = parseJson<HarnessConfigJson>(await readFile(join(dir, 'harness.config.json'), 'utf8')).prefix;
-  const TO = FROM === 'zeta' ? 'omega' : 'zeta';
+  const TO = FROM === 'zeta7' ? 'omega9' : 'zeta7';
   const Pascal = (FROM[0] ?? '').toUpperCase() + FROM.slice(1);
   await assert.rejects(renamePrefix(dir, FROM, 'Acme', { quiet: true }), /must match/);
   await assert.rejects(renamePrefix(dir, FROM, 'my-brand', { quiet: true }), /must match/);
