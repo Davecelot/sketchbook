@@ -1,6 +1,6 @@
 ---
 component: Field
-status: beta
+status: stable
 version: 0.1.0
 platforms: [web, design]
 dependsOn: []

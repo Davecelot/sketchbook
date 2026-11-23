@@ -1,3 +1,7 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { frontmatter } from '../lib/claude-layer.mjs';
+import { errorCode } from '../lib/files.mjs';
 import { validate } from '../lib/schema.mjs';
 import { schemaOrThrow, type CheckContext, type CheckIssue, type CheckResult } from './types.mjs';
 
@@ -39,8 +43,9 @@ function extensionErrors(ext: Record<string, unknown> | undefined): ExtensionIss
 
 const kebab = (s: string): string => s.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
-export function run({ all, schemas, registry, config }: CheckContext): CheckResult {
+export function run({ root, all, schemas, registry, config }: CheckContext): CheckResult {
   const errors: CheckIssue[] = [];
+  const warnings: CheckIssue[] = [];
   for (const e of validate(schemaOrThrow(schemas.registry, 'registry'), registry)) errors.push({ file: 'spec/registry.json', msg: e, fix: 'Match spec/schemas/registry.schema.json.' });
   for (const { name, file, contract, error } of all.contracts) {
     if (error) { errors.push({ file, msg: `not valid JSON: ${error}`, fix: 'Fix the JSON syntax.' }); continue; }
@@ -55,6 +60,17 @@ export function run({ all, schemas, registry, config }: CheckContext): CheckResu
     const entry = registry.components.find((c) => kebab(c.name.replace(/ /g, '')) === name || c.name === contract.component);
     if (!entry) errors.push({ file, msg: `${contract.component} is not in spec/registry.json`, fix: 'Add it to the registry.' });
     else if (entry.status !== contract.status) errors.push({ file, msg: `status "${contract.status}" differs from registry "${entry.status}"`, fix: 'Keep the contract and registry status equal.' });
+    const markdown = `spec/components/${name}/contract.md`;
+    const front = (() => {
+      try { return frontmatter(readFileSync(join(root, markdown), 'utf8').replace(/\r\n/g, '\n')); }
+      catch (e) { if (errorCode(e) === 'ENOENT') return null; throw e; }
+    })();
+    for (const key of ['status', 'version'] as const) {
+      const value = front?.[key];
+      if (typeof value !== 'string' || contract[key] === undefined || value === contract[key]) continue;
+      // Existing downstream projects own their Markdown; an engine upgrade must not block them on old prose.
+      (config.catalog?.source ? errors : warnings).push({ file: markdown, msg: `${key} "${value}" differs from contract.json "${contract[key]}"`, fix: `Update the Markdown ${key} to match contract.json.` });
+    }
     for (const [prop, p] of Object.entries(contract.props || {})) {
       if (p.type === 'variant' && !p.values?.length) errors.push({ file, token: prop, msg: 'variant prop without values', fix: 'List the allowed values.' });
       if (p.type === 'variant' && p.default != null && p.values && !p.values.some((v) => v === p.default)) errors.push({ file, token: prop, msg: `default "${p.default}" is not one of its values`, fix: 'Pick a default from values.' });
@@ -67,5 +83,5 @@ export function run({ all, schemas, registry, config }: CheckContext): CheckResu
     const open = (contract.openQuestions || []).filter((q) => q.status === 'open');
     if (open.length && ['beta', 'stable'].includes(contract.status)) errors.push({ file, msg: `${open.length} open question(s) at status ${contract.status}`, fix: 'Answer them before beta.' });
   }
-  return { errors };
+  return { errors, warnings };
 }

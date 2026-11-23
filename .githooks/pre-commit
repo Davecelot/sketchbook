@@ -7,7 +7,12 @@ out=$(mktemp) || exit 1
 trap 'rm -f "$out"' EXIT
 # The source repo is told apart by its build script: harness/checks/run.mjs is compiled, so a fresh clone has none yet.
 if [ -f scripts/build-harness.mjs ]; then
-  node scripts/build-harness.mjs > "$out" 2>&1 && node harness/checks/run.mjs >> "$out" 2>&1
+  if ! node scripts/build-harness.mjs > "$out" 2>&1; then
+    cat "$out"
+    printf '\nCommit blocked: the Sketchbook harness failed to build.\n'
+    exit 1
+  fi
+  node harness/checks/run.mjs >> "$out" 2>&1
 elif [ -x node_modules/.bin/sketchbook ]; then
   node_modules/.bin/sketchbook check > "$out" 2>&1
 else
@@ -15,9 +20,9 @@ else
   exit 1
 fi
 status=$?
-if [ "$status" -eq 1 ]; then
+if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
   cat "$out"
-  echo "\nCommit blocked: npm run check failed. Fix the spec (or rebuild with npm run generate), then commit again."
+  printf '\nCommit blocked: Sketchbook check failed (exit %s). Fix the diagnostics above, then commit again.\n' "$status"
   exit 1
 fi
 exit 0

@@ -67,7 +67,7 @@
     },
     {
       "path": "playwright/tests/native-select/native-select.behavior.spec.ts",
-      "hash": "c0626646c03aeb3ad93c"
+      "hash": "9b68554478dc6bfb56f3"
     },
     {
       "path": "spec/components/native-select/contract.json",
@@ -75,7 +75,7 @@
     },
     {
       "path": "spec/components/native-select/contract.md",
-      "hash": "04dd3d3b7e52db816e7a"
+      "hash": "70a653445bacf814bded"
     },
     {
       "path": "src/components/native-select/NativeSelect.scss",

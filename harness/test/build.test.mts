@@ -171,6 +171,64 @@ test('BH7 a fresh clone with a restored node_modules cache still emits every out
   }
 });
 
+test('Git gates accept only documented check statuses and reject every failed build', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'sb-gates-'));
+  try {
+    for (const folder of ['.githooks', 'scripts', 'harness/checks', 'node_modules/.bin']) mkdirSync(join(dir, folder), { recursive: true });
+    for (const hook of ['pre-commit', 'pre-push']) {
+      copyFileSync(join(ROOT, '.githooks', hook), join(dir, '.githooks', hook));
+      chmodSync(join(dir, '.githooks', hook), 0o755);
+    }
+    writeFileSync(join(dir, 'package.json'), JSON.stringify({ scripts: Object.fromEntries(['test:harness', 'typecheck', 'lint'].map((s) => [s, 'node -e 0'])) }));
+    const run = (hook: string) => spawnSync('sh', [join('.githooks', hook)], { cwd: dir, encoding: 'utf8' });
+    const build = join(dir, 'scripts/build-harness.mjs');
+    const checks = join(dir, 'harness/checks/run.mjs');
+    writeFileSync(checks, 'process.exit(0);\n');
+    for (const code of [1, 2, 127, 137]) {
+      writeFileSync(build, `console.error('build diagnostic'); process.exit(${code});\n`);
+      const result = run('pre-commit');
+      assert.equal(result.status, 1, `build exit ${code}`);
+      assert.match(result.stdout, /build diagnostic/);
+    }
+    writeFileSync(build, '');
+    for (const code of [0, 2, 1, 127, 137]) {
+      const expected = code === 0 || code === 2 ? 0 : 1;
+      writeFileSync(checks, `process.exit(${code});\n`);
+      assert.equal(run('pre-commit').status, expected, `source check exit ${code}`);
+      writeFileSync(checks, `if (process.argv.includes('--maintainer')) process.exit(${code});\n`);
+      assert.equal(run('pre-push').status, expected, `maintainer check exit ${code}`);
+    }
+    rmSync(build);
+    for (const code of [0, 2, 1, 127, 137]) {
+      const installed = join(dir, 'node_modules/.bin/sketchbook');
+      writeFileSync(installed, `#!/bin/sh\nexit ${code}\n`, { mode: 0o755 });
+      assert.equal(run('pre-commit').status, code === 0 || code === 2 ? 0 : 1, `installed check exit ${code}`);
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('the Hammock component scan ignores generated styles, Storybook entry points and barrel imports', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'sb-hammock-'));
+  try {
+    const folder = join(dir, 'src/components/probe');
+    mkdirSync(folder, { recursive: true });
+    writeFileSync(join(dir, 'src/index.ts'), "export * from './components/probe/Probe';\n");
+    for (const name of ['Probe', 'Probe.styles', 'Probe.stories', 'Unreferenced']) {
+      writeFileSync(join(folder, `${name}.ts`), 'export const probe = true;\n');
+    }
+    const script = join(ROOT, 'harness/templates/agent-catalog/hammock/scripts/audit-simplicity.sh');
+    const result = spawnSync('bash', [script], { cwd: dir, encoding: 'utf8' });
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /Unreferenced\.ts/);
+    assert.doesNotMatch(result.stdout, /Probe(?:\.stories|\.styles)?\.ts/);
+    assert.match(result.stdout, /src\/components/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('BH5 the inputs hash covers the .mts source and never its compiled .mjs', needsBuildScript, async () => {
   const { inputsHash } = await import('../lib/propagation.mjs');
   const dir = mkdtempSync(join(tmpdir(), 'sb-hash-'));

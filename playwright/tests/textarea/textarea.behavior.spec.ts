@@ -56,6 +56,22 @@ test.describe('Textarea', () => {
     await expect(field(page).locator('[part="error"]')).not.toBeEmpty();
   });
 
+  test('a submit attempt reveals the native error; programmatic values and reset update it', async ({ page }) => {
+    await gotoStory(page, 'components-textarea--default', TAG);
+    await mountForm(page, '<sb-textarea name="field" label="Field" required></sb-textarea>');
+    const textarea = page.locator('form#under-test sb-textarea');
+    const error = textarea.locator('[part="error"]');
+    await expect(error).toBeEmpty();
+    await page.locator('form#under-test').evaluate((form: HTMLFormElement) => form.requestSubmit());
+    await expect(error).not.toBeEmpty();
+    await textarea.evaluate((el: HTMLElement & { value: string }) => { el.value = 'Ready'; });
+    await expect(error).toBeEmpty();
+    expect(await formEntries(page)).toEqual([['field', 'Ready']]);
+    await page.locator('form#under-test').evaluate((form: HTMLFormElement) => form.reset());
+    await expect(textarea.locator('textarea')).toHaveValue('');
+    await expect(error).toBeEmpty();
+  });
+
   test('required: native required, asterisk hidden from assistive tech', async ({ page }) => {
     await gotoStory(page, 'components-textarea--required', TAG);
     await expect(control(page)).toHaveAttribute('required', '');

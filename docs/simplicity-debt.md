@@ -10,7 +10,7 @@ Open verification, deliberate tradeoffs, and work already closed. A tradeoff is 
 
 | Date | File | Simplification | Why | Revisit when |
 | --- | --- | --- | --- | --- |
-| 2026-11-08 | harness/lib/schema.mts | Small JSON Schema subset instead of Ajv | Checks stay plain Node + PostCSS (D-013) | A schema needs a keyword the subset lacks |
+| 2026-11-08 | harness/lib/schema.mts | Small JSON Schema subset instead of Ajv | Checks stay plain Node + PostCSS (D-013); the validator now covers the shipped uniqueness and minimum constraints, and the API uses `anyOf` for disjoint alternatives | A schema needs constraints that can’t be expressed clearly in the supported subset |
 
 | 2026-11-09 | harness/commands/upgrade.mts | The upstream harness/manifest.json is never written; its glob differences are only listed for a hand merge (SB-0070) | Ownership rules must not come from the side being installed | Upstream manifests change often enough that hand merges are a burden |
 | 2026-11-08 | harness/commands/brand.mts | `brand use --yes` clears overrides instead of saving them per brand (SB-0062) | Brand files share the brand.config schema, which has no overrides | Teams need overrides on several brands |
@@ -18,6 +18,7 @@ Open verification, deliberate tradeoffs, and work already closed. A tradeoff is 
 | 2026-11-14 | harness/cli/commands | No `sketchbook brief` orientation command (SB-0114) | Agents read the specs directly, and [round 5](research/value-benchmark/ROUND5.md) met the context target without a new command | A benchmark shows orientation calls (help, status, list, docs) taking a large share of UI or QA runs |
 | 2026-11-14 | .claude/settings.json | No Sketchbook-specific output limit for test runs (SB-0114) | Claude Code already limits its inline output and documents [`bashOutputMaxChars`](https://code.claude.com/docs/en/settings-reference#bashoutputmaxchars) for local tuning | A measured run shows test output dominating context; preserve failure diagnostics if tuning it |
 | 2026-11-16 | eslint.config.js | `eslint.config` stays JavaScript (`// @ts-check`, type-checked by `tsconfig.tools.json`) while the other configs are TypeScript (SB-0119) | ESLint 10 loads a `.ts` config only through jiti or the unstable `unstable_native_nodejs_ts_config` flag, even on a Node that strips types | ESLint loads TypeScript configs natively by default, then convert it to `eslint.config.ts` |
+| 2026-11-23 | `src/components/{input,textarea,native-select}/` | Keep each control's native validation display local | A new shared helper would require an update to project-owned files before these catalog components could be installed in older projects. The shared form lifecycle already lives in `FormAssociated`. | The catalog can deliver shared dependencies to existing projects without overwriting team code, or the three implementations diverge in user-visible behavior |
 
 ## Closed
 

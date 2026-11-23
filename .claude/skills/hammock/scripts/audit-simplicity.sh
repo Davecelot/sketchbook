@@ -26,6 +26,7 @@ echo -e "${BLUE}|  Hammock -- Simplicity Audit                    |${NC}"
 echo -e "${BLUE}+------------------------------------------------+${NC}"
 echo ""
 echo "Mode: $MODE"
+echo "Scope: hand-written component implementation in src/components (not the CLI)"
 echo ""
 
 list_files() {
@@ -44,7 +45,9 @@ list_files() {
 
 FILES=()
 while IFS= read -r -d '' file; do
-  case "$file" in src/components/*.ts|src/components/*.tsx) ;;
+  case "$file" in
+    *.stories.ts|*.stories.tsx|*.styles.ts|*.d.ts) continue ;;
+    src/components/*.ts|src/components/*.tsx) ;;
     *) continue ;;
   esac
   [ -f "$file" ] && FILES+=("$file")
@@ -69,15 +72,15 @@ else
 fi
 echo ""
 
-# --- Smell 2: single-use generic-sounding abstractions ---
-echo "Smell 2: exported helpers/components with exactly one in-repo caller"
+# --- Smell 2: no filename reference in the source tree ---
+echo "Smell 2: exported modules with no filename reference elsewhere in src/"
 for f in "${FILES[@]}"; do
   NAME=$(basename "$f" | sed -E 's/\.tsx?$//')
   EXPORT_COUNT=$(grep -cE "^export (default )?(function|const|class) " "$f" 2>/dev/null)
   if [ "$EXPORT_COUNT" -gt 0 ]; then
-    CALLERS=$(grep -rlF "$NAME" src/components 2>/dev/null | grep -Fxv "$f" | wc -l | tr -d '[:space:]')
+    CALLERS=$(grep -rlF "$NAME" src 2>/dev/null | grep -Fxv "$f" | wc -l | tr -d '[:space:]')
     if [ -z "$CALLERS" ] || [ "$CALLERS" -eq 0 ] 2>/dev/null; then
-      echo -e "  ${YELLOW}$f${NC} -- exported but no in-repo importer found (verify manually, this is a heuristic)"
+      echo -e "  ${YELLOW}$f${NC} -- no other source file mentions its filename (check public and implicit usage)"
     fi
   fi
 done

@@ -43,7 +43,7 @@
     },
     {
       "path": "spec/components/aspect-ratio/contract.md",
-      "hash": "2591d39bae9388ba807b"
+      "hash": "0beedc45006c3f9baf0f"
     },
     {
       "path": "src/components/aspect-ratio/AspectRatio.scss",

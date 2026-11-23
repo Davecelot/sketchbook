@@ -55,7 +55,7 @@
     },
     {
       "path": "playwright/tests/textarea/textarea.behavior.spec.ts",
-      "hash": "ece8fd9c92b58896f533"
+      "hash": "ae69fd8cede43e1266d5"
     },
     {
       "path": "spec/components/textarea/contract.json",
@@ -63,7 +63,7 @@
     },
     {
       "path": "spec/components/textarea/contract.md",
-      "hash": "4d71c9cadff18e09886a"
+      "hash": "2d668cd50c2226fc7b75"
     },
     {
       "path": "src/components/textarea/Textarea.scss",

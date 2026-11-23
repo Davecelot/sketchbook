@@ -112,6 +112,22 @@ test.describe('NativeSelect', () => {
     await expect(host(page).locator('[part="error"]')).not.toBeEmpty();
   });
 
+  test('a submit attempt reveals the native error; programmatic values and reset update it', async ({ page }) => {
+    await gotoStory(page, 'components-nativeselect--default', TAG);
+    await mountForm(page, '<sb-native-select name="field" label="Field" required><option value="">Choose</option><option value="ready">Ready</option></sb-native-select>');
+    const field = page.locator('form#under-test sb-native-select');
+    const error = field.locator('[part="error"]');
+    await expect(error).toBeEmpty();
+    await page.locator('form#under-test').evaluate((form: HTMLFormElement) => form.requestSubmit());
+    await expect(error).not.toBeEmpty();
+    await field.evaluate((el: HTMLElement & { value: string }) => { el.value = 'ready'; });
+    await expect(error).toBeEmpty();
+    expect(await formEntries(page)).toEqual([['field', 'ready']]);
+    await page.locator('form#under-test').evaluate((form: HTMLFormElement) => form.reset());
+    await expect(field.locator('select')).toHaveValue('');
+    await expect(error).toBeEmpty();
+  });
+
   test('disabled cannot be changed', async ({ page }) => {
     await gotoStory(page, 'components-nativeselect--disabled', TAG);
     await expect(page.getByRole('combobox')).toBeDisabled();

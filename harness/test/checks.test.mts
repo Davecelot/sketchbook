@@ -9,7 +9,8 @@ import { promisify } from 'node:util';
 import { formatHuman, runChecks } from '../checks/run.mjs';
 import { compileStyles, mediaVars } from '../../scripts/build-styles.mjs';
 import { fixture, reference, ROOT, sourceRepoOnly, readJson, writeJson, must } from './helpers.mjs';
-import { parseJson } from '../lib/files.mjs';
+import { engineSchema, parseJson } from '../lib/files.mjs';
+import { validate } from '../lib/schema.mjs';
 import type { CheckIssue, CheckOutcome, Report } from '../checks/types.mjs';
 import type { ComponentContract, Realization } from '../../generated/types/contract.js';
 import type { ComponentRegistry } from '../../generated/types/registry.js';
@@ -116,6 +117,42 @@ test('C1 rejects schema errors and tag mismatch', async () => {
   const msgs = first(r).errors.map((e) => e.msg).join('\n');
   assert.match(msgs, /should be "sb-probe"/);
   assert.match(msgs, /variant prop without values/);
+});
+
+test('C1 rejects lifecycle metadata that disagrees with the JSON contract', async () => {
+  const dir = await fixture();
+  try {
+    await withProbe(dir, { ...CONTRACT, version: '1.0.0' });
+    const md = join(dir, 'spec/components/probe/contract.md');
+    await writeFile(md, '---\r\nstatus: beta\r\nversion: 0.1.0\r\n---\r\n# Probe\r\n');
+    await edit<HarnessConfigJson>(dir, 'harness.config.json', (config) => { config.catalog = { source: false }; });
+    const downstream = first(await runChecks(dir, { only: ['C1'] }));
+    assert.equal(downstream.errors.length, 0);
+    assert.equal(downstream.warnings.filter((w) => w.file?.endsWith('probe/contract.md')).length, 2);
+    await edit<HarnessConfigJson>(dir, 'harness.config.json', (config) => { config.catalog = { source: true }; });
+    const issues = first(await runChecks(dir, { only: ['C1'] })).errors.filter((e) => e.file?.endsWith('probe/contract.md'));
+    assert.equal(issues.length, 2);
+    assert.match(issues.map((e) => e.msg).join('\n'), /status.*beta.*draft/);
+    assert.match(issues.map((e) => e.msg).join('\n'), /version.*0\.1\.0.*1\.0\.0/);
+    await writeFile(md, '---\nstatus: draft\nversion: 1.0.0\n---\n# Probe\n');
+    assert.deepEqual(failing(await runChecks(dir, { only: ['C1'] })), []);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('runtime schema validation honors constraints used by the API and harness config', async () => {
+  const api = await readJson<APIVocabulary>(ROOT, 'spec/api.json');
+  const schema = must(engineSchema('api'), 'API schema');
+  assert.deepEqual(validate(schema, api), []);
+  const invalid = { ...api, states: { ...api.states, canonicalKeys: { Focus: 42 } }, regions: { 'probe.content': { name: 'Content', meaning: 'Body', preferred: ['button', 'button'] } } };
+  assert.match(validate(schema, invalid).join('\n'), /canonicalKeys\.Focus/);
+  assert.match(validate(schema, invalid).join('\n'), /preferred.*unique/);
+  const config = await readJson<HarnessConfigJson>(ROOT, 'harness.config.json');
+  const badConfig = { ...config, contextBudget: { alwaysOnBytes: -1 }, agentProfiles: ['claude', 'claude'] };
+  const errors = validate(must(engineSchema('harness-config'), 'harness config schema'), badConfig).join('\n');
+  assert.match(errors, /alwaysOnBytes.*at least 0/);
+  assert.match(errors, /agentProfiles.*unique/);
 });
 
 test('C1 keeps the contract closed except for namespaced $extensions with valid design.figma options', async () => {

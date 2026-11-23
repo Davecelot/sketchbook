@@ -124,10 +124,11 @@ function flattenSet(doc: unknown, prefix: string[] = [], inherited?: string): { 
 const modeName = (s: unknown): string => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const ENABLED: (string | undefined)[] = ['enabled', 'source'];
 
-// A token-set document (Tokens Studio or plain DTCG) -> normalized tokens. Themes decide modes: a set enabled
-// in only some themes belongs to those themes' modes; a set every theme enables (or no theme names) is mode-less.
+// Themes select active sets. Shared values stay mode-less unless they compete with a mode-specific
+// definition or need their alias evaluated independently in each theme.
 export function parseSets(obj: TokenSetsDoc): ParsedImport {
   const themes = Array.isArray(obj.$themes) ? obj.$themes : [];
+  const themeModes = themes.map((th) => modeName(th.name));
   const multi = Boolean(obj.$metadata?.tokenSetOrder || themes.length);
   const sets: [string, unknown][] = multi ? (obj.$metadata?.tokenSetOrder ?? Object.keys(obj).filter((k) => !k.startsWith('$'))).filter((s) => isObj(obj[s])).map((s): [string, unknown] => [s, obj[s]]) : [['', obj]];
   const enabled = (th: TokensStudioTheme, set: string): boolean => ENABLED.includes(th.selectedTokenSets?.[set]);
@@ -135,7 +136,8 @@ export function parseSets(obj: TokenSetsDoc): ParsedImport {
   const skipped: ImportToken[] = [];
   for (const [set, doc] of sets) {
     const on = themes.filter((th) => enabled(th, set)).map((th) => modeName(th.name));
-    let modes = on.length && on.length < themes.length ? on : [];
+    if (themes.length && !on.length) continue;
+    let modes = on.length < themes.length ? on : [];
     if (!themes.length) { const m = /(^|[/._-])(light|dark)($|[/._-])/i.exec(set); if (m) modes = [(m[2] ?? '').toLowerCase()]; }
     for (const t of flattenSet(doc)) {
       const rec: ImportToken = { path: t.path, type: TYPE[String(t.rawType)] ?? t.rawType ?? null, value: t.value, ...(set ? { set } : {}) };
@@ -144,7 +146,19 @@ export function parseSets(obj: TokenSetsDoc): ParsedImport {
       else tokens.push(rec);
     }
   }
-  return { tokens, skipped, modes: themes.map((th) => modeName(th.name)) };
+  if (!themes.length) return { tokens, skipped, modes: [] };
+  const scoped = new Set(tokens
+    .filter((t) => t.mode !== undefined || (typeof t.value === 'string' && ALIAS.test(t.value.trim())))
+    .map((t) => t.path));
+  const winners = new Map<string, ImportToken>();
+  for (const token of tokens) {
+    const modes = token.mode !== undefined ? [token.mode] : scoped.has(token.path) ? themeModes : [undefined];
+    for (const mode of modes) {
+      // A later set wins in each theme, even when the later set is shared.
+      winners.set(JSON.stringify([token.path, mode]), mode === undefined ? token : { ...token, mode });
+    }
+  }
+  return { tokens: [...winners.values()], skipped, modes: themeModes };
 }
 
 // CSS custom properties: :root (and [data-theme=light], .light) vs .dark / [data-theme=dark]. A variable only :root
@@ -190,7 +204,7 @@ async function readSets(file: string): Promise<TokenSetsDoc> {
       if (e.isDirectory()) await walk(p);
       else if (e.name.endsWith('.json')) {
         const key = relative(file, p).replace(/\.json$/, '');
-        obj[key.startsWith('$') ? key : key] = await readJsonFile(p);
+        obj[key] = await readJsonFile(p);
       }
     }
   };
@@ -205,10 +219,13 @@ export async function parseFile(file: string, from: string): Promise<ParsedImpor
 }
 
 // Resolves aliases inside the import (per mode, falling back to mode-less tokens).
-export function resolveImport(tokens: ImportToken[]): ResolvedImportToken[] {
+export function resolveImport(tokens: ImportToken[], { themeScoped = false } = {}): ResolvedImportToken[] {
   const byPath = new Map<string, ImportToken[]>();
   for (const t of tokens) { let l = byPath.get(t.path); if (!l) byPath.set(t.path, (l = [])); l.push(t); }
-  const find = (path: string, mode: string | undefined): ImportToken | undefined => { const l = byPath.get(path) ?? []; return l.find((x) => x.mode === mode) ?? l.find((x) => !x.mode) ?? l[0]; };
+  const find = (path: string, mode: string | undefined): ImportToken | undefined => {
+    const candidates = byPath.get(path) ?? [];
+    return candidates.find((x) => x.mode === mode) ?? candidates.find((x) => !x.mode) ?? (themeScoped ? undefined : candidates[0]);
+  };
   const resolve = (t: ImportToken, seen: string[] = []): unknown => {
     const m = typeof t.value === 'string' ? ALIAS.exec(t.value.trim()) : null;
     if (!m) return t.value;
@@ -435,7 +452,7 @@ export async function semanticTargets(root: string): Promise<Required<SemanticTa
 
 export async function buildProposal(root: string, file: string, { from, name }: { from: string; name?: string }): Promise<{ name: string; path: string; proposal: ImportProposal }> {
   const parsed = await parseFile(file, from);
-  const tokens = resolveImport(parsed.tokens);
+  const tokens = resolveImport(parsed.tokens, { themeScoped: from === 'dtcg' && parsed.modes.length > 0 });
   const { mapping, unmapped } = proposeMapping(tokens, await semanticTargets(root));
   const n = name ?? (basename(file, extname(file)) || 'import');
   if (/[\\/]/.test(n) || n.startsWith('.')) throw fail(`--name "${n}" must be a plain file name: the proposal is written to generated/import/<name>.proposal.json.`, 'Use a name like brand-2026 (no slashes, no leading dot).');

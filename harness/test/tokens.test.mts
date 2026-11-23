@@ -11,11 +11,11 @@ import { find } from '../cli/registry.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { buildInterface, INTERFACE_FILE } from '../lib/interface.mjs';
 import { cssDiff, parseCssVars } from '../commands/tokens.mjs';
-import { toHex, roleSet } from '../commands/tokens-import.mjs';
+import { parseSets, proposeMapping, resolveImport, toHex, roleSet } from '../commands/tokens-import.mjs';
 import { errorMessage, parseJson } from '../lib/files.mjs';
 import type { Envelope } from '../cli/types.mjs';
 import type { CssDiff, DtcgTokenNode, Impact } from '../commands/tokens.mjs';
-import type { ImportProposal } from '../commands/tokens-import.mjs';
+import type { ImportProposal, TokensStudioTheme } from '../commands/tokens-import.mjs';
 import type { ContrastPair, InterfaceDoc } from '../lib/interface.mjs';
 import type { Json } from '../standards/resolve.mjs';
 
@@ -37,6 +37,42 @@ const envelope = (j: Envelope) => {
   for (const e of j.errors) for (const k of ['file', 'msg', 'fix']) assert.ok(k in e, `error lacks ${k}`);
 };
 const ok = (r: Result, label: string) => { envelope(r.json); assert.equal(r.json.ok, true, `${label}: ${JSON.stringify(r.json.errors).slice(0, 600)}`); assert.notEqual(r.code, 1, label); };
+
+test('Tokens Studio ignores inactive sets and resolves competing sets in set order per theme', () => {
+  const color = (value: string) => ({ $type: 'color', $value: value });
+  const themes: TokensStudioTheme[] = [
+    { name: 'Light', selectedTokenSets: { shared: 'source', light: 'enabled', disabled: 'disabled' } },
+    { name: 'Dark', selectedTokenSets: { shared: 'source', dark: 'enabled', disabled: 'disabled' } },
+  ];
+  const doc = {
+    $metadata: { tokenSetOrder: ['shared', 'light', 'dark', 'disabled', 'unselected'] },
+    shared: { color: { primary: color('#000000'), accent: color('{color.primary}'), background: color('#ffffff'), link: color('{color.lightOnly}') } },
+    light: { color: { primary: color('#0000ff'), lightOnly: color('#cccccc') } },
+    dark: { color: { primary: color('#00ff00') } },
+    disabled: { color: { primary: color('#ff0000') } },
+    unselected: { color: { primary: color('#ffff00') } },
+    $themes: themes,
+  };
+  const { tokens } = parseSets(doc);
+  assert.deepEqual([...new Set(tokens.map((t) => t.set))].sort(), ['dark', 'light', 'shared']);
+  const resolved = resolveImport(tokens, { themeScoped: true });
+  assert.equal(resolved.find((t) => t.path === 'color.link' && t.mode === 'dark')?.resolved, null);
+  const { mapping } = proposeMapping(resolved, {
+    semantic: ['color.primary', 'color.accent', 'color.background'].map((path) => ({ path, type: 'color' })),
+  });
+  for (const path of ['primary', 'accent']) {
+    assert.deepEqual(mapping.find((entry) => entry.to === `color.${path}`)?.values, { light: '#0000ff', dark: '#00ff00' });
+  }
+  assert.deepEqual(mapping.find((entry) => entry.to === 'color.background')?.values, { base: '#ffffff' });
+  assert.equal(mapping.find((entry) => entry.to === 'foundation:color.primary')?.value, '#0000FF');
+  const sharedLast = parseSets({ ...doc, $metadata: { tokenSetOrder: ['light', 'dark', 'shared'] } });
+  assert.deepEqual(sharedLast.tokens.filter((t) => t.path === 'color.primary').map((t) => t.value), ['#000000', '#000000']);
+  assert.deepEqual(parseSets({ color: { primary: color('#000000') } }).tokens.map((t) => t.value), ['#000000']);
+  assert.deepEqual(parseSets({ $metadata: { tokenSetOrder: ['light'] }, light: doc.light }).tokens.map((t) => [t.path, t.mode]), [
+    ['color.primary', 'light'],
+    ['color.lightOnly', 'light'],
+  ]);
+});
 
 // Every file under these folders, as text, to prove a dry run writes nothing.
 async function snapshot(dir: string, folders = ['spec', 'src', 'playwright', '.storybook', 'generated/css', 'generated/tokens']) {

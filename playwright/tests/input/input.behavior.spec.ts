@@ -49,6 +49,22 @@ test.describe('Input', () => {
     await expect(field(page).locator('[part="error"]')).not.toBeEmpty();
   });
 
+  test('a submit attempt reveals the native error; programmatic values and reset update it', async ({ page }) => {
+    await gotoStory(page, 'components-input--default', TAG);
+    await mountForm(page, '<sb-input name="field" label="Field" required></sb-input>');
+    const input = page.locator('form#under-test sb-input');
+    const error = input.locator('[part="error"]');
+    await expect(error).toBeEmpty();
+    await page.locator('form#under-test').evaluate((form: HTMLFormElement) => form.requestSubmit());
+    await expect(error).not.toBeEmpty();
+    await input.evaluate((el: HTMLElement & { value: string }) => { el.value = 'Ready'; });
+    await expect(error).toBeEmpty();
+    expect(await formEntries(page)).toEqual([['field', 'Ready']]);
+    await page.locator('form#under-test').evaluate((form: HTMLFormElement) => form.reset());
+    await expect(input.locator('input')).toHaveValue('');
+    await expect(error).toBeEmpty();
+  });
+
   test('required: native required on the input, asterisk hidden from assistive tech', async ({ page }) => {
     await gotoStory(page, 'components-input--required', TAG);
     await expect(control(page)).toHaveAttribute('required', '');

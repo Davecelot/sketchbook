@@ -55,7 +55,7 @@
     },
     {
       "path": "playwright/tests/input/input.behavior.spec.ts",
-      "hash": "bfe480c8577cbf45dd5e"
+      "hash": "2e14d57c7eceb9a8037d"
     },
     {
       "path": "spec/components/input/contract.json",
@@ -63,7 +63,7 @@
     },
     {
       "path": "spec/components/input/contract.md",
-      "hash": "0374ecc1c70cfbeb5477"
+      "hash": "709e9689fcfb36382c16"
     },
     {
       "path": "src/components/input/Input.scss",
