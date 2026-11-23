@@ -38,3 +38,5 @@ The npm tarball ships the engine and the reference library together. The [public
 | `npm run verify` | The full pre-merge gate on a clean candidate |
 
 Review generated diffs alongside their sources. If a change affects a file pinned in the starter skeleton, use `npm run test:reference-sync` and review the template diff as well.
+
+If the browser stage of `npm run verify` reaches a local runner's timeout, keep the built Storybook and rerun that stage with `CI=true npm run test:component -- --workers=6` on a machine that can handle six browsers. The default stays at two workers in CI.

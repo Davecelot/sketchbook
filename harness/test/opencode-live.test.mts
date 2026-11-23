@@ -28,7 +28,7 @@ test('OpenCode discovers and loads portable skills in catalog-only, standalone a
       // OpenCode may first request a session title without any tools.
       const tool = !sentTool && parsed.tools?.length && action ? (action === 'bash' ? 'bash' : 'skill') : null;
       if (tool) sentTool = true;
-      const args = tool === 'skill' ? { id: action } : { command: 'node node_modules/sketchbook/harness/cli.mjs help --json', description: 'Inspect Sketchbook CLI help' };
+      const args = tool === 'skill' ? { id: action } : { command: 'node node_modules/sketchbook/harness/cli.mjs help audit-page --json', description: 'Inspect Sketchbook page audit help' };
       const delta = tool ? { role: 'assistant', tool_calls: [{ index: 0, id: 'call_test', type: 'function', function: { name: tool, arguments: JSON.stringify(args) } }] } : { role: 'assistant', content: 'Test completed.' };
       const chunks = [
         { id: 'chat-test', object: 'chat.completion.chunk', created: 1, model: 'local', choices: [{ index: 0, delta, finish_reason: null }] },
@@ -96,7 +96,7 @@ test('OpenCode discovers and loads portable skills in catalog-only, standalone a
     assert.match(standaloneInput, /Author a Sketchbook component contract/);
     assert.match(standaloneInput, /Ask for explicit approval before any tests or implementation/);
     action = 'component-builder';
-    assert.match(await run(project), /confirm failure for the intended behavior/);
+    assert.match(await run(project), /sketchbook evidence red <name>/);
     action = 'hammock';
     assert.match(await run(standalone), /\.sketchbook\/hammock\.json/);
     action = 'review-rangers';
@@ -112,6 +112,7 @@ test('OpenCode discovers and loads portable skills in catalog-only, standalone a
     await run(project);
     assert.ok(sentTool, 'the mock provider requested the shell tool');
     assert.match(clientOutput, /"command"\s*:\s*"help"/, `OpenCode output: ${clientOutput.slice(-1000)}`);
+    assert.match(clientOutput, /"name"\s*:\s*"audit-page"/);
   } finally {
     if (server.listening) await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
     await rm(temp, { recursive: true, force: true });

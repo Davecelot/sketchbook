@@ -41,7 +41,11 @@ test('the wall: a Foundations change reaches every output through propagate --ma
     must(brand.color, 'brand.config.json color').primary = CHANGED_PRIMARY;
     writeFileSync(brandPath, JSON.stringify(brand, null, 2) + '\n');
 
-    execFileSync('node', ['harness/cli.mjs', 'propagate', '--maintainer'], { cwd: dir, stdio: 'pipe', timeout: 40 * 60 * 1000 });
+    // Script generation is local. Do not depend on a maintainer's actual Figma file key.
+    rmSync(join(dir, 'generated/design/figma/variables'), { recursive: true, force: true });
+    execFileSync(process.execPath, ['harness/cli.mjs', 'propagate', '--maintainer'], {
+      cwd: dir, env: { ...process.env, SKETCHBOOK_FIGMA_FILE: 'SketchbookWallFixture' }, stdio: 'pipe', timeout: 40 * 60 * 1000,
+    });
 
     // Every output moved with the change.
     const after = readFileSync(join(dir, 'generated/css/tokens.css'), 'utf8');

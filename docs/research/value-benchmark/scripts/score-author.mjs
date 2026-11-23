@@ -1,6 +1,6 @@
 // usage: node score-author.mjs <run-dir> <template-dir>  -> one JSON line
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const [run, tpl] = process.argv.slice(2);
@@ -38,10 +38,12 @@ const n = (e) => e.filter(([, v]) => v).length;
 let contractFound = changed.some((f) => /contract\.json$/.test(f));
 let check = null;
 if (existsSync(join(run, 'harness.config.json'))) {
-  const own = join(run, 'node_modules/sketchbook/harness/cli.mjs');
-  const cli = existsSync(own) ? own : process.env.SB_ENGINE;
-  const r = spawnSync('node', [cli, 'check', '--only', 'C1,C2,A1,T7,H1', '--json'], { cwd: run, encoding: 'utf8' });
-  check = r.status;
+  const cli = ['node_modules/@usesketchbook/cli/harness/cli.mjs', 'node_modules/sketchbook/harness/cli.mjs']
+    .map((path) => resolve(run, path)).find(existsSync) ?? process.env.SB_ENGINE;
+  if (cli) {
+    const r = spawnSync(process.execPath, [resolve(cli), 'check', '--only', 'C1,C2,C4,A1,T7,H1', '--json'], { cwd: run, encoding: 'utf8' });
+    check = r.status;
+  }
 }
 const gold = JSON.parse(readFileSync(new URL('../gold-switch-contract.json', import.meta.url), 'utf8'));
 const cj = changed.find((f) => /contract\.json$/.test(f));

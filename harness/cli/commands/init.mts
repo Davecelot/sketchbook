@@ -68,7 +68,7 @@ export default {
     for (const k of ['no-install', 'adopt', 'engine'] as const) if (options[k] !== undefined) throw Object.assign(new Error(`--${k} goes with a new project (a folder without harness.config.json).`), { fix: `Drop --${k}.` });
     const agentInstall = options.agent !== undefined || options.with !== undefined;
     const projectChange = Object.keys(opts).length || start || options.components || options.from || options.yes || options['detach-catalog'];
-    if (agentInstall && projectChange) throw Object.assign(new Error('Apply integration and starter or brand options in separate commands in an existing project.'), { fix: 'Run sketchbook init --agent <profiles> separately.' });
+    if (agentInstall && projectChange) throw Object.assign(new Error('Apply integration and starter or brand options in separate commands in an existing project.'), { fix: 'Run sketchbook init --agent <profiles> separately, without --yes.' });
     if (!projectChange) {
       const r = agentInstall ? installAgents(root, profiles, extras, { dryRun }) : { ...repair(root, { dryRun }), configChanged: false };
       if ('profiles' in r) out(`Agent profiles: ${r.profiles.join(', ') || 'none'}`);

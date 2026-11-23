@@ -18,6 +18,7 @@ import type { Envelope } from '../cli/types.mjs';
 import type { BrandConfig } from '../../generated/types/brand-config.js';
 import type { ComponentContract } from '../../generated/types/contract.js';
 import type { HarnessConfigJson } from '../../generated/types/harness-config.js';
+import type { ComponentRegistry } from '../../generated/types/registry.js';
 
 // The parts of each command's --json `data` these tests read.
 interface InitData { checks: { exitCode: number }; installed?: unknown; repair: { hooks: unknown[]; added: string[]; edited: string[]; skipped: string[]; preserved: string[] } }
@@ -770,15 +771,28 @@ pkgTest('a core-only project can install a component, change a foundation, and r
     cli('tokens', 'set', 'color.primary', '#0F766E');
     assert.match(await readFile(brand, 'utf8'), /#0F766E/i);
 
-    const badge = join(dir, 'spec/components/badge');
-    cli('add', 'badge', '--blank', '--dry-run');
-    assert.ok(!existsSync(badge));
-    const scaffold = cli('add', 'badge', '--blank');
+    const component = join(dir, 'spec/components/status-dot');
+    const registryFile = 'spec/registry.json';
+    const before = await readFile(join(dir, registryFile), 'utf8');
+    const unknown = run(dir, 'add', 'Status Dot', '--blank', '--dry-run', '--json');
+    assert.equal(unknown.code, 1);
+    assert.match(unknown.out, /not in spec\/registry\.json/);
+    assert.equal(await readFile(join(dir, registryFile), 'utf8'), before);
+    assert.ok(!existsSync(component));
+    const registry = parseJson<ComponentRegistry>(before);
+    registry.components.push({ name: 'Status Dot', tier: 1, status: 'planned' });
+    await writeFile(join(dir, registryFile), JSON.stringify(registry, null, 2) + '\n');
+    cli('add', 'Status Dot', '--blank', '--dry-run');
+    assert.ok(!existsSync(component));
+    const scaffold = cli('add', 'Status Dot', '--blank');
     assert.match(scaffold.next ?? '', /planning gate.*stop for approval/);
     assert.doesNotMatch(scaffold.next ?? '', /skill|Claude/i);
-    assert.match(await readFile(join(badge, 'plan.md'), 'utf8'), /Tests and code start only after approval/);
-    assert.ok(!existsSync(join(dir, 'src/components/badge')));
-    assert.ok(!existsSync(join(dir, 'playwright/tests/badge')));
+    assert.match(await readFile(join(component, 'plan.md'), 'utf8'), /Tests and code start only after approval/);
+    assert.ok(existsSync(join(component, 'contract.json')) && existsSync(join(component, 'contract.md')));
+    assert.ok(!existsSync(join(component, 'approved.json')));
+    assert.ok(!existsSync(join(dir, 'src/components/status-dot')));
+    assert.ok(!existsSync(join(dir, 'playwright/tests/status-dot')));
+    assert.equal((await readJson<ComponentRegistry>(dir, registryFile)).components.filter((c) => c.name === 'Status Dot').length, 1);
     cli('check');
   } finally { await rm(dir, { recursive: true, force: true }); }
 });
@@ -788,7 +802,7 @@ pkgTest('adds profiles to an existing project, previews the same writes, and rep
   try {
     const config = join(dir, 'harness.config.json');
     const initial = await readFile(config, 'utf8');
-    for (const args of [['--agent', 'trae,wrong'], ['--agent', 'trae', '--start', 'library'], ['--agent', 'trae', '--with', 'wrong']]) {
+    for (const args of [['--agent', 'trae,wrong'], ['--agent', 'trae', '--start', 'library'], ['--agent', 'trae', '--with', 'wrong'], ['--agent', 'trae', '--yes']]) {
       assert.equal(run(dir, 'init', ...args, '--json').code, 1);
       assert.equal(await readFile(config, 'utf8'), initial);
       assert.ok(!existsSync(join(dir, '.trae')));

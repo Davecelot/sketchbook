@@ -4,7 +4,7 @@ description: "Install a catalog component as shipped or start your own with a co
 order: 30
 ---
 
-Start with the catalog if it has what you need. To design a new component or replace the catalog design, run `sketchbook add "<Name>" --blank`, then [write its contract](/concepts/contracts/).
+Start with the catalog if it has what you need. To design a new component, [register it and preview a blank scaffold](#design-a-new-component) before writing its contract.
 
 ## Install from the catalog
 
@@ -39,7 +39,7 @@ In Claude Code, `/add <Component Name>` runs the dry run, shows the result, then
 
 You can do this with or without an agent profile. Run `sketchbook help approve` and `sketchbook help evidence` to check that your installed CLI supports the records below.
 
-1. Add a `planned` entry to `spec/registry.json` if the name is not already there. Preview with `sketchbook add "<Name>" --blank --dry-run`, then run it without `--dry-run` to create the contract and plan.
+1. Check whether an existing component covers the behavior. If you need a new one, add a `planned` entry to `spec/registry.json` if it’s missing. Use the registry’s display name: preview with `sketchbook add "Status Dot" --blank --dry-run`, then run without `--dry-run` to create the contract and plan. Registering a component does not approve it.
 2. [Draft the contract](/concepts/contracts/) from your design and applicable accessibility references. Use `spec/api.json` for canonical API names. Run `sketchbook check`.
 3. If `features.planningGate` is on, complete `spec/components/<name>/plan.md`. Before writing tests or implementation, have the approving person run `sketchbook approve <name> --by <name>`. C4 verifies that the approval still covers the current scope.
 4. If `features.testFirst` is on, write the story and behavior spec and run `sketchbook evidence red <name>`. Check that the tests fail for the behavior you haven’t implemented yet. A missing browser or server records nothing.

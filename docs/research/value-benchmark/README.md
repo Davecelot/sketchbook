@@ -1,6 +1,14 @@
 # Value benchmark, pilot (2026-11-12)
 
 Does the harness (Claude layer) and the CLI pay for themselves? A first, small simulation on one component (Switch) with real headless Claude Code sessions.
+
+## Rerunning on current packages
+
+Use a new disposable benchmark root, outside `~/.claude/`, and a package pinned to the release or candidate under test. Pass the tarball's actual filename to `scripts/setup-arms.sh`; it explicitly selects the Claude profile and prepares both CLI-only (`a2`) and full (`a3`) templates. For authoring, use a separate tarball with Switch removed from the catalog, and verify that the template cannot see the existing Switch contract. Use `scripts/make-round3-arms.sh` once after preparing the author and UI templates to create the files-only and QA templates. Neither script replaces existing templates.
+
+Use the same prompt and tool permissions for `a2` and `a3`. For UI trials with an installed engine, the runner gives both arms the same ready-to-use browser bundle and token stylesheet so permission to build isn't part of the result. The CLI hint is a separate `n` condition. Set `BENCH_BUDGET_USD` and `BENCH_TIMEOUT_SECONDS` before running; the defaults are $1 and 300 seconds per trial. Run with the exact model ID; the runner records its exit and refuses to overwrite a trial. Always inspect permission denials and timeouts: a blocked tool call is not evidence that the model ignored guidance.
+
+Run `SKETCHBOOK_TEST_BENCHMARK_BROWSER=1 node --test scripts/grading.test.mjs` before collecting results (requires Chromium). Set `SB_ENGINE` to the control engine's absolute CLI path when collecting files-only authoring results; the grader can use it without exposing the command to the agent. The UI grader tests all three named controls and submits via the Save button, separately from axe and component conformance. New QA reviews belong at `<bench-root>/reviews/<trial-id>.json`, outside the agent workspace, with `reportSha256` (SHA-256 of the unchanged `qa-report.md`) and `verdicts` (an object mapping report line numbers to `verified`, `false-positive`, or `uncertain`). Unreviewed matches are not evidence of correctness. Keep archived TSVs as published; these grading and setup changes are not retroactive.
 Pilot only: 2 runs per cell, no confidence intervals. Read the direction, not the decimals.
 Round 2 (library starter, 5 runs per cell, QA task, cost of checking and run-to-run consistency): [ROUND2.md](ROUND2.md).
 Round 3 (files vs CLI vs harness, separated): [ROUND3.md](ROUND3.md).

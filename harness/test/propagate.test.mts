@@ -5,18 +5,40 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, rm, mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fixture, ROOT, readJson, writeJson, edit, sourceRepoOnly, PARTS, must } from './helpers.mjs';
 import { parseJson } from '../lib/files.mjs';
 import type { Report } from '../checks/types.mjs';
 import type { BrandConfig } from '../../generated/types/brand-config.js';
+import type { HarnessConfigJson } from '../../generated/types/harness-config.js';
 import { inputsHash, docsInputsHash, hashFile, writeRecord, readRecord, keepTime, RECORD } from '../lib/propagation.mjs';
 import { runChecks } from '../checks/run.mjs';
 import { runGenerator } from '../generators/foundation.mjs';
 import { regenerate } from '../commands/prefix.mjs';
-import { stamp } from '../lib/design/sync.mjs';
+import { FILE_ENV, stamp } from '../lib/design/sync.mjs';
 
 const only = (dir: string, ids: string[]): Promise<Report> => runChecks(dir, { only: ids });
 const failing = (report: Report): string[] => report.results.filter((r) => r.errors.length).map((r) => r.id);
+
+test('propagate without a Figma key explains the skip and does not suggest applying scripts', sourceRepoOnly, async () => {
+  const dir = await fixture();
+  try {
+    await edit<HarnessConfigJson>(dir, 'harness.config.json', (j) => { j.adapters.design = { ...j.adapters.design, tool: 'figma', file: null }; });
+    // The full builds are covered by test:wall; this fixture exercises CLI routing and its next step.
+    await writeJson(dir, 'package.json', { scripts: Object.fromEntries(['tokens:generate', 'tokens', 'build'].map((key) => [key, 'node -e ""'])) });
+    await rm(join(dir, 'generated/design/figma'), { recursive: true, force: true });
+    const env = { ...process.env };
+    delete env[FILE_ENV];
+    const r = spawnSync(process.execPath, [join(ROOT, 'harness/cli.mjs'), 'propagate'], { cwd: dir, env, encoding: 'utf8' });
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.match(r.stdout, /sync skipped:.*SKETCHBOOK_FIGMA_FILE/);
+    assert.match(r.stdout, /Run sketchbook check\./);
+    assert.doesNotMatch(r.stdout, /Paste the Figma scripts/);
+    await assert.rejects(readFile(join(dir, 'generated/design/figma/styles.js')), { code: 'ENOENT' });
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 
 test('O1 record gate: no record yet is not a failure; a record that matches the inputs passes; a changed foundation fails until propagate records again', async () => {
   const dir = await fixture(PARTS);

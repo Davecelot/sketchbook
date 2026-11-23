@@ -54,10 +54,14 @@ export default {
     }
     await writeRecord(root, keepTime(previous, record));
     changed.push(RECORD);
-    const figmaPending = 'Paste the Figma scripts listed under generated/design/figma (in order, one use_figma call each), then run sketchbook sync stamp tokens.';
+    const check = `sketchbook check${options.maintainer ? ' --maintainer' : ''}`;
+    const next = syncDesign
+      ? `Paste the Figma scripts listed under generated/design/figma (in order, one use_figma call each), then run sketchbook sync stamp tokens and ${check}.`
+      : `Run ${check}.`;
+    out(`Next: ${next}`);
     return {
       changed,
-      next: `Paste the Figma scripts listed by the sync steps above, then run sketchbook check${options.maintainer ? ' --maintainer' : ''}. ${figmaPending}`,
+      next,
     };
   },
 } satisfies Command<typeof options>;
