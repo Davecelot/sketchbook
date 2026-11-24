@@ -14,6 +14,7 @@ import { commands, GROUPS } from '../cli/registry.mjs';
 import { cliDocs } from '../cli/docs.mjs';
 import { knownCommands } from '../cli/known.mjs';
 import { dispatch } from '../cli/run.mjs';
+import { presentation } from '../cli/presentation.mjs';
 import { interactive, wantsInteractive, type InteractiveIO } from '../cli/interactive.mjs';
 import { parseJson } from '../lib/files.mjs';
 import type { Envelope } from '../cli/types.mjs';
@@ -462,6 +463,22 @@ test('L13 generate rebuilds every generated output from the spec (what a project
   await rm(dir, { recursive: true });
 });
 
+
+test('terminal presentation does not split a copyable preview command', () => {
+  const command = `  npx sketchbook tokens import apply generated/import/${'long-'.repeat(100)}.proposal.json --dry-run`;
+  assert.equal(presentation(true, false).line(command), command);
+});
+
+test('tokens help leads to naming presets and bulk rename examples', async () => {
+  const readHelp = async (...args: string[]) => {
+    let out = '';
+    assert.equal(await dispatch(args, { human: true, stdout: (text) => { out += text; } }), 0);
+    return out;
+  };
+  assert.match(await readHelp('tokens', '--help'), /\n {2}sketchbook tokens rename-plan\n/);
+  assert.match(await readHelp('tokens', 'rename-plan', '--help'), /--preset on-role-colors --out token-renames\.json/);
+  assert.match(await readHelp('help', 'tokens', 'rename'), /--map token-renames\.json --dry-run/);
+});
 
 test('terminal presentation shows concise help and respects pipes, NO_COLOR, and JSON', async () => {
   const dir = await reference();

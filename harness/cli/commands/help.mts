@@ -12,7 +12,7 @@ export default {
   name: 'help',
   group: 'meta',
   summary: 'Find a command or look up its usage, options, and examples.',
-  args: [{ name: 'command', required: false, description: 'A command name' }],
+  args: [{ name: 'command', required: false, description: 'A command name' }, { name: 'subcommand', required: false, description: 'A subcommand name' }],
   options: {},
   examples: ['sketchbook help', 'sketchbook help init'],
   mutates: false,
@@ -24,11 +24,19 @@ export default {
     if (args[0]) {
       const c = find(args[0]);
       if (!c) throw Object.assign(new Error(`Unknown command "${args[0]}".`), { fix: 'Run sketchbook help to list commands.' });
+      const subs = subcommandsOf(c);
+      const sub = subs.find(({ name }) => name === args[1]);
+      if (sub) {
+        out(`${sub.summary}\n\nUsage:\n  ${sub.usage}`);
+        if (sub.examples.length) out(`\nExamples:\n${sub.examples.map((e) => `  ${e}`).join('\n')}`);
+        out(`\nMore options: sketchbook help ${c.name} --details`);
+        return { data: { command: describe(c), subcommand: sub } };
+      }
       if (human && !details) {
-        out(`${c.summary}\n\n${ui.section('Usage')}\n  ${usage(c)}\n  ${c.mutates ? 'Changes files' : 'Read-only'}`);
+        out(`${c.summary}\n\n${ui.section('Usage')}\n  ${subs.length ? `sketchbook ${c.name} <subcommand> [arguments] [--help]` : usage(c)}\n  ${c.mutates ? 'Changes files' : 'Read-only'}`);
         if (c.args.length) { out('\nArguments:'); for (const a of c.args) out(`  ${a.name}  ${a.description}${a.required ? '' : ' (optional)'}`); }
-        if (c.subcommands) out(`\nSubcommands:  ${subcommandsOf(c).map((sc) => sc.name).join('  ·  ')}`);
-        if (c.examples.length) out(`\nTry:  ${c.examples[0]}`);
+        if (subs.length) out(`\nSubcommands:  ${subs.map((sc) => sc.name).join('  ·  ')}`);
+        if (c.examples.length) out(`\nTry:\n  ${c.examples[0]}`);
         out(`\nMore options  sketchbook help ${c.name} --details\nDocumentation  ${DOCS_URL}`);
         return { data: { command: describe(c) } };
       }

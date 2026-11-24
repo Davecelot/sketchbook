@@ -41,6 +41,7 @@ A guide can lead with a command, a concept with a diagram, and a demo with an in
 
 - Put the result first. Give readers the path, value, or check ID they need to act on, followed by a next step when there is one.
 - Put the effect of pressing Enter next to the prompt. Before confirmation, show the exact command and what its preview found.
+- Put a command readers should copy on its own line. Don't insert a line break that separates an argument or a safety flag such as `--dry-run`.
 - Give short help a usage line and a runnable example. Use detailed help for the full option list. Write the command description once, where the CLI and generated reference can both use it.
 - Preserve the machine-readable payload when editing human-facing copy. Check the result in a terminal, with color turned off, and in a pipe.
 

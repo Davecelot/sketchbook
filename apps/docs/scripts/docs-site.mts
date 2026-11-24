@@ -372,6 +372,7 @@ async function load() {
     ['client-files', itemList(catalog.filter(({ kind, integration }) => kind !== 'hook' && integration))],
   ]);
   const isStat = (key: string): key is keyof Stats => key in n;
+  const namingGlossary = await readFile('harness/templates/agent-catalog/foundations/references/token-naming-glossary.md', 'utf8');
   const sources: Source[] = [];
   for (const rel of await mdFiles('apps/docs/content')) {
     const { meta, body } = parse(await readFile(join('apps/docs/content', rel), 'utf8'));
@@ -390,6 +391,7 @@ async function load() {
           return items;
         })
         .replace('<!-- tokens:preview -->', panel)
+        .replace('<!-- tokens:naming-glossary -->', () => namingGlossary.trim())
         .replace('<!-- status:table -->', statusTable(n))
         .replace(/<!-- stat:(\w+) -->/g, (_, key: string) => {
           if (!isStat(key)) throw new Error(`apps/docs/content/${rel}: unknown <!-- stat:${key} -->`);

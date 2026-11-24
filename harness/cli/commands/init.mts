@@ -10,6 +10,7 @@ import { tmpdir } from 'node:os';
 import { show } from '../../lib/files.mjs';
 import { changedFiles, conflicts, copyBack, snapshot } from '../../lib/stage.mjs';
 import { formatHuman, runChecks } from '../../checks/run.mjs';
+import { DOCS_URL } from '../presentation.mjs';
 import type { BrandConfig } from '../../../generated/types/brand-config.js';
 import type { Command, CommandResult, IssueLike, OptionSpecs } from '../types.mjs';
 
@@ -35,6 +36,7 @@ const densityOf = (density: BrandConfig['density']) => (density && typeof densit
 
 // Starter, prefix and brand inputs/outputs, plus the files the staged checks inspect.
 const STARTER_PATHS = ['src', 'spec', 'playwright', '.storybook', 'docs', 'README.md', 'CLAUDE.md', '.claude', '.agents', 'move-to-.claude', 'brands', 'brand.config.json', 'harness.config.json', 'generated', 'harness', 'scripts', 'package.json', 'AGENTS.md'];
+const NAMING_TIP = `Keep the default token names or compare alternatives: ${DOCS_URL}guides/choosing-token-names/`;
 
 export default {
   name: 'init',
@@ -57,11 +59,11 @@ export default {
       const r = await bootstrap(root, { dir: options.dir, adopt: options.adopt, engine: options.engine, extras, profiles, start: start ?? 'library', components: options.components, from: options.from, opts, dryRun, install: !options['no-install'], json, out });
       for (const l of r.lines ?? []) out(l);
       if (r.exitCode === 1) return r;
-      // Past the exitCode 1 return, data is the install summary; `in` only narrows the inferred union.
-      if (!dryRun && 'target' in r.data) { out(`\nCreated your design system in ${r.data.target}. See docs/harness.md in that folder for the installation details.`); for (const l of installedSummary(r.data.installed)) out(l); }
+      if (!dryRun && r.data && 'target' in r.data) { out(`\nCreated your design system in ${r.data.target}. See docs/harness.md in that folder for the installation details.`); for (const l of installedSummary(r.data.installed)) out(l); }
       for (const w of r.warnings ?? []) out(`warning: ${w.msg}${w.fix ? `\n  fix: ${w.fix}` : ''}`);
       if (r.claudeStep) out(`\nOptional setup for Claude Code: the Claude layer (skills, commands, rules, hooks) is staged in ${STAGED}/.\n  ${r.claudeStep.charAt(0).toUpperCase()}${r.claudeStep.slice(1)}.\n  Claude Code asks for approval to write into .claude/.`);
       if (r.next) out(`Next: ${r.next}`);
+      if (!dryRun) out(NAMING_TIP);
       return r;
     }
     if (options.dir && target !== resolve(root)) throw Object.assign(new Error(`${options.dir} is already a Sketchbook project.`), { fix: `cd ${options.dir}, then run sketchbook init again.` });
@@ -133,7 +135,7 @@ export default {
         data.anchors = r.anchors;
       }
       if (start) {
-        const r = await applyStarter(dir, start, { components: options.components, from: options.from, inputRoot: root, yes: options.yes, detachCatalog: options['detach-catalog'] });
+        const r = await applyStarter(dir, start, { components: options.components, from: options.from, inputRoot: root, sourceRoot: root, yes: options.yes, detachCatalog: options['detach-catalog'] });
         if (r.actionExit) return { changed: [], errors: [{ msg: r.lines.join('\n') || `The ${start} step exited ${r.actionExit}.`, fix: r.next[0] }], exitCode: 1 };
         if (r.warning) { out(r.warning); warnings.push({ file: 'harness.config.json', msg: r.warning, fix: 'Set catalog.source back to true if this repo is the catalog source.' }); }
         out(`Starter ${start}: installed ${r.plan.components.install.length} component(s), removed ${r.plan.components.remove.length}; kits installed ${r.plan.kits.install.length}, removed ${r.plan.kits.remove.length}. Components now: ${r.plan.components.target.length}.`);
@@ -184,6 +186,8 @@ export default {
       if (edited.length) throw Object.assign(new Error(`${edited.length} file(s) changed while the starter ran: ${edited.slice(0, 6).join(', ')}. Nothing was written.`), { fix: 'Save your edits, then rerun the starter.' });
       copyBack(root, stage, before, after, changed);
       for (const line of lines) out(line);
+      if (result.next) out(`Next: ${result.next}`);
+      out(NAMING_TIP);
       return { ...result, changed };
     } finally {
       rmSync(stage, { recursive: true, force: true });

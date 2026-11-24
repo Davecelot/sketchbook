@@ -312,7 +312,7 @@ async function build(stage: string, target: string, { start, components, from, b
   writeFileSync(join(stage, 'spec/decisions/DECISIONS.md'), emptyLog());
   if (Object.keys(brand).length) await init(stage, brand);
   else await runGenerator(stage, { quiet: true });
-  const starter = await applyStarter(stage, start, { components, from });
+  const starter = await applyStarter(stage, start, { components, from, sourceRoot: target });
   inheritDecisions(stage);
   const data = installed(stage);
   mkdirSync(join(stage, 'docs'), { recursive: true });
@@ -452,6 +452,10 @@ export async function bootstrap(cwd: string, { dir, adopt = false, start = 'libr
   const stage = mkdtempSync(join(dryRun ? tmpdir() : dirname(target), '.sketchbook-init-'));
   try {
     const r = await build(stage, target, { start, components, from: from ? resolve(cwd, from) : undefined, brand, spec, extras, profiles });
+    if (r.starter.actionExit) return {
+      exitCode: 1, changed: [],
+      errors: [{ file: null, msg: `${r.starter.lines.join('\n') || 'The starter could not finish.'}\nNo project files were written.`, fix: r.starter.next[0] }],
+    };
     const files = walk(stage, '.');
     const checks = { exitCode: r.report.exitCode, failing: r.report.results.filter((x) => x.errors.length).map((x) => x.id) };
     const errors = r.report.results.flatMap((x) => x.errors.map((e) => ({ ...e, id: x.id })));

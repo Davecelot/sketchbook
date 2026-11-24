@@ -72,6 +72,8 @@ In both `init` commands, pass the starter you need to `--start`.
 
 For example, replace `--start library` with `--start pick --components card,button` to start with two components.
 
+You can keep Sketchbook’s token names and start using the project right away. If your team already has tokens, [review the import proposal](/guides/import-tokens/) before applying it. An import maps values; it doesn’t rename tokens. To compare naming options first, see [Choosing token names](/guides/choosing-token-names/).
+
 > **Warning** Preview `npx sketchbook init --start <starter> --dry-run` before changing starters in an existing project. A successful change can remove components or kits. Commit or stash first so you can undo it with Git.
 
 ## Next steps

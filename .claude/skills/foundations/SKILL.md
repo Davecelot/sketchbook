@@ -25,7 +25,7 @@ Use this skill when:
 
 - The person wants to create, change, import, restart or roast foundations: color, typography, spacing and baseline grid, radius, elevation, motion, density, layout grid and breakpoints, icons, z-index, opacity, border width, contrast, semantic naming.
 - A contrast (T6) or foundations (F1) check fails.
-- The person asks why a value is what it is.
+- The person asks why a value is what it is, or wants help choosing or comparing token names.
 
 Do not use this skill for:
 
@@ -69,6 +69,10 @@ A hand edit to a generated foundation token is not lost: the generator keeps it,
 
 `sketchbook explain <token | --css-var>` traces any value to its foundation, preset and source; translate the answer into plain words.
 
+### 6. Choosing token names
+
+Read [semantic naming](references/semantic-naming.md) for the workflow and the [token naming glossary](references/token-naming-glossary.md) for vocabulary. Start with one real use and offer the shipped name and one or two alternatives; explain where they would mean different things. Follow the team's established vocabulary when it expresses the same intent. If the person only wants advice, compare names without writing anything or running the change workflow.
+
 ---
 
 ## Decision tree
@@ -101,7 +105,7 @@ Areas and their references (read the one you need, not all):
 | opacity | [references/opacity.md](references/opacity.md) | `Foundations/Opacity` |
 | border width | [references/border-width.md](references/border-width.md) | `Foundations/Border width` |
 | contrast | [references/contrast.md](references/contrast.md) | `Foundations/Color` (pairs and ratios) |
-| semantic naming | [references/semantic-naming.md](references/semantic-naming.md) | every page (semantic tables) |
+| semantic naming | [semantic naming](references/semantic-naming.md) and [token naming glossary](references/token-naming-glossary.md) | every page (semantic tables) |
 
 ---
 
@@ -133,11 +137,11 @@ For beginners. One question at a time; never a form.
 
 Bring tokens that already exist: DTCG JSON (a file or a folder of sets) or Tokens Studio export, or a CSS file with custom properties.
 
-1. `sketchbook tokens import <file> --from dtcg|css`. It writes `generated/import/<name>.proposal.json`: the parsed tokens and a proposed mapping onto the semantic interface. Nothing else changes.
-2. For names the importer could not map, follow the [token-mapper brief](agents/token-mapper.md) using the proposal path. It writes only a proposal file under `generated/import/`.
-3. Review with the person, in this order: unmapped interface tokens (components would lose a value), imported tokens with no home (offer `sketchbook tokens add` or drop), contrast of mapped color pairs, and anything that looks like a raw value where a scale exists.
-4. Apply only after they agree: `sketchbook tokens import apply generated/import/<name>.proposal.json --dry-run`, then for real.
-5. Read [references/semantic-naming.md](references/semantic-naming.md) when names don't line up.
+1. Use the existing `generated/import/<name>.proposal.json` if setup already created it. Otherwise run `sketchbook tokens import <file> --from dtcg|css` to write the parsed tokens and a proposed mapping onto the semantic interface. Nothing else changes.
+2. When mappings are missing or unclear, follow the [token-mapper brief](agents/token-mapper.md) using the proposal path. It writes only an advisory `.mapping.json` under `generated/import/`. Use the glossary to compare meanings, not to substitute words.
+3. Review with the person: missing interface matches (the import would not supply a value), ambiguous candidates (ask about real usage), imported tokens with no home (offer `sketchbook tokens add` or skip), contrast of mapped color pairs, and raw values that may belong on a scale.
+4. After they agree, reflect the reviewed choices in the original `.proposal.json`; set `"apply": false` for unresolved entries. The CLI does not read `.mapping.json`. Run `sketchbook tokens import apply generated/import/<name>.proposal.json --dry-run`, show the preview and get approval before applying for real.
+5. If they also want their vocabulary in the interface, use the separate [rename workflow](references/semantic-naming.md). Importing a value does not rename a token.
 
 ### scratch
 

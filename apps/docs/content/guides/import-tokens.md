@@ -13,9 +13,9 @@ Bring DTCG or Tokens Studio JSON, or CSS custom properties. First, `sketchbook t
    sketchbook tokens import theme.css --from css --name brand
    ```
 
-2. **Map the names.** The `token-mapper` brief reads the proposal and `spec/tokens/interface.json`, and reports each interface token as `match`, `candidates` or `missing`. It writes only `generated/import/<name>.mapping.json`.
+2. **Map by usage.** The `token-mapper` brief reads the proposal and `spec/tokens/interface.json`, and reports each interface token as `match`, `candidates` or `missing`. It writes only `generated/import/<name>.mapping.json`. Check the original input for descriptions the proposal doesn't carry. For example, an incoming `active` may mean pressed, selected, or current: check where it's used before mapping it.
 
-3. **Review.** Go through unmapped tokens, candidates, new roles and contrast failures, one at a time.
+3. **Review.** Go through unmapped tokens, candidates, new roles and contrast failures, one at a time. Apply reads the original `.proposal.json`, not the mapper's advisory `.mapping.json`. Reflect agreed changes in the proposal and set `"apply": false` on mappings you're not ready to use.
 
 4. **Preview the apply.**
 
@@ -52,6 +52,7 @@ Review the proposal with `/foundations import`, or start with `sketchbook init -
 ## Next steps
 
 - [Change a foundation](/guides/foundations/): refine imported values with presets.
+- [Choosing token names](/guides/choosing-token-names/): rename the interface separately if you want to keep your team's vocabulary.
 - [Foundations CLI](/cli/foundations/): every option of `tokens` and `audit-css`.
 
 Source of truth: `.claude/commands/import-tokens.md`, `.claude/skills/foundations/agents/token-mapper.md`, `harness/starters/from-codebase.json`, `docs/cli.md`

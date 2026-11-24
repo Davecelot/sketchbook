@@ -5,5 +5,5 @@
   "foundations": null,
   "components": "none",
   "kits": "none",
-  "next": ["Review the foundations with sketchbook tokens", "sketchbook add <name> (from the catalog) or sketchbook add <Name> --blank (a new design)"]
+  "next": ["Run npx sketchbook tokens presets to compare foundation options"]
 }

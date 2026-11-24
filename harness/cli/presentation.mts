@@ -14,7 +14,8 @@ export function presentation(enabled: boolean, color = enabled && !('NO_COLOR' i
     // eslint-disable-next-line no-control-regex
     const size = (s: string) => [...s.replace(new RegExp('\\x1b\\[[0-9;]*m', 'g'), '')].length;
     return value.split('\n').flatMap((line) => {
-      if (size(line) <= width) return [line];
+      // Let the terminal soft-wrap copyable commands; a hard break can separate a safety flag.
+      if (size(line) <= width || /^\s+(?:npx )?sketchbook /.test(line)) return [line];
       const indent = line.match(/^\s*/)?.[0] ?? '';
       const parts = line.trim().split(/\s+/);
       const lines: string[] = [];

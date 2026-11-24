@@ -108,7 +108,7 @@ Ask: "What best describes you?" — designer, developer, design-system lead, pro
 | only need some components | `pick` | The chosen components and what they depend on |
 | want to settle foundations before any component | `foundations` | Foundations, their Storybook pages and Figma variables; no components yet |
 | want to design everything from zero | `blank` | A foundations questionnaire; components added one at a time |
-| already have tokens (DTCG / Tokens Studio, CSS variables) | `import` | Their tokens mapped onto the semantic interface, then any of the above |
+| already have tokens (DTCG / Tokens Studio, CSS variables) | `import` | A library and kits, plus a proposal to map their token values when they provide a file |
 | already have a product | `from-codebase` | A token proposal clustered from their CSS (colors, sizes, radii, shadows) |
 
 Recommendation logic (say it as a sentence with the reason):
@@ -127,15 +127,23 @@ Recommendation logic (say it as a sentence with the reason):
 3. Read the check results with them; for a contrast failure, name the pair in plain words and offer the suggested step.
 4. `sketchbook status` to show what is installed.
 
-### 4. Hand off
+### 4. Offer help with token names (optional)
+
+After setup, before the first Foundations session, offer one choice if they have not already made it: “Keep Sketchbook’s token names, bring your team’s names, or explore alternatives?” Recommend keeping the names if they’re unsure. Let them skip without delaying their next step. If they already chose the `import` starter to bring their tokens, go straight to review instead of asking again.
+
+- **Keep Sketchbook’s names:** give one concrete next step for the starter. Nothing changes, and there’s no need to ask another naming question.
+- **Bring your team’s names:** ask for a token file if they have one and take them to Foundations import review. If `init --start import --from <file>` already wrote a proposal, use it rather than running import again. Import maps values; it does not rename tokens. If they want Sketchbook to adopt their vocabulary, review an explicit rename with the Foundations skill. If they have names but no file, compare names using the next option.
+- **Explore alternatives:** use [Choosing token names](https://sketchbook-docs.vercel.app/guides/choosing-token-names/) to compare names on one component. For content on the primary button fill, Sketchbook ships `color.primary-foreground`; `color.on-primary` is a possible replacement, not a second token or a built-in alias. Do not ask people to settle a system-wide format or change anything without approval.
+
+### 5. Hand off
 
 | Starter | Next |
 | --- | --- |
 | `blank`, `foundations` | `foundations` skill, `guided` mode, all areas (color first) |
 | `library`, `library+kits` | `foundations` skill, `guided` mode for the brand (color, typography, radius, density), then `npm run storybook` |
 | `pick` | `sketchbook add <name>` for anything missing (or `/add <Name>` to design a new one), then `foundations` guided |
-| `import` | `/import-tokens <file>` (foundations skill, `import` mode) |
-| `from-codebase` | `foundations` skill, `import` mode on the CSS proposal |
+| `import` | Foundations import review: open the proposal, or ask for a file to create one |
+| `from-codebase` | Review the CSS audit with Foundations, then preview any chosen values with `sketchbook tokens set`; the audit is not an import proposal |
 
 Then, when they want pages: the `kits` skill. Several brands from one system: `sketchbook brand add <name>` (run `sketchbook help brand`).
 

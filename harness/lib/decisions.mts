@@ -53,14 +53,17 @@ export interface DecisionProposal { title: string; context: string; decision: st
 export async function proposeDecision(root: string, { title, context, decision, why, watchOut, section }: DecisionProposal): Promise<string> {
   const path = join(root, LOG);
   const text = await readFile(path, 'utf8');
+  const separator = /(\r?\n)---\1\1/;
+  const eol = separator.exec(text)?.[1];
+  if (!eol || !text.includes(`## Index${eol}`)) throw new Error('The decision log needs an index and an entry separator.');
   // After every default id too, so a later inherited entry never collides with the team's own.
   const pinnedIds = existsSync(PINNED) ? idsIn(readFileSync(PINNED, 'utf8')) : [];
   const next = Math.max(0, ...[...idsIn(text), ...pinnedIds].map((id) => Number(id.slice(3)))) + 1;
   const id = `SB-${String(next).padStart(4, '0')}`;
-  const entry = `### ${id} · ${today()} · ${title}\n**Status:** proposed\n**Context:** ${context}\n**Decision:** ${decision}\n**Why:** ${why}\n**Watch out:** ${watchOut}\n\n`;
-  let out = text.replace(/\n---\n\n/, `\n---\n\n${entry}`);
+  const entry = `### ${id} · ${today()} · ${title}\n**Status:** proposed\n**Context:** ${context}\n**Decision:** ${decision}\n**Why:** ${why}\n**Watch out:** ${watchOut}\n\n`.replaceAll('\n', eol);
+  let out = text.replace(separator, (marker) => marker + entry);
   const line = new RegExp(`- ${section}: `);
-  out = line.test(out) ? out.replace(line, `- ${section}: ${id}, `) : out.replace('## Index\n', `## Index\n- ${section}: ${id}\n`);
+  out = line.test(out) ? out.replace(line, `- ${section}: ${id}, `) : out.replace(`## Index${eol}`, `## Index${eol}- ${section}: ${id}${eol}`);
   await writeFile(path, out);
   return id;
 }

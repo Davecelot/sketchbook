@@ -6,7 +6,6 @@
   "components": "all",
   "kits": "all",
   "next": [
-    "sketchbook audit-css <path|glob>",
-    "Review generated/import/codebase.proposal.json and apply chosen foundation values with sketchbook tokens"
+    "Run npx sketchbook audit-css \"<path-or-glob>\" to suggest foundation values without applying them"
   ]
 }

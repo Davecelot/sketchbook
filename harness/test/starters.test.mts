@@ -489,6 +489,12 @@ test('S21 import and from-codebase starters run or print their next step', async
   assert.equal(imp.json.ok, true);
   assert.match(must(imp.json.next, 'next'), /tokens import/);
   assert.equal((await readJson<{ starter: string }>(dir, 'harness.config.json')).starter, 'import');
+  const withFile = cliJson(dir, 'init', '--start', 'import', '--from', 'legacy/site.css', '--json');
+  assert.equal(withFile.json.ok, true, withFile.out);
+  const proposalPath = 'generated/import/site.proposal.json';
+  assert.ok(withFile.json.changed.includes(proposalPath));
+  assert.equal((await readJson<{ source: { file: string } }>(dir, proposalPath)).source.file, join('legacy', 'site.css'));
+  assert.match(must(withFile.json.next, 'next'), /npx sketchbook tokens import apply generated\/import\/site\.proposal\.json --dry-run/);
   assert.equal(cli(dir, 'init', '--start', 'nope', '--json').code, 1);
   await rm(dir, { recursive: true });
 });

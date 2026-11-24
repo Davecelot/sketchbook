@@ -4,6 +4,8 @@ description: "Look up a Sketchbook term and find where to use it."
 order: 60
 ---
 
+For design token roles and naming alternatives, see the [token naming glossary](/reference/token-naming-glossary/).
+
 | Term | Meaning |
 | --- | --- |
 | Adapter | The tool behind one output, named in `harness.config.json` (`lit`, `style-dictionary`, `storybook`, `playwright`, `figma`). Swapping one does not change the spec ([how it works](/concepts/how-it-works/)). |

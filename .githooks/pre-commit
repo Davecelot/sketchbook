@@ -7,6 +7,17 @@ out=$(mktemp) || exit 1
 trap 'rm -f "$out"' EXIT
 # The source repo is told apart by its build script: harness/checks/run.mjs is compiled, so a fresh clone has none yet.
 if [ -f scripts/build-harness.mjs ]; then
+  if [ -f docs/content-guidelines.md ]; then
+    git diff --cached --quiet --diff-filter=ACMRT -- \
+      'README.md' ':(glob)apps/docs/content/**/*.md' ':(glob)docs/**/*.md' \
+      ':(glob)harness/templates/project/docs/**/*.md' ':(glob)harness/templates/agent-catalog/**/*.md' \
+      ':(glob)harness/cli/**/*.mts' ':(glob)harness/commands/**/*.mts' \
+      ':(glob)harness/starters/*.json' ':(exclude)docs/cli.md'
+    if [ "$?" -eq 1 ]; then
+      printf '%s\n' 'Content review: see docs/content-guidelines.md.' \
+        'Check that readers can find the next action, what it changes, and how to verify the result.'
+    fi
+  fi
   if ! node scripts/build-harness.mjs > "$out" 2>&1; then
     cat "$out"
     printf '\nCommit blocked: the Sketchbook harness failed to build.\n'

@@ -39,7 +39,11 @@ export interface TokenPlan<D = unknown> { files?: Record<string, string>; apply?
 export interface CheckIssue { file?: string | null; msg: string; fix?: string | null; token?: string; [k: string]: unknown }
 export interface CheckReport { exitCode: number; results: { id: string; errors: CheckIssue[]; warnings: CheckIssue[] }[] }
 export type PlanIssue = CheckIssue & { id: string };
-export interface RunPlanOptions<R extends CheckReport = CheckReport> { dryRun?: boolean; check?: (dir: string) => Promise<R> }
+export interface RunPlanOptions<R extends CheckReport = CheckReport> {
+  dryRun?: boolean;
+  check?: (dir: string) => Promise<R>;
+  finalize?: (dir: string, diff: CssDiff) => Promise<PlanIssue | void>;
+}
 export interface RunPlanResult<R extends CheckReport = CheckReport> {
   diff: CssDiff;
   changed: string[];
@@ -47,6 +51,7 @@ export interface RunPlanResult<R extends CheckReport = CheckReport> {
   failed: boolean;
   errors: PlanIssue[];
   conflict: string[];
+  notRestored?: string[];
   warnings: PlanIssue[];
   report: R | null;
   linkWarnings: GeneratorResult['links']['missing'];
@@ -141,14 +146,14 @@ export function cssDiff(before: string | null | undefined, after: string | null 
   return out;
 }
 
-export function formatDiff(diff: CssDiff, limit = 12): string[] {
+export function formatDiff(diff: CssDiff, limit = 12, more = 'sketchbook tokens diff'): string[] {
   const lines: string[] = [];
   const modes = Object.entries(diff);
   if (!modes.length) return ['CSS: no custom property changed.'];
   for (const [m, d] of modes) {
     lines.push(`CSS ${m}: ${d.changed.length} changed, ${d.added.length} added, ${d.removed.length} removed`);
     const rows = [...d.changed.map((c) => `  ~ ${c.name}: ${c.before} -> ${c.after}`), ...d.added.map((c) => `  + ${c.name}: ${c.after}`), ...d.removed.map((c) => `  - ${c.name}`)];
-    lines.push(...rows.slice(0, limit), ...(rows.length > limit ? [`  … ${rows.length - limit} more (sketchbook tokens diff)`] : []));
+    lines.push(...rows.slice(0, limit), ...(rows.length > limit ? [`  … ${rows.length - limit} more (${more})`] : []));
   }
   return lines;
 }
@@ -245,8 +250,11 @@ const STAGE = [...COPY, 'brands', 'src', 'playwright', '.storybook', 'docs', 'ha
 const SKIP = new Set(['node_modules', 'dist', 'storybook-static', '.git', 'test-results', 'playwright-report', '.tmp']);
 const hash = (buf: Buffer): string => createHash('sha256').update(buf).digest('hex');
 
-// Test seam: called with (root, stage) after the checks and before the conflict check and copy-back.
-export const stageHooks: { beforeCopyBack: ((root: string, stage: string) => Promise<void>) | null } = { beforeCopyBack: null };
+// Test seams at the snapshot and copy-back boundaries.
+export const stageHooks: {
+  beforeStage: ((root: string) => Promise<void>) | null;
+  beforeCopyBack: ((root: string, stage: string) => Promise<void>) | null;
+} = { beforeStage: null, beforeCopyBack: null };
 
 async function writeFiles(dir: string, files: Record<string, string> | undefined): Promise<void> {
   for (const [rel, content] of Object.entries(files ?? {})) { await mkdir(dirname(join(dir, rel)), { recursive: true }); await writeFile(join(dir, rel), content); }
@@ -296,37 +304,58 @@ async function conflicts(root: string, snapshot: Map<string, string>, files: str
   return out;
 }
 
-// Writes the stage's version of each file (deleting the ones the stage removed; only snapshot files reach here as
-// deletions). Every target is backed up first; any error restores them all and rethrows.
-async function copyBack(root: string, stage: string, files: string[]): Promise<void> {
+// On failure, restore the targets we touched and report any we could not restore.
+async function copyBack(root: string, stage: string, files: string[]): Promise<{ issue: PlanIssue; notRestored: string[] } | null> {
   const backup: [string, Buffer | null][] = [];
+  let target: string | null = null;
   try {
     for (const rel of files) {
+      target = rel;
       const to = join(root, rel);
       let prev: Buffer | null = null;
-      try { prev = await readFile(to); } catch { /* absent */ }
-      backup.push([to, prev]);
+      try { prev = await readFile(to); } catch (e) {
+        if (!isObj(e) || e.code !== 'ENOENT') throw e;
+      }
+      backup.push([rel, prev]);
       const from = join(stage, rel);
       if (await exists(from)) { await mkdir(dirname(to), { recursive: true }); await writeFile(to, await readFile(from)); } else await rm(to, { force: true });
     }
   } catch (e) {
-    for (const [to, prev] of backup.reverse()) {
-      try { if (prev === null) await rm(to, { force: true }); else { await mkdir(dirname(to), { recursive: true }); await writeFile(to, prev); } } catch { /* best effort */ }
+    const notRestored: string[] = [];
+    for (const [rel, prev] of backup.reverse()) {
+      const originalHash = prev === null ? null : hash(prev);
+      if (await liveHash(root, rel) === originalHash) continue;
+      const to = join(root, rel);
+      try {
+        if (prev === null) await rm(to, { force: true });
+        else { await mkdir(dirname(to), { recursive: true }); await writeFile(to, prev); }
+      } catch { notRestored.push(rel); }
     }
-    throw e;
+    return {
+      notRestored,
+      issue: {
+        file: target, id: 'write',
+        msg: `Could not update ${target}: ${firstLine(e)}.${notRestored.length ? ` Could not restore: ${notRestored.join(', ')}.` : ' Project files were restored.'}`,
+        fix: notRestored.length ? 'Review git diff and restore the listed files before retrying.' : 'Check the path and its write permissions, then run the command again.',
+      },
+    };
   }
+  return null;
 }
 
 const firstLine = (e: unknown): string => String((typeof e === 'object' && e !== null && 'message' in e ? e.message : undefined) ?? e).split('\n').map((l) => l.trim()).filter(Boolean).slice(0, 3).join(' ');
 
 // check: async (dir) => runChecks report (the CLI passes the token checks); a failing report applies nothing.
-export async function runPlan<R extends CheckReport = CheckReport>(root: string, plan: Pick<TokenPlan, 'files' | 'apply'>, { dryRun = false, check }: RunPlanOptions<R> = {}): Promise<RunPlanResult<R>> {
-  const before = await readText(root, CSS);
-  const apply = plan.apply ?? ((dir: string) => writeFiles(dir, plan.files));
+type PlanWrites = Pick<TokenPlan, 'files' | 'apply'>;
+export async function runPlan<R extends CheckReport = CheckReport>(root: string, prepare: PlanWrites | ((dir: string) => Promise<PlanWrites>), { dryRun = false, check, finalize }: RunPlanOptions<R> = {}): Promise<RunPlanResult<R>> {
   const tmp = await mkdtemp(join(tmpdir(), 'sketchbook-stage-'));
   try {
+    if (stageHooks.beforeStage) await stageHooks.beforeStage(root);
     const snapshot = await stageIn(root, tmp);
-    await apply(tmp);
+    const before = await readText(tmp, CSS);
+    const plan = typeof prepare === 'function' ? await prepare(tmp) : prepare;
+    if (plan.apply) await plan.apply(tmp);
+    else await writeFiles(tmp, plan.files);
     let gen: Pick<GeneratorResult, 'links' | 'overrides'> = { links: { changed: [], missing: [] }, overrides: { kept: [], added: [], dropped: [] } };
     let buildError: unknown = null;
     try {
@@ -344,18 +373,32 @@ export async function runPlan<R extends CheckReport = CheckReport>(root: string,
       errors.unshift({ file: CSS, id: 'build', msg: `the rebuild failed: ${firstLine(buildError)}`, fix: cause.length ? `Underlying: ${cause.join('; ')}.` : 'Run sketchbook check --only=T1,T2,T3 on the change; each error names its fix.' });
     }
     let failed = Boolean(buildError) || report?.exitCode === 1;
-    const changed = await changedFiles(snapshot, tmp);
+    const diff = buildError ? {} : cssDiff(before, after);
+    let changed = await changedFiles(snapshot, tmp);
+    if (!failed && changed.length && finalize) {
+      const issue = await finalize(tmp, diff);
+      if (issue) { errors.push(issue); failed = true; }
+      else changed = await changedFiles(snapshot, tmp);
+    }
     let conflict: string[] = [];
+    let notRestored: string[] | undefined;
     if (!dryRun && !failed) {
       if (stageHooks.beforeCopyBack) await stageHooks.beforeCopyBack(root, tmp);
       conflict = await conflicts(root, snapshot, changed);
       if (conflict.length) {
         failed = true;
         errors.unshift({ file: conflict[0], id: 'conflict', msg: `${conflict.length} file(s) changed in the project while the command ran, and the command would overwrite them: ${conflict.slice(0, 6).join(', ')}${conflict.length > 6 ? ', …' : ''}. Nothing was written.`, fix: 'Save or commit those edits, then run the command again (it starts from the files as they are then).' });
-      } else await copyBack(root, tmp, changed);
+      } else {
+        const failure = await copyBack(root, tmp, changed);
+        if (failure) {
+          errors.push(failure.issue);
+          notRestored = failure.notRestored;
+          failed = true;
+        }
+      }
     }
     return {
-      diff: buildError ? {} : cssDiff(before, after), changed, applied: !dryRun && !failed, failed, errors, conflict,
+      diff, changed, applied: !dryRun && !failed, failed, errors, conflict, ...(notRestored?.length ? { notRestored } : {}),
       warnings: report ? report.results.flatMap((r) => r.warnings.map((w) => ({ ...w, id: r.id }))) : [],
       report, linkWarnings: gen.links.missing, linked: gen.links.changed, overrides: gen.overrides,
     };
@@ -629,20 +672,22 @@ function reservedPaths(brand: BrandConfig | null): { ramps: Set<unknown>; paths:
 
 // Why `path` can't be a semantic token: the generator can make it (or a group around it), or another token in any
 // layer already builds its CSS variable. `ignore` holds paths that are moving away (a rename's own tokens).
-async function refuseName(root: string, path: string, { ignore = new Set<string>() }: { ignore?: Set<string> } = {}): Promise<void> {
+async function refuseNames(root: string, names: Iterable<string>, { ignore = new Set<string>() }: { ignore?: Set<string> } = {}): Promise<void> {
   const brand = await readJson<BrandConfig>(root, BRAND);
   const { ramps, paths } = reservedPaths(brand);
-  const parts = path.split('.');
-  const ramp = parts[1] ?? '';
-  if (parts[0] === 'color' && ramps.has(parts[1])) throw fail(`${path} is reserved: the generator makes color.${ramp}${['white', 'black'].includes(ramp) ? '' : '.*'} (a foundation ramp${ramps.has(parts[1]) && !['brand', 'neutral', 'white', 'black'].includes(ramp) ? ' for an accent or color role' : ''}), now or when brand.config changes.`, 'Pick a semantic name outside the foundation ramps, e.g. color.highlight.');
-  const hit = [...paths].find((p) => p === path || p.startsWith(path + '.') || path.startsWith(p + '.'));
-  if (hit) throw fail(`${path} is reserved: the generator can make ${hit} (a foundation token of some preset).`, 'Pick a semantic name outside the foundation families, e.g. a role name like space.section.');
   // String(): a missing prefix built "--undefined-…" here before it was typed; kept so the comparison does not change.
   const prefix = String((await readJson<Partial<HarnessConfigJson>>(root, 'harness.config.json'))?.prefix);
-  const all = await loadAll(root);
-  const v = cssVarName(prefix, path);
-  const clash = all.sets.flatMap((s) => s.tokens).find((t) => !ignore.has(t.path) && t.path !== path && cssVarName(prefix, t.path) === v);
-  if (clash) throw fail(`${path} would build ${v}, the CSS variable of ${clash.path} (${clash.file}).`, 'Pick a name whose CSS variable is free: dots and dashes both become "-".');
+  const tokens = (await loadAll(root)).sets.flatMap((s) => s.tokens);
+  for (const path of names) {
+    const parts = path.split('.');
+    const ramp = parts[1] ?? '';
+    if (parts[0] === 'color' && ramps.has(parts[1])) throw fail(`${path} is reserved: the generator makes color.${ramp}${['white', 'black'].includes(ramp) ? '' : '.*'} (a foundation ramp${ramps.has(parts[1]) && !['brand', 'neutral', 'white', 'black'].includes(ramp) ? ' for an accent or color role' : ''}), now or when brand.config changes.`, 'Pick a semantic name outside the foundation ramps, e.g. color.highlight.');
+    const hit = [...paths].find((p) => p === path || p.startsWith(path + '.') || path.startsWith(p + '.'));
+    if (hit) throw fail(`${path} is reserved: the generator can make ${hit} (a foundation token of some preset).`, 'Pick a semantic name outside the foundation families, e.g. a role name like space.section.');
+    const v = cssVarName(prefix, path);
+    const clash = tokens.find((t) => !ignore.has(t.path) && t.path !== path && cssVarName(prefix, t.path) === v);
+    if (clash) throw fail(`${path} would build ${v}, the CSS variable of ${clash.path} (${clash.file}).`, 'Pick a name whose CSS variable is free: dots and dashes both become "-".');
+  }
 }
 
 
@@ -681,7 +726,7 @@ export async function planAdd(root: string, path: string, { value, light, dark, 
     if (v === undefined) throw fail(`No value for mode ${m.name} (role ${m.role}).`, `Pass --${m.role} v.`);
     values[m.name] = parseValue(v);
   }
-  await refuseName(root, path);
+  await refuseNames(root, [path]);
   if (type !== undefined && !TYPES.includes(type)) throw fail(`--type ${type} is not a token type.`, `Use one of: ${TYPES.join(', ')}.`);
   const known = new Set([...all.sets.flatMap((s) => s.tokens.map((x) => x.path)), path]);
   for (const [m, v] of Object.entries(values)) {
@@ -735,26 +780,54 @@ export async function planRemove(root: string, path: string): Promise<TokenPlan<
   return { files, summary: [`${path} removed from ${where.join(', ')}`], warnings: [], data: { token: path, from: where }, decision: { title: `Remove semantic token ${path}`, decision: `Remove ${path} from the semantic layer (${where.join(', ')}); nothing used it (sketchbook tokens remove).` } };
 }
 
-// Renames a semantic token (or a group of them) everywhere it is named.
-export async function planRename(root: string, from: string, to: string): Promise<TokenPlan<{ from: string; to: string; tokens: Record<string, string>; files: string[] }>> {
+interface RenamePlanData { tokens: Record<string, string>; files: string[] }
+type RenamePair = Pick<Rename, 'from' | 'to'>;
+const under = (path: string, base: string): boolean => path === base || path.startsWith(base + '.');
+const tokenPath = /^[a-z][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)+$/;
+
+export async function planRename(root: string, from: string, to: string): Promise<TokenPlan<RenamePlanData & RenamePair>> {
+  const plan = await planRenames(root, [{ from, to }], { single: true });
+  return { ...plan, data: { from, to, tokens: plan.data.tokens, files: plan.data.files } };
+}
+
+export async function planRenames(root: string, renames: RenamePair[], { single = false, details = false }: { single?: boolean; details?: boolean } = {}): Promise<TokenPlan<RenamePlanData & { renames: RenamePair[] }>> {
   const { docs } = await semanticDocs(root);
   const config = await readJson<HarnessConfigJson>(root, 'harness.config.json');
   if (!config) throw new TypeError("Cannot read properties of null (reading 'prefix')");
   const prefix = config.prefix;
-  if (from === to) throw fail('Old and new names are the same.', 'Pick a new name.');
-  safeParts(from);
-  if (!/^[a-z][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)+$/.test(to)) throw fail(`"${to}" is not a token path.`, 'Use category.role[-modifier].');
-  if (to.startsWith(from + '.')) throw fail(`${to} is inside ${from}.`, 'Rename to a sibling path.');
-  const paths = [...new Set(Object.values(docs).flatMap((d) => flatten(d).map((t) => t.path)).filter((p) => p === from || p.startsWith(from + '.')))];
-  if (!paths.length) throw fail(`${from} is not a semantic token or group.`, 'sketchbook tokens impact <path> shows where a token lives.');
-  for (const [name, doc] of Object.entries(docs)) if (nodeAt(doc, to) !== undefined) throw fail(`${to} already exists in ${semanticFile(name)}.`, 'Pick a free name, or remove that token first.');
+  const existing = new Set(Object.values(docs).flatMap((d) => flatten(d).map((t) => t.path)));
+  const map = new Map<string, string>();
+  for (const { from, to } of renames) {
+    if (from === to) throw fail(`${from}: the old and new names are the same.`, 'Choose a new name or remove this entry.');
+    safeParts(from);
+    if (!tokenPath.test(to) || (!single && !tokenPath.test(from))) throw fail(`${JSON.stringify(!tokenPath.test(to) ? to : from)} is not a token path.`, 'Use a lowercase dot path, such as color.on-primary.');
+    if (to.startsWith(from + '.')) throw fail(`${to} is inside ${from}.`, 'Rename to a sibling path.');
+    const sources = single ? [...existing].filter((p) => under(p, from)) : existing.has(from) ? [from] : [];
+    if (!sources.length) throw fail(`${from} is not a semantic token${single ? ' or group' : ''}.`, single ? 'Run sketchbook tokens impact <path> to look up a token.' : 'Check the source name in the rename list. To move a group, use tokens rename <old> <new> separately.');
+    for (const [name, doc] of Object.entries(docs)) if (nodeAt(doc, to) !== undefined) throw fail(`${to} already exists in ${semanticFile(name)}.`, 'Choose an unused destination. A rename list does not support chains or swaps.');
+    for (const path of sources) {
+      if (map.has(path)) throw fail(`${path} is listed more than once.`, 'Keep one destination for each source token.');
+      map.set(path, to + path.slice(from.length));
+    }
+  }
   const all = await loadAll(root);
-  if (all.sets.some((s) => s.layer !== 'semantic' && s.tokens.some((t) => t.path === to || t.path.startsWith(to + '.')))) throw fail(`${to} is a foundation or component path.`, 'Pick a free semantic name.');
-  const map = new Map(paths.map((p) => [p, to + p.slice(from.length)]));
-  for (const p of map.values()) await refuseName(root, p, { ignore: new Set(paths) });
+  const destinations = new Map<string, string>();
+  for (const { to } of renames) if (all.sets.some((s) => s.layer !== 'semantic' && s.tokens.some((t) => under(t.path, to)))) throw fail(`${to} is a foundation or component path.`, 'Pick a free semantic name.');
+  for (const [from, to] of map) {
+    const css = cssVarName(prefix, to);
+    const collision = destinations.get(css);
+    if (collision === to) throw fail(`${to} is the destination for more than one token.`, 'Give each destination a distinct name.');
+    if (collision) throw fail(`${collision} and ${to} would both use ${css}.`, 'Give each destination a distinct CSS variable. Dots and dashes both become "-".');
+    if (!single && [...map.keys()].some((source) => (from !== source && cssVarName(prefix, source) === css) || under(to, source))) {
+      throw fail(`${to} overlaps a source in the same rename list.`, 'Choose an unused destination. A rename list does not support chains or swaps.');
+    }
+    if ([...destinations.values()].some((other) => under(other, to) || under(to, other))) throw fail(`${to} overlaps another destination in the rename list.`, 'Use separate token paths, not a token and a path inside it.');
+    destinations.set(css, to);
+  }
+  const paths = [...map.keys()];
+  await refuseNames(root, map.values(), { ignore: new Set(paths) });
   const rn = (p: string): string => map.get(p) ?? p;
   const files: Record<string, string> = {};
-  const touched: string[] = [];
 
   // Semantic files: move the nodes, then re-point aliases.
   for (const [name, original] of Object.entries(docs)) {
@@ -790,17 +863,31 @@ export async function planRename(root: string, from: string, to: string): Promis
     const text = await readText(root, file);
     if (!text) continue;
     const out = renameCodeText(text, map, prefix);
-    if (out !== text) { files[file] = out; touched.push(file); }
+    if (out !== text) files[file] = out;
   }
   // The rename log: catalog installs translate incoming components and kits through it (SB-0066).
   const log = (await readJson<RenamesDoc>(root, RENAMES)) ?? { $description: RENAMES_DESCRIPTION, renames: [] };
-  log.renames = [...(log.renames ?? []), { from, to, date: new Date().toISOString().slice(0, 10) }];
+  const date = new Date().toISOString().slice(0, 10);
+  log.renames = [...(log.renames ?? []), ...renames.map((pair) => ({ ...pair, date }))];
   files[RENAMES] = serialize(log);
+  const filenames = Object.keys(files);
+  const [pair] = renames;
+  const summary = single && pair
+    ? [`${pair.from} -> ${pair.to}: ${paths.length} token(s); ${filenames.length} file(s) rewritten`, ...filenames.map((f) => `  ${f}`)]
+    : [
+      `${map.size} ${map.size === 1 ? 'rename' : 'renames'}:`,
+      ...renames.slice(0, details ? undefined : 12).map(({ from, to }) => `  ${from} -> ${to}`),
+      ...(details || map.size <= 12 ? [] : [`  ${map.size - 12} more. Use --details to see all renames.`]),
+      `Files with updated references (${filenames.length}, before regeneration):`,
+      ...filenames.slice(0, details ? undefined : 8).map((file) => `  ${file}`),
+      ...(details || filenames.length <= 8 ? [] : [`  ${filenames.length - 8} more. Use --details to see all files.`]),
+    ];
   return {
-    files, warnings: [],
-    summary: [`${from} -> ${to}: ${paths.length} token(s); ${Object.keys(files).length} file(s) rewritten`, ...Object.keys(files).map((f) => `  ${f}`)],
-    data: { from, to, tokens: Object.fromEntries(map), files: Object.keys(files) },
-    decision: { title: `Rename ${from} to ${to}`, decision: `Rename the semantic token${paths.length > 1 ? 's under' : ''} ${from} to ${to} in semantic files, brand links, contracts, contrast pairs, stories, specs, patterns and .storybook (sketchbook tokens rename).` },
+    files, warnings: [], summary,
+    data: { renames, tokens: Object.fromEntries(map), files: filenames },
+    decision: single && pair
+      ? { title: `Rename ${pair.from} to ${pair.to}`, decision: `Rename the semantic token${paths.length > 1 ? 's under' : ''} ${pair.from} to ${pair.to} in semantic files, brand links, contracts, contrast pairs, stories, specs, patterns and .storybook (sketchbook tokens rename).` }
+      : { title: `Rename ${map.size} semantic ${map.size === 1 ? 'token' : 'tokens'}`, decision: `Rename ${renames.map(({ from, to }) => `${from} to ${to}`).join('; ')} (sketchbook tokens rename --map).` },
   };
 }
 
@@ -848,4 +935,3 @@ export async function planScratch(root: string, answers: Record<string, string |
     decision: { title: 'Foundations restarted from scratch', decision: `brand.config.json rewritten from a questionnaire (${Object.entries(answers).map(([k, v]) => `${k} ${v}`).join(', ') || 'catalog defaults'}) with sketchbook tokens scratch; the semantic interface was kept.` },
   };
 }
-

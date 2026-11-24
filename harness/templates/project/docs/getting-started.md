@@ -27,6 +27,8 @@ Sketchbook is a first draft: start from wherever you are, and edit or redo the d
 
 To see what your current project contains, run `npx sketchbook status`.
 
+Keep the default token names if they work for you. If you have existing tokens or want to compare names on a real component, see [Choosing token names](https://sketchbook-docs.vercel.app/guides/choosing-token-names/). Setup does not require a naming choice.
+
 ## 3. Change your first foundation
 
 Preview a primary color change and apply it when you’re ready.

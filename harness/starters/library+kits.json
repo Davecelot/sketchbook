@@ -5,5 +5,5 @@
   "foundations": null,
   "components": "all",
   "kits": "all",
-  "next": ["Review the foundations with sketchbook tokens", "npm run storybook (Patterns)", "sketchbook kits list"]
+  "next": ["Run npm run storybook and open Patterns to try the page templates"]
 }

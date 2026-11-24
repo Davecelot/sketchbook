@@ -399,17 +399,17 @@ Examples:
 
 ### tokens
 
-Set foundation values, manage semantic tokens, or trace the impact of a change.
+Set foundation values, rename semantic tokens, or trace the impact of a change.
 
 ```
-sketchbook tokens <subcommand> [args...] [--value <v>] [--light <v>] [--dark <v>] [--type <type>] [--pair <fg:bg>] [--kind <text|large-text|ui>] [--against <ref>] [--from <dtcg|css>] [--name <n>] [--only <semantic|foundation|mapped>] [--min-confidence <0.6>] [--answers <file.json>] [--all] [--yes] [--verbose] [--no-record] [--dry-run] [--json]
+sketchbook tokens <subcommand> [args...] [--value <v>] [--light <v>] [--dark <v>] [--type <type>] [--pair <fg:bg>] [--kind <text|large-text|ui>] [--against <ref>] [--from <dtcg|css>] [--name <n>] [--only <semantic|foundation|mapped>] [--min-confidence <0.6>] [--map <file>] [--preset <id>] [--out <file>] [--answers <file.json>] [--all] [--yes] [--verbose] [--no-record] [--dry-run] [--json]
 ```
 
 Changes files; supports `--dry-run`.
 
 | Argument | Meaning |
 | --- | --- |
-| `subcommand` | rebuild | set | preset | presets | diff | impact | add | remove | rename | import | scratch | overrides |
+| `subcommand` | rebuild | set | preset | presets | diff | impact | add | remove | rename | rename-plan | import | scratch | overrides |
 | `args` (optional) | The subcommand's arguments (see below) |
 
 | Option | Meaning |
@@ -425,6 +425,9 @@ Changes files; supports `--dry-run`.
 | `--name` | import: proposal name (default: the file name) |
 | `--only` | import apply: only semantic (alias mapped) or only foundation entries |
 | `--min-confidence` | import apply: skip entries below this confidence |
+| `--map` | rename: read a JSON list of semantic token renames |
+| `--preset` | rename-plan: pick a naming preset from tokens rename-plan |
+| `--out` | rename-plan: write the list to this new JSON file |
 | `--answers` | scratch: answers (name, primary, neutral, font, scale, spacing, radius, density, motion, elevation, contrast) |
 | `--all` | overrides reset: every override |
 | `--yes` | overrides reset --all: confirm without asking; any mutating subcommand: let the brand links overwrite hand-edited linked tokens |
@@ -441,16 +444,19 @@ Changes files; supports `--dry-run`.
 | `sketchbook tokens impact <token-path \| --css-var>` | What depends on a token: semantic aliases, brand links, contracts (component tokens, contrast pairs), and stories, specs, .storybook and patterns using its CSS variable. Read-only. |
 | `sketchbook tokens add <semantic.path> (--value v \| --light v --dark v) [--type t] [--pair fg:bg --kind text\|large-text\|ui]` | Add a semantic token: one mode-less value (--value) or one per mode (--light, --dark; modes by role); optionally a contrast pair. |
 | `sketchbook tokens remove <semantic.path>` | Remove a semantic token from every semantic file; refused (with the impact) while anything depends on it. |
-| `sketchbook tokens rename <old> <new>` | Rename a semantic token (or group) everywhere: semantic files and aliases, brand links, contracts (tokens, contrast), contrast.json, CSS variables in stories, specs, patterns and .storybook. |
+| `sketchbook tokens rename [<old> <new> \| --map <file>] [--dry-run] [--details]` | Rename one semantic token or group, or use --map to rename several tokens together. Updates references and checks the whole change before writing. |
+| `sketchbook tokens rename-plan [--preset <id> --out <file>] [--dry-run]` | List naming presets, or write an editable JSON rename list. Does not change tokens or overwrite a file. |
 | `sketchbook tokens import <file\|folder> --from dtcg\|css [--name n] \| import apply <proposal> [--only semantic\|foundation\|mapped] [--min-confidence 0.6]` | Parse existing tokens (DTCG / Tokens Studio, one file or a folder of sets, CSS custom properties) into generated/import/<name>.proposal.json with a proposed mapping; "import apply" writes a reviewed proposal into brand.config and the semantic files. |
 | `sketchbook tokens scratch [--answers file.json]` | Restart the foundations: a minimal brand.config.json from answers (a JSON file, or questions when interactive; defaults otherwise). The semantic interface is kept. |
 | `sketchbook tokens overrides list \| reset <path> \| reset --all [--yes]` | Hand edits kept in spec/tokens/overrides.json: list them, reset one to the generated value (a hand-added token is removed), or reset all (asks unless --yes). |
 
 Examples:
 
+- `sketchbook tokens rename-plan`
+- `sketchbook tokens rename-plan --preset on-role-colors --out token-renames.json`
+- `sketchbook tokens rename --map token-renames.json --dry-run`
 - `sketchbook tokens set typography.family Inter --dry-run`
 - `sketchbook tokens impact color.border`
-- `sketchbook tokens rename color.muted color.subtle --dry-run`
 - `sketchbook tokens import theme.css --from css`
 - `sketchbook tokens rebuild --dry-run`
 - `sketchbook tokens rebuild`
@@ -469,7 +475,8 @@ Examples:
 - `sketchbook tokens add color.highlight --light "{color.neutral.100}" --dark "{color.neutral.800}" --pair color.foreground:color.highlight`
 - `sketchbook tokens add space.section --value "{space.16}"`
 - `sketchbook tokens remove color.legacy-accent --dry-run`
-- `sketchbook tokens rename color.muted color.subtle`
+- `sketchbook tokens rename --map token-renames.json`
+- `sketchbook tokens rename color.muted color.subtle --dry-run`
 - `sketchbook tokens import tokens.json --from dtcg`
 - `sketchbook tokens import theme.css --from css --name brand`
 - `sketchbook tokens import apply generated/import/brand.proposal.json --dry-run`
@@ -796,7 +803,7 @@ Examples:
 Find a command or look up its usage, options, and examples.
 
 ```
-sketchbook help [command] [--json]
+sketchbook help [command] [subcommand] [--json]
 ```
 
 Read-only.
@@ -804,6 +811,7 @@ Read-only.
 | Argument | Meaning |
 | --- | --- |
 | `command` (optional) | A command name |
+| `subcommand` (optional) | A subcommand name |
 
 Examples:
 

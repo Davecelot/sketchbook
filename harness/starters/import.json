@@ -6,6 +6,6 @@
   "components": "all",
   "kits": "all",
   "next": [
-    "sketchbook tokens import <file>"
+    "Run npx sketchbook tokens import <file> to create a proposal without applying it"
   ]
 }

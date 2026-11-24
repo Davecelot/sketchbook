@@ -13,6 +13,25 @@ import { dispatch } from '../cli/run.mjs';
 
 const hook = (name: string, dir: string, call: unknown) => spawnSync('node', [join(ROOT, '.claude/hooks', name)], { input: JSON.stringify(call), env: { ...process.env, CLAUDE_PROJECT_DIR: dir }, encoding: 'utf8' });
 
+test('the source pre-commit hook gives one advisory reminder for staged copy', sourceRepoOnly, async (t) => {
+  const dir = await mkdtemp(join(tmpdir(), 'sketchbook-content-hook-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const run = (bin: string, ...args: string[]) => spawnSync(bin, args, { cwd: dir, encoding: 'utf8' });
+  for (const folder of ['apps/docs/content', 'scripts', 'harness/checks', 'docs']) await mkdir(join(dir, folder), { recursive: true });
+  for (const file of ['harness/checks/run.mjs', 'scripts/build-harness.mjs', 'docs/content-guidelines.md', 'docs/cli.md', 'apps/docs/content/guide.md', 'app.ts']) {
+    await writeFile(join(dir, file), '');
+  }
+  assert.equal(run('git', 'init', '-q').status, 0);
+  const preCommit = () => run('sh', join(ROOT, '.githooks/pre-commit'));
+  assert.equal(run('git', 'add', 'app.ts', 'docs/cli.md').status, 0);
+  assert.equal(preCommit().stdout, '', 'unstaged and unrelated changes do not prompt');
+  assert.equal(run('git', 'add', 'apps/docs/content/guide.md', 'docs/content-guidelines.md').status, 0);
+  const result = preCommit();
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stdout.match(/Content review:/g)?.length, 1);
+  assert.match(result.stdout, /docs\/content-guidelines\.md/);
+});
+
 const ACCEPTED = '### SB-0009 · 2026-01-01 · Buttons are buttons\n**Status:** accepted\n**Context:** c\n**Decision:** Use a native button.\n**Why:** w\n**Watch out:** o';
 const PROPOSED = '### SB-0100 · 2026-11-11 · A team idea\n**Status:** proposed\n**Context:** c\n**Decision:** d\n**Why:** w\n**Watch out:** o';
 const LOG = `# Decisions\n\n## Index\n- Inherited from Sketchbook: SB-0009\n- Process: SB-0100\n\n---\n\n${PROPOSED}\n\n---\n\n${ACCEPTED}\n`;

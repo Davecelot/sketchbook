@@ -63,7 +63,7 @@
       ]
     },
     "tokens": {
-      "summary": "Set foundation values, manage semantic tokens, or trace the impact of a change.",
+      "summary": "Set foundation values, rename semantic tokens, or trace the impact of a change.",
       "subcommands": [
         "rebuild",
         "set",
@@ -74,6 +74,7 @@
         "add",
         "remove",
         "rename",
+        "rename-plan",
         "import",
         "scratch",
         "overrides"

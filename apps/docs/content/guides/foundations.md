@@ -84,6 +84,7 @@ A color pair that fails contrast (T6) is named with the nearest passing step. Fo
 ## Next steps
 
 - [Foundations and tokens](/concepts/foundations-and-tokens/): the three token layers.
+- [Choosing token names](/guides/choosing-token-names/): keep the defaults or find words that fit your team.
 - [Import tokens](/guides/import-tokens/): bring tokens you already have.
 - [Config files](/reference/config-files/): the shape of `brand.config.json`.
 

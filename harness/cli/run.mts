@@ -91,7 +91,7 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
   }
   const values: OptionValues = parsed.values;
   const positionals = parsed.positionals.map((p) => (p.startsWith(MARK) ? p.slice(1) : p));
-  if (values.help) return finish(name, help.run({ root, args: [name], options: {}, json, out, human: ui.enabled, details: Boolean(values.details) }));
+  if (values.help) return finish(name, help.run({ root, args: [name, ...positionals.slice(0, 1)], options: {}, json, out, human: ui.enabled, details: Boolean(values.details) }));
   if (cmd.project !== false && !existsSync(join(root, 'harness.config.json'))) {
     const ancestor = ancestorProject(root);
     return fail(name, `Not a Sketchbook project (no harness.config.json in ${root}).`, ancestor

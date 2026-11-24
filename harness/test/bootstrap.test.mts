@@ -213,6 +213,23 @@ pkgTest('B6 --from is read from the folder init was started in (from-codebase in
   await rm(app, { recursive: true, force: true });
 });
 
+pkgTest('the import starter gives a proposal preview command and leaves no project on failure', async () => {
+  const app = await empty();
+  try {
+    await writeFile(join(app, 'team.css'), ':root { --on-primary: #fff; --active: #252c37; }\n');
+    const r = run(app, 'init', '--dir', 'ds', '--start', 'import', '--from', 'team.css', '--no-install', '--json');
+    assert.equal(r.code, 0, r.out + r.err);
+    assert.match(r.json?.next ?? '', /npx sketchbook tokens import apply generated\/import\/team\.proposal\.json --dry-run/);
+    const proposal = await readJson<{ source: { file: string } }>(join(app, 'ds'), 'generated/import/team.proposal.json');
+    assert.equal(proposal.source.file, join('..', 'team.css'));
+    const missing = run(app, 'init', '--dir', 'failed', '--start', 'import', '--from', 'missing.css', '--no-install', '--json');
+    assert.equal(missing.code, 1, missing.out + missing.err);
+    assert.match(missing.json?.errors[0]?.msg ?? '', /Could not find the token input.*missing\.css\.\nNo project files were written/);
+    assert.match(missing.json?.errors[0]?.fix ?? '', /--from/);
+    assert.deepEqual(ls(app).sort(), ['ds', 'team.css']);
+  } finally { await rm(app, { recursive: true, force: true }); }
+});
+
 test('local engine specs resolve from the command directory without changing registry or Git specs', () => {
   const cwd = join(tmpdir(), 'engine path with spaces');
   for (const spec of ['./engine.tgz', 'engine.tgz', 'file:./engine.tgz']) assert.equal(engineSpec(spec, cwd), `file:${join(cwd, 'engine.tgz')}`);

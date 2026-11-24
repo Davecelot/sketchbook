@@ -30,6 +30,10 @@ No component implementation without a `contract.json` that passes `npm run check
 
 Write no comments unless they explain a non-obvious why. Manual, no linter.
 
+## content-guidelines
+
+Follow the [content guidelines](https://github.com/Davecelot/sketchbook/blob/main/docs/content-guidelines.md) when writing docs, agent guidance, or CLI messages. The Sketchbook source checkout’s pre-commit hook reminds you to review staged copy; the review itself is manual.
+
 ## form-associated-controls
 
 A component that stands in for a native form control extends `FormAssociated(LitElement)` from its first version and implements `formValue()`, `formReset()`, `formStateRestore()` and `validationAnchor()`. Manual.

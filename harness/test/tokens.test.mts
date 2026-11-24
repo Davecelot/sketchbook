@@ -93,7 +93,7 @@ test('K1 tokens is one registry command with documented subcommands', () => {
   assert.ok(c && c.mutates && c.dryRun && c.cssVarArgs);
   const subcommands = must(c.subcommands, 'tokens subcommands').map((s) => { assert.ok(typeof s === 'object', 'every tokens subcommand is described'); return s; });
   const names = subcommands.map((s) => s.name);
-  assert.deepEqual(names, ['rebuild', 'set', 'preset', 'presets', 'diff', 'impact', 'add', 'remove', 'rename', 'import', 'scratch', 'overrides']);
+  assert.deepEqual(names, ['rebuild', 'set', 'preset', 'presets', 'diff', 'impact', 'add', 'remove', 'rename', 'rename-plan', 'import', 'scratch', 'overrides']);
   for (const s of subcommands) for (const k of ['name', 'usage', 'summary', 'mutates', 'examples']) assert.ok(k in s, `${s.name} lacks ${k}`);
   const known = parseJson<{ commands: { tokens: { subcommands: string[] } } }>(spawnSync('cat', [join(ROOT, 'harness/cli/known-commands.json')], { encoding: 'utf8' }).stdout);
   assert.deepEqual(known.commands.tokens.subcommands, names);
@@ -288,6 +288,161 @@ test('K12b rename and add refuse a name whose CSS variable another token already
   }
   assert.deepEqual(await snapshot(dir), before);
   await rm(dir, { recursive: true });
+});
+
+test('a naming preset writes only an editable list, which the CLI can preview and apply together', async (t) => {
+  const dir = await fixture(PARTS);
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = 'token-renames.json';
+  const make = ['tokens', 'rename-plan', '--preset', 'on-role-colors', '--out', file];
+  const before = await snapshot(dir);
+  const list = await sb<{ presets: { id: string }[] }>(dir, 'tokens', 'rename-plan');
+  assert.deepEqual(list.json.data.presets.map(({ id }) => id), ['on-role-colors']);
+  ok(await sb(dir, ...make, '--dry-run'), 'preview list write');
+  await assert.rejects(readFile(join(dir, file)), { code: 'ENOENT' });
+  ok(await sb(dir, ...make), 'write proposal');
+  const raw = await readFile(join(dir, file), 'utf8');
+  const proposal = parseJson<{ renames: { from: string; to: string }[] }>(raw);
+  assert.deepEqual(proposal.renames.find(({ from }) => from === 'color.primary-foreground'), { from: 'color.primary-foreground', to: 'color.on-primary' });
+  assert.ok(!proposal.renames.some(({ from }) => from === 'color.foreground'));
+  const overwrite = await sb(dir, ...make);
+  assert.equal(overwrite.code, 1);
+  assert.match(overwrite.json.errors[0]?.msg ?? '', /already exists/);
+  assert.equal(await readFile(join(dir, file), 'utf8'), raw);
+
+  const args = ['tokens', 'rename', '--map', file];
+  const preview = await sb<{ tokens: Record<string, string>; files: string[]; diff: CssDiff }>(dir, ...args, '--dry-run');
+  ok(preview, 'preview batch');
+  assert.match(preview.json.next ?? '', /npx sketchbook tokens rename --map token-renames\.json/);
+  assert.ok(preview.json.data.files.includes('spec/components/button/contract.json'));
+  assert.ok(preview.json.data.diff.light?.added.some(({ name }) => name === '--sb-color-on-primary'));
+  assert.deepEqual(await snapshot(dir), before);
+  const applied = await sb<{ decision: string }>(dir, ...args);
+  ok(applied, 'apply batch');
+  assert.match(applied.json.data.decision, /^SB-\d+$/);
+  assert.ok(applied.json.changed.includes('spec/tokens/contrast.json'));
+  assert.equal(await readFile(join(dir, file), 'utf8'), raw);
+  const log = await readJson<{ renames: { from: string; to: string; date: string }[] }>(dir, 'spec/tokens/renames.json');
+  assert.deepEqual(log.renames.map(({ from, to }) => ({ from, to })), proposal.renames);
+  assert.deepEqual(failing(await runChecks(dir)), []);
+  const alreadyRenamed = await sb(dir, ...make.slice(0, -1), 'repeat.json');
+  assert.equal(alreadyRenamed.code, 0);
+  assert.deepEqual(alreadyRenamed.json.changed, []);
+});
+
+test('a hand-written rename list rejects bad entries and failed checks without applying any rename', async (t) => {
+  const dir = await fixture(PARTS);
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = 'rename list.json';
+  const args = ['tokens', 'rename', '--map', file];
+  const good = { from: 'color.primary-foreground', to: 'color.on-primary' };
+  const other = { from: 'color.secondary-foreground', to: 'color.on-secondary' };
+  const before = await snapshot(dir);
+  const cases: [string, RegExp][] = [
+    ['{', /not valid JSON/],
+    [JSON.stringify({ renames: [good, { from: 'color.missing', to: 'color.new' }] }), /not a semantic token/],
+    [JSON.stringify({ renames: [good, { ...other, to: good.to }] }), /destination for more than one/],
+    [JSON.stringify({ renames: [good, { ...other, to: 'color.on.primary' }] }), /both use --sb-color-on-primary/],
+    [JSON.stringify({ renames: [good, { ...other, to: good.from }] }), /already exists/],
+    [JSON.stringify({ renames: [good, { ...good, to: 'color.other' }] }), /listed more than once/],
+  ];
+  for (const [text, expected] of cases) {
+    await writeFile(join(dir, file), text);
+    const r = await sb(dir, ...args);
+    assert.equal(r.code, 1);
+    assert.match(r.json.errors[0]?.msg ?? '', expected);
+    assert.deepEqual(r.json.changed, []);
+  }
+  assert.deepEqual(await snapshot(dir), before);
+  await writeFile(join(dir, file), JSON.stringify({ renames: [good, other] }));
+  const preview = await sb(dir, ...args, '--dry-run');
+  ok(preview, 'preview manual list');
+  assert.match(preview.json.next ?? '', /--map 'rename list\.json'/);
+
+  await edit<{ pairs: ContrastPair[] }>(dir, 'spec/tokens/contrast.json', (doc) => {
+    doc.pairs.push({ fg: 'color.background', bg: 'color.background', kind: 'text' });
+  });
+  const badBaseline = await snapshot(dir);
+  const refused = await sb(dir, ...args);
+  assert.equal(refused.code, 1);
+  assert.deepEqual(refused.json.changed, []);
+  assert.deepEqual(await snapshot(dir), badBaseline);
+});
+
+test('bulk rename plans from the snapshot and preserves an edit made just before staging', async (t) => {
+  const { stageHooks } = await import('../commands/tokens.mjs');
+  const dir = await fixture(PARTS);
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = 'spec/tokens/semantic/light.tokens.json';
+  const teamEdit = 'Team copy saved just before the snapshot.';
+  await writeFile(join(dir, 'rename.json'), JSON.stringify({ renames: [{ from: 'color.primary-foreground', to: 'color.on-primary' }] }));
+  stageHooks.beforeStage = async () => {
+    await edit<{ color: Record<string, DtcgTokenNode> }>(dir, file, (doc) => {
+      must(doc.color['primary-foreground'], 'original foreground').$description = teamEdit;
+    });
+  };
+  try {
+    ok(await sb(dir, 'tokens', 'rename', '--map', 'rename.json', '--no-record'), 'apply after editor save');
+    const light = await readJson<{ color: Record<string, DtcgTokenNode> }>(dir, file);
+    assert.equal(light.color['on-primary']?.$description, teamEdit);
+    assert.equal(light.color['primary-foreground'], undefined);
+  } finally {
+    stageHooks.beforeStage = null;
+  }
+});
+
+test('bulk rename previews the decision log and refuses the whole apply if it cannot record the decision', async (t) => {
+  const dir = await fixture(PARTS);
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const log = 'spec/decisions/DECISIONS.md';
+  await writeFile(join(dir, 'rename.json'), JSON.stringify({ renames: [{ from: 'color.primary-foreground', to: 'color.on-primary' }] }));
+  const args = ['tokens', 'rename', '--map', 'rename.json'];
+  const before = await snapshot(dir);
+  const preview = await sb(dir, ...args, '--dry-run');
+  ok(preview, 'preview with a decision record');
+  assert.ok(preview.json.changed.includes(log));
+  assert.deepEqual(await snapshot(dir), before);
+
+  await rm(join(dir, log));
+  const missingLog = await snapshot(dir);
+  for (const flags of [['--dry-run'], []]) {
+    const refused = await sb(dir, ...args, ...flags);
+    assert.equal(refused.code, 1);
+    assert.deepEqual(refused.json.changed, []);
+    assert.equal(refused.json.errors[0]?.file, log);
+    assert.match(refused.json.errors[0]?.fix ?? '', /--no-record/);
+    assert.deepEqual(await snapshot(dir), missingLog);
+  }
+  const skip = await sb(dir, ...args, '--no-record', '--dry-run');
+  ok(skip, 'preview without a decision record');
+  assert.ok(!skip.json.changed.includes(log));
+  assert.deepEqual(await snapshot(dir), missingLog);
+
+  await writeFile(join(dir, log), '# Decisions\n');
+  const malformed = await snapshot(dir);
+  const refused = await sb(dir, ...args);
+  assert.equal(refused.code, 1);
+  assert.match(refused.json.errors[0]?.msg ?? '', /needs an index and an entry separator/);
+  assert.deepEqual(await snapshot(dir), malformed);
+});
+
+test('a decision log edited after staging blocks the whole rename and keeps the edit', async (t) => {
+  const { stageHooks } = await import('../commands/tokens.mjs');
+  const dir = await fixture(PARTS);
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const log = 'spec/decisions/DECISIONS.md';
+  const before = await snapshot(dir);
+  const teamEdit = (await readFile(join(dir, log), 'utf8')) + '\n<!-- Team copy saved during preview. -->\n';
+  stageHooks.beforeCopyBack = async () => { await writeFile(join(dir, log), teamEdit); };
+  try {
+    const r = await sb<{ conflict: string[] }>(dir, 'tokens', 'rename', 'color.primary-foreground', 'color.on-primary');
+    assert.equal(r.code, 1);
+    assert.deepEqual(r.json.changed, []);
+    assert.deepEqual(r.json.data.conflict, [log]);
+    assert.deepEqual(await snapshot(dir), { ...before, [log]: teamEdit });
+  } finally {
+    stageHooks.beforeCopyBack = null;
+  }
 });
 
 test('K13 import: Tokens Studio DTCG and a shadcn-style CSS theme become proposals', async () => {

@@ -185,6 +185,8 @@
 /commands/swap.d.mts
 /commands/tokens-import.mjs
 /commands/tokens-import.d.mts
+/commands/tokens-rename-plan.mjs
+/commands/tokens-rename-plan.d.mts
 /commands/tokens.mjs
 /commands/tokens.d.mts
 /commands/upgrade.mjs

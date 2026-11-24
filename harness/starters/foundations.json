@@ -5,5 +5,5 @@
   "foundations": null,
   "components": "none",
   "kits": "none",
-  "next": ["Review the foundations with sketchbook tokens", "npm run storybook (Foundations pages)", "sketchbook sync tokens"]
+  "next": ["Run npm run storybook and open Foundations to see your tokens"]
 }
