@@ -448,18 +448,56 @@ const ICONS = {
   menu: icon('<path d="M4 6h16M4 12h16M4 18h16"/>'),
   close: icon('<path d="M18 6 6 18M6 6l12 12"/>'),
   search: icon('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+  external: icon('<path d="M13 5h6v6m0-6-9 9m8-1v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
   github: '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.06c-3.1.67-3.75-1.32-3.75-1.32-.5-1.29-1.23-1.63-1.23-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.7 1.15 1.7 1.15 1 1.7 2.6 1.21 3.23.93.1-.72.39-1.21.7-1.49-2.47-.28-5.07-1.24-5.07-5.49 0-1.21.43-2.2 1.14-2.98-.12-.28-.5-1.41.11-2.94 0 0 .93-.3 3.05 1.14a10.6 10.6 0 0 1 5.56 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.53.23 2.66.11 2.94.71.78 1.14 1.77 1.14 2.98 0 4.26-2.6 5.2-5.08 5.48.4.35.75 1.02.75 2.06v3.05c0 .3.2.65.76.54A11.1 11.1 0 0 0 12 .9Z"/></svg>',
   npm: '<svg aria-hidden="true" width="24" height="18" viewBox="0 0 18 7" fill="currentColor"><path fill-rule="evenodd" d="M0 0h18v6H9v1H5V6H0V0Zm1 5h2V2h1v3h1V1H1v4Zm5-4v5h2V5h2V1H6Zm2 1h1v2H8V2Zm3-1v4h2V2h1v3h1V2h1v3h1V1h-6Z"/></svg>',
   theme: icon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
 };
+
+const docsOrigin = 'https://sketchbook-docs.vercel.app';
+const externalLinkAttrs = {
+  target: '_blank',
+  rel: 'noopener noreferrer',
+  'aria-describedby': 'external-link-description'
+};
+const externalLinkIcon = `<span class="external-link-icon">${ICONS.external}</span>`;
+
+function externalLink(href: string, label: string, logo?: string) {
+  const attrs = Object.entries(externalLinkAttrs).map(([key, value]) => `${key}="${value}"`).join(' ');
+  return `<a href="${esc(href)}" ${attrs}${logo ? ` class="icon-btn social-link" aria-label="${esc(label)}"` : ''}>${logo ?? esc(label)}${externalLinkIcon}</a>`;
+}
+
+for (const renderer of [md, releaseMd]) {
+  renderer.core.ruler.push('external_links', ({ tokens, Token }) => {
+    for (const { children } of tokens) {
+      if (!children) continue;
+      let external = false;
+      for (let i = 0; i < children.length; i++) {
+        const token = children[i];
+        if (token?.type === 'link_open') {
+          const url = URL.parse(String(token.attrGet('href') ?? ''), docsOrigin);
+          external = !!url && (url.protocol === 'https:' || url.protocol === 'http:') && url.origin !== docsOrigin;
+          if (external) {
+            for (const [key, value] of Object.entries(externalLinkAttrs)) token.attrSet(key, value);
+          }
+        } else if (token?.type === 'link_close' && external) {
+          const indicator = new Token('html_inline', '', 0);
+          indicator.content = externalLinkIcon;
+          children.splice(i++, 0, indicator);
+          external = false;
+        }
+      }
+    }
+  });
+}
 
 function nav(pages: Page[], page: Page) {
   if (page.tab === 'changelog') {
     return `<div class="nav-group" role="group" aria-labelledby="nav-release-resources">
       <p class="nav-heading" id="nav-release-resources">Release resources</p>
       <ul>
-        <li><a href="https://github.com/Davecelot/sketchbook/releases">All GitHub releases</a></li>
-        <li><a href="https://www.npmjs.com/package/@usesketchbook/cli?activeTab=versions">All npm versions</a></li>
+        <li>${externalLink('https://github.com/Davecelot/sketchbook/releases', 'All GitHub releases')}</li>
+        <li>${externalLink('https://www.npmjs.com/package/@usesketchbook/cli?activeTab=versions', 'All npm versions')}</li>
       </ul>
     </div>`;
   }
@@ -521,6 +559,7 @@ ${page.html.includes('<sb-') ? '<script src="/assets/sketchbook.js" defer></scri
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
+<span id="${externalLinkAttrs['aria-describedby']}" hidden>Opens in a new tab.</span>
 <header class="topbar">
   <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="navigation-sheet" aria-haspopup="dialog">${ICONS.menu}</button>
   <a class="brand" href="/"><img src="/assets/sketchbook-icon.png" alt="" width="24" height="24"><span class="brand-name">Sketchbook</span></a>
@@ -528,8 +567,8 @@ ${page.html.includes('<sb-') ? '<script src="/assets/sketchbook.js" defer></scri
     (tab) => `<a href="${tab.url}"${tab.id === page.tab ? ' aria-current="page"' : ''}>${tab.title}</a>`
   ).join('')}</nav>
   <button class="search-btn" type="button" aria-haspopup="dialog">${ICONS.search}<span>Search</span><kbd>⌘K</kbd></button>
-  <a class="icon-btn social-link" href="https://github.com/Davecelot/sketchbook" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">${ICONS.github}</a>
-  <a class="icon-btn social-link" href="https://www.npmjs.com/package/@usesketchbook/cli" target="_blank" rel="noopener noreferrer" aria-label="npm (opens in a new tab)">${ICONS.npm}</a>
+  ${externalLink('https://github.com/Davecelot/sketchbook', 'GitHub', ICONS.github)}
+  ${externalLink('https://www.npmjs.com/package/@usesketchbook/cli', 'npm', ICONS.npm)}
   <button class="icon-btn theme-btn" type="button" aria-label="Switch theme">${ICONS.theme}</button>
 </header>
 <div class="layout${home ? ' layout-home' : ''}">

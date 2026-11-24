@@ -71,13 +71,15 @@ test.describe('mobile navigation touch targets', () => {
 test('mobile header links fit and search remains a dialog', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await page.goto('/');
-  const github = page.getByRole('link', { name: 'GitHub (opens in a new tab)' });
-  const npm = page.getByRole('link', { name: 'npm (opens in a new tab)' });
+  const github = page.getByRole('link', { name: 'GitHub', exact: true });
+  const npm = page.getByRole('link', { name: 'npm', exact: true });
   await expect(github).toHaveAttribute('href', 'https://github.com/Davecelot/sketchbook');
   await expect(npm).toHaveAttribute('href', 'https://www.npmjs.com/package/@usesketchbook/cli');
   for (const link of [github, npm]) {
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(link).toHaveAccessibleDescription('Opens in a new tab.');
+    await expect(link.locator('.external-link-icon')).toBeVisible();
   }
   expect(await page.locator('.topbar').evaluate((header) =>
     [...header.children].every((child) => child.getBoundingClientRect().right <= innerWidth)
@@ -92,8 +94,48 @@ test('desktop keeps the sidebar and links', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#sidebar')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Open navigation' })).toBeHidden();
-  await expect(page.getByRole('link', { name: 'GitHub (opens in a new tab)' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'npm (opens in a new tab)' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'GitHub', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'npm', exact: true })).toBeVisible();
+});
+
+test('Release resources open in a new tab with a visible and accessible cue', async ({ context, page }) => {
+  await page.goto('/changelog/');
+  const changelog = page.url();
+  const resources = page.getByRole('group', { name: 'Release resources' });
+  for (const [name, destination] of [
+    ['All GitHub releases', 'https://github.com/Davecelot/sketchbook/releases'],
+    ['All npm versions', 'https://www.npmjs.com/package/@usesketchbook/cli?activeTab=versions'],
+  ] as const) {
+    await context.route((url) => url.href === destination, (route) => route.fulfill({ body: 'Release resource' }));
+    const link = resources.getByRole('link', { name, exact: true });
+    await expect(link).toHaveAccessibleDescription('Opens in a new tab.');
+    await expect(link.locator('.external-link-icon')).toBeVisible();
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    const [tab] = await Promise.all([
+      context.waitForEvent('page'),
+      name === 'All GitHub releases' ? link.click() : link.press('Enter'),
+    ]);
+    await expect(tab).toHaveURL(destination);
+    await expect(page).toHaveURL(changelog);
+    await tab.close();
+  }
+});
+
+test('Changelog marks off-site Markdown links without changing internal navigation', async ({ page }) => {
+  await page.goto('/changelog/');
+  const article = page.getByRole('article');
+  const releaseLink = article.getByRole('link', { name: /^GitHub release v/ }).first();
+  await expect(releaseLink).toHaveAttribute('target', '_blank');
+  await expect(releaseLink).toHaveAttribute('rel', 'noopener noreferrer');
+  await expect(releaseLink).toHaveAccessibleDescription('Opens in a new tab.');
+  await expect(releaseLink.locator('.external-link-icon')).toBeVisible();
+
+  const docsLink = article.getByRole('link', { name: 'upgrade guide', exact: true }).first();
+  await expect(docsLink).not.toHaveAttribute('target', '_blank');
+  await expect(docsLink.locator('.external-link-icon')).toHaveCount(0);
+  const sectionLink = page.getByRole('navigation', { name: 'On this page' }).getByRole('link').first();
+  await sectionLink.click();
+  await expect(page).toHaveURL(new URL((await sectionLink.getAttribute('href'))!, page.url()).href);
 });
 
 for (const width of [1280, 375]) {
