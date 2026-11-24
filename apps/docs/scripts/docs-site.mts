@@ -464,27 +464,18 @@ const externalLinkIcon = `<span class="external-link-icon">${ICONS.external}</sp
 
 function externalLink(href: string, label: string, logo?: string) {
   const attrs = Object.entries(externalLinkAttrs).map(([key, value]) => `${key}="${value}"`).join(' ');
-  return `<a href="${esc(href)}" ${attrs}${logo ? ` class="icon-btn social-link" aria-label="${esc(label)}"` : ''}>${logo ?? esc(label)}${externalLinkIcon}</a>`;
+  return `<a href="${esc(href)}" ${attrs}${logo ? ` class="icon-btn social-link" aria-label="${esc(label)}"` : ''}>${logo ?? `${esc(label)}${externalLinkIcon}`}</a>`;
 }
 
 for (const renderer of [md, releaseMd]) {
-  renderer.core.ruler.push('external_links', ({ tokens, Token }) => {
+  renderer.core.ruler.push('external_links', ({ tokens }) => {
     for (const { children } of tokens) {
       if (!children) continue;
-      let external = false;
-      for (let i = 0; i < children.length; i++) {
-        const token = children[i];
-        if (token?.type === 'link_open') {
-          const url = URL.parse(String(token.attrGet('href') ?? ''), docsOrigin);
-          external = !!url && (url.protocol === 'https:' || url.protocol === 'http:') && url.origin !== docsOrigin;
-          if (external) {
-            for (const [key, value] of Object.entries(externalLinkAttrs)) token.attrSet(key, value);
-          }
-        } else if (token?.type === 'link_close' && external) {
-          const indicator = new Token('html_inline', '', 0);
-          indicator.content = externalLinkIcon;
-          children.splice(i++, 0, indicator);
-          external = false;
+      for (const token of children) {
+        if (token.type !== 'link_open') continue;
+        const url = URL.parse(String(token.attrGet('href') ?? ''), docsOrigin);
+        if (url && (url.protocol === 'https:' || url.protocol === 'http:') && url.origin !== docsOrigin) {
+          for (const [key, value] of Object.entries(externalLinkAttrs)) token.attrSet(key, value);
         }
       }
     }

@@ -174,7 +174,6 @@ a:hover {
 
 .social-link {
   justify-content: center;
-  gap: var(--sb-space-1);
   text-decoration: none;
 }
 
@@ -188,10 +187,6 @@ a:hover {
 .external-link-icon svg {
   width: 0.9em;
   height: 0.9em;
-}
-
-.social-link .external-link-icon {
-  margin-inline-start: 0;
 }
 
 .search-btn {

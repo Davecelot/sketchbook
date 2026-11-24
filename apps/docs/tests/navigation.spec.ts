@@ -79,7 +79,7 @@ test('mobile header links fit and search remains a dialog', async ({ page }) => 
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     await expect(link).toHaveAccessibleDescription('Opens in a new tab.');
-    await expect(link.locator('.external-link-icon')).toBeVisible();
+    await expect(link.locator('.external-link-icon')).toHaveCount(0);
   }
   expect(await page.locator('.topbar').evaluate((header) =>
     [...header.children].every((child) => child.getBoundingClientRect().right <= innerWidth)
@@ -121,14 +121,14 @@ test('Release resources open in a new tab with a visible and accessible cue', as
   }
 });
 
-test('Changelog marks off-site Markdown links without changing internal navigation', async ({ page }) => {
+test('Changelog inline links stay icon-free without changing link behavior', async ({ page }) => {
   await page.goto('/changelog/');
   const article = page.getByRole('article');
   const releaseLink = article.getByRole('link', { name: /^GitHub release v/ }).first();
   await expect(releaseLink).toHaveAttribute('target', '_blank');
   await expect(releaseLink).toHaveAttribute('rel', 'noopener noreferrer');
   await expect(releaseLink).toHaveAccessibleDescription('Opens in a new tab.');
-  await expect(releaseLink.locator('.external-link-icon')).toBeVisible();
+  await expect(releaseLink.locator('.external-link-icon')).toHaveCount(0);
 
   const docsLink = article.getByRole('link', { name: 'upgrade guide', exact: true }).first();
   await expect(docsLink).not.toHaveAttribute('target', '_blank');
