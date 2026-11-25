@@ -14,6 +14,12 @@ Pick a skill below and use its ID to preview what it installs. For example, run 
 
 <!-- harness:build-components -->
 
+### Use a shared task board for component work
+
+For a new composite component or a substantial edit, ask your coding agent to use the shared task board in `component-builder`. The board tracks owners, blockers, and evidence links without replacing your approval, test-first evidence, or formal review. Skip it for routine edits.
+
+If you already have an earlier copy of the skill, preview the update with `npx sketchbook harness add component-builder --dry-run`. Review any conflicts with guidance your team has customized before applying it.
+
 ## Work with tokens and Figma
 
 <!-- harness:tokens-and-figma -->

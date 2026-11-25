@@ -1,6 +1,6 @@
 {
   "$description": "Who owns which files (SB-0048, SB-0099). sketchbook upgrade replaces harness-owned files and only reports team-owned and shared ones, which it never touches. Paths match top-down: team wins over harness, except exact harness paths (docs/cli.md and the schemas in spec/schemas, which a project keeps only as editor hints of the engine's). harness/** and scripts/** are the engine: a project runs them from node_modules. move-to-.claude/** is the Claude layer before Claude installs it into .claude/.",
-  "version": "0.6.1",
+  "version": "0.8.0",
   "harness": [
     "harness/**",
     ".claude/skills/**",

@@ -67,6 +67,25 @@ test('all catalog workflows install with their local resources and native projec
   }
 });
 
+test('component builder installs the opt-in board template without starting a board', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'sketchbook-board-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const skill = '.agents/skills/component-builder';
+  const template = `${skill}/assets/task-board.md`;
+  const preview = await run(root, 'add', 'component-builder', '--dry-run');
+  assert.equal(preview.exit, 0);
+  assert.ok(preview.changed.includes(template));
+  assert.deepEqual(await readdir(root), []);
+
+  const install = await run(root, 'add', 'component-builder');
+  assert.equal(install.exit, 0);
+  assert.deepEqual(await readdir(root), ['.agents']);
+  assert.match(await readFile(join(root, skill, 'SKILL.md'), 'utf8'), /When the person asks.*\(assets\/task-board\.md\)/);
+  assert.match(await readFile(join(root, template), 'utf8'), /outside tracked project files/);
+  assert.deepEqual(await readdir(join(root, skill, 'assets')), ['task-board.md']);
+  assert.deepEqual((await run(root, 'add', 'component-builder')).changed, []);
+});
+
 test('module internals cannot install separately; team settings survive the complete module install', async (t) => {
   const root = await mkdtemp(join(tmpdir(), 'sketchbook-module-'));
   t.after(() => rm(root, { recursive: true, force: true }));

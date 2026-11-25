@@ -693,7 +693,7 @@ const RECOMMENDED_ADDONS = [
   '.sketchbook/hammock.json',
   ...['contract-first', 'form-associated-controls', 'planning-gate', 'spec-is-source', 'test-first', 'tokens-through-the-harness'].map((name) => `.agents/sketchbook/rules/${name}.md`),
   '.agents/skills/contract-author/agents/extractor.md', '.agents/skills/contract-author/agents/drafter.md', '.agents/skills/contract-author/agents/validator.md', '.agents/skills/contract-author/agents/change-triage.md',
-  '.agents/skills/component-builder/agents/parity-auditor.md',
+  '.agents/skills/component-builder/agents/parity-auditor.md', '.agents/skills/component-builder/assets/task-board.md',
   '.agents/skills/hammock/SKILL.md', '.agents/skills/hammock/assets/DECISION-LADDER.md',
   '.agents/skills/hammock/assets/DEBT-LOG-TEMPLATE.md', '.agents/skills/hammock/scripts/audit-simplicity.sh',
   '.agents/skills/review-rangers/SKILL.md', '.agents/skills/review-rangers/assets/committee-member-template.md',

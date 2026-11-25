@@ -13,4 +13,8 @@ description: Implement a Sketchbook Web Component from its approved contract. Us
 
 For form controls, use `src/mixins/form-associated.ts` and `src/mixins/native-control.ts` with an existing input as a reference. Verify implicit submission, reset and validity; an error prop must set `customError` validity, and ARIA ID references do not cross shadow roots. For roving keyboard focus, start with `src/controllers/roving-focus.ts`. For stories, use the contract helpers in `src/stories/contract.ts` where applicable. Check `spec/decisions/DECISIONS.md` for the rationale and project-specific exceptions.
 
+## Shared task board (opt-in pilot)
+
+When the person asks for a shared task board for a new composite component or substantial edit, use the [task board template](assets/task-board.md). Keep it outside the tracked component files and leave the existing workflow unchanged. The board tracks ownership, blockers and evidence links. It does not prove approval, test results, or readiness. Skip the board for routine work.
+
 Report the checks actually run, any observed test-first failure, drift, token changes, review status and remaining work. Do not commit or publish unless asked.

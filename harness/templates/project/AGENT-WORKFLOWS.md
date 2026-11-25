@@ -11,6 +11,8 @@ For a catalog component wanted as shipped, use `npx sketchbook add <name> --dry-
 3. If `features.testFirst` is enabled, write behavior tests and stories from the approved contract. Run `npx sketchbook evidence red <name>` and confirm the failure is for the expected reason. Then implement and run `npx sketchbook evidence green <name>` against the same spec and test setup; check C5 verifies both. If the suite must change, record red again against the pre-change implementation. After review, `npx sketchbook evidence ready <name>` requires a current green run and clean component checks. Verify with `npm run check`, `npm run typecheck`, and the relevant component tests.
 4. Use component tokens in component CSS; follow semantic → foundation token layering. For form controls, consult the form-associated-controls rule below. Review behavior, accessibility, contract parity and applicable security concerns before reporting completion.
 
+For a new composite component or a substantial edit, you can ask to pilot a shared task board. Use the task board template bundled with `component-builder` to track owners, blockers and evidence links. Keep the existing approval, test-first and review steps. The board is optional and does not replace `plan.md`, CLI evidence, or a `review-rangers` verdict.
+
 ## Tokens, kits and design
 
 - Foundations come from `brand.config.json`; semantic tokens are team-owned. Use `npx sketchbook tokens` for changes, especially `tokens rename` for interface renames. Inspect imports before applying them and run the relevant checks.
