@@ -42,7 +42,12 @@ export default {
       }
       out(`${usage(c)}\n\n${c.summary}${c.mutates ? ' Changes files.' : ' Read-only.'}`);
       if (c.args.length) { out('\nArguments:'); for (const a of c.args) out(`  ${a.name.padEnd(16)} ${a.description}${a.required ? '' : ' (optional)'}`); }
-      const opts: Record<string, Pick<CommandOption, 'description'>> = { ...c.options, ...(c.dryRun ? { 'dry-run': GLOBAL_OPTIONS['dry-run'] } : {}), json: GLOBAL_OPTIONS.json, details: GLOBAL_OPTIONS.details };
+      const opts: Record<string, Pick<CommandOption, 'description'>> = {
+        ...c.options,
+        ...(c.dryRun ? { 'dry-run': GLOBAL_OPTIONS['dry-run'] } : {}),
+        ...(c.interactiveOnly ? {} : { json: GLOBAL_OPTIONS.json }),
+        details: GLOBAL_OPTIONS.details,
+      };
       out('\nOptions:'); for (const [k, o] of Object.entries(opts)) out(`  --${k.padEnd(14)} ${o.description}`);
       if (c.subcommands) { out('\nSubcommands:'); for (const sc of subcommandsOf(c)) out(`  ${sc.usage}\n      ${sc.summary}${sc.mutates ? '' : ' Read-only.'}`); }
       out('\nExamples:'); for (const e of c.examples) out(`  ${e}`);
@@ -65,7 +70,7 @@ export default {
       out(`${label}:`);
       for (const c of list) out(`  ${c.name.padEnd(9)} ${brief(c.summary)}`);
     }
-    out(`\nsketchbook help <command> for details. Every command accepts --json (envelope: ok, command, changed, warnings, errors, next).\nDocumentation: ${DOCS_URL}`);
+    out(`\nsketchbook help <command> for details. Use --json for structured output where supported.\nDocumentation: ${DOCS_URL}`);
     return { data: { commands: commands().map(describe) } };
   },
 } satisfies Command;

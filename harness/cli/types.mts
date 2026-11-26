@@ -96,6 +96,7 @@ export interface Command<S extends OptionSpecs = OptionSpecs> {
   examples: string[];
   mutates: boolean;
   dryRun?: boolean;
+  interactiveOnly?: boolean;
   // false: runs outside a project; every other command needs harness.config.json.
   project?: boolean;
   // First-argument words, as plain words (sync) or described (tokens).

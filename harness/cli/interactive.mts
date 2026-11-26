@@ -96,7 +96,9 @@ export async function interactive({ root = process.cwd(), input = process.stdin,
     if (ui.enabled) write(ui.header('explore'));
     write(`${line('  Choose what you want to do in your design system.')}\n  Choose a number and press Enter. Type q and press Enter to quit.\n`);
     for (;;) {
-      const groups = Object.entries(GROUPS).map(([g, label]) => ({ g, label, list: commands().filter((c) => c.group === g && c.name !== 'harness') })).filter((x) => x.list.length);
+      const groups = Object.entries(GROUPS).map(([g, label]) => ({
+        g, label, list: commands().filter((c) => c.group === g && c.name !== 'harness' && c.name !== 'workspace'),
+      })).filter((x) => x.list.length);
       const group = await choose<(typeof groups)[number] | 'harness'>('Groups:', [
         { label: 'Harness      Browse and install workflows', value: 'harness' },
         ...groups.map((x) => ({ label: `${x.label.padEnd(12)} ${x.list.length} ${x.list.length === 1 ? 'command' : 'commands'}`, value: x })),

@@ -5,6 +5,8 @@ export function presentation(enabled: boolean, color = enabled && !('NO_COLOR' i
   const paint = (code: string, value: string) => color ? `\u001b[${code}m${value}\u001b[0m` : value;
   const accent = (s: string) => paint('38;5;208', s);
   const bold = (s: string) => paint('1', s);
+  const italic = (s: string) => paint('3', s);
+  const inverse = (s: string) => paint('7', s);
   const dim = (s: string) => paint('2', s);
   const success = (s: string) => paint('32', s);
   const warning = (s: string) => paint('33', s);
@@ -30,7 +32,7 @@ export function presentation(enabled: boolean, color = enabled && !('NO_COLOR' i
     }).join('\n');
   };
   return {
-    enabled, accent, bold, dim, success, warning,
+    enabled, accent, bold, italic, inverse, dim, success, warning,
     header: (label: string) => `\n${accent('◆')} ${bold('SKETCHBOOK')} ${dim(' / ' + label)}\n`,
     line: (value: string) => wrap(value).split('\n').map((line) => {
       const match = /^(\s*)([A-Za-z][A-Za-z ]{1,24}:)(.*)$/.exec(line);

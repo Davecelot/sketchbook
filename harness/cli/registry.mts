@@ -19,6 +19,7 @@ import remove from './commands/remove.mjs';
 import list from './commands/list.mjs';
 import kits from './commands/kits.mjs';
 import harness from './commands/harness.mjs';
+import workspace from './commands/workspace.mjs';
 import icons from './commands/icons.mjs';
 import api from './commands/api.mjs';
 import brand from './commands/brand.mjs';
@@ -31,7 +32,7 @@ import selftest from './commands/selftest.mjs';
 import propagate from './commands/propagate.mjs';
 import type { Command, GroupId, SubcommandInfo } from './types.mjs';
 
-const ALL: Command[] = [init, harness, status, doctor, upgrade, propagate, generate, prefix, swap, add, approve, remove, list, kits, tokens, presets, brand, icons, api, auditCss, auditPage, auditDecisions, evidence, sync, docs, check, selftest, explain, help];
+const ALL: Command[] = [init, harness, workspace, status, doctor, upgrade, propagate, generate, prefix, swap, add, approve, remove, list, kits, tokens, presets, brand, icons, api, auditCss, auditPage, auditDecisions, evidence, sync, docs, check, selftest, explain, help];
 export const GROUPS: Record<GroupId, string> = { project: 'Project', components: 'Components', tokens: 'Tokens', design: 'Design file', quality: 'Quality', meta: 'Help' };
 
 export const commands = (): Command[] => ALL;

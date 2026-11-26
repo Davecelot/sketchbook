@@ -145,6 +145,8 @@
 /cli/commands/tokens.d.mts
 /cli/commands/upgrade.mjs
 /cli/commands/upgrade.d.mts
+/cli/commands/workspace.mjs
+/cli/commands/workspace.d.mts
 /cli/docs.mjs
 /cli/docs.d.mts
 /cli/harness-picker.mjs
@@ -163,6 +165,12 @@
 /cli/run.d.mts
 /cli/types.mjs
 /cli/types.d.mts
+/cli/workspace-actions.mjs
+/cli/workspace-actions.d.mts
+/cli/workspace-view.mjs
+/cli/workspace-view.d.mts
+/cli/workspace.mjs
+/cli/workspace.d.mts
 /commands/add.mjs
 /commands/add.d.mts
 /commands/audit-css.mjs
@@ -355,3 +363,5 @@
 /test/tokens.test.d.mts
 /test/wall.mjs
 /test/wall.d.mts
+/test/workspace.test.mjs
+/test/workspace.test.d.mts

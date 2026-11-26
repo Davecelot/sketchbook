@@ -21,6 +21,9 @@
         "add"
       ]
     },
+    "workspace": {
+      "summary": "Review project status and check findings in a read-only terminal workspace. Requires an interactive terminal; use status and check for plain or JSON output."
+    },
     "status": {
       "summary": "See your active brand, component counts, token overrides, and design sync status."
     },

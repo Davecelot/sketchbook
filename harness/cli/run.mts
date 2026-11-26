@@ -112,8 +112,8 @@ export async function dispatch(argv: string[], { root = process.cwd(), stdout = 
 // Commands throw Object.assign(new Error(msg), { fix }) to name the fix.
 const fixOf = (e: unknown): string | undefined => (typeof e === 'object' && e !== null && 'fix' in e && typeof e.fix === 'string' ? e.fix : undefined);
 
-export function usage(cmd: Pick<Command, 'name' | 'args' | 'options' | 'dryRun'>): string {
+export function usage(cmd: Pick<Command, 'name' | 'args' | 'options' | 'dryRun' | 'interactiveOnly'>): string {
   const args = cmd.args.map((a) => (a.required ? `<${a.name}${a.variadic ? '...' : ''}>` : `[${a.name}${a.variadic ? '...' : ''}]`));
   const opts = Object.entries(cmd.options).map(([k, o]) => (o.type === 'boolean' ? `[--${k}]` : `[--${k} <${o.value ?? 'value'}>]`));
-  return ['sketchbook', cmd.name, ...args, ...opts, ...(cmd.dryRun ? ['[--dry-run]'] : []), '[--json]'].join(' ');
+  return ['sketchbook', cmd.name, ...args, ...opts, ...(cmd.dryRun ? ['[--dry-run]'] : []), ...(cmd.interactiveOnly ? [] : ['[--json]'])].join(' ');
 }

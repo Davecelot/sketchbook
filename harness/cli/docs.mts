@@ -18,7 +18,7 @@ export function cliDocs(): string {
     '- Run `sketchbook` in a terminal to choose a group and command. Commands that change files show a preview where supported. Type `y` and press Enter to confirm, or press Enter to cancel. Without an interactive terminal, bare `sketchbook` prints help.',
     '- Run `sketchbook harness` in a terminal to preview the recommended skills or pick individual items. Without an interactive terminal, it lists the catalog instead.',
     '- `--details` shows full human-readable output where a terminal view is abbreviated.',
-    '- `--json` on every command prints one envelope: `{ ok, command, changed[], warnings[], errors[{file, msg, fix}], next, data? }`.',
+    '- `--json` prints one envelope: `{ ok, command, changed[], warnings[], errors[{file, msg, fix}], next, data? }`. Workspace requires an interactive terminal; use `sketchbook status --json` or `sketchbook check --json` for scripts.',
     '- Exit codes: 0 ok, 1 failed, 2 ok with flags (for example overrides kept in spec/tokens/overrides.json).',
     '- Use `--dry-run` on commands marked as supporting it to review the paths and values that would change.',
     '- Conventions (one registry, introspect before mutate, JSON envelope) are adapted from CLI-Anything (HKUDS, Apache-2.0, https://github.com/HKUDS/CLI-Anything); no code is used.',

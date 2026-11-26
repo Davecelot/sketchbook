@@ -152,7 +152,7 @@ async function menu(lines: string[], { real = false, failDryRun = false, root, s
   return { calls, text, code };
 }
 const groupIndex = (g: string): string => String(['harness', ...Object.keys(GROUPS).filter((k) => commands().some((c) => c.group === k))].indexOf(g) + 1);
-const commandIndex = (name: string): string => { const c = must(commands().find((x) => x.name === name), `command ${name}`); return String(commands().filter((x) => x.group === c.group && x.name !== 'harness').indexOf(c) + 1); };
+const commandIndex = (name: string): string => { const c = must(commands().find((x) => x.name === name), `command ${name}`); return String(commands().filter((x) => x.group === c.group && x.name !== 'harness' && x.name !== 'workspace').indexOf(c) + 1); };
 
 test('L9 interactive: groups -> command -> read-only commands run at once', async () => {
   const dir = await fixture();
